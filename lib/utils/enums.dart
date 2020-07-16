@@ -1,0 +1,1 @@
+enum ZimType {WEALTH, ASPIRE,MUTUAL}

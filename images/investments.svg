@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" id="prefix__Sidepane_Icons_Dashboard_Active" width="24" height="24" data-name="Sidepane/Icons/Dashboard/Active" viewBox="0 0 24 24">
+    <defs>
+        <style>
+            .prefix__cls-2{fill:#deeaed}
+        </style>
+    </defs>
+    <g id="prefix__Group_4" data-name="Group 4">
+
+        <g id="prefix__bx-line-chart-down" transform="translate(5 5)">
+            <path id="prefix__Path" d="M1.474 0H0v13.263h13.263v-1.474H1.474z" class="prefix__cls-2"/>
+            <path id="prefix__Path-2" d="M4.205-3.163L1.042 0 0-1.042l4.205-4.205 2.211 2.21L9.579-6.2l1.042 1.042L6.416-.953z" class="prefix__cls-2" data-name="Path" transform="translate(3.163 10.1)"/>
+        </g>
+    </g>
+</svg>

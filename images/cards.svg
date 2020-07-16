@@ -1,0 +1,18 @@
+<svg xmlns="http://www.w3.org/2000/svg" id="prefix__Sidepane-Icons-Cards_and_Banks-Inactive" width="24" height="24" data-name="Sidepane-Icons-Cards and Banks-Inactive" viewBox="0 0 24 24">
+    <defs>
+        <style>
+            .prefix__cls-2{fill:#fff;fill-rule:evenodd}
+        </style>
+    </defs>
+    <g id="prefix__Group_268" data-name="Group 268">
+
+        <g id="prefix__Group_267" data-name="Group 267" transform="translate(4 6)">
+            <g id="prefix__Group_265" data-name="Group 265">
+                <path id="prefix__Path_2526" d="M14.625 0h-13A1.627 1.627 0 0 0 0 1.625v9.75A1.627 1.627 0 0 0 1.625 13h13a1.627 1.627 0 0 0 1.625-1.625v-9.75A1.627 1.627 0 0 0 14.625 0zm-13 1.625h13V3.25h-13zm0 4.875v4.875h13V6.5z" class="prefix__cls-2" data-name="Path 2526"/>
+            </g>
+            <g id="prefix__Group_266" data-name="Group 266" transform="translate(3.25 8.125)">
+                <path id="prefix__Path_2527" d="M3.25 8.125h4.875V9.75H3.25z" class="prefix__cls-2" data-name="Path 2527" transform="translate(-3.25 -8.125)"/>
+            </g>
+        </g>
+    </g>
+</svg>

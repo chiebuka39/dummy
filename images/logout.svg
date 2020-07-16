@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="13" height="12" viewBox="0 0 13 12">
+    <defs>
+        <style>
+            .prefix__cls-1{fill:#ee5f44;fill-rule:evenodd}
+        </style>
+    </defs>
+    <g id="prefix__bx-log-in" transform="translate(-3.333)">
+        <g id="prefix__Group_271" data-name="Group 271" transform="translate(7)">
+            <path id="prefix__Path_2530" d="M6 8.667L9.333 6 6 3.333v2H0v1.334h6z" class="prefix__cls-1" data-name="Path 2530"/>
+        </g>
+        <g id="prefix__Group_272" data-name="Group 272" transform="translate(3.333)">
+            <path id="prefix__Path_2531" d="M4.667 0h6A1.335 1.335 0 0 1 12 1.333V4h-1.333V1.333h-6v9.333h6V8H12v2.667A1.335 1.335 0 0 1 10.667 12h-6a1.335 1.335 0 0 1-1.333-1.333V1.333A1.335 1.335 0 0 1 4.667 0z" class="prefix__cls-1" data-name="Path 2531" transform="translate(-3.333)"/>
+        </g>
+    </g>
+</svg>
