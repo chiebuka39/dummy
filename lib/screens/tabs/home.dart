@@ -276,6 +276,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
       case ZimType.WEALTH:
         result =DotsIndicator(
             decorator: DotsDecorator(
+              activeColor: AppColors.kPrimaryColor,
                 size: Size.fromRadius(3), activeSize: Size.fromRadius(3)),
             dotsCount:_wealthOptions.length,
             position: currentIndexPage);
@@ -283,6 +284,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
       case ZimType.ASPIRE:
         result =DotsIndicator(
             decorator: DotsDecorator(
+                activeColor: AppColors.kPrimaryColor,
                 size: Size.fromRadius(3), activeSize: Size.fromRadius(3)),
             dotsCount:_aspireOptions.length,
             position: currentIndexPage);
@@ -293,6 +295,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
     }
     return DotsIndicator(
         decorator: DotsDecorator(
+            activeColor: AppColors.kPrimaryColor,
             size: Size.fromRadius(3), activeSize: Size.fromRadius(3)),
         dotsCount: _zimType == ZimType.WEALTH
             ? _wealthOptions.length

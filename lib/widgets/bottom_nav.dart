@@ -36,8 +36,8 @@ class BottomNavEntry extends StatelessWidget {
               title,
               style: TextStyle(
                 color: isSelected ? AppColors.kAccentColor: AppColors.kLightText,
-                fontFamily: 'DinPro-Medium',
-                fontSize: 13,
+                fontFamily: 'Caros',
+                fontSize: 10,
               ),
             ),
 
