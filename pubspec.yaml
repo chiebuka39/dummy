@@ -37,6 +37,7 @@ dependencies:
   flutter_money_formatter: ^0.8.3
   dots_indicator: ^1.2.0
   fl_chart: ^0.10.1
+  animate_icons: ^0.0.4
 
 dev_dependencies:
   flutter_test:
