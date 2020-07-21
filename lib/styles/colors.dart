@@ -7,6 +7,8 @@ class AppColors {
   static const kPrimaryColor2 = Color(0xff0b2328);
   static const kLightText = Color(0xffdeeaed);
   static const kLightText2 = Color(0xFFa2bdc3);
+  static const kAccountTextColor = Color(0xFF324d53);
+  static const kLightText3 = Color(0xFF708a8f);
   static const kLightTitleText = Color(0xff7e9195);
   static const kLightBG = Color(0xfff8fbfb);
   static const kAccentColor = Color(0xffbf9931);

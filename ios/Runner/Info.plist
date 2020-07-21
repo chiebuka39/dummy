@@ -24,6 +24,12 @@
 	<true/>
 	<key>UILaunchStoryboardName</key>
 	<string>LaunchScreen</string>
+	<key>NSPhotoLibraryUsageDescription</key>
+	<string>We need you to upload your documents to verify your identity</string>
+	<key>NSCameraUsageDescription</key>
+	<string>We need you to upload your documents to verify your identity</string>
+	<key>NSMicrophoneUsageDescription</key>
+	<string>We need you to upload your documents to verify your identity</string>
 	<key>UIMainStoryboardFile</key>
 	<string>Main</string>
 	<key>UISupportedInterfaceOrientations</key>

@@ -1,1 +1,2 @@
 enum ZimType {WEALTH, ASPIRE,MUTUAL}
+enum ZimInvestmentType {MUTUAL_FUNDS, FIXED,HIGH_YIELD}

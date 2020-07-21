@@ -38,6 +38,16 @@ dependencies:
   dots_indicator: ^1.2.0
   fl_chart: ^0.10.1
   animate_icons: ^0.0.4
+  hive: ^1.4.1+1
+  hive_flutter: ^0.3.0+2
+  provider: ^4.3.1
+  path_provider: ^1.6.11
+  custom_dropdown: ^0.0.2
+  select_dialog: ^1.1.0
+  image_picker: ^0.6.7+4
+
+dependency_overrides:
+  path: 1.7.0
 
 dev_dependencies:
   flutter_test:

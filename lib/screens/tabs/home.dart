@@ -29,6 +29,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
   PageController secondController;
   PageController thirdController;
   PageController aspireController;
+  PageController headerController;
   List<String> _wealthOptions;
   List<String> _aspireOptions;
   List<String> _mutualOptions;
@@ -43,10 +44,11 @@ class _DashboardScreenState extends State<DashboardScreen> {
     aspireController = PageController(initialPage: 0, viewportFraction: 0.90);
     secondController = PageController(initialPage: 0, viewportFraction: 0.90);
     thirdController = PageController();
+    headerController = PageController();
 
     _zimType = ZimType.WEALTH;
     _aspireOptions = ["", ""];
-    _wealthOptions = ["", "",""];
+    _wealthOptions = ["", "", ""];
     _mutualOptions = ["", ""];
 
     controller.addListener(() {
@@ -65,104 +67,58 @@ class _DashboardScreenState extends State<DashboardScreen> {
       children: [
         Container(
           height: 255,
-          width: double.infinity,
-          decoration: BoxDecoration(color: AppColors.kPrimaryColor),
-          child: SafeArea(
-            child: Column(
-              children: [
-                YMargin(20),
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 20),
-                  child: Row(
-                    children: [
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            "Welcome back",
-                            style: TextStyle(
-                                fontSize: 16, color: AppColors.kWhite),
-                          ),
-                          Text(
-                            "Ayomikun,",
-                            style: TextStyle(
-                                fontSize: 16,
-                                fontFamily: "Caros-Medium",
-                                color: AppColors.kWhite),
-                          ),
-                        ],
-                      ),
-                      Spacer(),
-                      NotificationIdentifier(),
-                      XMargin(12),
-                      CircularProfileAvatar(
-                        AppStrings.avatar,
-                        radius: 17,
-                      )
-                    ],
-                  ),
-                ),
-                YMargin(25),
-                Row(
-                  children: [
-                    IconButton(
-                      icon: Icon(
-                        Icons.arrow_back_ios,
-                        color: Colors.white.withOpacity(0.5),
-                        size: 18,
-                      ),
-                      onPressed: () {},
-                    ),
-                    Spacer(),
-                    Column(
-                      children: [
-                        Text(
-                          "My Dollar portfolio balance",
-                          style: TextStyle(
-                              color: AppColors.kLightTitleText, fontSize: 13),
-                        ),
-                        Text(
-                          amount.output.symbolOnLeft,
-                          style: TextStyle(
-                              fontFamily: "Caros-Bold",
-                              color: AppColors.kWhite,
-                              fontSize: 27),
-                        ),
-                      ],
-                    ),
-                    Spacer(),
-                    IconButton(
-                      icon: Icon(
-                        Icons.arrow_forward_ios,
-                        color: Colors.white.withOpacity(0.5),
-                        size: 18,
-                      ),
-                      onPressed: () {},
-                    ),
-                  ],
-                ),
-                YMargin(25),
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 20),
-                  child: Row(
-                    children: [
-                      Text(
-                        "Accrued Interest",
-                        style: AppStyles.tinyTitle,
-                      ),
-                      XMargin(10),
-                      Text(
-                        "\u20A6${amount.output.nonSymbol}",
-                        style: TextStyle(
-                            color: AppColors.kWhite,
-                            fontSize: 12,
-                            fontFamily: "Caros-Bold"),
-                      ),
-                    ],
-                  ),
-                )
-              ],
-            ),
+          child: PageView(
+            controller: headerController,
+            children: [
+              HeaderPage(
+                showLastWidget: false,
+                amount: amount,
+                moveToNext: () {
+                  headerController.animateToPage(1,
+                      duration: Duration(milliseconds: 300),
+                      curve: Curves.easeIn);
+                },
+                title: "Total Portfolio balance",
+
+                bg: "header_bg",
+              ),
+              HeaderPage(
+                amount: amount,
+                moveToPrev: () {
+                  headerController.animateToPage(0,
+                      duration: Duration(milliseconds: 300),
+                      curve: Curves.easeIn);
+                },
+                moveToNext: (){
+                  headerController.animateToPage(2,
+                      duration: Duration(milliseconds: 300), curve: Curves.easeIn);
+                },
+              ),
+              HeaderPage(
+
+                amount: amount,
+                moveToPrev: () {
+                  headerController.animateToPage(1,
+                      duration: Duration(milliseconds: 300),
+                      curve: Curves.easeIn);
+                },
+                moveToNext: (){
+                  headerController.animateToPage(3,
+                      duration: Duration(milliseconds: 300), curve: Curves.easeIn);
+                },
+                title: "My Naira portfolio balance",
+              ),
+              HeaderPage(
+
+                amount: amount,
+                moveToPrev: () {
+                  headerController.animateToPage(1,
+                      duration: Duration(milliseconds: 300),
+                      curve: Curves.easeIn);
+                },
+                title: "My wallet balance",
+              ),
+            ],
           ),
         ),
         Expanded(
@@ -176,6 +132,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                       topLeft: Radius.circular(15),
                       topRight: Radius.circular(16))),
               child: ListView(
+                padding: EdgeInsets.only(top: 5),
                 children: [
                   _buildZimSelector(),
                   YMargin(5),
@@ -272,21 +229,23 @@ class _DashboardScreenState extends State<DashboardScreen> {
 
   Widget _buildZimDots() {
     Widget result;
-    switch(_zimType){
+    switch (_zimType) {
       case ZimType.WEALTH:
-        result =DotsIndicator(
+        result = DotsIndicator(
             decorator: DotsDecorator(
-              activeColor: AppColors.kPrimaryColor,
-                size: Size.fromRadius(3), activeSize: Size.fromRadius(3)),
-            dotsCount:_wealthOptions.length,
+                activeColor: AppColors.kPrimaryColor,
+                size: Size.fromRadius(3),
+                activeSize: Size.fromRadius(3)),
+            dotsCount: _wealthOptions.length,
             position: currentIndexPage);
         break;
       case ZimType.ASPIRE:
-        result =DotsIndicator(
+        result = DotsIndicator(
             decorator: DotsDecorator(
                 activeColor: AppColors.kPrimaryColor,
-                size: Size.fromRadius(3), activeSize: Size.fromRadius(3)),
-            dotsCount:_aspireOptions.length,
+                size: Size.fromRadius(3),
+                activeSize: Size.fromRadius(3)),
+            dotsCount: _aspireOptions.length,
             position: currentIndexPage);
         break;
       case ZimType.MUTUAL:
@@ -296,7 +255,8 @@ class _DashboardScreenState extends State<DashboardScreen> {
     return DotsIndicator(
         decorator: DotsDecorator(
             activeColor: AppColors.kPrimaryColor,
-            size: Size.fromRadius(3), activeSize: Size.fromRadius(3)),
+            size: Size.fromRadius(3),
+            activeSize: Size.fromRadius(3)),
         dotsCount: _zimType == ZimType.WEALTH
             ? _wealthOptions.length
             : _aspireOptions.length,
@@ -387,6 +347,143 @@ class _DashboardScreenState extends State<DashboardScreen> {
             ),
           ],
         ),
+      ),
+    );
+  }
+}
+
+class HeaderPage extends StatelessWidget {
+  const HeaderPage({
+    Key key,
+    @required this.amount,
+    this.moveToPrev,
+    this.moveToNext,
+    this.title = "My Dollar portfolio balance", this.bg = "layer_2", this.showLastWidget = true,
+  }) : super(key: key);
+
+
+  final FlutterMoneyFormatter amount;
+  final VoidCallback moveToPrev;
+  final VoidCallback moveToNext;
+  final String title;
+  final String bg;
+  final bool showLastWidget;
+
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      height: 255,
+      width: double.infinity,
+      decoration: BoxDecoration(color: bg == "header_bg"?AppColors.kAccentColor: AppColors.kPrimaryColor),
+      child: Stack(
+        children: [
+          Positioned(
+              left: 0,
+              right: 0,
+              child: Image.asset(
+                "images/$bg.png",
+                width: double.infinity,
+              )),
+          SafeArea(
+            child: Column(
+              children: [
+                YMargin(20),
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 20),
+                  child: Row(
+                    children: [
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            "Welcome back",
+                            style: TextStyle(
+                                fontSize: 16, color: AppColors.kWhite),
+                          ),
+                          Text(
+                            "Ayomikun,",
+                            style: TextStyle(
+                                fontSize: 16,
+                                fontFamily: "Caros-Medium",
+                                color: AppColors.kWhite),
+                          ),
+                        ],
+                      ),
+                      Spacer(),
+                      NotificationIdentifier(),
+                      XMargin(12),
+                      CircularProfileAvatar(
+                        AppStrings.avatar,
+                        radius: 17,
+                      )
+                    ],
+                  ),
+                ),
+                YMargin(25),
+                Row(
+                  children: [
+                    IconButton(
+                      icon: Icon(
+                        Icons.arrow_back_ios,
+                        color: Colors.white.withOpacity(moveToPrev ==null ? 0:0.5),
+                        size: 18,
+                      ),
+                      onPressed: moveToPrev,
+                    ),
+                    Spacer(),
+                    Column(
+                      children: [
+                        Text(
+                          title,
+                          style: TextStyle(
+                              color: bg == "header_bg"?AppColors.kPrimaryColor2: AppColors.kLightTitleText, fontSize: 13),
+                        ),
+                        YMargin(5),
+                        Text(
+                          amount.output.symbolOnLeft,
+                          style: TextStyle(
+                              fontFamily: "Caros-Bold",
+                              color: AppColors.kWhite,
+                              fontSize: 27),
+                        ),
+                      ],
+                    ),
+                    Spacer(),
+                    IconButton(
+                      icon: Icon(
+                        Icons.arrow_forward_ios,
+                        color: Colors.white.withOpacity(moveToNext == null ?0:0.5),
+                        size: 18,
+                      ),
+                      onPressed: moveToNext,
+                    ),
+                  ],
+                ),
+                YMargin(15),
+                showLastWidget == true? Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 20),
+                  child: Row(
+                    children: [
+                      Text(
+                        "Accrued Interest",
+                        style: AppStyles.tinyTitle,
+                      ),
+                      XMargin(10),
+                      Text(
+                        "\u20A6${amount.output.nonSymbol}",
+                        style: TextStyle(
+                            color: AppColors.kWhite,
+                            fontSize: 12,
+                            fontFamily: "Caros-Bold"),
+                      ),
+                    ],
+                  ),
+                ):SizedBox()
+              ],
+            ),
+          ),
+        ],
       ),
     );
   }
