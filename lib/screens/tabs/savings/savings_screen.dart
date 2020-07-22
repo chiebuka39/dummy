@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_money_formatter/flutter_money_formatter.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:zimvest/animations/fab_menu_items.dart';
+import 'package:zimvest/screens/tabs/savings/create_aspire_screen.dart';
 import 'package:zimvest/styles/colors.dart';
 import 'package:zimvest/styles/styles.dart';
 import 'package:zimvest/utils/enums.dart';
@@ -11,25 +12,24 @@ import 'package:zimvest/utils/margin.dart';
 import 'package:zimvest/utils/strings.dart';
 import 'package:zimvest/widgets/buttons.dart';
 import 'package:zimvest/widgets/line_chart.dart';
+import 'package:zimvest/widgets/savings.dart';
 
-class InvestmentScreen extends StatefulWidget {
+class SavingsScreen extends StatefulWidget {
   @override
-  _InvestmentScreenState createState() => _InvestmentScreenState();
+  _SavingsScreenState createState() => _SavingsScreenState();
 }
 
-class _InvestmentScreenState extends State<InvestmentScreen> {
+class _SavingsScreenState extends State<SavingsScreen> {
   FlutterMoneyFormatter amount;
-  ZimInvestmentType _zimType;
+  ZimType _zimType;
   bool showSavingsGraph = true;
-  List<ZimInvestmentType> investmentList;
 
+  bool showFabContainer = false;
+  bool showFabContainer2 = false;
 
   @override
   void initState() {
-    investmentList = [ZimInvestmentType.MUTUAL_FUNDS,
-      ZimInvestmentType.FIXED,
-      ZimInvestmentType.HIGH_YIELD];
-    _zimType = ZimInvestmentType.MUTUAL_FUNDS;
+    _zimType = ZimType.WEALTH;
     amount = FlutterMoneyFormatter(
         amount: 10000000, settings: MoneyFormatterSettings(fractionDigits: 0));
     super.initState();
@@ -40,17 +40,12 @@ class _InvestmentScreenState extends State<InvestmentScreen> {
     return Scaffold(
       floatingActionButton: Padding(
         padding: const EdgeInsets.only(bottom: 100),
-        child: Fabmenuitems(
-            height: 150,
-            weith: 200,
-            animatedIcons: AnimatedIcons.menu_close,
-            fabcolor: AppColors.kAccentColor,
-            containercolor: AppColors.kPrimaryColor.withOpacity(0.6),
-            childrens: <Widget>[
-              FabItem(item: "New Mutual funds",),
-              FabItem(item: "New Direct Fixed income sales",),
-              FabItem(item: "New Zimvest yield",),
-            ]),
+        child: FloatingActionButton(
+          child: Icon(Icons.add),
+          onPressed: (){
+            Navigator.of(context).push(CreateZimvestAspireScreen.route());
+          },
+        ),
       ),
       body: Container(
         color: AppColors.kBg,
@@ -72,7 +67,7 @@ class _InvestmentScreenState extends State<InvestmentScreen> {
                   Padding(
                     padding: const EdgeInsets.only(left: 20),
                     child: Text(
-                      "My Investments",
+                      "My Savings",
                       style: TextStyle(
                           fontSize: 20,
                           fontFamily: "Caros-Bold",
@@ -80,9 +75,9 @@ class _InvestmentScreenState extends State<InvestmentScreen> {
                     ),
                   ),
                   Padding(
-                    padding: const EdgeInsets.only(left: 20, top: 7),
+                    padding: const EdgeInsets.only(left: 20, top: 11),
                     child: Text(
-                      "Here are the active instruments you are interested in",
+                      "You are a zimvest classic client. Are you ready to invest?",
                       style: TextStyle(
                           fontSize: 12,
                           fontFamily: "Caros",
@@ -90,50 +85,55 @@ class _InvestmentScreenState extends State<InvestmentScreen> {
                     ),
                   ),
                   YMargin(20),
-                  SingleChildScrollView(
-                    scrollDirection: Axis.horizontal,
+                  Row(
+                    children: [
+                      XMargin(10),
+                      ZimSelectedButton(
+                        title: "Zimvest Wealth Box",
+                        onTap: () {
+                          setState(() {
+                            _zimType = ZimType.WEALTH;
+                          });
+                        },
+                        type: ZimType.WEALTH,
+                        selectedType: _zimType,
+                      ),
+                      ZimSelectedButton(
+                        title: "Zimvest Aspire",
+                        onTap: () {
+                          setState(() {
+                            _zimType = ZimType.ASPIRE;
+                          });
+                        },
+                        type: ZimType.ASPIRE,
+                        selectedType: _zimType,
+                      ),
+                    ],
+                  ),
+                  YMargin(15),
+                  SavingsDetailContainer(amount: amount),
+                  YMargin(15),
+                  Padding(
+                    padding: const EdgeInsets.only(left: 20),
                     child: Row(
                       children: [
-                        XMargin(10),
-                        ZimInVestSelectedButton(
-                          title: "Mutual Funds",
-                          onTap: () {
-                            setState(() {
-                              _zimType = ZimInvestmentType.MUTUAL_FUNDS;
-                            });
-                          },
-                          type: ZimInvestmentType.MUTUAL_FUNDS,
-                          selectedType: _zimType,
+                        SavingsActionWidget(
+                          title: "Add funds",
                         ),
-                        ZimInVestSelectedButton(
-                          title: "Fixed Income",
-                          onTap: () {
-                            setState(() {
-                              _zimType = ZimInvestmentType.FIXED;
-                            });
-                          },
-                          type: ZimInvestmentType.FIXED,
-                          selectedType: _zimType,
-                        ),
-                        ZimInVestSelectedButton(
-                          title: "Zimvest high yield",
-                          onTap: () {
-                            setState(() {
-                              _zimType = ZimInvestmentType.HIGH_YIELD;
-                            });
-                          },
-                          type:ZimInvestmentType.HIGH_YIELD,
-                          selectedType: _zimType,
-                        ),
+                        XMargin(5),
+                        SavingsActionWidget(
+                          title: "Withdraw",
+                        )
                       ],
                     ),
                   ),
-                  YMargin(15),
-                  Container(
-                    height: 140,
-                    width: double.infinity,
-                    child: buildListView(),
+                  YMargin(20),
+                  PauseSavingsWidget(
+                    active: false,
                   ),
+                  YMargin(15),
+                  _buildTrackYourSavingsHeader(),
+                  showSavingsGraph == true ? LineChartSample2() : SizedBox(),
                   YMargin(30),
                   _buildSavingsActivities(),
                   YMargin(20),
@@ -204,36 +204,6 @@ class _InvestmentScreenState extends State<InvestmentScreen> {
     );
   }
 
-  Widget buildListView() {
-    Widget list;
-    switch(_zimType){
-      case ZimInvestmentType.MUTUAL_FUNDS:
-        list = ListView(
-          scrollDirection: Axis.horizontal,
-          children: [
-            InvestmentDetailContainer(amount: amount,investmentType: ZimInvestmentType.MUTUAL_FUNDS,),
-            InvestmentDetailContainer(amount: amount,investmentType: ZimInvestmentType.MUTUAL_FUNDS,),
-          ],);
-        break;
-      case ZimInvestmentType.FIXED:
-        list = ListView(
-          scrollDirection: Axis.horizontal,
-          children: [
-            InvestmentDetailContainer(amount: amount,investmentType: ZimInvestmentType.FIXED,),
-          ],);
-        break;
-      case ZimInvestmentType.HIGH_YIELD:
-        list = ListView(
-          scrollDirection: Axis.horizontal,
-          children: [
-            InvestmentDetailContainer(amount: amount,investmentType: ZimInvestmentType.HIGH_YIELD,),
-            InvestmentDetailContainer(amount: amount,investmentType: ZimInvestmentType.HIGH_YIELD,),
-          ],);
-        break;
-    }
-    return list;
-  }
-
   Widget _buildTrackYourSavingsHeader() {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 20),
@@ -284,7 +254,7 @@ class _InvestmentScreenState extends State<InvestmentScreen> {
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           Text(
-            "Investment activities",
+            "Savings activities",
             style: TextStyle(
                 fontSize: 16,
                 fontFamily: "Caros-Bold",
@@ -378,166 +348,3 @@ class PauseSavingsWidget extends StatelessWidget {
     );
   }
 }
-
-class SavingsActionWidget extends StatelessWidget {
-  final String title;
-  final VoidCallback onTap;
-  final String icon;
-  const SavingsActionWidget({
-    Key key,
-    this.title,
-    this.onTap,
-    this.icon = "savings",
-  }) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return InkWell(
-      onTap: onTap,
-      child: Container(
-        height: 40,
-        width: 120,
-        decoration: BoxDecoration(
-            color: AppColors.kPrimaryColor,
-            borderRadius: BorderRadius.circular(5)),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-          children: [
-            SvgPicture.asset(
-              "images/$icon.svg",
-              color: AppColors.kAccentColor,
-            ),
-            Text(
-              title,
-              style: TextStyle(
-                  color: AppColors.kWhite,
-                  fontSize: 11,
-                  fontFamily: "Caros-medium"),
-            )
-          ],
-        ),
-      ),
-    );
-  }
-}
-
-class InvestmentDetailContainer extends StatelessWidget {
-  const InvestmentDetailContainer({
-    Key key,
-    @required this.amount, this.investmentType,
-  }) : super(key: key);
-
-  final FlutterMoneyFormatter amount;
-  final ZimInvestmentType investmentType;
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      height: 140,
-      margin: EdgeInsets.only(left: 20),
-      padding: EdgeInsets.symmetric(horizontal: 15, vertical: 10),
-      width: MediaQuery.of(context).size.width - 50,
-      decoration: BoxDecoration(
-          color: AppColors.kPrimaryColor,
-          borderRadius: BorderRadius.circular(5)),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Row(
-                children: [
-                  Container(
-                    height: 20,
-                    width: 100,
-                    decoration: BoxDecoration(color: Color(0xFF324d53)),
-                    child: Center(
-                      child: Text(
-                        getTitle(),
-                        style: TextStyle(fontSize: 10, color: AppColors.kWhite,
-                            fontFamily: "Caros-Medium"),
-                      ),
-                    ),
-                  ),
-                  Spacer(),
-                  SizedBox(
-                    width: 85,
-                    child: Row(
-                      children: [
-                        Text(
-                          "View details",
-                          style: TextStyle(fontSize: 10, color: AppColors.kAccentColor),
-                        ),
-                        Icon(Icons.navigate_next, color: AppColors.kAccentColor,)
-                      ],
-                    ),
-                  ),
-                ],
-              ),
-              YMargin(10),
-              Text(
-                "A random fixed income",
-                style: TextStyle(
-                    color: AppColors.kLightText,
-                    fontSize: 11,
-                    fontFamily: "Caros"),
-              ),
-            ],
-          ),
-          Spacer(),
-          Row(
-            children: [
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    "Maximum amount",
-                    style: TextStyle(
-                        fontSize: 10, color: AppColors.kLightTitleText),
-                  ),
-                  YMargin(3),
-                  Text(
-                    amount.output.symbolOnLeft,
-                    style: TextStyle(
-                        fontSize: 16,
-                        fontFamily: "Caros-Medium",
-                        color: AppColors.kWhite),
-                  )
-                ],
-              ),
-              Spacer(),
-              Padding(
-                padding: const EdgeInsets.only(top: 15),
-                child: Text(
-                  "6% Interest P.A",
-                  style: TextStyle(
-                      color: AppColors.kWhite,
-                      fontSize: 10,
-                      fontFamily: "Caros-Medium"),
-                ),
-              )
-            ],
-          )
-        ],
-      ),
-    );
-  }
-
-  String getTitle() {
-    String value;
-    switch (investmentType){
-      case ZimInvestmentType.MUTUAL_FUNDS:
-        value = "Mutual funds".toUpperCase();
-        break;
-      case ZimInvestmentType.FIXED:
-        value = "Fixed income".toUpperCase();
-        break;
-      case ZimInvestmentType.HIGH_YIELD:
-        value = "High Yield".toUpperCase();
-        break;
-    }
-    return value;
-  }
-}
-

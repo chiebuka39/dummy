@@ -3,6 +3,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:zimvest/animations/fab_sequence_animation.dart';
+import 'package:zimvest/screens/tabs/savings/create_aspire_screen.dart';
 import 'package:zimvest/styles/colors.dart';
 
 class Fabmenuitems extends StatefulWidget {
@@ -181,24 +182,20 @@ class _FabmenuitemsState extends State<Fabmenuitems> with SingleTickerProviderSt
           SizedBox(
             height: 5,
           ),
-          FloatingActionButton(backgroundColor: fabcolor,heroTag: 'Asif',onPressed: (){
-            _playAnimation();
-
-          },child: AnimateIcons(
+          FloatingActionButton(backgroundColor: fabcolor,heroTag: 'Asif',onPressed: null,child: AnimateIcons(
             startIcon: Icons.add,
             endIcon: Icons.close,
-            size: 24,
+            size: 25.0,
             onStartIconPress: () {
               _playAnimation();
               return true;
             },
             onEndIconPress: () {
               _playAnimation();
-
               return true;
             },
             duration: Duration(milliseconds: 500),
-            color: AppColors.kWhite,
+            color: Colors.white,
             clockwise: false,
           ),
           ),

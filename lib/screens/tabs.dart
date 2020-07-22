@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:zimvest/screens/tabs/home.dart';
-import 'package:zimvest/screens/tabs/investment_screen.dart';
-import 'package:zimvest/screens/tabs/savings_screen.dart';
+import 'package:zimvest/screens/tabs/invstment/investment_screen.dart';
+import 'package:zimvest/screens/tabs/savings/savings_screen.dart';
 import 'package:zimvest/styles/colors.dart';
 import 'package:zimvest/widgets/bottom_nav.dart';
 

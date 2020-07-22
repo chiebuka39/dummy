@@ -133,3 +133,54 @@ class PrimaryButton extends StatelessWidget {
     );
   }
 }
+class OutlinePrimaryButton extends StatelessWidget {
+  final Function onPressed;
+  final String title;
+  final Color color;
+  final Color borderColor;
+  final Color textColor;
+  final bool loading;
+  final double horizontalMargin;
+
+  const OutlinePrimaryButton(
+      {Key key,
+        @required this.onPressed,
+        @required this.title,
+        this.color = AppColors.kWhite,
+        this.loading = false,
+        this.horizontalMargin = 0,
+        this.textColor = AppColors.kAccentColor,
+        this.borderColor = AppColors.kAccentColor})
+      : super(key: key);
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: EdgeInsets.symmetric(horizontal: horizontalMargin),
+      child: ButtonTheme(
+          minWidth: double.infinity,
+          buttonColor: color,
+          height: 55,
+          child: RaisedButton(
+            elevation: 1,
+            shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(5)
+            ),
+            onPressed: onPressed,
+            child: loading == true
+                ? SizedBox(
+              width: 35,
+              height: 35,
+              child: CircularProgressIndicator(
+                valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
+              ),
+            )
+                : Text(
+              title,
+              style: TextStyle(
+                fontSize: 14,
+                  color: textColor, fontFamily: "Caros-Bold"),
+            ),
+          )),
+    );
+  }
+}

@@ -58,7 +58,10 @@ class TextMultiLineWidget extends StatelessWidget {
   final Color textColor;
 
   const TextMultiLineWidget({
-    Key key, this.title, this.onChange, this.error = false, this.textColor = Colors.black,
+    Key key, this.title,
+    this.onChange,
+    this.error = false,
+    this.textColor = Colors.black,
   }) : super(key: key);
 
   @override
@@ -99,18 +102,19 @@ class TextWidgetBorder extends StatelessWidget {
   final ValueChanged<String> onChange;
   final String title;
   final bool error;
+  final double bottomMargin;
   final Color textColor;
   final double labelSize;
   const TextWidgetBorder({
     Key key, this.title,
     this.onChange,
     this.error = false,
-    this.textColor = Colors.white, this.labelSize = 12,
+    this.textColor = Colors.white, this.labelSize = 12, this.bottomMargin = 20,
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return Container(height: 90,
+    return Container(height: 70+bottomMargin,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -134,6 +138,60 @@ class TextWidgetBorder extends StatelessWidget {
                   hintText: "",
                   border: InputBorder.none,
                   hintStyle: TextStyle(fontSize: 14, color: AppColors.kLightText2)),
+            ),
+          ),
+          YMargin(bottomMargin)
+        ],),);
+  }
+}
+class AmountWidgetBorder extends StatelessWidget {
+  final ValueChanged<String> onChange;
+  final String title;
+  final bool error;
+  final Color textColor;
+  final double labelSize;
+  const AmountWidgetBorder({
+    Key key, this.title,
+    this.onChange,
+    this.error = false,
+    this.textColor = Colors.white, this.labelSize = 12,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(height: 90,
+
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            title,
+            style: TextStyle(color:error == true ?Colors.redAccent:  textColor, fontSize: labelSize),
+          ),
+          YMargin(8),
+          Container(
+            height: 45,
+            padding: EdgeInsets.only(left: 10),
+            decoration: BoxDecoration(
+                color: Colors.transparent,
+                border: Border.all(color: error == true? Colors.redAccent : AppColors.kLightText),
+                borderRadius: BorderRadius.circular(4)),
+            child: Row(
+              children: [
+                Text("\u20A6"),
+                Expanded(
+                  child: TextFormField(
+                    onChanged: onChange,
+                    keyboardType: TextInputType.emailAddress,
+                    style: TextStyle(color: AppColors.kAccountTextColor),
+                    decoration: InputDecoration(
+                        contentPadding: EdgeInsets.only(left: 10, bottom: 5),
+                        hintText: "",
+                        border: InputBorder.none,
+                        hintStyle: TextStyle(fontSize: 14, color: AppColors.kLightText2)),
+                  ),
+                ),
+              ],
             ),
           ),
           YMargin(20)
@@ -176,9 +234,9 @@ class DateOfBirthBorderInputWidget extends StatelessWidget {
                   border: Border.all(color: error == true? Colors.redAccent : AppColors.kLightText),
                   borderRadius: BorderRadius.circular(4)),
               child: Row(children: [
-                Text("DOB", style: TextStyle(fontSize: 14, color: AppColors.kLightText2),),
+                Text("", style: TextStyle(fontSize: 14, color: AppColors.kLightText2),),
                 Spacer(),
-                SvgPicture.asset("images/bx-calendar.svg")
+                SvgPicture.asset("images/bx-calendar2.svg")
               ],),
             ),
           ),
@@ -191,11 +249,13 @@ class DropdownBorderInputWidget extends StatefulWidget {
   final String title;
   final List<String> items;
   final Color textColor;
+  final double bottomMargin;
+  final ValueChanged<String> onSelect;
 
 
   const DropdownBorderInputWidget({
     Key key, this.title,
-    this.textColor = Colors.white, this.items,
+    this.textColor = Colors.white, this.items, this.bottomMargin = 20, this.onSelect,
   }) : super(key: key);
 
   @override
@@ -205,9 +265,11 @@ class DropdownBorderInputWidget extends StatefulWidget {
 class _DropdownBorderInputWidgetState extends State<DropdownBorderInputWidget> {
   int _checkboxValue;
 
+  String _source;
+
   @override
   Widget build(BuildContext context) {
-    return Container(height: 90,
+    return Container(height: 70+widget.bottomMargin,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -223,11 +285,14 @@ class _DropdownBorderInputWidgetState extends State<DropdownBorderInputWidget> {
                 label: widget.title,
                 titleStyle: TextStyle(color: Colors.brown),
                 showSearchBox: false,
-                selectedValue: null,
+                selectedValue: _source,
                 backgroundColor: Colors.white,
                 items: widget.items,
                 onChange: (String selected) {
-
+                    widget.onSelect(selected);
+                    setState(() {
+                      _source = selected;
+                    });
                 },
               );
             },
@@ -239,13 +304,13 @@ class _DropdownBorderInputWidgetState extends State<DropdownBorderInputWidget> {
                   border: Border.all(color:  AppColors.kLightText),
                   borderRadius: BorderRadius.circular(4)),
               child: Row(children: [
-                Text("", style: TextStyle(fontSize: 14, color: AppColors.kLightText2),),
+                Text(_source ?? "", style: TextStyle(fontSize: 14, color: AppColors.kPrimaryColor),),
                 Spacer(),
                 Icon(Icons.keyboard_arrow_down, size: 23,)
               ],),
             ),
           ),
-          YMargin(20)
+          YMargin(widget.bottomMargin)
         ],),);
   }
 }

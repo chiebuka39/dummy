@@ -1,0 +1,8 @@
+<svg id="bx-calendar" xmlns="http://www.w3.org/2000/svg" width="13.5" height="15" viewBox="0 0 13.5 15">
+  <g id="Group_313" data-name="Group 313" transform="translate(3 6.75)">
+    <path id="Path_2534" data-name="Path 2534" d="M4.7,7.2H3.2V8.7H4.7Zm1.5,0H7.7V8.7H6.2Zm3,0h1.5V8.7H9.2Zm-4.5,3H3.2v1.5H4.7Zm3,0H6.2v1.5H7.7Zm3,0H9.2v1.5h1.5Z" transform="translate(-3.2 -7.2)" fill="#324d53" fill-rule="evenodd"/>
+  </g>
+  <g id="Group_314" data-name="Group 314">
+    <path id="Path_2535" data-name="Path 2535" d="M12,15H1.5A1.5,1.5,0,0,1,0,13.5V3A1.5,1.5,0,0,1,1.5,1.5H3V0H4.5V1.5H9V0h1.5V1.5H12A1.5,1.5,0,0,1,13.5,3V13.5A1.5,1.5,0,0,1,12,15Zm0-1.5v-9H1.5v9Z" fill="#324d53" fill-rule="evenodd"/>
+  </g>
+</svg>

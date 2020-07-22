@@ -48,13 +48,18 @@ class _AccountSettingScreenState extends State<AccountSettingScreen> {
                 YMargin(15),
                 Row(
                   children: [
-                    Container(
-                      child: Row(children: [
-                        XMargin(20),
-                        Icon(Icons.arrow_back_ios, color: AppColors.kAccentColor,size: 18,),
-                        XMargin(3),
-                        Text("Go back",style: TextStyle(fontSize: 12, color: AppColors.kAccentColor),)
-                      ],),
+                    InkWell(
+                      onTap: (){
+                        Navigator.of(context).pop();
+                      },
+                      child: Container(
+                        child: Row(children: [
+                          XMargin(20),
+                          Icon(Icons.arrow_back_ios, color: AppColors.kAccentColor,size: 18,),
+                          XMargin(3),
+                          Text("Go back",style: TextStyle(fontSize: 12, color: AppColors.kAccentColor),)
+                        ],),
+                      ),
                     ),
                     Spacer(),
                     CircularProfileAvatar(
