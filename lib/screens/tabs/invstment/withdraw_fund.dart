@@ -6,17 +6,17 @@ import 'package:zimvest/widgets/account_widgets.dart';
 import 'package:zimvest/widgets/appbars.dart';
 import 'package:zimvest/widgets/buttons.dart';
 
-class AddFundScreen extends StatefulWidget {
+class WithdrawFundScreen extends StatefulWidget {
   static Route<dynamic> route() {
     return MaterialPageRoute(
-        builder: (_) => AddFundScreen(),
-        settings: RouteSettings(name: AddFundScreen().toStringShort()));
+        builder: (_) => WithdrawFundScreen(),
+        settings: RouteSettings(name: WithdrawFundScreen().toStringShort()));
   }
   @override
-  _AddFundScreenState createState() => _AddFundScreenState();
+  _WithdrawFundScreenState createState() => _WithdrawFundScreenState();
 }
 
-class _AddFundScreenState extends State<AddFundScreen> {
+class _WithdrawFundScreenState extends State<WithdrawFundScreen> {
 
   String _source;
 
@@ -24,39 +24,29 @@ class _AddFundScreenState extends State<AddFundScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Color(0xFFF8FBFB),
-      appBar: ZimAppBar(title: "Add funds",),
+      appBar: ZimAppBar(title: "Add funds",desc: 'Use the form below to complete your withdrawal',),
       body: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 0),
         child: ListView(children: [
           YMargin(15),
-          Padding(
-            padding: const EdgeInsets.only(left: 20),
-            child: Text("Add more money to your investment",style: TextStyle(fontSize: 10, color: AppColors.kPrimaryColor),),
-          ),
-          YMargin(20),
+
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 20),
             child: AmountWidgetBorder(textColor: AppColors.kAccountTextColor,
-              onChange: (value){},title: "How much are you willing to invest",),
+              onChange: (value){},title: "Enter amount",),
           ),
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 20),
-            child: DropdownBorderInputWidget(title: "How often will you like to invest?",
-              items: ["Treasury bill"],textColor: AppColors.kPrimaryColor,),
+            child: DropdownBorderInputWidget(title: "Select Withdrawal bank",
+              items: ["Access bank","Heritage bank"],textColor: AppColors.kPrimaryColor,),
           ),
 
 
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 20),
-            child: DropdownBorderInputWidget(title: "Select Funding Source",
-              items: ["Card Ending in 3456", "Bank Transfer"],
-              textColor: AppColors.kPrimaryColor,bottomMargin: 6,onSelect: (value){
-              setState(() {
-                _source = value;
-              });
-              },),
+            child: LoginPasswordOutlineWidget(title: "Please enter your password",titleColor: AppColors.kAccountTextColor,),
           ),
-          _source == "Bank Transfer"? ShowBankDetailsWidget():SizedBox(),
+
           YMargin(40),
           PrimaryButton(
             title: 'Make Payment',

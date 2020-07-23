@@ -15,7 +15,7 @@ class ZimAppBar extends StatelessWidget implements PreferredSizeWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      height: desc == null? 140: 220,
+      height: desc == null? 140: desc.length < 100 ? 170: 220,
       decoration: BoxDecoration(
         boxShadow: AppUtils.getBoxShaddow2,
         color: AppColors.kWhite,

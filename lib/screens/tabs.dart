@@ -101,7 +101,8 @@ class _ScreenContainerState extends State<ScreenContainer> {
                         onTap: widget.handleMoreClicked,
                         title: 'More',
                         image : "more",
-                        isSelected: _currentIndex == 2 ? true : false,
+
+                        isSelected: false,
                       ),
                     ],
                   ),

@@ -1,0 +1,7 @@
+<svg id="Group" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
+  <circle id="Oval" cx="12" cy="12" r="12" fill="rgba(255,255,255,0)"/>
+  <g id="eye_4_" data-name="eye (4)" transform="translate(4 8)">
+    <path id="Shape" d="M.113,4.3a.444.444,0,0,1,0-.593C.248,3.552,3.506,0,7.585,0s7.337,3.552,7.472,3.7a.444.444,0,0,1,0,.593C14.922,4.448,11.665,8,7.585,8S.248,4.448.113,4.3Z" transform="translate(0)" fill="#a2bdc3"/>
+    <circle id="Oval-2" data-name="Oval" cx="2.222" cy="2.222" r="2.222" transform="translate(5.363 1.778)" fill="#fff"/>
+  </g>
+</svg>

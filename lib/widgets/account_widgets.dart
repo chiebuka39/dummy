@@ -144,6 +144,56 @@ class TextWidgetBorder extends StatelessWidget {
         ],),);
   }
 }
+class UploadWidgetBorder extends StatelessWidget {
+  final ValueChanged<File> onChange;
+  final String title;
+  final String desc;
+  final bool error;
+  final double bottomMargin;
+  final Color textColor;
+  final double labelSize;
+  const UploadWidgetBorder({
+    Key key, this.title,
+    this.onChange,
+    this.error = false,
+    this.textColor = Colors.white, this.labelSize = 12, this.bottomMargin = 20, this.desc,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      height: 70+bottomMargin,
+      width: double.infinity,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            title,
+            style: TextStyle(color:error == true ?Colors.redAccent:  textColor, fontSize: labelSize),
+          ),
+          YMargin(8),
+          Container(
+            height: 45,
+            width: double.infinity,
+            decoration: BoxDecoration(
+                color: Colors.transparent,
+                border: Border.all(color: error == true? Colors.redAccent : AppColors.kLightText),
+                borderRadius: BorderRadius.circular(4)),
+            child: Align(
+              alignment: Alignment.centerLeft,
+              child: Padding(
+                padding: const EdgeInsets.only(left: 10),
+                child: Text(desc,
+                  style: TextStyle(
+                      color: AppColors.kPrimaryColor,
+                      fontSize: 14),),
+              ),
+            ),
+          ),
+          YMargin(bottomMargin)
+        ],),);
+  }
+}
 class AmountWidgetBorder extends StatelessWidget {
   final ValueChanged<String> onChange;
   final String title;
@@ -251,11 +301,13 @@ class DropdownBorderInputWidget extends StatefulWidget {
   final Color textColor;
   final double bottomMargin;
   final ValueChanged<String> onSelect;
+  final double labelSize;
 
 
   const DropdownBorderInputWidget({
     Key key, this.title,
-    this.textColor = Colors.white, this.items, this.bottomMargin = 20, this.onSelect,
+
+    this.textColor = Colors.white,this.labelSize = 12, this.items, this.bottomMargin = 20, this.onSelect,
   }) : super(key: key);
 
   @override
@@ -264,7 +316,6 @@ class DropdownBorderInputWidget extends StatefulWidget {
 
 class _DropdownBorderInputWidgetState extends State<DropdownBorderInputWidget> {
   int _checkboxValue;
-
   String _source;
 
   @override
@@ -275,7 +326,7 @@ class _DropdownBorderInputWidgetState extends State<DropdownBorderInputWidget> {
         children: [
           Text(
             widget.title,
-            style: TextStyle(color: widget.textColor, fontSize: 12),
+            style: TextStyle(color: widget.textColor, fontSize: widget.labelSize),
           ),
           YMargin(8),
           InkWell(
@@ -435,6 +486,55 @@ class LoginPasswordWidget extends StatelessWidget {
                   hintText: "",
                   border: InputBorder.none,
                   hintStyle: TextStyle(fontSize: 14)),
+            ),
+          ),
+
+          YMargin(20)
+        ],),);
+  }
+}
+class LoginPasswordOutlineWidget extends StatelessWidget {
+  final String title;
+  final bool error;
+  final Color titleColor;
+  final ValueChanged<String> onChange;
+  const LoginPasswordOutlineWidget({
+    Key key, this.title, this.error = false, this.onChange, this.titleColor =Colors.white,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(height: 115,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            title,
+            style: TextStyle(color:error == true ?Colors.redAccent: titleColor, fontSize: 12),
+          ),
+          YMargin(8),
+          Container(
+            padding: EdgeInsets.symmetric(horizontal: 10),
+            height: 45,
+            decoration: BoxDecoration(
+                color: Colors.transparent,
+                border: Border.all(color: error == true? Colors.redAccent : AppColors.kLightText),
+                borderRadius: BorderRadius.circular(4)),
+            child: Row(
+              children: [
+                Expanded(
+                  child: TextFormField(
+                    keyboardType: TextInputType.emailAddress,
+                    style: TextStyle(color: AppColors.kAccountTextColor),
+                    decoration: InputDecoration(
+                        contentPadding: EdgeInsets.only(left: 10, bottom: 5),
+                        hintText: "",
+                        border: InputBorder.none,
+                        hintStyle: TextStyle(fontSize: 14)),
+                  ),
+                ),
+                SvgPicture.asset("images/visible.svg",)
+              ],
             ),
           ),
 

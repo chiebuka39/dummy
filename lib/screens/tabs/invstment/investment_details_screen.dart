@@ -8,25 +8,33 @@ import 'package:zimvest/screens/tabs/invstment/add_fund.dart';
 import 'package:zimvest/screens/tabs/invstment/invest_direct.dart';
 import 'package:zimvest/screens/tabs/invstment/invest_high.dart';
 import 'package:zimvest/screens/tabs/invstment/invest_mutual.dart';
-import 'package:zimvest/screens/tabs/invstment/investment_details_screen.dart';
+import 'package:zimvest/screens/tabs/invstment/withdraw_fund.dart';
 import 'package:zimvest/styles/colors.dart';
 import 'package:zimvest/styles/styles.dart';
 import 'package:zimvest/utils/enums.dart';
 import 'package:zimvest/utils/margin.dart';
 import 'package:zimvest/utils/strings.dart';
+import 'package:zimvest/widgets/appbars.dart';
 import 'package:zimvest/widgets/buttons.dart';
 import 'package:zimvest/widgets/line_chart.dart';
 
-class InvestmentScreen extends StatefulWidget {
+class InvestmentDetailScreen extends StatefulWidget {
+  static Route<dynamic> route() {
+    return MaterialPageRoute(
+        builder: (_) => InvestmentDetailScreen(),
+        settings: RouteSettings(name: InvestmentDetailScreen().toStringShort()));
+  }
   @override
-  _InvestmentScreenState createState() => _InvestmentScreenState();
+  _InvestmentDetailScreenState createState() => _InvestmentDetailScreenState();
 }
 
-class _InvestmentScreenState extends State<InvestmentScreen> {
+class _InvestmentDetailScreenState extends State<InvestmentDetailScreen> {
   FlutterMoneyFormatter amount;
   ZimInvestmentType _zimType;
   bool showSavingsGraph = true;
   List<ZimInvestmentType> investmentList;
+
+  double completion = 37;
 
 
   @override
@@ -36,181 +44,195 @@ class _InvestmentScreenState extends State<InvestmentScreen> {
       ZimInvestmentType.HIGH_YIELD];
     _zimType = ZimInvestmentType.MUTUAL_FUNDS;
     amount = FlutterMoneyFormatter(
-        amount: 10000000, settings: MoneyFormatterSettings(fractionDigits: 0));
+        amount: 1000, settings: MoneyFormatterSettings(fractionDigits: 0));
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      floatingActionButton: Padding(
-        padding: const EdgeInsets.only(bottom: 100),
-        child: Fabmenuitems(
-            height: 150,
-            weith: 200,
-            animatedIcons: AnimatedIcons.menu_close,
-            fabcolor: AppColors.kAccentColor,
-            containercolor: AppColors.kPrimaryColor.withOpacity(0.6),
-            childrens: <Widget>[
-              FabItem(item: "New Mutual funds",onTap: (){
-                Navigator.of(context).push(InvestInMutualScreen.route());
-              },),
-              FabItem(item: "New Direct Fixed income sales",onTap: (){
-      Navigator.of(context).push(InvestInDirectScreen.route());
-      }),
-              FabItem(item: "New Zimvest yield",onTap: (){
-                Navigator.of(context).push(InvestInHighScreen.route());
-              }),
-            ]),
+      appBar: ZimAppBar(
+        title: "Zimvest Money Market Fund",
       ),
       body: Container(
         color: AppColors.kBg,
-        child: SafeArea(
-          child: CustomScrollView(
-            slivers: [
-              SliverList(
-                delegate: SliverChildListDelegate([
-                  Row(
+        child: CustomScrollView(
+          slivers: [
+            SliverList(
+              delegate: SliverChildListDelegate([
+
+                YMargin(15),
+                Container(
+                  margin: EdgeInsets.symmetric(horizontal: 20),
+                  padding: EdgeInsets.all(16),
+                  height: 140,
+                  decoration: BoxDecoration(
+                    color: AppColors.kPrimaryColor,
+                    borderRadius: BorderRadius.circular(5)
+                  ),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Spacer(),
-                      CircularProfileAvatar(
-                        AppStrings.avatar,
-                        radius: 17,
-                      ),
-                      XMargin(20)
-                    ],
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.only(left: 20),
-                    child: Text(
-                      "My Investments",
-                      style: TextStyle(
-                          fontSize: 20,
-                          fontFamily: "Caros-Bold",
-                          color: Color(0xFF0b2328)),
-                    ),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.only(left: 20, top: 7),
-                    child: Text(
-                      "Here are the active instruments you are interested in",
-                      style: TextStyle(
-                          fontSize: 12,
-                          fontFamily: "Caros",
-                          color: Color(0xFF324d53)),
-                    ),
-                  ),
-                  YMargin(20),
-                  SingleChildScrollView(
-                    scrollDirection: Axis.horizontal,
-                    child: Row(
+                    Row(
                       children: [
-                        XMargin(10),
-                        ZimInVestSelectedButton(
-                          title: "Mutual Funds",
-                          onTap: () {
-                            setState(() {
-                              _zimType = ZimInvestmentType.MUTUAL_FUNDS;
-                            });
-                          },
-                          type: ZimInvestmentType.MUTUAL_FUNDS,
-                          selectedType: _zimType,
+                        Text(
+                          "Zimvest wealth balance",
+                          style: TextStyle(fontSize: 11, color: Color(0xFFa2bdc3)),
                         ),
-                        ZimInVestSelectedButton(
-                          title: "Fixed Income",
-                          onTap: () {
-                            setState(() {
-                              _zimType = ZimInvestmentType.FIXED;
-                            });
-                          },
-                          type: ZimInvestmentType.FIXED,
-                          selectedType: _zimType,
-                        ),
-                        ZimInVestSelectedButton(
-                          title: "Zimvest high yield",
-                          onTap: () {
-                            setState(() {
-                              _zimType = ZimInvestmentType.HIGH_YIELD;
-                            });
-                          },
-                          type:ZimInvestmentType.HIGH_YIELD,
-                          selectedType: _zimType,
+                        Spacer(),
+                        SizedBox(
+                          width: 115,
+                          child: Text(
+                            "Joined 25 March, 2020",
+                            style: TextStyle(fontSize: 10, color: Color(0xFFa2bdc3)),
+                          ),
                         ),
                       ],
                     ),
-                  ),
-                  YMargin(15),
-                  Container(
-                    height: 140,
-                    width: double.infinity,
-                    child: buildListView(),
-                  ),
-                  YMargin(20),
-
-                  _buildSavingsActivities(),
-                  YMargin(20),
-                ]),
-              ),
-              SliverList(
-                delegate: SliverChildListDelegate(List.generate(
-                    4,
-                    (index) => Container(
-                          decoration: BoxDecoration(
-                              border: Border(
-                                  bottom: BorderSide(
-                                      width: .5, color: AppColors.kLightText))),
-                          margin: EdgeInsets.symmetric(horizontal: 20),
-                          height: 55,
-                          child: Row(
-                            children: [
-                              Column(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Text(
-                                    "Wealth Box",
-                                    style: TextStyle(
-                                        color: Color(0xFF324d53), fontSize: 12),
-                                  ),
-                                  YMargin(5),
-                                  Text(
-                                    "Mon, April 13 2020",
-                                    style: TextStyle(
-                                        fontSize: 10,
-                                        color: AppColors.kLightText2),
-                                  )
-                                ],
-                              ),
-                              Spacer(),
-                              Column(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                crossAxisAlignment: CrossAxisAlignment.end,
-                                children: [
-                                  Text(
-                                    "450.00",
-                                    style: TextStyle(
-                                        fontSize: 12, color: AppColors.kGreen),
-                                  ),
-                                  YMargin(5),
-                                  Text(
-                                    "Successful",
-                                    style: TextStyle(
-                                        fontSize: 10,
-                                        color: AppColors.kLightText2),
-                                  )
-                                ],
-                              )
-                            ],
+                    YMargin(5),
+                    Text(
+                      amount.output.symbolOnLeft,
+                      style: TextStyle(
+                          fontSize: 16,
+                          fontFamily: "Caros-Medium",
+                          color: AppColors.kWhite),
+                    ),
+                      Spacer(),
+                      Row(
+                        children: [
+                          Text("90 day average yield",
+                            style: TextStyle(
+                                fontSize: 10,
+                                color: AppColors.kWhite),),
+                          XMargin(10),
+                          Text("9%",
+                            style: TextStyle(
+                                fontSize: 12,
+                                fontFamily: "Caros-Medium",
+                                color: AppColors.kWhite),),
+                        ],
+                      ),
+                      YMargin(10),
+                      ClipRRect(
+                        borderRadius: BorderRadius.circular(7),
+                        child: LinearProgressIndicator(
+                          minHeight: 6,
+                          backgroundColor: Color(0xFFfcf8ee),
+                          value: completion / 100,
+                          valueColor: AlwaysStoppedAnimation<Color>(AppColors.kAccentColor),
+                        ),
+                      ),
+                      YMargin(11),
+                      Row(
+                        children: [
+                          Text(
+                            "25 days",
+                            style: TextStyle(fontSize: 8, color: AppColors.kLightTitleText),
                           ),
-                        ))),
-              ),
-              SliverToBoxAdapter(
-                child: SizedBox(
-                  height: 60,
+                          Text(
+                            " /100 days",
+                            style: TextStyle(
+                                fontSize: 12,
+                                fontFamily: "Caros-Medium",
+                                color: AppColors.kWhite),
+                          ),
+                          Spacer(),
+                          Text(
+                            "${completion}% Complete",
+                            style:
+                            TextStyle(color: AppColors.kWhite, fontSize: 8),
+                          ),
+                        ],
+                      )
+                  ],),
                 ),
-              )
-            ],
-          ),
+                YMargin(10),
+                Padding(
+                  padding: const EdgeInsets.only(left: 20),
+                  child: Row(
+                    children: [
+                      SavingsActionWidget(
+                        title: "Add funds",
+                        onTap: (){
+                          Navigator.of(context).push(AddFundScreen.route());
+                        },
+                      ),
+                      XMargin(5),
+                      SavingsActionWidget(
+                        title: "Withdraw",
+                        onTap: (){
+                          Navigator.of(context).push(WithdrawFundScreen.route());
+                        },
+                      )
+                    ],
+                  ),
+                ),
+                YMargin(20),
+
+                _buildSavingsActivities(),
+
+                YMargin(20),
+              ]),
+            ),
+            SliverList(
+              delegate: SliverChildListDelegate(List.generate(
+                  4,
+                  (index) => Container(
+                        decoration: BoxDecoration(
+                            border: Border(
+                                bottom: BorderSide(
+                                    width: .5, color: AppColors.kLightText))),
+                        margin: EdgeInsets.symmetric(horizontal: 20),
+                        height: 55,
+                        child: Row(
+                          children: [
+                            Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  "Wealth Box",
+                                  style: TextStyle(
+                                      color: Color(0xFF324d53), fontSize: 12),
+                                ),
+                                YMargin(5),
+                                Text(
+                                  "Mon, April 13 2020",
+                                  style: TextStyle(
+                                      fontSize: 10,
+                                      color: AppColors.kLightText2),
+                                )
+                              ],
+                            ),
+                            Spacer(),
+                            Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              crossAxisAlignment: CrossAxisAlignment.end,
+                              children: [
+                                Text(
+                                  "450.00",
+                                  style: TextStyle(
+                                      fontSize: 12, color: AppColors.kGreen),
+                                ),
+                                YMargin(5),
+                                Text(
+                                  "Successful",
+                                  style: TextStyle(
+                                      fontSize: 10,
+                                      color: AppColors.kLightText2),
+                                )
+                              ],
+                            )
+                          ],
+                        ),
+                      ))),
+            ),
+            SliverToBoxAdapter(
+              child: SizedBox(
+                height: 60,
+              ),
+            )
+          ],
         ),
       ),
     );
@@ -477,21 +499,16 @@ class InvestmentDetailContainer extends StatelessWidget {
                     ),
                   ),
                   Spacer(),
-                  InkWell(
-                    onTap: (){
-                      Navigator.of(context).push(InvestmentDetailScreen.route());
-                    },
-                    child: SizedBox(
-                      width: 85,
-                      child: Row(
-                        children: [
-                          Text(
-                            "View details",
-                            style: TextStyle(fontSize: 10, color: AppColors.kAccentColor),
-                          ),
-                          Icon(Icons.navigate_next, color: AppColors.kAccentColor,)
-                        ],
-                      ),
+                  SizedBox(
+                    width: 85,
+                    child: Row(
+                      children: [
+                        Text(
+                          "View details",
+                          style: TextStyle(fontSize: 10, color: AppColors.kAccentColor),
+                        ),
+                        Icon(Icons.navigate_next, color: AppColors.kAccentColor,)
+                      ],
                     ),
                   ),
                 ],

@@ -3,6 +3,7 @@ import 'package:circular_profile_avatar/circular_profile_avatar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:zimvest/screens/account/account_settings_screen.dart';
+import 'package:zimvest/screens/my_planner/target_planner.dart';
 import 'package:zimvest/screens/tabs.dart';
 import 'package:zimvest/styles/colors.dart';
 import 'package:zimvest/utils/margin.dart';
@@ -55,7 +56,9 @@ class _MenuContainerState extends State<MenuContainer> {
               ],),
               YMargin(0.08 * screenHeight),
               SideMenuItem(icon: "investments",title: "Investments",left:0.4*screenWidth ,),
-              SideMenuItem(icon: "planner",title: "My Planner",top: 25,left:0.4*screenWidth),
+              SideMenuItem(icon: "planner",title: "My Planner",top: 25,left:0.4*screenWidth,onTap: (){
+                Navigator.of(context).push(TargetCalculator.route());
+              },),
               SideMenuItem(icon: "persona",title: "Investment Persona Analysis",top: 25,left:0.4*screenWidth),
               SideMenuItem(icon: "service",title: "Service Request",top: 25,left:0.4*screenWidth),
               SideMenuItem(icon: "cards",title: "Cards and banks",top: 25,left:0.4*screenWidth),

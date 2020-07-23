@@ -163,7 +163,8 @@ class OutlinePrimaryButton extends StatelessWidget {
           child: RaisedButton(
             elevation: 1,
             shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(5)
+                borderRadius: BorderRadius.circular(5),
+              side: BorderSide(color: borderColor,width: .8)
             ),
             onPressed: onPressed,
             child: loading == true
