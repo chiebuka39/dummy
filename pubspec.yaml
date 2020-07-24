@@ -48,6 +48,7 @@ dependencies:
   animations: ^1.1.1
   modal_bottom_sheet: ^0.2.0+1
 
+
 dependency_overrides:
   path: 1.7.0
 
