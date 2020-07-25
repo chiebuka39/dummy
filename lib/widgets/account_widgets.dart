@@ -105,11 +105,14 @@ class TextWidgetBorder extends StatelessWidget {
   final double bottomMargin;
   final Color textColor;
   final double labelSize;
+  final TextInputType keyboardType;
   const TextWidgetBorder({
     Key key, this.title,
     this.onChange,
     this.error = false,
-    this.textColor = Colors.white, this.labelSize = 12, this.bottomMargin = 20,
+    this.textColor = Colors.white,
+    this.labelSize = 12, this.bottomMargin = 20,
+    this.keyboardType = TextInputType.text,
   }) : super(key: key);
 
   @override
@@ -131,7 +134,7 @@ class TextWidgetBorder extends StatelessWidget {
                 borderRadius: BorderRadius.circular(4)),
             child: TextFormField(
               onChanged: onChange,
-              keyboardType: TextInputType.emailAddress,
+              keyboardType: keyboardType,
               style: TextStyle(color: AppColors.kAccountTextColor),
               decoration: InputDecoration(
                   contentPadding: EdgeInsets.only(left: 10, bottom: 5),
@@ -479,6 +482,7 @@ class LoginPasswordWidget extends StatelessWidget {
                 border: Border.all(color: error == true? Colors.redAccent : Colors.transparent),
                 borderRadius: BorderRadius.circular(4)),
             child: TextFormField(
+              onChanged: onChange,
               keyboardType: TextInputType.emailAddress,
               style: TextStyle(color: AppColors.kAccountTextColor),
               decoration: InputDecoration(

@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="344" height="171" viewBox="0 0 344 171">
+    <g id="Group_347" data-name="Group 347" transform="translate(-16 -424)">
+        <rect id="Rectangle_Copy_2" width="344" height="171" fill="#cbaa4d" data-name="Rectangle Copy 2" rx="10" transform="translate(16 424)"/>
+        <path id="Path_2538" fill="#324d53" d="M212.672 11.5L344 101H0z" data-name="Path 2538" transform="rotate(180 180 268)"/>
+        <path id="Path_2539" fill="#0a3037" d="M226.245-16.375L344 90.052H0z" data-name="Path 2539" transform="translate(16 494)"/>
+        <rect id="Rectangle_Copy_2-2" width="344" height="171" fill="#f8fbfb" data-name="Rectangle Copy 2" rx="10" transform="translate(16 424)"/>
+        <g id="Group_7" data-name="Group 7" transform="translate(30 424)">
+            <path id="Path" fill="rgba(255,255,255,0)" d="M62 31A31 31 0 0 1 6.735 50.294q-.624-.784-1.2-1.608A31 31 0 1 1 62 31z"/>
+            <circle id="Oval" cx="15.979" cy="15.979" r="15.979" fill="#ee0005" transform="translate(5.086 15.015)"/>
+            <circle id="Oval-2" cx="15.979" cy="15.979" r="15.979" fill="#f9a000" data-name="Oval" transform="translate(24.939 15.015)"/>
+            <path id="Path-2" fill="#ff6300" d="M0 12.522a15.949 15.949 0 0 0 6.053 12.521 15.95 15.95 0 0 0 6.053-12.522A15.949 15.949 0 0 0 6.053 0 15.95 15.95 0 0 0 0 12.522z" data-name="Path" transform="translate(24.939 18.473)"/>
+        </g>
+    </g>
+</svg>

@@ -2,6 +2,7 @@ import 'package:dio/dio.dart';
 import 'package:zimvest/data/models/user.dart';
 import 'package:zimvest/locator.dart';
 import 'package:zimvest/utils/result.dart';
+import 'package:zimvest/utils/strings.dart';
 
 abstract class ABSIdentityService{
   Future<Result<User>> login({String email, String password});
@@ -32,11 +33,26 @@ class IdentityService extends ABSIdentityService{
       'password':password
     };
 
-    var url = "";
+    var url = "${AppStrings.baseUrl}zimvest.services.identity/api/Account/login";
+    print("lll $body");
+    print("lll $url");
     try{
       var response = await dio.post(url, data: body);
+      final int statusCode = response.statusCode;
+      var response1 = response.data;
+      print("iii ${response1}");
+
+      if (statusCode != 200) {
+        result.errorMessage = response1['message'];
+        result.error = true;
+      }else {
+        result.error = false;
+        var user = User.fromJson(response1['data']);
+        result.data = user;
+      }
 
     }on DioError catch(e){
+      print("error $e");
       result.error = true;
     }
 
