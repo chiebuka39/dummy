@@ -1,7 +1,13 @@
+import 'dart:io';
+
 import 'package:circular_profile_avatar/circular_profile_avatar.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:hive/hive.dart';
+import 'package:zimvest/data/models/secondary_state.dart';
 import 'package:zimvest/screens/account/account_settings_screen.dart';
+import 'package:zimvest/screens/account/login_screen.dart';
 import 'package:zimvest/screens/banks_cards/manage_banks_cards.dart';
 import 'package:zimvest/screens/my_planner/target_planner.dart';
 import 'package:zimvest/screens/tabs.dart';
@@ -116,6 +122,9 @@ class _MenuContainerState extends State<MenuContainer> {
                   SideMenuItem(
                     icon: "logout",
                     title: "Logout",
+                    onTap: (){
+                      _showConfirmLogoutDialog(context);
+                    },
                     top: 25,
                     left: 0.4 * screenWidth,
                     color: AppColors.kRed,
@@ -155,6 +164,70 @@ class _MenuContainerState extends State<MenuContainer> {
       ),
     );
   }
+
+  void _showConfirmLogoutDialog(BuildContext context) {
+    var content = new Text('Do you want to log out');
+    if (Platform.isIOS) {
+      showDialog(
+          context: context,
+          builder: (BuildContext context) {
+            return new CupertinoAlertDialog(
+              content: content,
+              actions: <Widget>[
+                new CupertinoDialogAction(
+                    child: const Text('Yes'),
+                    isDestructiveAction: true,
+                    onPressed: () {
+                      _logout(context);
+
+                    }),
+                new CupertinoDialogAction(
+                  child: const Text('No'),
+                  isDefaultAction: true,
+                  onPressed: () {
+                    Navigator.pop(context);
+                  },
+                ),
+              ],
+            );
+          });
+    } else {
+      showDialog(
+          context: context,
+          builder: (BuildContext context) {
+            return new AlertDialog(
+              content: content,
+              actions: <Widget>[
+                new FlatButton(
+                    onPressed: () {
+                      _logout(context);
+                    },
+                    child: new Text('Yes')),
+                new FlatButton(
+                    onPressed: () {
+                      Navigator.pop(context);
+                    },
+                    child: new Text('No'))
+              ],
+            );
+          });
+    }
+  }
+
+  void _logout(BuildContext context) {
+    final box = Hive.box(AppStrings.state);
+    box.put("user", null);
+    box.put("state", SecondaryState(false));
+
+
+
+    Navigator.of(context, rootNavigator: true).pop();
+    Navigator.pushAndRemoveUntil(
+        context,
+        MaterialPageRoute(builder: (context) => LoginScreen()),
+            (Route<dynamic> route) => false);
+  }
+
 }
 
 class SideMenuItem extends StatelessWidget {

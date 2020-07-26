@@ -4,9 +4,11 @@ import 'package:circular_profile_avatar/circular_profile_avatar.dart';
 import 'package:dots_indicator/dots_indicator.dart';
 import 'package:flutter/material.dart';
 
-import 'package:flutter/material.dart';
+
 import 'package:flutter_money_formatter/flutter_money_formatter.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:sa_multi_tween/sa_multi_tween.dart';
+import 'package:simple_animations/simple_animations.dart';
 import 'package:zimvest/styles/colors.dart';
 import 'package:zimvest/styles/styles.dart';
 import 'package:zimvest/utils/enums.dart';
@@ -17,6 +19,11 @@ import 'package:zimvest/widgets/buttons.dart';
 import 'package:zimvest/widgets/circular_progress.dart';
 import 'package:zimvest/widgets/donut_chart.dart';
 import 'package:zimvest/widgets/generic_widgets.dart';
+import 'package:supercharged/supercharged.dart';
+
+
+
+enum AniProps { offset, opacity }
 
 class DashboardScreen extends StatefulWidget {
   @override
@@ -61,8 +68,187 @@ class _DashboardScreenState extends State<DashboardScreen> {
     super.initState();
   }
 
+  final _tween = MultiTween<AniProps>()
+    ..add(AniProps.opacity, 0.0.tweenTo(1.0), 300.milliseconds)
+    ..add(
+      // top left => top right
+        AniProps.offset,
+        Tween(begin: Offset(0, 0), end: Offset(0, -20)),
+        300.milliseconds, Curves.easeInOutSine);
+
   @override
   Widget build(BuildContext context) {
+    return PlayAnimation<MultiTweenValues<AniProps>>(
+      tween: _tween,
+      duration: _tween.duration,
+      builder: (context, child, value){
+        return Column(
+          children: [
+            Container(
+              height: 255,
+              child: PageView(
+                controller: headerController,
+                children: [
+                  HeaderPage(
+                    showLastWidget: false,
+                    amount: amount,
+                    moveToNext: () {
+                      headerController.animateToPage(1,
+                          duration: Duration(milliseconds: 300),
+                          curve: Curves.easeIn);
+                    },
+                    title: "Total Portfolio balance",
+
+                    bg: "header_bg",
+                  ),
+                  HeaderPage(
+                    amount: amount,
+                    moveToPrev: () {
+                      headerController.animateToPage(0,
+                          duration: Duration(milliseconds: 300),
+                          curve: Curves.easeIn);
+                    },
+                    moveToNext: (){
+                      headerController.animateToPage(2,
+                          duration: Duration(milliseconds: 300), curve: Curves.easeIn);
+                    },
+                  ),
+                  HeaderPage(
+
+                    amount: amount,
+                    moveToPrev: () {
+                      headerController.animateToPage(1,
+                          duration: Duration(milliseconds: 300),
+                          curve: Curves.easeIn);
+                    },
+                    moveToNext: (){
+                      headerController.animateToPage(3,
+                          duration: Duration(milliseconds: 300), curve: Curves.easeIn);
+                    },
+                    title: "My Naira portfolio balance",
+                  ),
+                  HeaderPage(
+
+                    amount: amount,
+                    moveToPrev: () {
+                      headerController.animateToPage(1,
+                          duration: Duration(milliseconds: 300),
+                          curve: Curves.easeIn);
+                    },
+                    title: "My wallet balance",
+                  ),
+                ],
+              ),
+            ),
+            Expanded(
+              child: Transform.translate(
+                offset: value.get(AniProps.offset),
+                child: Container(
+                  width: double.infinity,
+                  decoration: BoxDecoration(
+                      color: AppColors.kLightBG,
+                      borderRadius: BorderRadius.only(
+                          topLeft: Radius.circular(15),
+                          topRight: Radius.circular(16))),
+                  child: Opacity(
+                    opacity: value.get(AniProps.opacity),
+                    child: ListView(
+                      padding: EdgeInsets.only(top: 5),
+                      children: [
+                        _buildZimSelector(),
+                        YMargin(5),
+                        _buildZimSelectedDetails(),
+                        YMargin(6),
+                        _buildZimDots(),
+                        YMargin(20),
+                        Container(
+                          height: 200,
+                          width: double.infinity,
+                          child: PageView(
+                            physics: NeverScrollableScrollPhysics(),
+                            controller: thirdController,
+                            children: [
+                              Row(
+                                children: [
+                                  Opacity(
+                                      opacity: 0,
+                                      child: IconButton(
+                                        icon: Icon(Icons.arrow_back_ios),
+                                        onPressed: () {},
+                                      )),
+                                  Spacer(),
+                                  Container(
+                                      height: 200,
+                                      width: 200,
+                                      child: DonutPieChart.withSampleData()),
+                                  Spacer(),
+                                  IconButton(
+                                    icon: Icon(Icons.arrow_forward_ios),
+                                    onPressed: () {
+                                      print("ooo");
+                                      thirdController.animateToPage(1,
+                                          duration: Duration(milliseconds: 300),
+                                          curve: Curves.easeIn);
+                                    },
+                                  )
+                                ],
+                              ),
+                              Row(
+                                children: [
+                                  IconButton(
+                                    icon: Icon(Icons.arrow_back_ios),
+                                    onPressed: () {
+                                      thirdController.animateToPage(0,
+                                          duration: Duration(milliseconds: 300),
+                                          curve: Curves.easeIn);
+                                    },
+                                  ),
+                                  Spacer(),
+                                  Container(
+                                      height: 200,
+                                      width: 250,
+                                      child: SimpleBarChart.withSampleData()),
+                                  Spacer(),
+                                  Opacity(
+                                    opacity: 0,
+                                    child: IconButton(
+                                      icon: Icon(Icons.arrow_forward_ios),
+                                      onPressed: () {
+                                        print("ooo");
+                                        thirdController.animateToPage(1,
+                                            duration: Duration(milliseconds: 300),
+                                            curve: Curves.easeIn);
+                                      },
+                                    ),
+                                  )
+                                ],
+                              ),
+                            ],
+                          ),
+                        ),
+                        Container(
+                          height: 160,
+                          child: PageView(
+                            controller: secondController,
+                            scrollDirection: Axis.horizontal,
+                            children: [
+                              SecondaryActivityWidget(),
+                              SecondaryActivityWidget(
+                                bg: AppColors.kAccentColor,
+                              )
+                            ],
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              ),
+            )
+          ],
+        );
+      },
+    );
     return Column(
       children: [
         Container(

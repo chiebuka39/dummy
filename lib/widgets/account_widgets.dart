@@ -1,6 +1,6 @@
 import 'dart:io';
 
-import 'package:custom_dropdown/custom_dropdown.dart';
+import 'package:password_criteria/bloc/password_strength/password_strength_bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:image_picker/image_picker.dart';
@@ -9,18 +9,22 @@ import 'package:zimvest/screens/account/creat_account_screen.dart';
 import 'package:zimvest/styles/colors.dart';
 import 'package:zimvest/utils/app_utils.dart';
 import 'package:zimvest/utils/margin.dart';
+import "package:flutter_bloc/flutter_bloc.dart";
 
 class TextWidget extends StatelessWidget {
   final ValueChanged<String> onChange;
   final String title;
   final bool error;
+  final TextInputType textInputType;
   final Color textColor;
   const TextWidget({
-    Key key, this.title, this.onChange, this.error = false, this.textColor = Colors.white,
+    Key key, this.title, this.onChange, this.error = false,
+    this.textColor = Colors.white,this.textInputType = TextInputType.text
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
+    print("this is erro $error");
     return Container(height: 90,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -38,7 +42,7 @@ class TextWidget extends StatelessWidget {
                 borderRadius: BorderRadius.circular(4)),
             child: TextFormField(
               onChanged: onChange,
-              keyboardType: TextInputType.emailAddress,
+              keyboardType: textInputType,
               style: TextStyle(color: AppColors.kAccountTextColor),
               decoration: InputDecoration(
                   contentPadding: EdgeInsets.only(left: 10, bottom: 5),
@@ -408,52 +412,131 @@ class EmailWidget extends StatelessWidget {
         ],),);
   }
 }
-class PasswordWidget extends StatelessWidget {
+class PasswordWidget extends StatefulWidget {
   final String title;
+  final Function onChange;
   const PasswordWidget({
-    Key key, this.title,
+    Key key, this.title, this.onChange,
   }) : super(key: key);
 
   @override
+  _PasswordWidgetState createState() => _PasswordWidgetState();
+}
+
+class _PasswordWidgetState extends State<PasswordWidget> {
+  String password = "";
+  bool isValidPassword = false;
+  bool islowerCase = false;
+  bool isuperCase = false;
+  bool isnumber = false;
+  bool isEightChar = false;
+  bool isspecialChar = false;
+  bool ispattern = false;
+  String isVisible;
+  PasswordStrengthBloc passwordStrengthBloc = PasswordStrengthBloc();
+  @override
   Widget build(BuildContext context) {
-    return Container(height: 115,
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(
-            title,
-            style: TextStyle(color: Colors.white, fontSize: 12),
-          ),
-          YMargin(8),
-          Container(
-            height: 45,
-            decoration: BoxDecoration(
-                color: AppColors.kLightText,
-                borderRadius: BorderRadius.circular(4)),
-            child: TextFormField(
-              keyboardType: TextInputType.emailAddress,
-              style: TextStyle(color: AppColors.kAccountTextColor),
-              decoration: InputDecoration(
-                  contentPadding: EdgeInsets.only(left: 10, bottom: 5),
-                  hintText: "",
-                  border: InputBorder.none,
-                  hintStyle: TextStyle(fontSize: 14)),
-            ),
-          ),
-          YMargin(5),
-          SingleChildScrollView(
-            scrollDirection: Axis.horizontal,
-            child: Row(
+    passwordStrengthBloc.add(OnTextChangedEvent(text: password));
+    return BlocListener<PasswordStrengthBloc,PasswordStrengthState>(
+      listener: (context,state){
+        if (state is OnTextChangedState) {
+          isVisible = state.text;
+          passwordStrengthBloc.add(PasswordRegEx(passwordtext: state.text));
+        }
+        if (state is ValidPassword) {
+          isValidPassword = true;
+          islowerCase = true;
+          isuperCase = true;
+          isnumber = true;
+          isEightChar = true;
+          isspecialChar = true;
+          ispattern = true;
+        }
+        if (state is InvalidPassword) {
+          isValidPassword = state.isInvalidPassword;
+          if (state.passwordValidation['lowerCase'] != null &&
+              state.passwordValidation['lowerCase']) {
+            islowerCase = true;
+          } else {
+            islowerCase = false;
+          }
+          if (state.passwordValidation['upperCase'] != null &&
+              state.passwordValidation['upperCase']) {
+            isuperCase = true;
+          } else {
+            isuperCase = false;
+          }
+          if (state.passwordValidation['specialChar'] != null &&
+              state.passwordValidation['specialChar']) {
+            isspecialChar = true;
+          } else {
+            isspecialChar = false;
+          }
+          if (state.passwordValidation['minEightChar'] != null &&
+              state.passwordValidation['minEightChar']) {
+            isEightChar = true;
+          } else {
+            isEightChar = false;
+          }
+          if (state.passwordValidation['oneNumber'] != null &&
+              state.passwordValidation['oneNumber']) {
+            isnumber = true;
+          } else {
+            isnumber = false;
+          }
+        }
+      },
+      bloc:passwordStrengthBloc,
+      child:BlocBuilder<PasswordStrengthBloc, PasswordStrengthState>(
+        builder:(context, state){
+          return Container(height: 115,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                PasswordValidity(),
-                PasswordValidity(isValid: false,),
-                PasswordValidity(isValid: false,),
-                PasswordValidity(),
-              ],
-            ),
-          ),
-          YMargin(20)
-        ],),);
+                Text(
+                  widget.title,
+                  style: TextStyle(color: Colors.white, fontSize: 12),
+                ),
+                YMargin(8),
+                Container(
+                  height: 45,
+                  decoration: BoxDecoration(
+                      color: AppColors.kLightText,
+                      borderRadius: BorderRadius.circular(4)),
+                  child: TextFormField(
+                    keyboardType: TextInputType.text,
+                    onChanged: (value){
+                      setState(() {
+                        password = value;
+                      });
+                      widget.onChange(password,isValidPassword);
+                    },
+                    style: TextStyle(color: AppColors.kAccountTextColor),
+                    decoration: InputDecoration(
+                        contentPadding: EdgeInsets.only(left: 10, bottom: 5),
+                        hintText: "",
+                        border: InputBorder.none,
+                        hintStyle: TextStyle(fontSize: 14)),
+                  ),
+                ),
+                YMargin(5),
+                SingleChildScrollView(
+                  scrollDirection: Axis.horizontal,
+                  child: Row(
+                    children: [
+                      PasswordValidity(isValid: isEightChar,),
+                      PasswordValidity(isValid: isuperCase,value: "Uppercase",),
+                      PasswordValidity(isValid: islowerCase,value: "Lowercase",),
+                      PasswordValidity(value: "Symbol",isValid: isspecialChar,),
+                    ],
+                  ),
+                ),
+                YMargin(20)
+              ],),);
+        },
+        bloc:passwordStrengthBloc,
+      )
+    );
   }
 }
 class LoginPasswordWidget extends StatelessWidget {

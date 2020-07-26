@@ -9,18 +9,23 @@ class ScreenContainer extends StatefulWidget {
   final bool newSignUp;
   final Function handleMoreClicked;
 
-  const ScreenContainer({Key key, this.newSignUp, this.handleMoreClicked}) : super(key: key);
-  static Route<dynamic> route({bool newSignUp = false, Function handleMoreClicked }) {
+  const ScreenContainer({Key key, this.newSignUp, this.handleMoreClicked})
+      : super(key: key);
+  static Route<dynamic> route(
+      {bool newSignUp = false, Function handleMoreClicked}) {
     return MaterialPageRoute(
-        builder: (_) => ScreenContainer(newSignUp: newSignUp,handleMoreClicked: handleMoreClicked,),
+        builder: (_) => ScreenContainer(
+              newSignUp: newSignUp,
+              handleMoreClicked: handleMoreClicked,
+            ),
         settings: RouteSettings(name: ScreenContainer().toStringShort()));
   }
+
   @override
   _ScreenContainerState createState() => _ScreenContainerState();
 }
 
 class _ScreenContainerState extends State<ScreenContainer> {
-
   bool isCollapsed = true;
   double screenWidth, screenHieght;
 
@@ -30,11 +35,8 @@ class _ScreenContainerState extends State<ScreenContainer> {
     InvestmentScreen()
   ];
 
-
-
   // initial index of the bottom nav
   int _currentIndex = 0;
-
 
   @override
   void initState() {
@@ -43,11 +45,8 @@ class _ScreenContainerState extends State<ScreenContainer> {
 
   @override
   Widget build(BuildContext context) {
-
     return Container(
-        decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(20)
-    ),
+        decoration: BoxDecoration(borderRadius: BorderRadius.circular(20)),
         child: Stack(
           children: [
             _screenWidgetList.elementAt(_currentIndex),
@@ -60,48 +59,47 @@ class _ScreenContainerState extends State<ScreenContainer> {
                 child: Container(
                   height: 80,
                   color: AppColors.kPrimaryColor,
-                  padding: EdgeInsets.only(top: 20,),
+                  padding: EdgeInsets.only(
+                    top: 20,
+                  ),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceAround,
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: <Widget>[
                       BottomNavEntry(
-                        onTap: (){
+                        onTap: () {
                           setState(() {
                             _currentIndex = 0;
                           });
                         },
                         title: 'Dashboard',
-                        image : "home",
+                        image: "home",
                         isSelected: _currentIndex == 0 ? true : false,
                       ),
-
                       BottomNavEntry(
-                        onTap: (){
+                        onTap: () {
                           setState(() {
                             _currentIndex = 1;
                           });
                         },
                         title: 'Savings',
-                        image : "savings",
+                        image: "savings",
                         isSelected: _currentIndex == 1 ? true : false,
                       ),
-
                       BottomNavEntry(
-                        onTap: (){
+                        onTap: () {
                           setState(() {
                             _currentIndex = 2;
                           });
                         },
                         title: 'Investments',
-                        image : "investments",
+                        image: "investments",
                         isSelected: _currentIndex == 2 ? true : false,
                       ),
                       BottomNavEntry(
                         onTap: widget.handleMoreClicked,
                         title: 'More',
-                        image : "more",
-
+                        image: "more",
                         isSelected: false,
                       ),
                     ],
@@ -110,8 +108,6 @@ class _ScreenContainerState extends State<ScreenContainer> {
               ),
             )
           ],
-        )
-    );
+        ));
   }
 }
-
