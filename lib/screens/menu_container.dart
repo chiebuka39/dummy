@@ -5,7 +5,9 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:hive/hive.dart';
+import 'package:provider/provider.dart';
 import 'package:zimvest/data/models/secondary_state.dart';
+import 'package:zimvest/data/view_models/identity_view_model.dart';
 import 'package:zimvest/screens/account/account_settings_screen.dart';
 import 'package:zimvest/screens/account/login_screen.dart';
 import 'package:zimvest/screens/banks_cards/manage_banks_cards.dart';
@@ -27,11 +29,13 @@ class MenuContainer extends StatefulWidget {
 }
 
 class _MenuContainerState extends State<MenuContainer> {
+  ABSIdentityViewModel _identityViewModel;
   bool isCollapsed = false;
   double screenWidth, screenHeight;
 
   @override
   Widget build(BuildContext context) {
+    _identityViewModel = Provider.of(context);
     Size size = MediaQuery.of(context).size;
     screenHeight = size.height;
     screenWidth = size.width;
@@ -53,7 +57,7 @@ class _MenuContainerState extends State<MenuContainer> {
                       ),
                       XMargin(18),
                       Text(
-                        "Marie Mathews",
+                        _identityViewModel.user.fullname,
                         style: TextStyle(color: AppColors.kWhite, fontSize: 15),
                       ),
                       Spacer(),
@@ -72,11 +76,12 @@ class _MenuContainerState extends State<MenuContainer> {
                   ),
                   YMargin(0.08 * screenHeight),
                   SideMenuItem(
-                    icon: "investments",
-                    title: "Investments",
+                    icon: "wallet",
+                    title: "My wallet",
                     left: 0.4 * screenWidth,
                   ),
                   SideMenuItem(
+                    hasDropdown: true,
                     icon: "planner",
                     title: "My Planner",
                     top: 25,
@@ -104,6 +109,15 @@ class _MenuContainerState extends State<MenuContainer> {
                       Navigator.of(context).push(ManageCardsAndBank.route());
                     },
                   ),
+                  SideMenuItem(
+                    icon: "transaction_history",
+                    title: "Transaction history",
+                    top: 25,
+                    left: 0.4 * screenWidth,
+                    onTap: () {
+                      Navigator.of(context).push(ManageCardsAndBank.route());
+                    },
+                  ),
                   Spacer(),
                   SideMenuItem(
                     icon: "account",
@@ -122,7 +136,7 @@ class _MenuContainerState extends State<MenuContainer> {
                   SideMenuItem(
                     icon: "logout",
                     title: "Logout",
-                    onTap: (){
+                    onTap: () {
                       _showConfirmLogoutDialog(context);
                     },
                     top: 25,
@@ -179,7 +193,6 @@ class _MenuContainerState extends State<MenuContainer> {
                     isDestructiveAction: true,
                     onPressed: () {
                       _logout(context);
-
                     }),
                 new CupertinoDialogAction(
                   child: const Text('No'),
@@ -219,23 +232,21 @@ class _MenuContainerState extends State<MenuContainer> {
     box.put("user", null);
     box.put("state", SecondaryState(false));
 
-
-
     Navigator.of(context, rootNavigator: true).pop();
     Navigator.pushAndRemoveUntil(
         context,
         MaterialPageRoute(builder: (context) => LoginScreen()),
-            (Route<dynamic> route) => false);
+        (Route<dynamic> route) => false);
   }
-
 }
 
-class SideMenuItem extends StatelessWidget {
+class SideMenuItem extends StatefulWidget {
   final String title;
   final String icon;
   final double top;
   final double left;
   final Color color;
+  final bool hasDropdown;
   final VoidCallback onTap;
   const SideMenuItem({
     Key key,
@@ -245,32 +256,101 @@ class SideMenuItem extends StatelessWidget {
     this.left = 200,
     this.color = AppColors.kWhite,
     this.onTap,
+    this.hasDropdown = false,
   }) : super(key: key);
 
   @override
+  _SideMenuItemState createState() => _SideMenuItemState();
+}
+
+class _SideMenuItemState extends State<SideMenuItem> {
+  bool showDropdown = false;
+  @override
   Widget build(BuildContext context) {
+    print("has drop down ${widget.hasDropdown} -- ${widget.title.length}");
     return InkWell(
-      onTap: onTap,
+      onTap: widget.hasDropdown ?(){
+        setState(() {
+          showDropdown = !showDropdown;
+        });
+      } : widget.onTap,
       child: Container(
-        margin: EdgeInsets.only(top: top),
+        margin: EdgeInsets.only(top: widget.top),
         padding: EdgeInsets.symmetric(vertical: 5),
-        child: Row(
+        child: Column(
           children: [
-            XMargin(left),
-            SvgPicture.asset(
-              "images/$icon.svg",
-              color: color,
+            Row(
+              children: [
+                XMargin(widget.left),
+                SvgPicture.asset(
+                  "images/${widget.icon}.svg",
+                  color: widget.color,
+                ),
+                XMargin(5),
+                SizedBox(
+                    width: widget.title.length < 11 ? 80 : 140,
+                    child: Text(
+                      widget.title,
+                      style: TextStyle(color: widget.color),
+                    )),
+                widget.hasDropdown
+                    ? showDropdown == true ?Icon(
+                  Icons.arrow_drop_down,
+                  size: 23,
+                  color: AppColors.kWhite,
+                ):  Icon(
+                        Icons.arrow_drop_up,
+                        size: 23,
+                        color: AppColors.kWhite,
+                      )
+                    : SizedBox()
+              ],
             ),
-            XMargin(5),
-            SizedBox(
-                width: 140,
-                child: Text(
-                  title,
-                  style: TextStyle(color: color),
-                ))
+            (widget.hasDropdown && showDropdown == true)
+                ? Padding(
+                    padding: const EdgeInsets.only(left: 140),
+                    child: Container(
+                        height: 90,
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            InkWell(
+                              onTap: () {
+                                print("index 1");
+                              },
+                              child: Padding(
+                                padding: const EdgeInsets.only(top: 15),
+                                child: Text(
+                                  "Statement of personal networth",
+                                  style: TextStyle(
+                                      fontSize: 12, color: AppColors.kWhite),
+                                ),
+                              ),
+                            ),
+                            Padding(
+                              padding: const EdgeInsets.only(top: 15),
+                              child: Text(
+                                "Target calculator",
+                                style: TextStyle(
+                                    fontSize: 12, color: AppColors.kWhite),
+                              ),
+                            ),
+                            Padding(
+                              padding: const EdgeInsets.only(top: 15),
+                              child: Text(
+                                "Investment goal calculator",
+                                style: TextStyle(
+                                    fontSize: 12, color: AppColors.kWhite),
+                              ),
+                            ),
+                          ],
+                        )),
+                  )
+                : SizedBox()
           ],
         ),
       ),
     );
   }
 }
+

@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:flutter/services.dart';
 import 'package:password_criteria/bloc/password_strength/password_strength_bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -139,6 +140,58 @@ class TextWidgetBorder extends StatelessWidget {
             child: TextFormField(
               onChanged: onChange,
               keyboardType: keyboardType,
+              style: TextStyle(color: AppColors.kAccountTextColor),
+              decoration: InputDecoration(
+                  contentPadding: EdgeInsets.only(left: 10, bottom: 5),
+                  hintText: "",
+                  border: InputBorder.none,
+                  hintStyle: TextStyle(fontSize: 14, color: AppColors.kLightText2)),
+            ),
+          ),
+          YMargin(bottomMargin)
+        ],),);
+  }
+}
+class CardWidgetBorder extends StatelessWidget {
+  final ValueChanged<String> onChange;
+  final String title;
+  final bool error;
+  final double bottomMargin;
+  final Color textColor;
+  final double labelSize;
+  final TextInputType keyboardType;
+
+  final List<TextInputFormatter> inputFormaters;
+  const CardWidgetBorder({
+    Key key, this.title,
+    this.onChange,
+    this.error = false,
+    this.textColor = Colors.white,
+    this.labelSize = 12, this.bottomMargin = 20,
+    this.keyboardType = TextInputType.text, this.inputFormaters,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(height: 70+bottomMargin,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            title,
+            style: TextStyle(color:error == true ?Colors.redAccent:  textColor, fontSize: labelSize),
+          ),
+          YMargin(8),
+          Container(
+            height: 45,
+            decoration: BoxDecoration(
+                color: Colors.transparent,
+                border: Border.all(color: error == true? Colors.redAccent : AppColors.kLightText),
+                borderRadius: BorderRadius.circular(4)),
+            child: TextFormField(
+              onChanged: onChange,
+              keyboardType: keyboardType,
+              inputFormatters: inputFormaters,
               style: TextStyle(color: AppColors.kAccountTextColor),
               decoration: InputDecoration(
                   contentPadding: EdgeInsets.only(left: 10, bottom: 5),
