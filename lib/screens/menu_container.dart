@@ -10,6 +10,7 @@ import 'package:zimvest/data/models/secondary_state.dart';
 import 'package:zimvest/data/view_models/identity_view_model.dart';
 import 'package:zimvest/screens/account/account_settings_screen.dart';
 import 'package:zimvest/screens/account/login_screen.dart';
+import 'package:zimvest/screens/analysis/investment_persona_screen.dart';
 import 'package:zimvest/screens/banks_cards/manage_banks_cards.dart';
 import 'package:zimvest/screens/my_planner/target_planner.dart';
 import 'package:zimvest/screens/tabs.dart';
@@ -93,6 +94,9 @@ class _MenuContainerState extends State<MenuContainer> {
                   SideMenuItem(
                       icon: "persona",
                       title: "Investment Persona Analysis",
+                      onTap: () {
+                        Navigator.of(context).push(InvestmentPersonaScreen.route());
+                      },
                       top: 25,
                       left: 0.4 * screenWidth),
                   SideMenuItem(

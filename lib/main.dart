@@ -4,6 +4,7 @@ import 'package:provider/provider.dart';
 import 'package:zimvest/data/local/user_local.dart';
 import 'package:zimvest/data/view_models/identity_view_model.dart';
 import 'package:zimvest/locator.dart';
+import 'package:zimvest/onboarding/onboarding_screen.dart';
 import 'package:zimvest/screens/account/login_screen.dart';
 import 'package:path_provider/path_provider.dart' as path_provider;
 import 'package:zimvest/screens/menu_container.dart';
@@ -48,7 +49,7 @@ class MyApp extends StatelessWidget {
 
           visualDensity: VisualDensity.adaptivePlatformDensity,
         ),
-        home:_localStorage.getSecondaryState().isLoggedIn == false ?  LoginScreen(): MenuContainer(),
+        home:_localStorage.getSecondaryState().isLoggedIn == false ?  OnboardingScreen(): MenuContainer(),
       ),
     );
   }
