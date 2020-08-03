@@ -1,6 +1,11 @@
+import 'package:after_layout/after_layout.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:provider/provider.dart';
 import 'package:zimvest/animations/pop_up_menu.dart';
+import 'package:zimvest/data/models/payment/bank.dart';
+import 'package:zimvest/data/view_models/identity_view_model.dart';
+import 'package:zimvest/data/view_models/payment_view_model.dart';
 import 'package:zimvest/screens/banks_cards/new_bank_screen.dart';
 import 'package:zimvest/screens/banks_cards/new_card_screen.dart';
 import 'package:zimvest/styles/colors.dart';
@@ -19,7 +24,10 @@ class ManageCardsAndBank extends StatefulWidget {
 }
 
 class _ManageCardsAndBankState extends State<ManageCardsAndBank>
-    with SingleTickerProviderStateMixin {
+    with SingleTickerProviderStateMixin, AfterLayoutMixin<ManageCardsAndBank> {
+  ABSPaymentViewModel paymentViewModel;
+  ABSIdentityViewModel identityViewModel;
+  List<Bank> banks;
   GlobalKey btnKey = GlobalKey();
   GlobalKey btnKey2 = GlobalKey();
   TabController _tabController;
@@ -35,7 +43,19 @@ class _ManageCardsAndBankState extends State<ManageCardsAndBank>
   }
 
   @override
+  void afterFirstLayout(BuildContext context)async {
+    var result = await paymentViewModel.getBanks(identityViewModel.user.token);
+    if(result.error == false){
+      setState(() {
+        banks = result.data;
+      });
+    }
+  }
+
+  @override
   Widget build(BuildContext context) {
+    paymentViewModel = Provider.of(context);
+    identityViewModel = Provider.of(context);
     PopupMenu menu = setUpPopUp(context);
 
     return Scaffold(
@@ -50,7 +70,7 @@ class _ManageCardsAndBankState extends State<ManageCardsAndBank>
             if (_tabController.index == 0) {
               Navigator.of(context).push(NewCardScreen.route());
             } else {
-              Navigator.of(context).push(NewBankScreen.route());
+              Navigator.of(context).push(NewBankScreen.route(banks: banks));
             }
           },
           backgroundColor: AppColors.kAccentColor,

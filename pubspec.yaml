@@ -49,6 +49,7 @@ dependencies:
   modal_bottom_sheet: ^0.2.0+1
   simple_animations: ^2.2.1
   password_criteria: ^0.1.4
+  after_layout: ^1.0.7+2
 
 
 dependency_overrides:

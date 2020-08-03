@@ -1,5 +1,6 @@
 import 'dart:math';
 
+import 'package:after_layout/after_layout.dart';
 import 'package:circular_profile_avatar/circular_profile_avatar.dart';
 import 'package:dots_indicator/dots_indicator.dart';
 import 'package:flutter/material.dart';
@@ -7,8 +8,11 @@ import 'package:flutter/material.dart';
 
 import 'package:flutter_money_formatter/flutter_money_formatter.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:provider/provider.dart';
 import 'package:sa_multi_tween/sa_multi_tween.dart';
 import 'package:simple_animations/simple_animations.dart';
+import 'package:zimvest/data/view_models/dashboard_view_model.dart';
+import 'package:zimvest/data/view_models/identity_view_model.dart';
 import 'package:zimvest/styles/colors.dart';
 import 'package:zimvest/styles/styles.dart';
 import 'package:zimvest/utils/enums.dart';
@@ -30,7 +34,11 @@ class DashboardScreen extends StatefulWidget {
   _DashboardScreenState createState() => _DashboardScreenState();
 }
 
-class _DashboardScreenState extends State<DashboardScreen> {
+class _DashboardScreenState extends State<DashboardScreen> with AfterLayoutMixin<DashboardScreen> {
+  ABSIdentityViewModel identityViewModel;
+  ABSDashboardViewModel dashboardViewModel;
+
+
   FlutterMoneyFormatter amount;
   PageController controller;
   PageController secondController;
@@ -68,6 +76,11 @@ class _DashboardScreenState extends State<DashboardScreen> {
     super.initState();
   }
 
+  @override
+  void afterFirstLayout(BuildContext context) {
+    dashboardViewModel.getPortfolioValue(identityViewModel.user.token);
+  }
+
   final _tween = MultiTween<AniProps>()
     ..add(AniProps.opacity, 0.0.tweenTo(1.0), 300.milliseconds)
     ..add(
@@ -78,6 +91,9 @@ class _DashboardScreenState extends State<DashboardScreen> {
 
   @override
   Widget build(BuildContext context) {
+    identityViewModel = Provider.of(context);
+    dashboardViewModel = Provider.of(context);
+    print("ffff ${identityViewModel.user.token}");
     return PlayAnimation<MultiTweenValues<AniProps>>(
       tween: _tween,
       duration: _tween.duration,
