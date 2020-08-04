@@ -1,6 +1,7 @@
 import 'package:flutter/foundation.dart';
 import 'package:zimvest/data/models/dashboard.dart';
 import 'package:zimvest/data/models/payment/bank.dart';
+import 'package:zimvest/data/models/payment/card.dart';
 import 'package:zimvest/data/services/dashboard_service.dart';
 import 'package:zimvest/data/services/payment_service.dart';
 import 'package:zimvest/locator.dart';
@@ -9,14 +10,18 @@ import 'package:zimvest/utils/result.dart';
 abstract class ABSPaymentViewModel extends ChangeNotifier{
 
   List<Bank> _userBanks = [];
+  List<PaymentCard> _userCards = [];
   List<Bank> get userBanks => _userBanks;
+  List<PaymentCard> get userCards => _userCards;
 
   set userBanks(List<Bank> value);
+  set userCards(List<PaymentCard> value);
 
   Future<Result<List<Bank>>> getBanks(String token);
   Future<Result<List<String>>> validateBank({String token, int customerId,
     String accountNum, String bankCode});
   Future<Result<List<Bank>>> getCustomerBank(String token);
+  Future<Result<List<PaymentCard>>> getUserCards(String token);
   Future<Result<Bank>> addBank(
       {String token,
         int bankId,
@@ -34,12 +39,16 @@ class PaymentViewModel extends ABSPaymentViewModel{
     notifyListeners();
   }
 
+  set userCards(List<PaymentCard> value){
+    _userCards = value;
+    notifyListeners();
+  }
+
 
   @override
   Future<Result<List<Bank>>> getBanks(String token)async {
      var result =await _paymentService.getBanks(token);
 
-     //print(",,, ${result.data}");
      return result;
   }
 
@@ -82,6 +91,16 @@ class PaymentViewModel extends ABSPaymentViewModel{
       List<Bank> banks = userBanks;
       banks.removeWhere((element) => element.id == bankId);
       userBanks = banks;
+    }
+    return result;
+  }
+
+  @override
+  Future<Result<List<PaymentCard>>> getUserCards(String token)async {
+    var result =  await _paymentService.getUserCards(token);
+
+    if(result.error == false){
+      userCards = result.data;
     }
     return result;
   }

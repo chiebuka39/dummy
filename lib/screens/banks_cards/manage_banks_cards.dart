@@ -5,6 +5,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:provider/provider.dart';
 import 'package:zimvest/animations/pop_up_menu.dart';
 import 'package:zimvest/data/models/payment/bank.dart';
+import 'package:zimvest/data/models/payment/card.dart';
 import 'package:zimvest/data/view_models/identity_view_model.dart';
 import 'package:zimvest/data/view_models/payment_view_model.dart';
 import 'package:zimvest/screens/banks_cards/new_bank_screen.dart';
@@ -53,15 +54,11 @@ class _ManageCardsAndBankState extends State<ManageCardsAndBank>
         banks = result.data;
       });
     }
-    var customerBanksResult = await paymentViewModel.getCustomerBank(identityViewModel.user.token);
-    if(customerBanksResult.error == false){
-      EasyLoading.showSuccess('Success');
-      setState(() {
-        userBanks = customerBanksResult.data;
-      });
-    }else{
-      EasyLoading.showError('failed');
-    }
+    var futures = List<Future>();
+    futures.add(paymentViewModel.getCustomerBank(identityViewModel.user.token));
+    futures.add(paymentViewModel.getUserCards(identityViewModel.user.token));
+    await Future.wait(futures);
+    EasyLoading.showSuccess('Success');
   }
 
   @override
@@ -131,11 +128,7 @@ class _ManageCardsAndBankState extends State<ManageCardsAndBank>
                 controller: _tabController,
                 children: [
                   ListView(
-                    children: [
-                      PaymentCard(),
-                      PaymentCard(),
-
-                    ],
+                    children:paymentViewModel.userCards.map((e) => PaymentCardWidget(card: e,)).toList(),
                   ),
                   ListView(
                     children: paymentViewModel.userBanks.map((e) => AddedBankWidget(bank: e,)).toList(),
@@ -292,17 +285,18 @@ class _AddedBankWidgetState extends State<AddedBankWidget> {
   }
 }
 
-class PaymentCard extends StatefulWidget {
-  const PaymentCard({
-    Key key,
+class PaymentCardWidget extends StatefulWidget {
+  final PaymentCard card;
+  const PaymentCardWidget({
+    Key key, this.card,
   }) : super(key: key);
 
 
   @override
-  _PaymentCardState createState() => _PaymentCardState();
+  _PaymentCardWidgetState createState() => _PaymentCardWidgetState();
 }
 
-class _PaymentCardState extends State<PaymentCard> {
+class _PaymentCardWidgetState extends State<PaymentCardWidget> {
   GlobalKey btnKey = GlobalKey();
   @override
   Widget build(BuildContext context) {
@@ -358,7 +352,7 @@ class _PaymentCardState extends State<PaymentCard> {
               Padding(
                 padding: const EdgeInsets.only(left: 20),
                 child: Text(
-                  "**** **** *** 01223456",
+                  "**** **** *** ${widget.card.mp}",
                   style: TextStyle(
                       color: AppColors.kWhite,
                       fontSize: 20,
@@ -379,7 +373,7 @@ class _PaymentCardState extends State<PaymentCard> {
                           style: TextStyle(color: Colors.white, fontSize: 8),
                         ),
                         Text(
-                          "Diana Meyer",
+                          widget.card.cardName,
                           style: TextStyle(color: Colors.white,
                               fontFamily: "Caros-Bold", fontSize: 14),
                         ),
@@ -394,7 +388,7 @@ class _PaymentCardState extends State<PaymentCard> {
                           style: TextStyle(color: Colors.white, fontSize: 8),
                         ),
                         Text(
-                          "12/20",
+                          widget.card.expiryDate,
                           style: TextStyle(color: Colors.white,
                               fontFamily: "Caros-Bold", fontSize: 14),
                         ),
