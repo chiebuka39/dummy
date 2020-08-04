@@ -1,5 +1,6 @@
 import 'package:after_layout/after_layout.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:provider/provider.dart';
 import 'package:zimvest/animations/pop_up_menu.dart';
@@ -28,6 +29,7 @@ class _ManageCardsAndBankState extends State<ManageCardsAndBank>
   ABSPaymentViewModel paymentViewModel;
   ABSIdentityViewModel identityViewModel;
   List<Bank> banks;
+  List<Bank> userBanks = [];
   GlobalKey btnKey = GlobalKey();
   GlobalKey btnKey2 = GlobalKey();
   TabController _tabController;
@@ -44,11 +46,21 @@ class _ManageCardsAndBankState extends State<ManageCardsAndBank>
 
   @override
   void afterFirstLayout(BuildContext context)async {
+    EasyLoading.show(status: 'loading...');
     var result = await paymentViewModel.getBanks(identityViewModel.user.token);
     if(result.error == false){
       setState(() {
         banks = result.data;
       });
+    }
+    var customerBanksResult = await paymentViewModel.getCustomerBank(identityViewModel.user.token);
+    if(customerBanksResult.error == false){
+      EasyLoading.showSuccess('Success');
+      setState(() {
+        userBanks = customerBanksResult.data;
+      });
+    }else{
+      EasyLoading.showError('failed');
     }
   }
 
@@ -66,11 +78,14 @@ class _ManageCardsAndBankState extends State<ManageCardsAndBank>
             Icons.add,
             color: Colors.white,
           ),
-          onPressed: () {
+          onPressed: () async{
             if (_tabController.index == 0) {
               Navigator.of(context).push(NewCardScreen.route());
             } else {
-              Navigator.of(context).push(NewBankScreen.route(banks: banks));
+              var result = await Navigator.of(context).push(NewBankScreen.route(banks: banks));
+              if(result != null){
+                print("userbanks $userBanks");
+              }
             }
           },
           backgroundColor: AppColors.kAccentColor,
@@ -117,15 +132,13 @@ class _ManageCardsAndBankState extends State<ManageCardsAndBank>
                 children: [
                   ListView(
                     children: [
-                      AddedBankWidget(),
-                      AddedBankWidget(),
+                      PaymentCard(),
+                      PaymentCard(),
+
                     ],
                   ),
                   ListView(
-                    children: [
-                      PaymentCard(),
-                      PaymentCard(),
-                    ],
+                    children: paymentViewModel.userBanks.map((e) => AddedBankWidget(bank: e,)).toList(),
                   ),
                 ],
               ),
@@ -153,8 +166,9 @@ class _ManageCardsAndBankState extends State<ManageCardsAndBank>
 }
 
 class AddedBankWidget extends StatefulWidget {
+  final Bank bank;
   const AddedBankWidget({
-    Key key,
+    Key key, this.bank,
   }) : super(key: key);
 
 
@@ -164,9 +178,11 @@ class AddedBankWidget extends StatefulWidget {
 
 class _AddedBankWidgetState extends State<AddedBankWidget> {
   GlobalKey btnKey = GlobalKey();
+  ABSIdentityViewModel identityViewModel;
   @override
   Widget build(BuildContext context) {
-    PopupMenu menu = setUpPopUp(context);
+    identityViewModel = Provider.of(context);
+    PopupMenu menu = setUpPopUp(context,token: identityViewModel.user.token,bank: widget.bank);
     return Container(
       margin: EdgeInsets.only(top: 20),
       height: 145,
@@ -183,7 +199,7 @@ class _AddedBankWidgetState extends State<AddedBankWidget> {
                 flex: 3,
               ),
               Text(
-                "Active",
+                widget.bank.isActive ? "Active": "In Active",
                 style: TextStyle(
                     color: Colors.white,
                     fontFamily: "Caros-Bold"),
@@ -206,7 +222,7 @@ class _AddedBankWidgetState extends State<AddedBankWidget> {
           Padding(
             padding: const EdgeInsets.only(left: 20),
             child: Text(
-              "01223456",
+              widget.bank.accountNum,
               style: TextStyle(
                   color: AppColors.kWhite,
                   fontSize: 16,
@@ -220,7 +236,7 @@ class _AddedBankWidgetState extends State<AddedBankWidget> {
             child: Row(
               children: [
                 Text(
-                  "Zenith Bank",
+                  widget.bank.name,
                   style: TextStyle(color: Colors.white),
                 ),
                 Spacer(),
@@ -237,7 +253,7 @@ class _AddedBankWidgetState extends State<AddedBankWidget> {
             padding:
                 const EdgeInsets.symmetric(horizontal: 20),
             child: Text(
-              "Olarenwaju peter Balogun",
+              widget.bank.accountName,
               style: TextStyle(color: AppColors.kLightText3),
             ),
           ),
@@ -247,7 +263,8 @@ class _AddedBankWidgetState extends State<AddedBankWidget> {
     );
   }
 
-  PopupMenu setUpPopUp(BuildContext context) {
+  PopupMenu setUpPopUp(BuildContext context, {String token, Bank bank}) {
+    ABSPaymentViewModel paymentViewModel = Provider.of(context);
     PopupMenu.context = context;
     PopupMenu menu = PopupMenu(
         backgroundColor: AppColors.kPrimaryColor,
@@ -256,7 +273,19 @@ class _AddedBankWidgetState extends State<AddedBankWidget> {
           MenuItem(title: 'Remove Bank'),
           MenuItem(title: 'Set as active'),
         ],
-        onClickMenu: (value) {},
+        onClickMenu: (value) async{
+          if(value.menuTitle == 'Remove Bank'){
+            print("bank id ${bank.id}");
+            EasyLoading.show(status: 'loading...');
+            var result = await paymentViewModel.deleteBank(token, bank.id);
+            if(result.error == false){
+              EasyLoading.showSuccess("Successful");
+
+            }else{
+              EasyLoading.showError("Failed");
+            }
+          }
+        },
         stateChanged: (value) {},
         onDismiss: () {});
     return menu;

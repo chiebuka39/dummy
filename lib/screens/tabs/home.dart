@@ -4,6 +4,7 @@ import 'package:after_layout/after_layout.dart';
 import 'package:circular_profile_avatar/circular_profile_avatar.dart';
 import 'package:dots_indicator/dots_indicator.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_easyloading/flutter_easyloading.dart';
 
 
 import 'package:flutter_money_formatter/flutter_money_formatter.dart';
@@ -74,11 +75,16 @@ class _DashboardScreenState extends State<DashboardScreen> with AfterLayoutMixin
     amount = FlutterMoneyFormatter(
         amount: 10000000, settings: MoneyFormatterSettings(fractionDigits: 0));
     super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      //EasyLoading.showSuccess('Use in initState!');
+    });
   }
 
   @override
-  void afterFirstLayout(BuildContext context) {
-    dashboardViewModel.getPortfolioValue(identityViewModel.user.token);
+  void afterFirstLayout(BuildContext context) async{
+    EasyLoading.show(status: 'loading...');
+    await dashboardViewModel.getPortfolioValue(identityViewModel.user.token);
+    EasyLoading.dismiss();
   }
 
   final _tween = MultiTween<AniProps>()

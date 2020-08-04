@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:provider/provider.dart';
 import 'package:zimvest/data/models/payment/bank.dart';
 import 'package:zimvest/data/view_models/identity_view_model.dart';
@@ -27,6 +28,7 @@ class _NewBankScreenState extends State<NewBankScreen> {
   ABSIdentityViewModel _identityViewModel;
   List<Bank> banks;
   Bank selectedBank;
+  Bank savedBank;
   String accountNum;
   List<String> userBankData;
 
@@ -41,65 +43,97 @@ class _NewBankScreenState extends State<NewBankScreen> {
   Widget build(BuildContext context) {
     _paymentViewModel = Provider.of(context);
     _identityViewModel = Provider.of(context);
-    return Scaffold(
-      appBar: ZimAppBar(title: "Add new bank",),
-      body: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 20),
-        child: Column(children: [
-          YMargin(20),
-          DropdownBorderInputWidget(title: "Bank Name",
-            textColor: AppColors.kAccountTextColor,
-            items: banks.map((e) => e.name).toList(),
-            onSelect: (value){
-            Bank bank = banks.where((element) =>
-            element.name == value).toList().first;
-            setState(() {
-              selectedBank = bank;
-            });
-            },
-          ),
-          TextWidgetBorder(title: "Account Number",textColor: AppColors.kAccountTextColor,
-            keyboardType: TextInputType.number,onChange: (value){
-            setState(() {
-              accountNum = value;
-            });
-            },),
-          YMargin(20),
-          userBankData == null ? SizedBox():Container(
-            height: 75,
-            margin: EdgeInsets.only(bottom: 20),
-            padding: EdgeInsets.all(10),
-            width: double.infinity,
-            decoration: BoxDecoration(
-              color: AppColors.kPrimaryColor,
-              borderRadius: BorderRadius.circular(7)
+    return GestureDetector(
+      onTap: (){
+        FocusScope.of(context).requestFocus(new FocusNode());
+      },
+      child: Scaffold(
+        appBar: ZimAppBar(title: "Add new bank",),
+        body: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 20),
+          child: Column(children: [
+            YMargin(20),
+            DropdownBorderInputWidget(title: "Bank Name",
+              textColor: AppColors.kAccountTextColor,
+              items: banks.map((e) => e.name).toList(),
+              onSelect: (value){
+              Bank bank = banks.where((element) =>
+              element.name == value).toList().first;
+              setState(() {
+                selectedBank = bank;
+              });
+              },
             ),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: [
-              Text(userBankData[0],
-                style: TextStyle(fontSize: 16, fontFamily: "Caros-Bold", color: AppColors.kWhite),),
-              Text(userBankData[1], style: TextStyle(color: AppColors.kLightText, fontSize: 12),),
-            ],),
-          ),
-          PrimaryButton(
-            title: userBankData == null ?  "Validate Bank":"Add Bank",
-            onPressed: ()async{
-              var result = await _paymentViewModel.validateBank(
-                token: _identityViewModel.user.token,
-                accountNum:accountNum,
-                bankCode: selectedBank.code
-              );
-              if(result.error == false){
-                setState(() {
-                  userBankData = result.data;
-                });
-              }
-            },
-          )
-        ],),
+            TextWidgetBorder(title: "Account Number",textColor: AppColors.kAccountTextColor,
+              keyboardType: TextInputType.number,onChange: (value){
+              setState(() {
+                accountNum = value;
+              });
+              },),
+            YMargin(20),
+            userBankData == null ? SizedBox():Container(
+              height: 75,
+              margin: EdgeInsets.only(bottom: 20),
+              padding: EdgeInsets.all(10),
+              width: double.infinity,
+              decoration: BoxDecoration(
+                color: AppColors.kPrimaryColor,
+                borderRadius: BorderRadius.circular(7)
+              ),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [
+                Text(userBankData[0],
+                  style: TextStyle(fontSize: 16, fontFamily: "Caros-Bold", color: AppColors.kWhite),),
+                Text(userBankData[1], style: TextStyle(color: AppColors.kLightText, fontSize: 12),),
+              ],),
+            ),
+            PrimaryButton(
+              title: userBankData == null ?  "Validate Bank":"Add Bank",
+              onPressed: userBankData == null ? _validateBank: _addBank,
+            )
+          ],),
+        ),
       ),
     );
   }
+
+  _validateBank()async{
+    EasyLoading.show(status: 'loading...');
+            var result = await _paymentViewModel.validateBank(
+              token: _identityViewModel.user.token,
+              accountNum:accountNum,
+              bankCode: selectedBank.code
+            );
+
+            if(result.error == false){
+              EasyLoading.showSuccess("Successful");
+              setState(() {
+                userBankData = result.data;
+              });
+            }else{
+              EasyLoading.showError(result.errorMessage,duration: Duration(milliseconds: 1800));
+            }
+          }
+  _addBank()async{
+    print("ppppp ${userBankData[0]}");
+            EasyLoading.show(status: 'loading...');
+            var result = await _paymentViewModel.addBank(
+              token: _identityViewModel.user.token,
+              accountNum:userBankData[1],
+              bankId: selectedBank.id,
+              accountName: userBankData[0],
+              bankName: selectedBank.name
+            );
+            if(result.error == false){
+              EasyLoading.showSuccess("Bank Saved");
+              setState(() {
+                savedBank = result.data;
+              });
+              Navigator.of(context).pop(savedBank);
+            }else{
+              EasyLoading.showError(result.errorMessage);
+            }
+          }
 }

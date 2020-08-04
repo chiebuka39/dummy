@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:hive/hive.dart';
 import 'package:provider/provider.dart';
 import 'package:zimvest/data/local/user_local.dart';
@@ -31,6 +32,7 @@ void main()async {
   //initialize service locator
   setUpLocator();
   runApp(MyApp());
+  configLoading();
 }
 
 class MyApp extends StatelessWidget {
@@ -44,19 +46,37 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProvider<ABSDashboardViewModel>(create: (_) => DashboardViewModel(),),
         ChangeNotifierProvider<ABSPaymentViewModel>(create: (_) => PaymentViewModel(),)
       ],
-      child: MaterialApp(
-        title: 'Zimvest',
-        debugShowCheckedModeBanner: false,
-        theme: ThemeData(
-          fontFamily: "Caros",
-          primarySwatch: Colors.blue,
+      child: FlutterEasyLoading(
+        child: MaterialApp(
+          title: 'Zimvest',
+          debugShowCheckedModeBanner: false,
+          theme: ThemeData(
+            fontFamily: "Caros",
+            primarySwatch: Colors.blue,
 
-          visualDensity: VisualDensity.adaptivePlatformDensity,
+            visualDensity: VisualDensity.adaptivePlatformDensity,
+          ),
+          home:_localStorage.getSecondaryState().isLoggedIn == false ?  OnboardingScreen(): MenuContainer(),
         ),
-        home:_localStorage.getSecondaryState().isLoggedIn == false ?  OnboardingScreen(): MenuContainer(),
       ),
     );
   }
+}
+
+void configLoading() {
+  EasyLoading.instance
+    ..displayDuration = const Duration(milliseconds: 500)
+    ..indicatorType = EasyLoadingIndicatorType.circle
+    ..loadingStyle = EasyLoadingStyle.dark
+    ..indicatorSize = 45.0
+    ..radius = 10.0
+    ..progressColor = Colors.yellow
+    ..backgroundColor = Colors.green
+    ..indicatorColor = Colors.yellow
+    ..textColor = Colors.yellow
+    ..maskType = EasyLoadingMaskType.black
+    ..maskColor = Colors.blue.withOpacity(0.5)
+    ..userInteractions = false;
 }
 
 
