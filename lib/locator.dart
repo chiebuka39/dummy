@@ -4,6 +4,7 @@ import 'package:zimvest/data/local/user_local.dart';
 import 'package:zimvest/data/services/dashboard_service.dart';
 import 'package:zimvest/data/services/identity_service.dart';
 import 'package:zimvest/data/services/payment_service.dart';
+import 'package:zimvest/data/services/savings_service.dart';
 
 GetIt locator = GetIt.asNewInstance();
 
@@ -12,6 +13,7 @@ void setUpLocator(){
   locator.registerLazySingleton<ABSIdentityService>(() => IdentityService());
   locator.registerLazySingleton<ABSDashboardService>(() => DashboardService());
   locator.registerLazySingleton<ABSPaymentService>(() => PaymentService());
+  locator.registerLazySingleton<ABSSavingService>(() => SavingService());
 
   locator.registerLazySingleton<ABSStateLocalStorage>(() => StateBoxStorage());
 }

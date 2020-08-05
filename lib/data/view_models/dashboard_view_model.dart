@@ -5,7 +5,7 @@ import 'package:zimvest/locator.dart';
 import 'package:zimvest/utils/result.dart';
 
 abstract class ABSDashboardViewModel extends ChangeNotifier{
-  DashboardModel _dashboardModel;
+  DashboardModel _dashboardModel = DashboardModel();
   DashboardModel get dashboardModel => _dashboardModel;
   set dashboardModel(DashboardModel value);
 

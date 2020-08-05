@@ -2,6 +2,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_money_formatter/flutter_money_formatter.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:zimvest/data/models/saving_plan.dart';
 import 'package:zimvest/styles/colors.dart';
 import 'package:zimvest/utils/margin.dart';
 
@@ -48,15 +49,18 @@ class SavingsActionWidget extends StatelessWidget {
 }
 
 class SavingsDetailContainer extends StatelessWidget {
+  final SavingPlanModel savingPlanModel;
   const SavingsDetailContainer({
     Key key,
-    @required this.amount,
+    @required this.savingPlanModel,
   }) : super(key: key);
 
-  final FlutterMoneyFormatter amount;
 
   @override
   Widget build(BuildContext context) {
+   var amount = FlutterMoneyFormatter(
+        amount: savingPlanModel.targetAmount, settings: MoneyFormatterSettings(fractionDigits: 0,symbol: "\u20A6"));
+
     return Container(
       height: 140,
       margin: EdgeInsets.symmetric(horizontal: 20),
@@ -74,14 +78,14 @@ class SavingsDetailContainer extends StatelessWidget {
               Row(
                 children: [
                   Text(
-                    "Zimvest wealth balance",
+                    savingPlanModel.planName,
                     style: TextStyle(fontSize: 13, color: Color(0xFFa2bdc3)),
                   ),
                   Spacer(),
                   SizedBox(
                     width: 115,
                     child: Text(
-                      "Joined 25 March, 2020",
+                      "Joined ${savingPlanModel.dateCreated.day} March, ${savingPlanModel.dateCreated.year}",
                       style: TextStyle(fontSize: 10, color: Color(0xFFa2bdc3)),
                     ),
                   ),
@@ -133,7 +137,7 @@ class SavingsDetailContainer extends StatelessWidget {
               Padding(
                 padding: const EdgeInsets.only(top: 15),
                 child: Text(
-                  "9% P.A",
+                  "${savingPlanModel.accruedInterest}% P.A",
                   style: TextStyle(
                       color: AppColors.kLightTitleText,
                       fontSize: 12,

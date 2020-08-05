@@ -39,8 +39,6 @@ class _DashboardScreenState extends State<DashboardScreen> with AfterLayoutMixin
   ABSIdentityViewModel identityViewModel;
   ABSDashboardViewModel dashboardViewModel;
 
-
-  FlutterMoneyFormatter amount;
   PageController controller;
   PageController secondController;
   PageController thirdController;
@@ -72,8 +70,6 @@ class _DashboardScreenState extends State<DashboardScreen> with AfterLayoutMixin
         currentIndexPage = controller.page;
       });
     });
-    amount = FlutterMoneyFormatter(
-        amount: 10000000, settings: MoneyFormatterSettings(fractionDigits: 0));
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) {
       //EasyLoading.showSuccess('Use in initState!');
@@ -113,7 +109,7 @@ class _DashboardScreenState extends State<DashboardScreen> with AfterLayoutMixin
                 children: [
                   HeaderPage(
                     showLastWidget: false,
-                    amount: amount,
+                    amount: dashboardViewModel.dashboardModel.totalPortfolio,
                     moveToNext: () {
                       headerController.animateToPage(1,
                           duration: Duration(milliseconds: 300),
@@ -124,7 +120,7 @@ class _DashboardScreenState extends State<DashboardScreen> with AfterLayoutMixin
                     bg: "header_bg",
                   ),
                   HeaderPage(
-                    amount: amount,
+                    amount: dashboardViewModel.dashboardModel.dollarPortfolio,
                     moveToPrev: () {
                       headerController.animateToPage(0,
                           duration: Duration(milliseconds: 300),
@@ -137,7 +133,7 @@ class _DashboardScreenState extends State<DashboardScreen> with AfterLayoutMixin
                   ),
                   HeaderPage(
 
-                    amount: amount,
+                    amount: dashboardViewModel.dashboardModel.nairaPortfolio,
                     moveToPrev: () {
                       headerController.animateToPage(1,
                           duration: Duration(milliseconds: 300),
@@ -151,7 +147,7 @@ class _DashboardScreenState extends State<DashboardScreen> with AfterLayoutMixin
                   ),
                   HeaderPage(
 
-                    amount: amount,
+                    amount: dashboardViewModel.dashboardModel.totalPortfolio,
                     moveToPrev: () {
                       headerController.animateToPage(1,
                           duration: Duration(milliseconds: 300),
@@ -271,168 +267,6 @@ class _DashboardScreenState extends State<DashboardScreen> with AfterLayoutMixin
         );
       },
     );
-    return Column(
-      children: [
-        Container(
-          height: 255,
-          child: PageView(
-            controller: headerController,
-            children: [
-              HeaderPage(
-                showLastWidget: false,
-                amount: amount,
-                moveToNext: () {
-                  headerController.animateToPage(1,
-                      duration: Duration(milliseconds: 300),
-                      curve: Curves.easeIn);
-                },
-                title: "Total Portfolio balance",
-
-                bg: "header_bg",
-              ),
-              HeaderPage(
-                amount: amount,
-                moveToPrev: () {
-                  headerController.animateToPage(0,
-                      duration: Duration(milliseconds: 300),
-                      curve: Curves.easeIn);
-                },
-                moveToNext: (){
-                  headerController.animateToPage(2,
-                      duration: Duration(milliseconds: 300), curve: Curves.easeIn);
-                },
-              ),
-              HeaderPage(
-
-                amount: amount,
-                moveToPrev: () {
-                  headerController.animateToPage(1,
-                      duration: Duration(milliseconds: 300),
-                      curve: Curves.easeIn);
-                },
-                moveToNext: (){
-                  headerController.animateToPage(3,
-                      duration: Duration(milliseconds: 300), curve: Curves.easeIn);
-                },
-                title: "My Naira portfolio balance",
-              ),
-              HeaderPage(
-
-                amount: amount,
-                moveToPrev: () {
-                  headerController.animateToPage(1,
-                      duration: Duration(milliseconds: 300),
-                      curve: Curves.easeIn);
-                },
-                title: "My wallet balance",
-              ),
-            ],
-          ),
-        ),
-        Expanded(
-          child: Transform.translate(
-            offset: Offset(0, -20),
-            child: Container(
-              width: double.infinity,
-              decoration: BoxDecoration(
-                  color: AppColors.kLightBG,
-                  borderRadius: BorderRadius.only(
-                      topLeft: Radius.circular(15),
-                      topRight: Radius.circular(16))),
-              child: ListView(
-                padding: EdgeInsets.only(top: 5),
-                children: [
-                  _buildZimSelector(),
-                  YMargin(5),
-                  _buildZimSelectedDetails(),
-                  YMargin(6),
-                  _buildZimDots(),
-                  YMargin(20),
-                  Container(
-                    height: 200,
-                    width: double.infinity,
-                    child: PageView(
-                      physics: NeverScrollableScrollPhysics(),
-                      controller: thirdController,
-                      children: [
-                        Row(
-                          children: [
-                            Opacity(
-                                opacity: 0,
-                                child: IconButton(
-                                  icon: Icon(Icons.arrow_back_ios),
-                                  onPressed: () {},
-                                )),
-                            Spacer(),
-                            Container(
-                                height: 200,
-                                width: 200,
-                                child: DonutPieChart.withSampleData()),
-                            Spacer(),
-                            IconButton(
-                              icon: Icon(Icons.arrow_forward_ios),
-                              onPressed: () {
-                                print("ooo");
-                                thirdController.animateToPage(1,
-                                    duration: Duration(milliseconds: 300),
-                                    curve: Curves.easeIn);
-                              },
-                            )
-                          ],
-                        ),
-                        Row(
-                          children: [
-                            IconButton(
-                              icon: Icon(Icons.arrow_back_ios),
-                              onPressed: () {
-                                thirdController.animateToPage(0,
-                                    duration: Duration(milliseconds: 300),
-                                    curve: Curves.easeIn);
-                              },
-                            ),
-                            Spacer(),
-                            Container(
-                                height: 200,
-                                width: 250,
-                                child: SimpleBarChart.withSampleData()),
-                            Spacer(),
-                            Opacity(
-                              opacity: 0,
-                              child: IconButton(
-                                icon: Icon(Icons.arrow_forward_ios),
-                                onPressed: () {
-                                  print("ooo");
-                                  thirdController.animateToPage(1,
-                                      duration: Duration(milliseconds: 300),
-                                      curve: Curves.easeIn);
-                                },
-                              ),
-                            )
-                          ],
-                        ),
-                      ],
-                    ),
-                  ),
-                  Container(
-                    height: 160,
-                    child: PageView(
-                      controller: secondController,
-                      scrollDirection: Axis.horizontal,
-                      children: [
-                        SecondaryActivityWidget(),
-                        SecondaryActivityWidget(
-                          bg: AppColors.kAccentColor,
-                        )
-                      ],
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          ),
-        )
-      ],
-    );
   }
 
   Widget _buildZimDots() {
@@ -479,10 +313,10 @@ class _DashboardScreenState extends State<DashboardScreen> with AfterLayoutMixin
           controller: controller,
           scrollDirection: Axis.horizontal,
           children: [
-            ZimCategoryWidget(amount: amount),
-            ZimCategoryWidget(amount: amount),
+            ZimCategoryWidget(amount: dashboardViewModel.dashboardModel.nairaPortfolio),
+            ZimCategoryWidget(amount: dashboardViewModel.dashboardModel.nairaPortfolio),
             ZimAspireCategoryWidget(
-              amount: amount,
+              amount: dashboardViewModel.dashboardModel.nairaPortfolio,
               completion: 30,
             ),
           ],
@@ -494,10 +328,10 @@ class _DashboardScreenState extends State<DashboardScreen> with AfterLayoutMixin
           scrollDirection: Axis.horizontal,
           children: [
             ZimAspireCategoryWidget(
-              amount: amount,
+              amount: dashboardViewModel.dashboardModel.nairaPortfolio,
               completion: 30,
             ),
-            ZimCategoryWidget(amount: amount),
+            ZimCategoryWidget(amount: dashboardViewModel.dashboardModel.nairaPortfolio),
           ],
         );
         break;
@@ -570,7 +404,7 @@ class HeaderPage extends StatelessWidget {
   }) : super(key: key);
 
 
-  final FlutterMoneyFormatter amount;
+  final String amount;
   final VoidCallback moveToPrev;
   final VoidCallback moveToNext;
   final String title;
@@ -649,7 +483,7 @@ class HeaderPage extends StatelessWidget {
                         ),
                         YMargin(5),
                         Text(
-                          amount.output.symbolOnLeft,
+                          amount,
                           style: TextStyle(
                               fontFamily: "Caros-Bold",
                               color: AppColors.kWhite,
@@ -679,7 +513,7 @@ class HeaderPage extends StatelessWidget {
                       ),
                       XMargin(10),
                       Text(
-                        "\u20A6${amount.output.nonSymbol}",
+                        amount,
                         style: TextStyle(
                             color: AppColors.kWhite,
                             fontSize: 12,
@@ -703,7 +537,7 @@ class ZimCategoryWidget extends StatelessWidget {
     @required this.amount,
   }) : super(key: key);
 
-  final FlutterMoneyFormatter amount;
+  final String amount;
 
   @override
   Widget build(BuildContext context) {
@@ -728,7 +562,7 @@ class ZimCategoryWidget extends StatelessWidget {
                   ),
                   YMargin(4),
                   Text(
-                    amount.output.symbolOnLeft,
+                    amount,
                     style: TextStyle(
                         color: AppColors.kWhite,
                         fontSize: 16,
@@ -773,7 +607,7 @@ class ZimCategoryWidget extends StatelessWidget {
                         fontSize: 8, color: AppColors.kLightTitleText),
                   ),
                   Text(
-                    amount.output.symbolOnLeft,
+                    amount,
                     style: TextStyle(
                         fontSize: 12,
                         fontFamily: "Caros-Bold",
@@ -817,7 +651,7 @@ class ZimAspireCategoryWidget extends StatelessWidget {
     @required this.completion,
   }) : super(key: key);
 
-  final FlutterMoneyFormatter amount;
+  final String amount;
 
   @override
   Widget build(BuildContext context) {
@@ -889,7 +723,7 @@ class ZimAspireCategoryWidget extends StatelessWidget {
                 style: TextStyle(fontSize: 8, color: AppColors.kLightTitleText),
               ),
               Text(
-                "/ ${amount.output.symbolOnLeft}",
+                "/ $amount",
                 style: TextStyle(
                     fontSize: 12,
                     fontFamily: "Caros-Bold",

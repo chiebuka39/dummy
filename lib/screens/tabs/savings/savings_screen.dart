@@ -1,9 +1,15 @@
+import 'package:after_layout/after_layout.dart';
 import 'package:circular_profile_avatar/circular_profile_avatar.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:flutter_money_formatter/flutter_money_formatter.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:provider/provider.dart';
 import 'package:zimvest/animations/fab_menu_items.dart';
+import 'package:zimvest/data/models/product_transaction.dart';
+import 'package:zimvest/data/view_models/identity_view_model.dart';
+import 'package:zimvest/data/view_models/savings_view_model.dart';
 import 'package:zimvest/screens/tabs/savings/create_aspire_screen.dart';
 import 'package:zimvest/styles/colors.dart';
 import 'package:zimvest/styles/styles.dart';
@@ -19,7 +25,8 @@ class SavingsScreen extends StatefulWidget {
   _SavingsScreenState createState() => _SavingsScreenState();
 }
 
-class _SavingsScreenState extends State<SavingsScreen> {
+class _SavingsScreenState extends State<SavingsScreen>
+    with AfterLayoutMixin<SavingsScreen> {
   FlutterMoneyFormatter amount;
   ZimType _zimType;
   bool showSavingsGraph = true;
@@ -27,22 +34,45 @@ class _SavingsScreenState extends State<SavingsScreen> {
   bool showFabContainer = false;
   bool showFabContainer2 = false;
 
+  ABSSavingViewModel savingViewModel;
+  ABSIdentityViewModel identityViewModel;
+
+  List<ProductTransaction> productTransactions = [];
+
   @override
   void initState() {
     _zimType = ZimType.WEALTH;
     amount = FlutterMoneyFormatter(
-        amount: 10000000, settings: MoneyFormatterSettings(fractionDigits: 0));
+        amount: 10000000, settings: MoneyFormatterSettings(fractionDigits: 0,symbol: "\u20A6"));
     super.initState();
   }
 
   @override
+  void afterFirstLayout(BuildContext context) async {
+    EasyLoading.show(status: 'loading...');
+    await savingViewModel.getSavingPlans(token: identityViewModel.user.token);
+    var result =await savingViewModel.getTransactionForProductType(
+        token:identityViewModel.user.token,
+      productId: savingViewModel.savingPlanModel.first.productId
+    );
+    if(result.error == false){
+      setState(() {
+        productTransactions = result.data;
+      });
+    }
+    EasyLoading.dismiss();
+  }
+
+  @override
   Widget build(BuildContext context) {
+    savingViewModel = Provider.of(context);
+    identityViewModel = Provider.of(context);
     return Scaffold(
       floatingActionButton: Padding(
         padding: const EdgeInsets.only(bottom: 100),
         child: FloatingActionButton(
           child: Icon(Icons.add),
-          onPressed: (){
+          onPressed: () {
             Navigator.of(context).push(CreateZimvestAspireScreen.route());
           },
         ),
@@ -112,7 +142,16 @@ class _SavingsScreenState extends State<SavingsScreen> {
                     ],
                   ),
                   YMargin(15),
-                  SavingsDetailContainer(amount: amount),
+                  savingViewModel.savingPlanModel
+                              .where((element) => element.productId == 1)
+                              .length ==
+                          0
+                      ? SizedBox()
+                      : SavingsDetailContainer(
+                          savingPlanModel: savingViewModel.savingPlanModel
+                              .where((element) => element.productId == 1)
+                              .first,
+                        ),
                   YMargin(15),
                   Padding(
                     padding: const EdgeInsets.only(left: 20),
@@ -142,56 +181,59 @@ class _SavingsScreenState extends State<SavingsScreen> {
               ),
               SliverList(
                 delegate: SliverChildListDelegate(List.generate(
-                    4,
-                    (index) => Container(
-                          decoration: BoxDecoration(
-                              border: Border(
-                                  bottom: BorderSide(
-                                      width: .5, color: AppColors.kLightText))),
-                          margin: EdgeInsets.symmetric(horizontal: 20),
-                          height: 55,
-                          child: Row(
-                            children: [
-                              Column(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Text(
-                                    "Wealth Box",
-                                    style: TextStyle(
-                                        color: Color(0xFF324d53), fontSize: 12),
-                                  ),
-                                  YMargin(5),
-                                  Text(
-                                    "Mon, April 13 2020",
-                                    style: TextStyle(
-                                        fontSize: 10,
-                                        color: AppColors.kLightText2),
-                                  )
-                                ],
-                              ),
-                              Spacer(),
-                              Column(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                crossAxisAlignment: CrossAxisAlignment.end,
-                                children: [
-                                  Text(
-                                    "450.00",
-                                    style: TextStyle(
-                                        fontSize: 12, color: AppColors.kGreen),
-                                  ),
-                                  YMargin(5),
-                                  Text(
-                                    "Successful",
-                                    style: TextStyle(
-                                        fontSize: 10,
-                                        color: AppColors.kLightText2),
-                                  )
-                                ],
-                              )
-                            ],
-                          ),
-                        ))),
+                    productTransactions.length > 4 ? 4:productTransactions.length,
+                    (index) {
+                      var p = productTransactions[index];
+                      return Container(
+                        decoration: BoxDecoration(
+                            border: Border(
+                                bottom: BorderSide(
+                                    width: .5, color: AppColors.kLightText))),
+                        margin: EdgeInsets.symmetric(horizontal: 20),
+                        height: 55,
+                        child: Row(
+                          children: [
+                            Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  p.transactionDescription,
+                                  style: TextStyle(
+                                      color: Color(0xFF324d53), fontSize: 12),
+                                ),
+                                YMargin(5),
+                                Text(
+                                  "Mon, April 13 2020",
+                                  style: TextStyle(
+                                      fontSize: 10,
+                                      color: AppColors.kLightText2),
+                                )
+                              ],
+                            ),
+                            Spacer(),
+                            Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              crossAxisAlignment: CrossAxisAlignment.end,
+                              children: [
+                                Text(
+                                  "${p.amount}",
+                                  style: TextStyle(
+                                      fontSize: 12, color: AppColors.kGreen),
+                                ),
+                                YMargin(5),
+                                Text(
+                                  "Successful",
+                                  style: TextStyle(
+                                      fontSize: 10,
+                                      color: AppColors.kLightText2),
+                                )
+                              ],
+                            )
+                          ],
+                        ),
+                      );
+                    })),
               ),
               SliverToBoxAdapter(
                 child: SizedBox(
@@ -286,7 +328,8 @@ class _SavingsScreenState extends State<SavingsScreen> {
 class FabItem extends StatelessWidget {
   final String item;
   const FabItem({
-    Key key, this.item,
+    Key key,
+    this.item,
   }) : super(key: key);
 
   @override

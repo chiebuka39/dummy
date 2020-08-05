@@ -6,6 +6,7 @@ import 'package:zimvest/data/local/user_local.dart';
 import 'package:zimvest/data/view_models/dashboard_view_model.dart';
 import 'package:zimvest/data/view_models/identity_view_model.dart';
 import 'package:zimvest/data/view_models/payment_view_model.dart';
+import 'package:zimvest/data/view_models/savings_view_model.dart';
 import 'package:zimvest/locator.dart';
 import 'package:zimvest/onboarding/onboarding_screen.dart';
 import 'package:zimvest/screens/account/login_screen.dart';
@@ -44,7 +45,8 @@ class MyApp extends StatelessWidget {
       providers: [
         ChangeNotifierProvider<ABSIdentityViewModel>(create: (_) => IdentityViewModel(),),
         ChangeNotifierProvider<ABSDashboardViewModel>(create: (_) => DashboardViewModel(),),
-        ChangeNotifierProvider<ABSPaymentViewModel>(create: (_) => PaymentViewModel(),)
+        ChangeNotifierProvider<ABSPaymentViewModel>(create: (_) => PaymentViewModel(),),
+        ChangeNotifierProvider<ABSSavingViewModel>(create: (_) => SavingViewModel(),)
       ],
       child: FlutterEasyLoading(
         child: MaterialApp(
