@@ -151,7 +151,7 @@ class SavingService extends ABSSavingService{
       print("error $e}");
       if(e.response != null ){
         print(e.response.data);
-        result.errorMessage = e.response.data['message'];
+        //result.errorMessage = e.response.data['message'];
       }else{
         print(e.toString());
         result.errorMessage = "Sorry, We could not complete your request";

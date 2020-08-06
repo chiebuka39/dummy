@@ -7,12 +7,13 @@ class ZimSelectedButton extends StatelessWidget {
   final ZimType type;
   final ZimType selectedType;
   final String title;
+  final double leftMargin;
   const ZimSelectedButton({
     Key key,
     this.onTap,
     this.title,
     this.type,
-    this.selectedType,
+    this.selectedType, this.leftMargin = 10,
   }) : super(key: key);
 
   @override
@@ -20,7 +21,7 @@ class ZimSelectedButton extends StatelessWidget {
     return InkWell(
       onTap: onTap,
       child: AnimatedContainer(
-        margin: EdgeInsets.only(left: 10),
+        margin: EdgeInsets.only(left: leftMargin),
         padding: EdgeInsets.only(left: 10,right: 10),
         duration: Duration(milliseconds: 200),
         height: 35,

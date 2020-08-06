@@ -12,7 +12,13 @@ abstract class ABSSavingViewModel extends ChangeNotifier{
   List<SavingPlanModel> _savingPlanModel = [];
   List<SavingPlanModel> get savingPlanModel =>  _savingPlanModel;
 
+  List<List<ProductTransaction>> _savingsTransactions = [];
+  List<List<ProductTransaction>> get savingsTransactions =>  _savingsTransactions;
+
   set savingPlanModel(List<SavingPlanModel> plans);
+  set savingsTransactions(List<List<ProductTransaction>> transations);
+
+
 
   Future<Result<List<ProductType>>> getProductTypes({
     String token});
@@ -27,6 +33,11 @@ class SavingViewModel extends ABSSavingViewModel{
 
   set savingPlanModel(List<SavingPlanModel> plans){
     _savingPlanModel = plans;
+    notifyListeners();
+  }
+
+  set savingsTransactions(List<List<ProductTransaction>> transactions){
+    _savingsTransactions = transactions;
     notifyListeners();
   }
 
@@ -54,7 +65,9 @@ class SavingViewModel extends ABSSavingViewModel{
     int productId}) async{
     var result =await _savingService.getTransactionForProductType(token: token,
         productId: productId);
-
+    if(result.error == false){
+      _savingsTransactions[productId] = result.data;
+    }
     print(",,, ${result.data}");
     return result;
   }

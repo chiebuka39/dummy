@@ -28,7 +28,7 @@ class SavingsScreen extends StatefulWidget {
 class _SavingsScreenState extends State<SavingsScreen>
     with AfterLayoutMixin<SavingsScreen> {
   FlutterMoneyFormatter amount;
-  ZimType _zimType;
+  int _zimType;
   bool showSavingsGraph = true;
 
   bool showFabContainer = false;
@@ -41,9 +41,10 @@ class _SavingsScreenState extends State<SavingsScreen>
 
   @override
   void initState() {
-    _zimType = ZimType.WEALTH;
+    _zimType = 0;
     amount = FlutterMoneyFormatter(
-        amount: 10000000, settings: MoneyFormatterSettings(fractionDigits: 0,symbol: "\u20A6"));
+        amount: 10000000,
+        settings: MoneyFormatterSettings(fractionDigits: 0, symbol: "\u20A6"));
     super.initState();
   }
 
@@ -51,11 +52,10 @@ class _SavingsScreenState extends State<SavingsScreen>
   void afterFirstLayout(BuildContext context) async {
     EasyLoading.show(status: 'loading...');
     await savingViewModel.getSavingPlans(token: identityViewModel.user.token);
-    var result =await savingViewModel.getTransactionForProductType(
-        token:identityViewModel.user.token,
-      productId: savingViewModel.savingPlanModel.first.productId
-    );
-    if(result.error == false){
+    var result = await savingViewModel.getTransactionForProductType(
+        token: identityViewModel.user.token,
+        productId: savingViewModel.savingPlanModel.first.productId);
+    if (result.error == false) {
       setState(() {
         productTransactions = result.data;
       });
@@ -116,42 +116,9 @@ class _SavingsScreenState extends State<SavingsScreen>
                     ),
                   ),
                   YMargin(20),
-                  Row(
-                    children: [
-                      XMargin(10),
-                      ZimSelectedButton(
-                        title: "Zimvest Wealth Box",
-                        onTap: () {
-                          setState(() {
-                            _zimType = ZimType.WEALTH;
-                          });
-                        },
-                        type: ZimType.WEALTH,
-                        selectedType: _zimType,
-                      ),
-                      ZimSelectedButton(
-                        title: "Zimvest Aspire",
-                        onTap: () {
-                          setState(() {
-                            _zimType = ZimType.ASPIRE;
-                          });
-                        },
-                        type: ZimType.ASPIRE,
-                        selectedType: _zimType,
-                      ),
-                    ],
-                  ),
+                  buildSavingsType(),
                   YMargin(15),
-                  savingViewModel.savingPlanModel
-                              .where((element) => element.productId == 1)
-                              .length ==
-                          0
-                      ? SizedBox()
-                      : SavingsDetailContainer(
-                          savingPlanModel: savingViewModel.savingPlanModel
-                              .where((element) => element.productId == 1)
-                              .first,
-                        ),
+                  getSavingItem(),
                   YMargin(15),
                   Padding(
                     padding: const EdgeInsets.only(left: 20),
@@ -181,59 +148,58 @@ class _SavingsScreenState extends State<SavingsScreen>
               ),
               SliverList(
                 delegate: SliverChildListDelegate(List.generate(
-                    productTransactions.length > 4 ? 4:productTransactions.length,
-                    (index) {
-                      var p = productTransactions[index];
-                      return Container(
-                        decoration: BoxDecoration(
-                            border: Border(
-                                bottom: BorderSide(
-                                    width: .5, color: AppColors.kLightText))),
-                        margin: EdgeInsets.symmetric(horizontal: 20),
-                        height: 55,
-                        child: Row(
+                    productTransactions.length > 4
+                        ? 4
+                        : productTransactions.length, (index) {
+                  var p = productTransactions[index];
+                  return Container(
+                    decoration: BoxDecoration(
+                        border: Border(
+                            bottom: BorderSide(
+                                width: .5, color: AppColors.kLightText))),
+                    margin: EdgeInsets.symmetric(horizontal: 20),
+                    height: 55,
+                    child: Row(
+                      children: [
+                        Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            Column(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text(
-                                  p.transactionDescription,
-                                  style: TextStyle(
-                                      color: Color(0xFF324d53), fontSize: 12),
-                                ),
-                                YMargin(5),
-                                Text(
-                                  "Mon, April 13 2020",
-                                  style: TextStyle(
-                                      fontSize: 10,
-                                      color: AppColors.kLightText2),
-                                )
-                              ],
+                            Text(
+                              p.transactionDescription,
+                              style: TextStyle(
+                                  color: Color(0xFF324d53), fontSize: 12),
                             ),
-                            Spacer(),
-                            Column(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              crossAxisAlignment: CrossAxisAlignment.end,
-                              children: [
-                                Text(
-                                  "${p.amount}",
-                                  style: TextStyle(
-                                      fontSize: 12, color: AppColors.kGreen),
-                                ),
-                                YMargin(5),
-                                Text(
-                                  "Successful",
-                                  style: TextStyle(
-                                      fontSize: 10,
-                                      color: AppColors.kLightText2),
-                                )
-                              ],
+                            YMargin(5),
+                            Text(
+                              "Mon, April 13 2020",
+                              style: TextStyle(
+                                  fontSize: 10, color: AppColors.kLightText2),
                             )
                           ],
                         ),
-                      );
-                    })),
+                        Spacer(),
+                        Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          crossAxisAlignment: CrossAxisAlignment.end,
+                          children: [
+                            Text(
+                              "${p.amount}",
+                              style: TextStyle(
+                                  fontSize: 12, color: AppColors.kGreen),
+                            ),
+                            YMargin(5),
+                            Text(
+                              "Successful",
+                              style: TextStyle(
+                                  fontSize: 10, color: AppColors.kLightText2),
+                            )
+                          ],
+                        )
+                      ],
+                    ),
+                  );
+                })),
               ),
               SliverToBoxAdapter(
                 child: SizedBox(
@@ -245,6 +211,66 @@ class _SavingsScreenState extends State<SavingsScreen>
         ),
       ),
     );
+  }
+
+  Row buildSavingsType() {
+    return Row(
+      children: [
+        ZimSelectedButton(
+          title: "Zimvest Wealth Box",
+          onTap: () {
+            setState(() {
+              _zimType = ZimType.WEALTH;
+            });
+          },
+          type: ZimType.WEALTH,
+          selectedType: _zimType,
+        ),
+        ZimSelectedButton(
+          title: "Zimvest Aspire",
+          onTap: () {
+            setState(() {
+              _zimType = ZimType.ASPIRE;
+            });
+          },
+          type: ZimType.ASPIRE,
+          selectedType: _zimType,
+        ),
+      ],
+    );
+  }
+
+  Widget getSavingItem() {
+    Widget result;
+
+    if (_zimType == ZimType.WEALTH) {
+      result = savingViewModel.savingPlanModel
+                  .where((element) => element.productId == 1)
+                  .length ==
+              0
+          ? SizedBox()
+          : SavingsAspireContainer(
+              savingPlanModel: savingViewModel.savingPlanModel
+                  .where((element) => element.productId == 1)
+                  .first,
+            );
+    } else {
+      result = Container(
+        height: 140,
+        width: double.infinity,
+        child: ListView(
+          scrollDirection: Axis.horizontal,
+          children: savingViewModel.savingPlanModel
+              .where((element) => element.productId != 1)
+              .map((e) => SavingsAspireContainer(
+                    savingPlanModel: e,
+                  ))
+              .toList(),
+        ),
+      );
+    }
+
+    return result;
   }
 
   Widget _buildTrackYourSavingsHeader() {

@@ -151,4 +151,123 @@ class SavingsDetailContainer extends StatelessWidget {
     );
   }
 }
+class SavingsAspireContainer extends StatelessWidget {
+  final SavingPlanModel savingPlanModel;
+  const SavingsAspireContainer({
+    Key key,
+    @required this.savingPlanModel,
+  }) : super(key: key);
+
+
+  @override
+  Widget build(BuildContext context) {
+   var amount = FlutterMoneyFormatter(
+        amount: savingPlanModel.targetAmount, settings: MoneyFormatterSettings(fractionDigits: 0,symbol: "\u20A6"));
+
+    return Container(
+      height: 140,
+      margin: EdgeInsets.symmetric(horizontal: 20),
+      padding: EdgeInsets.symmetric(horizontal: 15, vertical: 10),
+      width: MediaQuery.of(context).size.width  - 60,
+      decoration: BoxDecoration(
+          color: AppColors.kPrimaryColor,
+          borderRadius: BorderRadius.circular(5)),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            children: [
+              Text(
+                savingPlanModel.planName,
+                style: TextStyle(fontSize: 13, color: Color(0xFFa2bdc3)),
+              ),
+              Spacer(),
+              SizedBox(
+                width: 115,
+                child: Text(
+                  "Joined ${savingPlanModel.dateCreated.day} March, ${savingPlanModel.dateCreated.year}",
+                  style: TextStyle(fontSize: 10, color: Color(0xFFa2bdc3)),
+                ),
+              ),
+            ],
+          ),
+          Spacer(),
+          Text(
+            "Accrued Interest",
+            style: TextStyle(
+                fontSize: 10, color: AppColors.kLightTitleText),
+          ),
+          YMargin(5),
+          Row(
+            children: [
+              Text(
+                amount.output.symbolOnLeft,
+                style: TextStyle(
+                    fontSize: 13,
+                    fontFamily: "Caros-Medium",
+                    color: AppColors.kWhite),
+              ),
+              Spacer(),
+              Text(
+                "90 days average yield:",
+                style: TextStyle(
+                    color: AppColors.kWhite,
+                    fontSize: 10,
+                    fontFamily: "Caros-Medium"),
+              ),
+              XMargin(5),
+              Text(
+                "${savingPlanModel.accruedInterest}%",
+                style: TextStyle(
+                    color: AppColors.kLightTitleText,
+                    fontSize: 12,
+                    fontFamily: "Caros"),
+              ),
+            ],
+          ),
+          YMargin(5),
+          ClipRRect(
+            borderRadius: BorderRadius.circular(5),
+            child: Container(
+              padding: EdgeInsets.all(1.5),
+              color: AppColors.kLightText,
+              child: LinearProgressIndicator(
+                value: 0.6,
+                backgroundColor: AppColors.kWhite,
+                valueColor: AlwaysStoppedAnimation<Color>(AppColors.kAccentColor),
+              ),
+            ),
+          ),
+          YMargin(15),
+          Row(
+            children: [
+              Text(
+                amount.output.symbolOnLeft,
+                style: TextStyle(
+                    fontSize: 9,
+                    fontFamily: "Caros-Medium",
+                    color: AppColors.kLightText2),
+              ),
+              Text(
+                " / ${amount.output.symbolOnLeft}",
+                style: TextStyle(
+                    fontSize: 9,
+                    fontFamily: "Caros-Medium",
+                    color: AppColors.kWhite),
+              ),
+              Spacer(),
+              Text(
+                "25% Complete",
+                style: TextStyle(
+                    color: AppColors.kWhite,
+                    fontSize: 10,
+                    fontFamily: "Caros-Medium"),
+              ),
+            ],
+          )
+        ],
+      ),
+    );
+  }
+}
 
