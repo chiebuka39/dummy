@@ -2,6 +2,7 @@ import 'package:dio/dio.dart';
 import 'package:zimvest/data/models/dashboard.dart';
 import 'package:zimvest/data/models/payment/bank.dart';
 import 'package:zimvest/data/models/payment/card.dart';
+import 'package:zimvest/data/models/payment/wallet.dart';
 import 'package:zimvest/data/models/user.dart';
 import 'package:zimvest/locator.dart';
 import 'package:zimvest/utils/result.dart';
@@ -11,7 +12,7 @@ abstract class ABSPaymentService {
   Future<Result<List<Bank>>> getBanks(String token);
   Future<Result<List<PaymentCard>>> getUserCards(String token);
   Future<Result<void>> deleteBank(String token,int bankId);
-  Future<Result<void>> getWallet(String token);
+  Future<Result<Wallet>> getWallet(String token);
   Future<Result<void>> setBankAsActive(String token,int bankId);
   Future<Result<List<Bank>>> getCustomerBank(String token);
   Future<Result<Bank>> addBank(
@@ -372,13 +373,13 @@ class PaymentService extends ABSPaymentService {
   }
 
   @override
-  Future<Result<void>> getWallet(String token) async{
-    Result<void> result = Result(error: false);
+  Future<Result<Wallet>> getWallet(String token) async{
+    Result<Wallet> result = Result(error: false);
 
     var headers = {"Authorization": "Bearer $token"};
 
 
-    var url = "${AppStrings.baseUrl}zimvest.services.payment/api/"
+    var url = "${AppStrings.baseUrl}zimvest.services.wallet/api/"
         "Wallet";
 
     print("lll $url");
@@ -393,7 +394,14 @@ class PaymentService extends ABSPaymentService {
         result.error = true;
       } else {
         result.error = false;
+        if(response1['data'] == null){
+          result.data = Wallet(hasWallet: false);
 
+        }else{
+          var wallet = Wallet.fromJson(response1['data']);
+          wallet.hasWallet = true;
+          result.data = wallet;
+        }
       }
     } on DioError catch (e) {
       print("error $e}");

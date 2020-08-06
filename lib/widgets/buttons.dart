@@ -45,6 +45,49 @@ class ZimSelectedButton extends StatelessWidget {
     );
   }
 }
+class ZimSelectedButton2 extends StatelessWidget {
+  final VoidCallback onTap;
+  final int type;
+  final int selectedType;
+  final String title;
+  final double leftMargin;
+  const ZimSelectedButton2({
+    Key key,
+    this.onTap,
+    this.title,
+    this.type,
+    this.selectedType, this.leftMargin = 10,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return InkWell(
+      onTap: onTap,
+      child: AnimatedContainer(
+        margin: EdgeInsets.only(left:type == selectedType ? leftMargin+10:leftMargin),
+        padding: EdgeInsets.only(left: 10,right: 10),
+        duration: Duration(milliseconds: 200),
+        height: 35,
+        decoration: BoxDecoration(
+            color: type == selectedType
+                ? AppColors.kAccentColor
+                : Colors.transparent,
+            borderRadius: BorderRadius.circular(5)),
+        child: Center(
+          child: Text(
+            title,
+            style: TextStyle(
+                fontSize: 12,
+                fontFamily: "Caros-Medium",
+                color: type == selectedType
+                    ? AppColors.kWhite
+                    : AppColors.kLightTitleText),
+          ),
+        ),
+      ),
+    );
+  }
+}
 class ZimInVestSelectedButton extends StatelessWidget {
   final VoidCallback onTap;
   final ZimInvestmentType type;

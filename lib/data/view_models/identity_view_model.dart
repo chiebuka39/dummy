@@ -1,5 +1,7 @@
 import 'package:flutter/foundation.dart';
 import 'package:zimvest/data/local/user_local.dart';
+import 'package:zimvest/data/models/completed_sections.dart';
+import 'package:zimvest/data/models/savings/funding_channels.dart';
 import 'package:zimvest/data/models/secondary_state.dart';
 import 'package:zimvest/data/models/user.dart';
 import 'package:zimvest/data/services/identity_service.dart';
@@ -12,6 +14,7 @@ abstract class ABSIdentityViewModel extends ChangeNotifier{
   User get user => _user;
   set user(User value);
   Future<Result<void>> login(String email, String password);
+  Future<Result<CompletedSections>> checkCompletedSections({String token});
 }
 
 class IdentityViewModel extends ABSIdentityViewModel{
@@ -49,5 +52,11 @@ class IdentityViewModel extends ABSIdentityViewModel{
   }
   return result;
   }
+
+  @override
+  Future<Result<CompletedSections>> checkCompletedSections({String token}) {
+    return _identityService.checkCompletedSections(token: token);
+  }
+
 
 }

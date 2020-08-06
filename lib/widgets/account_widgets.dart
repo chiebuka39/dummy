@@ -1,11 +1,13 @@
+import 'dart:async';
 import 'dart:io';
-
+import 'package:intl/intl.dart';
 import 'package:flutter/services.dart';
 import 'package:password_criteria/bloc/password_strength/password_strength_bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:select_dialog/select_dialog.dart';
+import 'package:zimvest/animations/select_dialog.dart';
+import 'package:zimvest/payment/input_formaters.dart';
 import 'package:zimvest/screens/account/creat_account_screen.dart';
 import 'package:zimvest/styles/colors.dart';
 import 'package:zimvest/utils/app_utils.dart';
@@ -255,18 +257,23 @@ class UploadWidgetBorder extends StatelessWidget {
   }
 }
 class AmountWidgetBorder extends StatelessWidget {
-  final ValueChanged<String> onChange;
+  final ValueChanged<double> onChange;
   final String title;
   final bool error;
+  final TextEditingController controller;
   final Color textColor;
   final double labelSize;
   const AmountWidgetBorder({
     Key key, this.title,
     this.onChange,
     this.error = false,
-    this.textColor = Colors.white, this.labelSize = 12,
+    this.textColor = Colors.white, this.labelSize = 12, this.controller,
   }) : super(key: key);
 
+  String _formatNumber(String string) {
+    final format = NumberFormat.decimalPattern('en');
+    return format.format(int.parse(string));
+  }
   @override
   Widget build(BuildContext context) {
     return Container(height: 90,
@@ -291,8 +298,15 @@ class AmountWidgetBorder extends StatelessWidget {
                 Text("\u20A6"),
                 Expanded(
                   child: TextFormField(
-                    onChanged: onChange,
-                    keyboardType: TextInputType.emailAddress,
+                    maxLines: 1,
+                    keyboardType: TextInputType.number,
+                    inputFormatters: [
+                      WhitelistingTextInputFormatter.digitsOnly,
+                      CurrencyPtBrInputFormatter(maxDigits: 11)
+                    ],
+                    onChanged: (string){
+                      onChange(double.parse(string));
+                    },
                     style: TextStyle(color: AppColors.kAccountTextColor),
                     decoration: InputDecoration(
                         contentPadding: EdgeInsets.only(left: 10, bottom: 5),
@@ -312,11 +326,12 @@ class DateOfBirthBorderInputWidget extends StatelessWidget {
 
   final String title;
   final bool error;
+  final ValueChanged<DateTime> setDate;
   final Color textColor;
   const DateOfBirthBorderInputWidget({
     Key key, this.title,
     this.error = false,
-    this.textColor = Colors.white,
+    this.textColor = Colors.white, this.setDate,
   }) : super(key: key);
 
   @override
@@ -333,7 +348,7 @@ class DateOfBirthBorderInputWidget extends StatelessWidget {
           InkWell(
             onTap: (){
               showDatePicker(context: context, initialDate: DateTime.utc(1994), firstDate: DateTime.utc(1930), lastDate: DateTime.utc(2030)).then((value) {
-
+                setDate(value);
               });
             },
             child: Container(
@@ -394,6 +409,10 @@ class _DropdownBorderInputWidgetState extends State<DropdownBorderInputWidget> {
               SelectDialog.showModal<String>(
                 context,
                 label: widget.title,
+                constraints: BoxConstraints(
+                  maxHeight: 300,
+                  maxWidth: MediaQuery.of(context).size.width * 0.7
+                ),
                 titleStyle: TextStyle(color: Colors.brown),
                 showSearchBox: false,
                 selectedValue: _source,

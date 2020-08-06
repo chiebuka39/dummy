@@ -8,17 +8,22 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:provider/provider.dart';
 import 'package:zimvest/animations/fab_menu_items.dart';
 import 'package:zimvest/data/models/product_transaction.dart';
+import 'package:zimvest/data/models/saving_plan.dart';
 import 'package:zimvest/data/view_models/identity_view_model.dart';
+import 'package:zimvest/data/view_models/payment_view_model.dart';
 import 'package:zimvest/data/view_models/savings_view_model.dart';
 import 'package:zimvest/screens/tabs/savings/create_aspire_screen.dart';
 import 'package:zimvest/styles/colors.dart';
 import 'package:zimvest/styles/styles.dart';
 import 'package:zimvest/utils/enums.dart';
 import 'package:zimvest/utils/margin.dart';
+import 'package:zimvest/utils/result.dart';
 import 'package:zimvest/utils/strings.dart';
 import 'package:zimvest/widgets/buttons.dart';
 import 'package:zimvest/widgets/line_chart.dart';
 import 'package:zimvest/widgets/savings.dart';
+
+import 'create_wealth_box.dart';
 
 class SavingsScreen extends StatefulWidget {
   @override
@@ -36,12 +41,13 @@ class _SavingsScreenState extends State<SavingsScreen>
 
   ABSSavingViewModel savingViewModel;
   ABSIdentityViewModel identityViewModel;
+  ABSPaymentViewModel paymentViewModel;
 
   List<ProductTransaction> productTransactions = [];
 
   @override
   void initState() {
-    _zimType = 0;
+    _zimType = 1;
     amount = FlutterMoneyFormatter(
         amount: 10000000,
         settings: MoneyFormatterSettings(fractionDigits: 0, symbol: "\u20A6"));
@@ -52,29 +58,58 @@ class _SavingsScreenState extends State<SavingsScreen>
   void afterFirstLayout(BuildContext context) async {
     EasyLoading.show(status: 'loading...');
     await savingViewModel.getSavingPlans(token: identityViewModel.user.token);
-    var result = await savingViewModel.getTransactionForProductType(
-        token: identityViewModel.user.token,
-        productId: savingViewModel.savingPlanModel.first.productId);
-    if (result.error == false) {
-      setState(() {
-        productTransactions = result.data;
-      });
+    await savingViewModel.getProductTypes(token: identityViewModel.user.token);
+    setDataForUniquePlans();
+    if(savingViewModel.productTypes.isNotEmpty){
+      await fetchTransactions(savingViewModel.productTypes.first.id);
     }
+
     EasyLoading.dismiss();
+
+    getRequiredDetailsForForm();
+  }
+
+  Future<void> fetchTransactions(int productId,{bool showLoader = false}) async {
+    if(showLoader == true){
+      EasyLoading.show(status: 'loading...');
+      await savingViewModel.getTransactionForProductType(
+          token: identityViewModel.user.token,
+          productId: productId);
+      EasyLoading.dismiss();
+
+    }else{
+      var result = await savingViewModel.getTransactionForProductType(
+          token: identityViewModel.user.token,
+          productId: productId);
+      ;
+    }
+
+  }
+
+  void setDataForUniquePlans() {
+
   }
 
   @override
   Widget build(BuildContext context) {
     savingViewModel = Provider.of(context);
     identityViewModel = Provider.of(context);
+    paymentViewModel = Provider.of(context);
     return Scaffold(
       floatingActionButton: Padding(
         padding: const EdgeInsets.only(bottom: 100),
         child: FloatingActionButton(
           child: Icon(Icons.add),
           onPressed: () {
-            Navigator.of(context).push(CreateZimvestAspireScreen.route());
+            if(_zimType == 1){
+
+              Navigator.of(context).push(CreateZimvestWealthBoxScreen.route());
+            }else{
+              Navigator.of(context).push(CreateZimvestAspireScreen.route());
+            }
+
           },
+          backgroundColor: AppColors.kAccentColor,
         ),
       ),
       body: Container(
@@ -146,12 +181,12 @@ class _SavingsScreenState extends State<SavingsScreen>
                   YMargin(20),
                 ]),
               ),
-              SliverList(
+              savingViewModel.savingsTransactions[_zimType]  == null? SliverToBoxAdapter():SliverList(
                 delegate: SliverChildListDelegate(List.generate(
-                    productTransactions.length > 4
+                    savingViewModel.savingsTransactions[_zimType].length > 4
                         ? 4
-                        : productTransactions.length, (index) {
-                  var p = productTransactions[index];
+                        : savingViewModel.savingsTransactions[_zimType].length, (index) {
+                  var p = savingViewModel.savingsTransactions[_zimType][index];
                   return Container(
                     decoration: BoxDecoration(
                         border: Border(
@@ -215,41 +250,34 @@ class _SavingsScreenState extends State<SavingsScreen>
 
   Row buildSavingsType() {
     return Row(
-      children: [
-        ZimSelectedButton(
-          title: "Zimvest Wealth Box",
-          onTap: () {
-            setState(() {
-              _zimType = ZimType.WEALTH;
-            });
-          },
-          type: ZimType.WEALTH,
-          selectedType: _zimType,
-        ),
-        ZimSelectedButton(
-          title: "Zimvest Aspire",
-          onTap: () {
-            setState(() {
-              _zimType = ZimType.ASPIRE;
-            });
-          },
-          type: ZimType.ASPIRE,
-          selectedType: _zimType,
-        ),
-      ],
+      children: savingViewModel.productTypes.map((e) => ZimSelectedButton2(
+
+        title: "Zimvest ${e.productTypeName}",
+        onTap: () async{
+          if(_zimType == e.id){
+            return;
+          }
+          setState(() {
+            _zimType = e.id;
+          });
+          await fetchTransactions(e.id,showLoader:true );
+        },
+        type: e.id,
+        selectedType: _zimType,
+      )).toList(),
     );
   }
 
   Widget getSavingItem() {
     Widget result;
 
-    if (_zimType == ZimType.WEALTH) {
+    if (_zimType == 1) {
       result = savingViewModel.savingPlanModel
                   .where((element) => element.productId == 1)
                   .length ==
               0
           ? SizedBox()
-          : SavingsAspireContainer(
+          : SavingsDetailContainer(
               savingPlanModel: savingViewModel.savingPlanModel
                   .where((element) => element.productId == 1)
                   .first,
@@ -348,6 +376,13 @@ class _SavingsScreenState extends State<SavingsScreen>
         ],
       ),
     );
+  }
+
+  void getRequiredDetailsForForm() {
+    savingViewModel.getFundingChannel(token: identityViewModel.user.token);
+    savingViewModel.getSavingFrequency(token: identityViewModel.user.token);
+    paymentViewModel.getUserCards(identityViewModel.user.token);
+    paymentViewModel.getWallet(identityViewModel.user.token);
   }
 }
 

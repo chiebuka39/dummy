@@ -2,6 +2,7 @@ import 'package:flutter/foundation.dart';
 import 'package:zimvest/data/models/dashboard.dart';
 import 'package:zimvest/data/models/payment/bank.dart';
 import 'package:zimvest/data/models/payment/card.dart';
+import 'package:zimvest/data/models/payment/wallet.dart';
 import 'package:zimvest/data/services/dashboard_service.dart';
 import 'package:zimvest/data/services/payment_service.dart';
 import 'package:zimvest/locator.dart';
@@ -14,7 +15,11 @@ abstract class ABSPaymentViewModel extends ChangeNotifier{
   List<Bank> get userBanks => _userBanks;
   List<PaymentCard> get userCards => _userCards;
 
+  Wallet _wallet;
+  Wallet get wallet => _wallet;
+
   set userBanks(List<Bank> value);
+  set wallet(Wallet value);
   set userCards(List<PaymentCard> value);
 
   Future<Result<List<Bank>>> getBanks(String token);
@@ -22,6 +27,7 @@ abstract class ABSPaymentViewModel extends ChangeNotifier{
     String accountNum, String bankCode});
   Future<Result<List<Bank>>> getCustomerBank(String token);
   Future<Result<List<PaymentCard>>> getUserCards(String token);
+  Future<Result<Wallet>> getWallet(String token);
   Future<Result<Bank>> addBank(
       {String token,
         int bankId,
@@ -41,6 +47,11 @@ class PaymentViewModel extends ABSPaymentViewModel{
 
   set userCards(List<PaymentCard> value){
     _userCards = value;
+    notifyListeners();
+  }
+
+  set wallet(Wallet value){
+    _wallet = value;
     notifyListeners();
   }
 
@@ -101,6 +112,16 @@ class PaymentViewModel extends ABSPaymentViewModel{
 
     if(result.error == false){
       userCards = result.data;
+    }
+    return result;
+  }
+
+  @override
+  Future<Result<Wallet>> getWallet(String token) async{
+    var result =  await _paymentService.getWallet(token);
+
+    if(result.error == false){
+      wallet = result.data;
     }
     return result;
   }
