@@ -59,7 +59,6 @@ class _SavingsScreenState extends State<SavingsScreen>
     EasyLoading.show(status: 'loading...');
     await savingViewModel.getSavingPlans(token: identityViewModel.user.token);
     await savingViewModel.getProductTypes(token: identityViewModel.user.token);
-    setDataForUniquePlans();
     if(savingViewModel.productTypes.isNotEmpty){
       await fetchTransactions(savingViewModel.productTypes.first.id);
     }
@@ -86,9 +85,7 @@ class _SavingsScreenState extends State<SavingsScreen>
 
   }
 
-  void setDataForUniquePlans() {
 
-  }
 
   @override
   Widget build(BuildContext context) {

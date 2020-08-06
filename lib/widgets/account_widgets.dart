@@ -304,8 +304,10 @@ class AmountWidgetBorder extends StatelessWidget {
                       WhitelistingTextInputFormatter.digitsOnly,
                       CurrencyPtBrInputFormatter(maxDigits: 11)
                     ],
-                    onChanged: (string){
-                      onChange(double.parse(string));
+                    onChanged: (value){
+                      String _onlyDigits = value.replaceAll(RegExp('[^0-9]'), "");
+                      double _doubleValue = double.parse(_onlyDigits) / 100;
+                      onChange(_doubleValue);
                     },
                     style: TextStyle(color: AppColors.kAccountTextColor),
                     decoration: InputDecoration(
@@ -322,7 +324,7 @@ class AmountWidgetBorder extends StatelessWidget {
         ],),);
   }
 }
-class DateOfBirthBorderInputWidget extends StatelessWidget {
+class DateOfBirthBorderInputWidget extends StatefulWidget {
 
   final String title;
   final bool error;
@@ -335,20 +337,29 @@ class DateOfBirthBorderInputWidget extends StatelessWidget {
   }) : super(key: key);
 
   @override
+  _DateOfBirthBorderInputWidgetState createState() => _DateOfBirthBorderInputWidgetState();
+}
+
+class _DateOfBirthBorderInputWidgetState extends State<DateOfBirthBorderInputWidget> {
+  DateTime time;
+  @override
   Widget build(BuildContext context) {
     return Container(height: 90,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
-            title,
-            style: TextStyle(color:error == true ?Colors.redAccent:  textColor, fontSize: 12),
+            widget.title,
+            style: TextStyle(color:widget.error == true ?Colors.redAccent:  widget.textColor, fontSize: 12),
           ),
           YMargin(8),
           InkWell(
             onTap: (){
               showDatePicker(context: context, initialDate: DateTime.utc(1994), firstDate: DateTime.utc(1930), lastDate: DateTime.utc(2030)).then((value) {
-                setDate(value);
+                widget.setDate(value);
+                setState(() {
+                  time = value;
+                });
               });
             },
             child: Container(
@@ -356,10 +367,10 @@ class DateOfBirthBorderInputWidget extends StatelessWidget {
               padding: EdgeInsets.symmetric(horizontal: 10),
               decoration: BoxDecoration(
                   color: Colors.transparent,
-                  border: Border.all(color: error == true? Colors.redAccent : AppColors.kLightText),
+                  border: Border.all(color: widget.error == true? Colors.redAccent : AppColors.kLightText),
                   borderRadius: BorderRadius.circular(4)),
               child: Row(children: [
-                Text("", style: TextStyle(fontSize: 14, color: AppColors.kLightText2),),
+                Text(time == null?"":"${time.day}, ${time.year}", style: TextStyle(fontSize: 14, color: AppColors.kAccountTextColor),),
                 Spacer(),
                 SvgPicture.asset("images/bx-calendar2.svg")
               ],),
