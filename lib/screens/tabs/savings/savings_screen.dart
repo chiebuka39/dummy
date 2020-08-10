@@ -57,15 +57,27 @@ class _SavingsScreenState extends State<SavingsScreen>
   @override
   void afterFirstLayout(BuildContext context) async {
     EasyLoading.show(status: 'loading...');
-    await savingViewModel.getSavingPlans(token: identityViewModel.user.token);
-    await savingViewModel.getProductTypes(token: identityViewModel.user.token);
-    if(savingViewModel.productTypes.isNotEmpty){
-      await fetchTransactions(savingViewModel.productTypes.first.id);
-    }
 
-    EasyLoading.dismiss();
+     var r1 = await savingViewModel.getSavingPlans(token: identityViewModel.user.token);
+     var r2 = await savingViewModel.getProductTypes(token: identityViewModel.user.token);
+     if(r1.error == false && r2.error == false ){
+       if(savingViewModel.productTypes.isNotEmpty){
+         await fetchTransactions(savingViewModel.productTypes.first.id);
+       }
+       EasyLoading.dismiss();
 
-    getRequiredDetailsForForm();
+       getRequiredDetailsForForm();
+     }else{
+       EasyLoading.showError("Error occured");
+
+       getRequiredDetailsForForm();
+     }
+
+
+
+
+
+
   }
 
   Future<void> fetchTransactions(int productId,{bool showLoader = false}) async {

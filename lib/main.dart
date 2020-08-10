@@ -5,6 +5,7 @@ import 'package:provider/provider.dart';
 import 'package:zimvest/data/local/user_local.dart';
 import 'package:zimvest/data/view_models/dashboard_view_model.dart';
 import 'package:zimvest/data/view_models/identity_view_model.dart';
+import 'package:zimvest/data/view_models/investment_view_model.dart';
 import 'package:zimvest/data/view_models/payment_view_model.dart';
 import 'package:zimvest/data/view_models/savings_view_model.dart';
 import 'package:zimvest/locator.dart';
@@ -46,7 +47,8 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProvider<ABSIdentityViewModel>(create: (_) => IdentityViewModel(),),
         ChangeNotifierProvider<ABSDashboardViewModel>(create: (_) => DashboardViewModel(),),
         ChangeNotifierProvider<ABSPaymentViewModel>(create: (_) => PaymentViewModel(),),
-        ChangeNotifierProvider<ABSSavingViewModel>(create: (_) => SavingViewModel(),)
+        ChangeNotifierProvider<ABSSavingViewModel>(create: (_) => SavingViewModel(),),
+        ChangeNotifierProvider<ABSInvestmentViewModel>(create: (_) => InvestmentViewModel(),)
       ],
       child: FlutterEasyLoading(
         child: MaterialApp(

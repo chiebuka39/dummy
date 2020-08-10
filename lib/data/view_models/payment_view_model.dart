@@ -35,6 +35,8 @@ abstract class ABSPaymentViewModel extends ChangeNotifier{
         String accountName,
         String accountNum});
   Future<Result<void>> deleteBank(String token, int bankId);
+  Future<Result<Bank>> addCard({String token, String cardNumber,
+    String expiryDate, String cvv, String pin});
 }
 
 class PaymentViewModel extends ABSPaymentViewModel{
@@ -124,6 +126,12 @@ class PaymentViewModel extends ABSPaymentViewModel{
       wallet = result.data;
     }
     return result;
+  }
+
+  @override
+  Future<Result<Bank>> addCard({String token, String cardNumber, String expiryDate, String cvv, String pin}) {
+    // TODO: implement addCard
+    throw UnimplementedError();
   }
 
 }

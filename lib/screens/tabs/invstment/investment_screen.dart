@@ -1,9 +1,15 @@
+import 'package:after_layout/after_layout.dart';
 import 'package:circular_profile_avatar/circular_profile_avatar.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:flutter_money_formatter/flutter_money_formatter.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:provider/provider.dart';
 import 'package:zimvest/animations/fab_menu_items.dart';
+import 'package:zimvest/data/view_models/identity_view_model.dart';
+import 'package:zimvest/data/view_models/investment_view_model.dart';
+import 'package:zimvest/data/view_models/payment_view_model.dart';
 import 'package:zimvest/screens/tabs/invstment/add_fund.dart';
 import 'package:zimvest/screens/tabs/invstment/invest_direct.dart';
 import 'package:zimvest/screens/tabs/invstment/invest_high.dart';
@@ -22,18 +28,25 @@ class InvestmentScreen extends StatefulWidget {
   _InvestmentScreenState createState() => _InvestmentScreenState();
 }
 
-class _InvestmentScreenState extends State<InvestmentScreen> {
+class _InvestmentScreenState extends State<InvestmentScreen>
+    with AfterLayoutMixin<InvestmentScreen> {
   FlutterMoneyFormatter amount;
   ZimInvestmentType _zimType;
   bool showSavingsGraph = true;
   List<ZimInvestmentType> investmentList;
 
+  //view models
+  ABSInvestmentViewModel investmentViewModel;
+  ABSIdentityViewModel identityViewModel;
+  ABSPaymentViewModel paymentViewModel;
 
   @override
   void initState() {
-    investmentList = [ZimInvestmentType.MUTUAL_FUNDS,
+    investmentList = [
+      ZimInvestmentType.MUTUAL_FUNDS,
       ZimInvestmentType.FIXED,
-      ZimInvestmentType.HIGH_YIELD];
+      ZimInvestmentType.HIGH_YIELD
+    ];
     _zimType = ZimInvestmentType.MUTUAL_FUNDS;
     amount = FlutterMoneyFormatter(
         amount: 10000000, settings: MoneyFormatterSettings(fractionDigits: 0));
@@ -41,7 +54,28 @@ class _InvestmentScreenState extends State<InvestmentScreen> {
   }
 
   @override
+  void afterFirstLayout(BuildContext context) async {
+    EasyLoading.show(status: 'loading...');
+    var i1 = await investmentViewModel.getMutualFundValuation(
+        token: identityViewModel.user.token);
+    var i2 = await investmentViewModel.getFixedFundValuation(
+        token: identityViewModel.user.token);
+    var i3 = await investmentViewModel.getTermFundValuation(
+        token: identityViewModel.user.token);
+    if (i1.error == false && i2.error == false && i3.error == false) {
+      var i4 = await investmentViewModel.getMutualFundActivities(
+          token: identityViewModel.user.token);
+      EasyLoading.dismiss();
+    } else {
+      EasyLoading.showError("Error");
+    }
+  }
+
+  @override
   Widget build(BuildContext context) {
+    investmentViewModel = Provider.of(context);
+    paymentViewModel = Provider.of(context);
+    identityViewModel = Provider.of(context);
     return Scaffold(
       floatingActionButton: Padding(
         padding: const EdgeInsets.only(bottom: 100),
@@ -52,15 +86,22 @@ class _InvestmentScreenState extends State<InvestmentScreen> {
             fabcolor: AppColors.kAccentColor,
             containercolor: AppColors.kPrimaryColor.withOpacity(0.6),
             childrens: <Widget>[
-              FabItem(item: "New Mutual funds",onTap: (){
-                Navigator.of(context).push(InvestInMutualScreen.route());
-              },),
-              FabItem(item: "New Direct Fixed income sales",onTap: (){
-      Navigator.of(context).push(InvestInDirectScreen.route());
-      }),
-              FabItem(item: "New Zimvest yield",onTap: (){
-                Navigator.of(context).push(InvestInHighScreen.route());
-              }),
+              FabItem(
+                item: "New Mutual funds",
+                onTap: () {
+                  Navigator.of(context).push(InvestInMutualScreen.route());
+                },
+              ),
+              FabItem(
+                  item: "New Direct Fixed income sales",
+                  onTap: () {
+                    Navigator.of(context).push(InvestInDirectScreen.route());
+                  }),
+              FabItem(
+                  item: "New Zimvest yield",
+                  onTap: () {
+                    Navigator.of(context).push(InvestInHighScreen.route());
+                  }),
             ]),
       ),
       body: Container(
@@ -133,77 +174,20 @@ class _InvestmentScreenState extends State<InvestmentScreen> {
                               _zimType = ZimInvestmentType.HIGH_YIELD;
                             });
                           },
-                          type:ZimInvestmentType.HIGH_YIELD,
+                          type: ZimInvestmentType.HIGH_YIELD,
                           selectedType: _zimType,
                         ),
                       ],
                     ),
                   ),
                   YMargin(15),
-                  Container(
-                    height: 140,
-                    width: double.infinity,
-                    child: buildListView(),
-                  ),
+                  _buildListOfFunds(),
                   YMargin(20),
-
                   _buildSavingsActivities(),
                   YMargin(20),
                 ]),
               ),
-              SliverList(
-                delegate: SliverChildListDelegate(List.generate(
-                    4,
-                    (index) => Container(
-                          decoration: BoxDecoration(
-                              border: Border(
-                                  bottom: BorderSide(
-                                      width: .5, color: AppColors.kLightText))),
-                          margin: EdgeInsets.symmetric(horizontal: 20),
-                          height: 55,
-                          child: Row(
-                            children: [
-                              Column(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Text(
-                                    "Wealth Box",
-                                    style: TextStyle(
-                                        color: Color(0xFF324d53), fontSize: 12),
-                                  ),
-                                  YMargin(5),
-                                  Text(
-                                    "Mon, April 13 2020",
-                                    style: TextStyle(
-                                        fontSize: 10,
-                                        color: AppColors.kLightText2),
-                                  )
-                                ],
-                              ),
-                              Spacer(),
-                              Column(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                crossAxisAlignment: CrossAxisAlignment.end,
-                                children: [
-                                  Text(
-                                    "450.00",
-                                    style: TextStyle(
-                                        fontSize: 12, color: AppColors.kGreen),
-                                  ),
-                                  YMargin(5),
-                                  Text(
-                                    "Successful",
-                                    style: TextStyle(
-                                        fontSize: 10,
-                                        color: AppColors.kLightText2),
-                                  )
-                                ],
-                              )
-                            ],
-                          ),
-                        ))),
-              ),
+              _buildActivities(),
               SliverToBoxAdapter(
                 child: SizedBox(
                   height: 60,
@@ -216,31 +200,179 @@ class _InvestmentScreenState extends State<InvestmentScreen> {
     );
   }
 
+  Widget _buildListOfFunds() {
+    Widget result;
+    if(investmentViewModel.mutualFunds == null){
+      result = Container(
+        width: 150,
+        height: 140,
+        decoration: BoxDecoration(
+          color: Colors.transparent
+        ),
+      );
+    }else{
+      if(investmentViewModel.mutualFunds.isEmpty){
+        result = Row(
+          children: [
+            Container(
+              margin: EdgeInsets.only(left: 20),
+              width: 150,
+              height: 140,
+              decoration: BoxDecoration(
+                  color: AppColors.kPrimaryColor,
+                borderRadius: BorderRadius.circular(6)
+              ),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [
+
+                Container(
+                  width: 40,
+                  height: 40,
+                  decoration: BoxDecoration(
+                      color: Colors.black,
+                      shape: BoxShape.circle
+                  ),
+                  child: Center(child: Icon(Icons.add, color: AppColors.kAccentColor,),),
+                ),
+
+                SizedBox(
+                  width: 100,
+                  child: Text("New Mutual funds", style: TextStyle(
+                    fontSize: 12,color: AppColors.kAccentColor
+                  ),textAlign: TextAlign.center,),
+                )
+              ],),
+            ),
+          ],
+        );
+      }else{
+        result = Container(
+          height: 140,
+          width: double.infinity,
+          child: buildListView(),
+        );
+      }
+    }
+return result;
+  }
+
+  Widget _buildActivities() {
+    Widget result;
+    if(investmentViewModel.mutualFundsActivity == null){
+      result =  SizedBox();
+    }else{
+      if(investmentViewModel.mutualFundsActivity.isNotEmpty){
+        result = SliverList(
+          delegate: SliverChildListDelegate(List.generate(
+              4,
+                  (index) => Container(
+                decoration: BoxDecoration(
+                    border: Border(
+                        bottom: BorderSide(
+                            width: .5, color: AppColors.kLightText))),
+                margin: EdgeInsets.symmetric(horizontal: 20),
+                height: 55,
+                child: Row(
+                  children: [
+                    Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          "Wealth Box",
+                          style: TextStyle(
+                              color: Color(0xFF324d53), fontSize: 12),
+                        ),
+                        YMargin(5),
+                        Text(
+                          "Mon, April 13 2020",
+                          style: TextStyle(
+                              fontSize: 10,
+                              color: AppColors.kLightText2),
+                        )
+                      ],
+                    ),
+                    Spacer(),
+                    Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.end,
+                      children: [
+                        Text(
+                          "450.00",
+                          style: TextStyle(
+                              fontSize: 12, color: AppColors.kGreen),
+                        ),
+                        YMargin(5),
+                        Text(
+                          "Successful",
+                          style: TextStyle(
+                              fontSize: 10,
+                              color: AppColors.kLightText2),
+                        )
+                      ],
+                    )
+                  ],
+                ),
+              ))),
+        );
+      }else{
+        result = SliverToBoxAdapter(
+          child: Container(
+            height: 100,
+            child: Center(
+              child: Text("You don't have any activity yet"),
+            ),
+          ),
+        );
+      }
+    }
+   return result;
+  }
+
   Widget buildListView() {
     Widget list;
-    switch(_zimType){
+    switch (_zimType) {
       case ZimInvestmentType.MUTUAL_FUNDS:
         list = ListView(
           scrollDirection: Axis.horizontal,
           children: [
-            InvestmentDetailContainer(amount: amount,investmentType: ZimInvestmentType.MUTUAL_FUNDS,),
-            InvestmentDetailContainer(amount: amount,investmentType: ZimInvestmentType.MUTUAL_FUNDS,),
-          ],);
+            InvestmentDetailContainer(
+              amount: amount,
+              investmentType: ZimInvestmentType.MUTUAL_FUNDS,
+            ),
+            InvestmentDetailContainer(
+              amount: amount,
+              investmentType: ZimInvestmentType.MUTUAL_FUNDS,
+            ),
+          ],
+        );
         break;
       case ZimInvestmentType.FIXED:
         list = ListView(
           scrollDirection: Axis.horizontal,
           children: [
-            InvestmentDetailContainer(amount: amount,investmentType: ZimInvestmentType.FIXED,),
-          ],);
+            InvestmentDetailContainer(
+              amount: amount,
+              investmentType: ZimInvestmentType.FIXED,
+            ),
+          ],
+        );
         break;
       case ZimInvestmentType.HIGH_YIELD:
         list = ListView(
           scrollDirection: Axis.horizontal,
           children: [
-            InvestmentDetailContainer(amount: amount,investmentType: ZimInvestmentType.HIGH_YIELD,),
-            InvestmentDetailContainer(amount: amount,investmentType: ZimInvestmentType.HIGH_YIELD,),
-          ],);
+            InvestmentDetailContainer(
+              amount: amount,
+              investmentType: ZimInvestmentType.HIGH_YIELD,
+            ),
+            InvestmentDetailContainer(
+              amount: amount,
+              investmentType: ZimInvestmentType.HIGH_YIELD,
+            ),
+          ],
+        );
         break;
     }
     return list;
@@ -328,7 +460,9 @@ class FabItem extends StatelessWidget {
   final String item;
   final Function onTap;
   const FabItem({
-    Key key, this.item, this.onTap,
+    Key key,
+    this.item,
+    this.onTap,
   }) : super(key: key);
 
   @override
@@ -440,7 +574,8 @@ class SavingsActionWidget extends StatelessWidget {
 class InvestmentDetailContainer extends StatelessWidget {
   const InvestmentDetailContainer({
     Key key,
-    @required this.amount, this.investmentType,
+    @required this.amount,
+    this.investmentType,
   }) : super(key: key);
 
   final FlutterMoneyFormatter amount;
@@ -471,15 +606,18 @@ class InvestmentDetailContainer extends StatelessWidget {
                     child: Center(
                       child: Text(
                         getTitle(),
-                        style: TextStyle(fontSize: 10, color: AppColors.kWhite,
+                        style: TextStyle(
+                            fontSize: 10,
+                            color: AppColors.kWhite,
                             fontFamily: "Caros-Medium"),
                       ),
                     ),
                   ),
                   Spacer(),
                   InkWell(
-                    onTap: (){
-                      Navigator.of(context).push(InvestmentDetailScreen.route());
+                    onTap: () {
+                      Navigator.of(context)
+                          .push(InvestmentDetailScreen.route());
                     },
                     child: SizedBox(
                       width: 85,
@@ -487,9 +625,13 @@ class InvestmentDetailContainer extends StatelessWidget {
                         children: [
                           Text(
                             "View details",
-                            style: TextStyle(fontSize: 10, color: AppColors.kAccentColor),
+                            style: TextStyle(
+                                fontSize: 10, color: AppColors.kAccentColor),
                           ),
-                          Icon(Icons.navigate_next, color: AppColors.kAccentColor,)
+                          Icon(
+                            Icons.navigate_next,
+                            color: AppColors.kAccentColor,
+                          )
                         ],
                       ),
                     ),
@@ -547,7 +689,7 @@ class InvestmentDetailContainer extends StatelessWidget {
 
   String getTitle() {
     String value;
-    switch (investmentType){
+    switch (investmentType) {
       case ZimInvestmentType.MUTUAL_FUNDS:
         value = "Mutual funds".toUpperCase();
         break;
@@ -561,4 +703,3 @@ class InvestmentDetailContainer extends StatelessWidget {
     return value;
   }
 }
-
