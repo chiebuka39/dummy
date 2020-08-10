@@ -16,7 +16,7 @@ class InvestmentFixedFund {
   PercentageInterest percentageInterest;
   String currentValue;
   bool isMatured;
-  int withdrawableValue;
+  double withdrawableValue;
   DateTime maturityDate;
 
   factory InvestmentFixedFund.fromJson(Map<String, dynamic> json) => InvestmentFixedFund(

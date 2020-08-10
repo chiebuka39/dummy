@@ -13,7 +13,7 @@ class InvestmentMutualFund {
   String fundName;
   String percentageInterest;
   String currentValue;
-  int withdrawableValue;
+  double withdrawableValue;
 
   factory InvestmentMutualFund.fromJson(Map<String, dynamic> json) => InvestmentMutualFund(
         productId: json["productId"],
@@ -44,6 +44,7 @@ class InvestmentActivity {
     this.instrumentType,
     this.currency,
     this.amount,
+    this.interestAmount,
     this.status,
     this.description,
     this.startDate,
@@ -55,8 +56,9 @@ class InvestmentActivity {
   InstrumentType instrumentType;
   Currency currency;
   String amount;
+  String interestAmount;
   Status status;
-  Description description;
+  String description;
   DateTime startDate;
 
   factory InvestmentActivity.fromJson(Map<String, dynamic> json) => InvestmentActivity(
@@ -66,8 +68,9 @@ class InvestmentActivity {
     instrumentType: instrumentTypeValues.map[json["instrumentType"]],
     currency: currencyValues.map[json["currency"]],
     amount: json["amount"],
+    interestAmount: json["interestAmount"],
     status: statusValues.map[json["status"]],
-    description: descriptionValues.map[json["description"]],
+    description: json["description"],
     startDate: DateTime.parse(json["startDate"]),
   );
 
@@ -79,7 +82,7 @@ class InvestmentActivity {
     "currency": currencyValues.reverse[currency],
     "amount": amount,
     "status": statusValues.reverse[status],
-    "description": descriptionValues.reverse[description],
+    "description": description,
     "startDate": startDate.toIso8601String(),
   };
 }
@@ -91,12 +94,7 @@ final currencyValues = EnumValues({
   "USD": Currency.USD
 });
 
-enum Description { SUBSCRIPTION, WITHDRAWAL }
 
-final descriptionValues = EnumValues({
-  "Subscription": Description.SUBSCRIPTION,
-  "Withdrawal": Description.WITHDRAWAL
-});
 
 enum InstrumentType { MONEY_MARKET_FUND, DOLLAR_FUND }
 

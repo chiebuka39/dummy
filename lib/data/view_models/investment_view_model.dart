@@ -50,6 +50,8 @@ abstract class ABSInvestmentViewModel extends ChangeNotifier{
   Future<Result<List<InvestmentTermFund>>> getTermFundValuation({String token, bool reload});
   Future<Result<List<InvestmentActivity>>> getMutualFundActivities({String token, bool reload});
   Future<Result<List<InvestmentActivity>>> getFixedFundActivities({String token, bool reload});
+  Future<Result<List<InvestmentActivity>>> getTermFundActivities({String token, bool reload});
+  void reset();
 }
 
 class InvestmentViewModel extends ABSInvestmentViewModel{
@@ -168,6 +170,32 @@ class InvestmentViewModel extends ABSInvestmentViewModel{
           data: termFunds,error: false,errorMessage: "");
     }
 
+  }
+
+  @override
+  Future<Result<List<InvestmentActivity>>> getTermFundActivities({String token,
+    bool reload}) async{
+    if(reload == true || termedFundsActivity == null){
+      var result = await _investmentService.getTermFundActivities(token: token);
+      if(result.error == false){
+        termedFundsActivity = result.data;
+      }
+      print(",,, ${result.data}");
+      return result;
+    }else{
+      return Result<List<InvestmentActivity>>(
+          data: termedFundsActivity,error: false,errorMessage: "");
+    }
+  }
+
+  @override
+  void reset() {
+    mutualFunds = null;
+    mutualFundsActivity = null;
+    termedFundsActivity = null;
+    termFunds = null;
+    fixedFunds = null;
+    fixedFundsActivity = null;
   }
 
 

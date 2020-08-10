@@ -8,6 +8,7 @@ import 'package:hive/hive.dart';
 import 'package:provider/provider.dart';
 import 'package:zimvest/data/models/secondary_state.dart';
 import 'package:zimvest/data/view_models/identity_view_model.dart';
+import 'package:zimvest/data/view_models/investment_view_model.dart';
 import 'package:zimvest/screens/account/account_settings_screen.dart';
 import 'package:zimvest/screens/account/login_screen.dart';
 import 'package:zimvest/screens/analysis/investment_persona_screen.dart';
@@ -31,12 +32,14 @@ class MenuContainer extends StatefulWidget {
 
 class _MenuContainerState extends State<MenuContainer> {
   ABSIdentityViewModel _identityViewModel;
+  ABSInvestmentViewModel _investmentViewModel;
   bool isCollapsed = false;
   double screenWidth, screenHeight;
 
   @override
   Widget build(BuildContext context) {
     _identityViewModel = Provider.of(context);
+    _investmentViewModel = Provider.of(context);
     Size size = MediaQuery.of(context).size;
     screenHeight = size.height;
     screenWidth = size.width;
@@ -232,10 +235,11 @@ class _MenuContainerState extends State<MenuContainer> {
   }
 
   void _logout(BuildContext context) {
+
     final box = Hive.box(AppStrings.state);
     box.put("user", null);
     box.put("state", SecondaryState(false));
-
+    _investmentViewModel.reset();
     Navigator.of(context, rootNavigator: true).pop();
     Navigator.pushAndRemoveUntil(
         context,
