@@ -4,6 +4,7 @@ import 'package:zimvest/data/models/investment/investment_fixed_fund.dart';
 import 'package:zimvest/data/models/investment/investment_fund_model.dart';
 import 'package:zimvest/data/models/investment/investment_termed_fund.dart';
 import 'package:zimvest/data/models/investment/money_market_fund.dart';
+import 'package:zimvest/data/models/investment/mutual_item_detail.dart';
 import 'package:zimvest/data/models/investment/term_instruments.dart';
 import 'package:zimvest/data/models/product_transaction.dart';
 import 'package:zimvest/data/models/product_type.dart';
@@ -64,6 +65,8 @@ abstract class ABSInvestmentViewModel extends ChangeNotifier{
   Future<Result<List<CorporateBond>>> getCorporateBond({String token});
   Future<Result<List<TermInstrument>>> getDollarTermInstruments({String token});
   Future<Result<List<TermInstrument>>> getNairaTermInstruments({String token});
+  Future<Result<Fund>> getFundDetails({String token,
+    String fundName, String fundId});
   void reset();
 }
 
@@ -260,6 +263,11 @@ class InvestmentViewModel extends ABSInvestmentViewModel{
   @override
   Future<Result<List<TermInstrument>>> getNairaTermInstruments({String token}) {
     return _investmentService.getNairaTermInstruments(token: token);
+  }
+
+  @override
+  Future<Result<Fund>> getFundDetails({String token, String fundName, String fundId}) {
+    return _investmentService.getFundDetails(token: token,fundId: fundId,fundName: fundName);
   }
 
 

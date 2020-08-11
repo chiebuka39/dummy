@@ -6,6 +6,7 @@ import 'package:zimvest/data/models/investment/investment_fixed_fund.dart';
 import 'package:zimvest/data/models/investment/investment_fund_model.dart';
 import 'package:zimvest/data/models/investment/investment_termed_fund.dart';
 import 'package:zimvest/data/models/investment/money_market_fund.dart';
+import 'package:zimvest/data/models/investment/mutual_item_detail.dart';
 import 'package:zimvest/data/models/investment/term_instruments.dart';
 import 'package:zimvest/data/models/product_transaction.dart';
 import 'package:zimvest/data/models/product_type.dart';
@@ -34,6 +35,8 @@ abstract class ABSInvestmentService{
   Future<Result<List<PromissoryNote>>> getPromissoryNotes({String token});
   Future<Result<List<EuroBond>>> getEuroBond({String token});
   Future<Result<List<CorporateBond>>> getCorporateBond({String token});
+  Future<Result<Fund>> getFundDetails({String token,
+    String fundName, String fundId});
 
 
 
@@ -907,6 +910,49 @@ class InvestmentService extends ABSInvestmentService{
           channels.add(TermInstrument.fromJson(chaList));
         });
         result.data = channels;
+      }
+
+    }on DioError catch(e){
+      print("error $e}");
+      if(e.response != null ){
+        print(e.response.data);
+        //result.errorMessage = e.response.data['message'];
+      }else{
+        print(e.toString());
+        result.errorMessage = "Sorry, We could not complete your request";
+      }
+      result.error = true;
+    }
+
+    return result;
+  }
+
+  @override
+  Future<Result<Fund>> getFundDetails({String token, String fundName, String fundId}) async{
+    Result<Fund> result = Result(error: false);
+
+
+    var headers = {
+      HttpHeaders.authorizationHeader: "Bearer $token"
+    };
+
+
+    var url = "${AppStrings.baseUrl}$microService/api/Dashboards/managefund?FundId=$fundId&FundName=$fundName";
+    print("url $url");
+    try{
+      var response = await dio.get(url,options: Options(headers: headers));
+      final int statusCode = response.statusCode;
+      var response1 = response.data;
+      print("iii ${response1}");
+
+      if (statusCode != 200) {
+        result.errorMessage = response1['message'];
+        result.error = true;
+      }else {
+        result.error = false;
+
+
+        result.data = Fund.fromJson(response1['data'] );
       }
 
     }on DioError catch(e){

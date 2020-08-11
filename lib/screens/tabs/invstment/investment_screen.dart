@@ -7,7 +7,9 @@ import 'package:flutter_money_formatter/flutter_money_formatter.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:provider/provider.dart';
 import 'package:zimvest/animations/fab_menu_items.dart';
+import 'package:zimvest/data/models/investment/investment_fixed_fund.dart';
 import 'package:zimvest/data/models/investment/investment_fund_model.dart';
+import 'package:zimvest/data/models/investment/investment_termed_fund.dart';
 import 'package:zimvest/data/view_models/identity_view_model.dart';
 import 'package:zimvest/data/view_models/investment_view_model.dart';
 import 'package:zimvest/data/view_models/payment_view_model.dart';
@@ -388,42 +390,38 @@ class _InvestmentScreenState extends State<InvestmentScreen>
       case ZimInvestmentType.MUTUAL_FUNDS:
         list = ListView(
           scrollDirection: Axis.horizontal,
-          children: [
-            InvestmentDetailContainer(
+          children: investmentViewModel.mutualFunds.map((e) {
+            print("kkkk ${e.fundName}");
+            return  InvestmentDetailContainer(
               amount: amount,
+              mutualFund: e,
               investmentType: ZimInvestmentType.MUTUAL_FUNDS,
-            ),
-            InvestmentDetailContainer(
-              amount: amount,
-              investmentType: ZimInvestmentType.MUTUAL_FUNDS,
-            ),
-          ],
+            );
+          }).toList(),
         );
         break;
       case ZimInvestmentType.FIXED:
         list = ListView(
           scrollDirection: Axis.horizontal,
-          children: [
-            InvestmentDetailContainer(
+          children: investmentViewModel.fixedFunds.map((e) {
+            return  InvestmentDetailContainerFixed(
               amount: amount,
+              mutualFund: e,
               investmentType: ZimInvestmentType.FIXED,
-            ),
-          ],
+            );
+          }).toList(),
         );
         break;
       case ZimInvestmentType.HIGH_YIELD:
         list = ListView(
           scrollDirection: Axis.horizontal,
-          children: [
-            InvestmentDetailContainer(
+          children:investmentViewModel.termFunds.map((e) {
+            return  InvestmentDetailContainerTerm(
               amount: amount,
+              mutualFund: e,
               investmentType: ZimInvestmentType.HIGH_YIELD,
-            ),
-            InvestmentDetailContainer(
-              amount: amount,
-              investmentType: ZimInvestmentType.HIGH_YIELD,
-            ),
-          ],
+            );
+          }).toList(),
         );
         break;
     }
@@ -746,11 +744,145 @@ class InvestmentDetailContainer extends StatelessWidget {
   const InvestmentDetailContainer({
     Key key,
     @required this.amount,
-    this.investmentType,
+    this.investmentType, this.mutualFund,
   }) : super(key: key);
 
   final FlutterMoneyFormatter amount;
   final ZimInvestmentType investmentType;
+  final InvestmentMutualFund mutualFund;
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      height: 140,
+      margin: EdgeInsets.only(left: 20),
+      padding: EdgeInsets.symmetric(horizontal: 15, vertical: 10),
+      width: MediaQuery.of(context).size.width - 50,
+      decoration: BoxDecoration(
+          color: AppColors.kPrimaryColor,
+          borderRadius: BorderRadius.circular(5)),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Row(
+                children: [
+                  Container(
+                    height: 20,
+                    width: 100,
+                    decoration: BoxDecoration(color: Color(0xFF324d53)),
+                    child: Center(
+                      child: Text(
+                        getTitle(),
+                        style: TextStyle(
+                            fontSize: 10,
+                            color: AppColors.kWhite,
+                            fontFamily: "Caros-Medium"),
+                      ),
+                    ),
+                  ),
+                  Spacer(),
+                  InkWell(
+                    onTap: () {
+                      Navigator.of(context)
+                          .push(InvestmentDetailScreen.route(id: mutualFund.fundId,title: mutualFund.fundName));
+                    },
+                    child: SizedBox(
+                      width: 85,
+                      child: Row(
+                        children: [
+                          Text(
+                            "View details",
+                            style: TextStyle(
+                                fontSize: 10, color: AppColors.kAccentColor),
+                          ),
+                          Icon(
+                            Icons.navigate_next,
+                            color: AppColors.kAccentColor,
+                          )
+                        ],
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+              YMargin(10),
+              Text(
+                mutualFund.fundName,
+                style: TextStyle(
+                    color: AppColors.kLightText,
+                    fontSize: 11,
+                    fontFamily: "Caros"),
+              ),
+            ],
+          ),
+          Spacer(),
+          Row(
+            children: [
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    "Maximum amount",
+                    style: TextStyle(
+                        fontSize: 10, color: AppColors.kLightTitleText),
+                  ),
+                  YMargin(3),
+                  Text(
+                    mutualFund.currentValue,
+                    style: TextStyle(
+                        fontSize: 16,
+                        fontFamily: "Caros-Medium",
+                        color: AppColors.kWhite),
+                  )
+                ],
+              ),
+              Spacer(),
+              Padding(
+                padding: const EdgeInsets.only(top: 15),
+                child: Text(
+                  "${mutualFund.percentageInterest} Interest P.A",
+                  style: TextStyle(
+                      color: AppColors.kWhite,
+                      fontSize: 10,
+                      fontFamily: "Caros-Medium"),
+                ),
+              )
+            ],
+          )
+        ],
+      ),
+    );
+  }
+
+  String getTitle() {
+    String value;
+    switch (investmentType) {
+      case ZimInvestmentType.MUTUAL_FUNDS:
+        value = "Mutual funds".toUpperCase();
+        break;
+      case ZimInvestmentType.FIXED:
+        value = "Fixed income".toUpperCase();
+        break;
+      case ZimInvestmentType.HIGH_YIELD:
+        value = "High Yield".toUpperCase();
+        break;
+    }
+    return value;
+  }
+}
+class InvestmentDetailContainerFixed extends StatelessWidget {
+  const InvestmentDetailContainerFixed({
+    Key key,
+    @required this.amount,
+    this.investmentType, this.mutualFund,
+  }) : super(key: key);
+
+  final FlutterMoneyFormatter amount;
+  final ZimInvestmentType investmentType;
+  final InvestmentFixedFund mutualFund;
 
   @override
   Widget build(BuildContext context) {
@@ -811,7 +943,7 @@ class InvestmentDetailContainer extends StatelessWidget {
               ),
               YMargin(10),
               Text(
-                "A random fixed income",
+                mutualFund.fixedIncomeName,
                 style: TextStyle(
                     color: AppColors.kLightText,
                     fontSize: 11,
@@ -832,7 +964,7 @@ class InvestmentDetailContainer extends StatelessWidget {
                   ),
                   YMargin(3),
                   Text(
-                    amount.output.symbolOnLeft,
+                    mutualFund.currentValue,
                     style: TextStyle(
                         fontSize: 16,
                         fontFamily: "Caros-Medium",
@@ -844,7 +976,140 @@ class InvestmentDetailContainer extends StatelessWidget {
               Padding(
                 padding: const EdgeInsets.only(top: 15),
                 child: Text(
-                  "6% Interest P.A",
+                  "${mutualFund.percentageInterest} Interest P.A",
+                  style: TextStyle(
+                      color: AppColors.kWhite,
+                      fontSize: 10,
+                      fontFamily: "Caros-Medium"),
+                ),
+              )
+            ],
+          )
+        ],
+      ),
+    );
+  }
+
+  String getTitle() {
+    String value;
+    switch (investmentType) {
+      case ZimInvestmentType.MUTUAL_FUNDS:
+        value = "Mutual funds".toUpperCase();
+        break;
+      case ZimInvestmentType.FIXED:
+        value = "Fixed income".toUpperCase();
+        break;
+      case ZimInvestmentType.HIGH_YIELD:
+        value = "High Yield".toUpperCase();
+        break;
+    }
+    return value;
+  }
+}
+class InvestmentDetailContainerTerm extends StatelessWidget {
+  const InvestmentDetailContainerTerm({
+    Key key,
+    @required this.amount,
+    this.investmentType, this.mutualFund,
+  }) : super(key: key);
+
+  final FlutterMoneyFormatter amount;
+  final ZimInvestmentType investmentType;
+  final InvestmentTermFund mutualFund;
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      height: 140,
+      margin: EdgeInsets.only(left: 20),
+      padding: EdgeInsets.symmetric(horizontal: 15, vertical: 10),
+      width: MediaQuery.of(context).size.width - 50,
+      decoration: BoxDecoration(
+          color: AppColors.kPrimaryColor,
+          borderRadius: BorderRadius.circular(5)),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Row(
+                children: [
+                  Container(
+                    height: 20,
+                    width: 100,
+                    decoration: BoxDecoration(color: Color(0xFF324d53)),
+                    child: Center(
+                      child: Text(
+                        getTitle(),
+                        style: TextStyle(
+                            fontSize: 10,
+                            color: AppColors.kWhite,
+                            fontFamily: "Caros-Medium"),
+                      ),
+                    ),
+                  ),
+                  Spacer(),
+                  InkWell(
+                    onTap: () {
+                      Navigator.of(context)
+                          .push(InvestmentDetailScreen.route());
+                    },
+                    child: SizedBox(
+                      width: 85,
+                      child: Row(
+                        children: [
+                          Text(
+                            "View details",
+                            style: TextStyle(
+                                fontSize: 10, color: AppColors.kAccentColor),
+                          ),
+                          Icon(
+                            Icons.navigate_next,
+                            color: AppColors.kAccentColor,
+                          )
+                        ],
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+              YMargin(10),
+              Text(
+                mutualFund.termInstrumentName,
+                style: TextStyle(
+                    color: AppColors.kLightText,
+                    fontSize: 11,
+                    fontFamily: "Caros"),
+              ),
+            ],
+          ),
+          Spacer(),
+          Row(
+            children: [
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    "Maximum amount",
+                    style: TextStyle(
+                        fontSize: 10, color: AppColors.kLightTitleText),
+                  ),
+                  YMargin(3),
+                  Text(
+                    mutualFund.currentValue,
+                    style: TextStyle(
+                        fontSize: 16,
+                        fontFamily: "Caros-Medium",
+                        color: AppColors.kWhite),
+                  )
+                ],
+              ),
+              Spacer(),
+              Padding(
+                padding: const EdgeInsets.only(top: 15),
+                child: Text(
+                  "${mutualFund.percentageInterest} Interest P.A",
                   style: TextStyle(
                       color: AppColors.kWhite,
                       fontSize: 10,

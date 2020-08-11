@@ -1,9 +1,15 @@
+import 'package:after_layout/after_layout.dart';
 import 'package:circular_profile_avatar/circular_profile_avatar.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:flutter_money_formatter/flutter_money_formatter.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:provider/provider.dart';
 import 'package:zimvest/animations/fab_menu_items.dart';
+import 'package:zimvest/data/models/investment/mutual_item_detail.dart';
+import 'package:zimvest/data/view_models/identity_view_model.dart';
+import 'package:zimvest/data/view_models/investment_view_model.dart';
 import 'package:zimvest/screens/tabs/invstment/add_fund.dart';
 import 'package:zimvest/screens/tabs/invstment/invest_direct.dart';
 import 'package:zimvest/screens/tabs/invstment/invest_high.dart';
@@ -19,22 +25,33 @@ import 'package:zimvest/widgets/buttons.dart';
 import 'package:zimvest/widgets/line_chart.dart';
 
 class InvestmentDetailScreen extends StatefulWidget {
-  static Route<dynamic> route() {
+  final int id;
+  final String title;
+
+  const InvestmentDetailScreen({Key key, this.id, this.title}) : super(key: key);
+  static Route<dynamic> route({int id, String title}) {
     return MaterialPageRoute(
-        builder: (_) => InvestmentDetailScreen(),
+        builder: (_) => InvestmentDetailScreen(id: id,title: title,),
         settings: RouteSettings(name: InvestmentDetailScreen().toStringShort()));
   }
   @override
   _InvestmentDetailScreenState createState() => _InvestmentDetailScreenState();
 }
 
-class _InvestmentDetailScreenState extends State<InvestmentDetailScreen> {
+class _InvestmentDetailScreenState extends State<InvestmentDetailScreen>
+    with AfterLayoutMixin<InvestmentDetailScreen> {
   FlutterMoneyFormatter amount;
   ZimInvestmentType _zimType;
   bool showSavingsGraph = true;
   List<ZimInvestmentType> investmentList;
 
   double completion = 37;
+
+  //view models
+  ABSInvestmentViewModel investmentViewModel;
+  ABSIdentityViewModel identityViewModel;
+
+  Fund fund;
 
 
   @override
@@ -49,12 +66,31 @@ class _InvestmentDetailScreenState extends State<InvestmentDetailScreen> {
   }
 
   @override
+  void afterFirstLayout(BuildContext context)async {
+    EasyLoading.show(status: 'loading...');
+    var result = await investmentViewModel.getFundDetails(
+        token: identityViewModel.user.token,
+        fundName: widget.title,fundId: widget.id.toString());
+    if(result.error == false){
+      EasyLoading.dismiss();
+      setState(() {
+        fund = result.data;
+      });
+    }else{
+      EasyLoading.showError("Error");
+    }
+
+  }
+
+  @override
   Widget build(BuildContext context) {
+    identityViewModel = Provider.of(context);
+    investmentViewModel = Provider.of(context);
     return Scaffold(
       appBar: ZimAppBar(
         title: "Zimvest Money Market Fund",
       ),
-      body: Container(
+      body: fund == null ? Container(): Container(
         color: AppColors.kBg,
         child: CustomScrollView(
           slivers: [
@@ -76,14 +112,14 @@ class _InvestmentDetailScreenState extends State<InvestmentDetailScreen> {
                     Row(
                       children: [
                         Text(
-                          "Zimvest wealth balance",
+                          fund.instrumentName,
                           style: TextStyle(fontSize: 11, color: Color(0xFFa2bdc3)),
                         ),
                         Spacer(),
                         SizedBox(
                           width: 115,
                           child: Text(
-                            "Joined 25 March, 2020",
+                            fund.dateJoined,
                             style: TextStyle(fontSize: 10, color: Color(0xFFa2bdc3)),
                           ),
                         ),
@@ -91,7 +127,7 @@ class _InvestmentDetailScreenState extends State<InvestmentDetailScreen> {
                     ),
                     YMargin(5),
                     Text(
-                      amount.output.symbolOnLeft,
+                      fund.balance,
                       style: TextStyle(
                           fontSize: 16,
                           fontFamily: "Caros-Medium",
@@ -100,7 +136,7 @@ class _InvestmentDetailScreenState extends State<InvestmentDetailScreen> {
                       Spacer(),
                       Row(
                         children: [
-                          Text("90 day average yield",
+                          Text(fund.averageYield,
                             style: TextStyle(
                                 fontSize: 10,
                                 color: AppColors.kWhite),),
@@ -176,56 +212,59 @@ class _InvestmentDetailScreenState extends State<InvestmentDetailScreen> {
             ),
             SliverList(
               delegate: SliverChildListDelegate(List.generate(
-                  4,
-                  (index) => Container(
-                        decoration: BoxDecoration(
-                            border: Border(
-                                bottom: BorderSide(
-                                    width: .5, color: AppColors.kLightText))),
-                        margin: EdgeInsets.symmetric(horizontal: 20),
-                        height: 55,
-                        child: Row(
-                          children: [
-                            Column(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text(
-                                  "Wealth Box",
-                                  style: TextStyle(
-                                      color: Color(0xFF324d53), fontSize: 12),
-                                ),
-                                YMargin(5),
-                                Text(
-                                  "Mon, April 13 2020",
-                                  style: TextStyle(
-                                      fontSize: 10,
-                                      color: AppColors.kLightText2),
-                                )
-                              ],
-                            ),
-                            Spacer(),
-                            Column(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              crossAxisAlignment: CrossAxisAlignment.end,
-                              children: [
-                                Text(
-                                  "450.00",
-                                  style: TextStyle(
-                                      fontSize: 12, color: AppColors.kGreen),
-                                ),
-                                YMargin(5),
-                                Text(
-                                  "Successful",
-                                  style: TextStyle(
-                                      fontSize: 10,
-                                      color: AppColors.kLightText2),
-                                )
-                              ],
-                            )
-                          ],
-                        ),
-                      ))),
+                  fund.transactionFund.length > 7 ? 7:fund.transactionFund.length,
+                  (index) {
+                    TransactionDatum data = fund.transactionFund[index];
+                    return Container(
+                      decoration: BoxDecoration(
+                          border: Border(
+                              bottom: BorderSide(
+                                  width: .5, color: AppColors.kLightText))),
+                      margin: EdgeInsets.symmetric(horizontal: 20),
+                      height: 55,
+                      child: Row(
+                        children: [
+                          Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                data.description,
+                                style: TextStyle(
+                                    color: Color(0xFF324d53), fontSize: 12),
+                              ),
+                              YMargin(5),
+                              Text(
+                                data.date,
+                                style: TextStyle(
+                                    fontSize: 10,
+                                    color: AppColors.kLightText2),
+                              )
+                            ],
+                          ),
+                          Spacer(),
+                          Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            crossAxisAlignment: CrossAxisAlignment.end,
+                            children: [
+                              Text(
+                                data.amount,
+                                style: TextStyle(
+                                    fontSize: 12, color: AppColors.kGreen),
+                              ),
+                              YMargin(5),
+                              Text(
+                                data.status,
+                                style: TextStyle(
+                                    fontSize: 10,
+                                    color: AppColors.kLightText2),
+                              )
+                            ],
+                          )
+                        ],
+                      ),
+                    );
+                  })),
             ),
             SliverToBoxAdapter(
               child: SizedBox(
