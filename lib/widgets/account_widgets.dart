@@ -383,6 +383,7 @@ class _DateOfBirthBorderInputWidgetState extends State<DateOfBirthBorderInputWid
 class DropdownBorderInputWidget extends StatefulWidget {
 
   final String title;
+  final String source;
   final List<String> items;
   final Color textColor;
   final double bottomMargin;
@@ -393,7 +394,7 @@ class DropdownBorderInputWidget extends StatefulWidget {
   const DropdownBorderInputWidget({
     Key key, this.title,
 
-    this.textColor = Colors.white,this.labelSize = 12, this.items, this.bottomMargin = 20, this.onSelect,
+    this.textColor = Colors.white,this.labelSize = 12, this.items, this.bottomMargin = 20, this.onSelect, this.source,
   }) : super(key: key);
 
   @override
@@ -403,6 +404,12 @@ class DropdownBorderInputWidget extends StatefulWidget {
 class _DropdownBorderInputWidgetState extends State<DropdownBorderInputWidget> {
   int _checkboxValue;
   String _source;
+
+  @override
+  void initState() {
+    _source = widget.source;
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -421,7 +428,7 @@ class _DropdownBorderInputWidgetState extends State<DropdownBorderInputWidget> {
                 context,
                 label: widget.title,
                 constraints: BoxConstraints(
-                  maxHeight: 300,
+                  maxHeight: 350,
                   maxWidth: MediaQuery.of(context).size.width * 0.7
                 ),
                 titleStyle: TextStyle(color: Colors.brown),

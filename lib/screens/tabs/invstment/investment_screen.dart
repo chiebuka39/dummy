@@ -15,6 +15,7 @@ import 'package:zimvest/screens/tabs/invstment/add_fund.dart';
 import 'package:zimvest/screens/tabs/invstment/invest_direct.dart';
 import 'package:zimvest/screens/tabs/invstment/invest_high.dart';
 import 'package:zimvest/screens/tabs/invstment/invest_mutual.dart';
+import 'package:zimvest/screens/tabs/invstment/invest_term.dart';
 import 'package:zimvest/screens/tabs/invstment/investment_details_screen.dart';
 import 'package:zimvest/styles/colors.dart';
 import 'package:zimvest/styles/styles.dart';
@@ -102,7 +103,7 @@ class _InvestmentScreenState extends State<InvestmentScreen>
               FabItem(
                   item: "New Zimvest yield",
                   onTap: () {
-                    Navigator.of(context).push(InvestInHighScreen.route());
+                    Navigator.of(context).push(InvestInTermScreen.route());
                   }),
             ]),
       ),

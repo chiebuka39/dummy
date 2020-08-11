@@ -1,9 +1,12 @@
 import 'dart:io';
 
 import 'package:dio/dio.dart';
+import 'package:zimvest/data/models/investment/fixed_models.dart';
 import 'package:zimvest/data/models/investment/investment_fixed_fund.dart';
 import 'package:zimvest/data/models/investment/investment_fund_model.dart';
 import 'package:zimvest/data/models/investment/investment_termed_fund.dart';
+import 'package:zimvest/data/models/investment/money_market_fund.dart';
+import 'package:zimvest/data/models/investment/term_instruments.dart';
 import 'package:zimvest/data/models/product_transaction.dart';
 import 'package:zimvest/data/models/product_type.dart';
 import 'package:zimvest/data/models/saving_plan.dart';
@@ -21,6 +24,16 @@ abstract class ABSInvestmentService{
   Future<Result<List<InvestmentActivity>>> getMutualFundActivities({String token});
   Future<Result<List<InvestmentActivity>>> getFixedFundActivities({String token});
   Future<Result<List<InvestmentActivity>>> getTermFundActivities({String token});
+  Future<Result<List<TermInstrument>>> getDollarTermInstruments({String token});
+  Future<Result<List<TermInstrument>>> getNairaTermInstruments({String token});
+  Future<Result<List<MutualFund>>> getMoneyMarketFund({String token});
+  Future<Result<List<MutualFund>>> getDollarFund({String token});
+  Future<Result<List<TreasuryBill>>> getTreasuryBill({String token});
+  Future<Result<List<CommercialPaper>>> getCommercialPaper({String token});
+  Future<Result<List<FGNBond>>> getFGNBond({String token});
+  Future<Result<List<PromissoryNote>>> getPromissoryNotes({String token});
+  Future<Result<List<EuroBond>>> getEuroBond({String token});
+  Future<Result<List<CorporateBond>>> getCorporateBond({String token});
 
 
 
@@ -305,6 +318,97 @@ class InvestmentService extends ABSInvestmentService{
     return result;
   }
 
+  @override
+  Future<Result<List<MutualFund>>> getMoneyMarketFund({String token}) async{
+    Result<List<MutualFund>> result = Result(error: false);
+
+
+    var headers = {
+      HttpHeaders.authorizationHeader: "Bearer $token"
+    };
+
+    var url = "${AppStrings.baseUrl}zimvest.services.investment/"
+        "api/MutualFunds/getmoneymarketfunds";
+    print("url $url");
+    try{
+      var response = await dio.get(url,options: Options(headers: headers));
+      final int statusCode = response.statusCode;
+      var response1 = response.data;
+      print("iii ${response1}");
+
+      if (statusCode != 200) {
+        result.errorMessage = response1['message'];
+        result.error = true;
+      }else {
+        result.error = false;
+        List<MutualFund> types = [];
+        (response1['data'] as List).forEach((chaList) {
+          //initialize Chat Object
+          types.add(MutualFund.fromJson(chaList));
+        });
+        result.data = types;
+      }
+
+    }on DioError catch(e){
+      print("error $e}");
+      if(e.response != null ){
+        print(e.response.data);
+        result.errorMessage = e.response.data['message'];
+      }else{
+        print(e.toString());
+        result.errorMessage = "Sorry, We could not complete your request";
+      }
+      result.error = true;
+    }
+
+    return result;
+  }
+
+  @override
+  Future<Result<List<MutualFund>>> getDollarFund({String token}) async{
+    Result<List<MutualFund>> result = Result(error: false);
+
+
+    var headers = {
+      HttpHeaders.authorizationHeader: "Bearer $token"
+    };
+
+    var url = "${AppStrings.baseUrl}zimvest.services.investment/api/MutualFunds/getdollarfunds";
+    print("url $url");
+    try{
+      var response = await dio.get(url,options: Options(headers: headers));
+      final int statusCode = response.statusCode;
+      var response1 = response.data;
+      print("iii ${response1}");
+
+      if (statusCode != 200) {
+        result.errorMessage = response1['message'];
+        result.error = true;
+      }else {
+        result.error = false;
+        List<MutualFund> types = [];
+        (response1['data'] as List).forEach((chaList) {
+          //initialize Chat Object
+          types.add(MutualFund.fromJson(chaList));
+        });
+        result.data = types;
+      }
+
+    }on DioError catch(e){
+      print("error $e}");
+      if(e.response != null ){
+        print(e.response.data);
+        result.errorMessage = e.response.data['message'];
+      }else{
+        print(e.toString());
+        result.errorMessage = "Sorry, We could not complete your request";
+      }
+      result.error = true;
+    }
+
+    return result;
+  }
+
 
   @override
   Future<Result<List<SavingsFrequency>>> getSavingFrequency({String token})async {
@@ -435,6 +539,374 @@ class InvestmentService extends ABSInvestmentService{
         if(response1['message'] != null){
           result.errorMessage = response1['message'];
         }
+      }
+
+    }on DioError catch(e){
+      print("error $e}");
+      if(e.response != null ){
+        print(e.response.data);
+        //result.errorMessage = e.response.data['message'];
+      }else{
+        print(e.toString());
+        result.errorMessage = "Sorry, We could not complete your request";
+      }
+      result.error = true;
+    }
+
+    return result;
+  }
+
+  @override
+  Future<Result<List<CommercialPaper>>> getCommercialPaper({String token})async {
+    Result<List<CommercialPaper>> result = Result(error: false);
+
+
+    var headers = {
+      HttpHeaders.authorizationHeader: "Bearer $token"
+    };
+
+
+    var url = "${AppStrings.baseUrl}$microService/api/CommercialPapers";
+    print("url $url");
+    try{
+      var response = await dio.get(url,options: Options(headers: headers));
+      final int statusCode = response.statusCode;
+      var response1 = response.data;
+      print("iii ${response1}");
+
+      if (statusCode != 200) {
+        result.errorMessage = response1['message'];
+        result.error = true;
+      }else {
+        result.error = false;
+        List<CommercialPaper> channels = [];
+        (response1['data'] as List).forEach((chaList) {
+          //initialize Chat Object
+          channels.add(CommercialPaper.fromJson(chaList));
+        });
+        result.data = channels;
+      }
+
+    }on DioError catch(e){
+      print("error $e}");
+      if(e.response != null ){
+        print(e.response.data);
+        //result.errorMessage = e.response.data['message'];
+      }else{
+        print(e.toString());
+        result.errorMessage = "Sorry, We could not complete your request";
+      }
+      result.error = true;
+    }
+
+    return result;
+  }
+
+  @override
+  Future<Result<List<CorporateBond>>> getCorporateBond({String token})async {
+    Result<List<CorporateBond>> result = Result(error: false);
+
+
+    var headers = {
+      HttpHeaders.authorizationHeader: "Bearer $token"
+    };
+
+
+    var url = "${AppStrings.baseUrl}$microService/api/CorporateBonds";
+    print("url $url");
+    try{
+      var response = await dio.get(url,options: Options(headers: headers));
+      final int statusCode = response.statusCode;
+      var response1 = response.data;
+      print("iii ${response1}");
+
+      if (statusCode != 200) {
+        result.errorMessage = response1['message'];
+        result.error = true;
+      }else {
+        result.error = false;
+        List<CorporateBond> channels = [];
+        (response1['data'] as List).forEach((chaList) {
+          //initialize Chat Object
+          channels.add(CorporateBond.fromJson(chaList));
+        });
+        result.data = channels;
+      }
+
+    }on DioError catch(e){
+      print("error $e}");
+      if(e.response != null ){
+        print(e.response.data);
+        //result.errorMessage = e.response.data['message'];
+      }else{
+        print(e.toString());
+        result.errorMessage = "Sorry, We could not complete your request";
+      }
+      result.error = true;
+    }
+
+    return result;
+  }
+
+  @override
+  Future<Result<List<EuroBond>>> getEuroBond({String token})async {
+    Result<List<EuroBond>> result = Result(error: false);
+
+
+    var headers = {
+      HttpHeaders.authorizationHeader: "Bearer $token"
+    };
+
+
+    var url = "${AppStrings.baseUrl}$microService/api/EuroBonds";
+    print("url $url");
+    try{
+      var response = await dio.get(url,options: Options(headers: headers));
+      final int statusCode = response.statusCode;
+      var response1 = response.data;
+      print("iii ${response1}");
+
+      if (statusCode != 200) {
+        result.errorMessage = response1['message'];
+        result.error = true;
+      }else {
+        result.error = false;
+        List<EuroBond> channels = [];
+        (response1['data'] as List).forEach((chaList) {
+          //initialize Chat Object
+          channels.add(EuroBond.fromJson(chaList));
+        });
+        result.data = channels;
+      }
+
+    }on DioError catch(e){
+      print("error $e}");
+      if(e.response != null ){
+        print(e.response.data);
+        //result.errorMessage = e.response.data['message'];
+      }else{
+        print(e.toString());
+        result.errorMessage = "Sorry, We could not complete your request";
+      }
+      result.error = true;
+    }
+
+    return result;
+  }
+
+  @override
+  Future<Result<List<FGNBond>>> getFGNBond({String token})async {
+    Result<List<FGNBond>> result = Result(error: false);
+
+
+    var headers = {
+      HttpHeaders.authorizationHeader: "Bearer $token"
+    };
+
+
+    var url = "${AppStrings.baseUrl}$microService/api/FGNBonds";
+    print("url $url");
+    try{
+      var response = await dio.get(url,options: Options(headers: headers));
+      final int statusCode = response.statusCode;
+      var response1 = response.data;
+      print("iii ${response1}");
+
+      if (statusCode != 200) {
+        result.errorMessage = response1['message'];
+        result.error = true;
+      }else {
+        result.error = false;
+        List<FGNBond> channels = [];
+        (response1['data'] as List).forEach((chaList) {
+          //initialize Chat Object
+          channels.add(FGNBond.fromJson(chaList));
+        });
+        result.data = channels;
+      }
+
+    }on DioError catch(e){
+      print("error $e}");
+      if(e.response != null ){
+        print(e.response.data);
+        //result.errorMessage = e.response.data['message'];
+      }else{
+        print(e.toString());
+        result.errorMessage = "Sorry, We could not complete your request";
+      }
+      result.error = true;
+    }
+
+    return result;
+  }
+
+  @override
+  Future<Result<List<PromissoryNote>>> getPromissoryNotes({String token}) async{
+    Result<List<PromissoryNote>> result = Result(error: false);
+
+
+    var headers = {
+      HttpHeaders.authorizationHeader: "Bearer $token"
+    };
+
+
+    var url = "${AppStrings.baseUrl}$microService/api/PromissoryNotes";
+    print("url $url");
+    try{
+      var response = await dio.get(url,options: Options(headers: headers));
+      final int statusCode = response.statusCode;
+      var response1 = response.data;
+      print("iii ${response1}");
+
+      if (statusCode != 200) {
+        result.errorMessage = response1['message'];
+        result.error = true;
+      }else {
+        result.error = false;
+        List<PromissoryNote> channels = [];
+        (response1['data'] as List).forEach((chaList) {
+          //initialize Chat Object
+          channels.add(PromissoryNote.fromJson(chaList));
+        });
+        result.data = channels;
+      }
+
+    }on DioError catch(e){
+      print("error $e}");
+      if(e.response != null ){
+        print(e.response.data);
+        //result.errorMessage = e.response.data['message'];
+      }else{
+        print(e.toString());
+        result.errorMessage = "Sorry, We could not complete your request";
+      }
+      result.error = true;
+    }
+
+    return result;
+  }
+
+  @override
+  Future<Result<List<TreasuryBill>>> getTreasuryBill({String token}) async{
+    Result<List<TreasuryBill>> result = Result(error: false);
+
+
+    var headers = {
+      HttpHeaders.authorizationHeader: "Bearer $token"
+    };
+
+
+    var url = "${AppStrings.baseUrl}$microService/api/TreasuryBills";
+    print("url $url");
+    try{
+      var response = await dio.get(url,options: Options(headers: headers));
+      final int statusCode = response.statusCode;
+      var response1 = response.data;
+      print("iii ${response1}");
+
+      if (statusCode != 200) {
+        result.errorMessage = response1['message'];
+        result.error = true;
+      }else {
+        result.error = false;
+        List<TreasuryBill> channels = [];
+        (response1['data'] as List).forEach((chaList) {
+          //initialize Chat Object
+          channels.add(TreasuryBill.fromJson(chaList));
+        });
+        result.data = channels;
+      }
+
+    }on DioError catch(e){
+      print("error $e}");
+      if(e.response != null ){
+        print(e.response.data);
+        //result.errorMessage = e.response.data['message'];
+      }else{
+        print(e.toString());
+        result.errorMessage = "Sorry, We could not complete your request";
+      }
+      result.error = true;
+    }
+
+    return result;
+  }
+
+  @override
+  Future<Result<List<TermInstrument>>> getDollarTermInstruments({String token}) async{
+    Result<List<TermInstrument>> result = Result(error: false);
+
+
+    var headers = {
+      HttpHeaders.authorizationHeader: "Bearer $token"
+    };
+
+
+    var url = "${AppStrings.baseUrl}$microService/api/ZimvestTermInstruments/getdollarterminstruments";
+    print("url $url");
+    try{
+      var response = await dio.get(url,options: Options(headers: headers));
+      final int statusCode = response.statusCode;
+      var response1 = response.data;
+      print("iii ${response1}");
+
+      if (statusCode != 200) {
+        result.errorMessage = response1['message'];
+        result.error = true;
+      }else {
+        result.error = false;
+        List<TermInstrument> channels = [];
+        (response1['data'] as List).forEach((chaList) {
+          //initialize Chat Object
+          channels.add(TermInstrument.fromJson(chaList));
+        });
+        result.data = channels;
+      }
+
+    }on DioError catch(e){
+      print("error $e}");
+      if(e.response != null ){
+        print(e.response.data);
+        //result.errorMessage = e.response.data['message'];
+      }else{
+        print(e.toString());
+        result.errorMessage = "Sorry, We could not complete your request";
+      }
+      result.error = true;
+    }
+
+    return result;
+  }
+
+  @override
+  Future<Result<List<TermInstrument>>> getNairaTermInstruments({String token}) async{
+    Result<List<TermInstrument>> result = Result(error: false);
+
+
+    var headers = {
+      HttpHeaders.authorizationHeader: "Bearer $token"
+    };
+
+
+    var url = "${AppStrings.baseUrl}$microService/api/ZimvestTermInstruments/getnairaterminstruments";
+    print("url $url");
+    try{
+      var response = await dio.get(url,options: Options(headers: headers));
+      final int statusCode = response.statusCode;
+      var response1 = response.data;
+      print("iii ${response1}");
+
+      if (statusCode != 200) {
+        result.errorMessage = response1['message'];
+        result.error = true;
+      }else {
+        result.error = false;
+        List<TermInstrument> channels = [];
+        (response1['data'] as List).forEach((chaList) {
+          //initialize Chat Object
+          channels.add(TermInstrument.fromJson(chaList));
+        });
+        result.data = channels;
       }
 
     }on DioError catch(e){

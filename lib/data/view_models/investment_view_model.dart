@@ -1,7 +1,10 @@
 import 'package:flutter/foundation.dart';
+import 'package:zimvest/data/models/investment/fixed_models.dart';
 import 'package:zimvest/data/models/investment/investment_fixed_fund.dart';
 import 'package:zimvest/data/models/investment/investment_fund_model.dart';
 import 'package:zimvest/data/models/investment/investment_termed_fund.dart';
+import 'package:zimvest/data/models/investment/money_market_fund.dart';
+import 'package:zimvest/data/models/investment/term_instruments.dart';
 import 'package:zimvest/data/models/product_transaction.dart';
 import 'package:zimvest/data/models/product_type.dart';
 import 'package:zimvest/data/models/saving_plan.dart';
@@ -51,6 +54,16 @@ abstract class ABSInvestmentViewModel extends ChangeNotifier{
   Future<Result<List<InvestmentActivity>>> getMutualFundActivities({String token, bool reload});
   Future<Result<List<InvestmentActivity>>> getFixedFundActivities({String token, bool reload});
   Future<Result<List<InvestmentActivity>>> getTermFundActivities({String token, bool reload});
+  Future<Result<List<MutualFund>>> getMoneyMarketFund({String token});
+  Future<Result<List<MutualFund>>> getDollarFund({String token});
+  Future<Result<List<TreasuryBill>>> getTreasuryBill({String token});
+  Future<Result<List<CommercialPaper>>> getCommercialPaper({String token});
+  Future<Result<List<FGNBond>>> getFGNBond({String token});
+  Future<Result<List<PromissoryNote>>> getPromissoryNotes({String token});
+  Future<Result<List<EuroBond>>> getEuroBond({String token});
+  Future<Result<List<CorporateBond>>> getCorporateBond({String token});
+  Future<Result<List<TermInstrument>>> getDollarTermInstruments({String token});
+  Future<Result<List<TermInstrument>>> getNairaTermInstruments({String token});
   void reset();
 }
 
@@ -197,6 +210,59 @@ class InvestmentViewModel extends ABSInvestmentViewModel{
     fixedFunds = null;
     fixedFundsActivity = null;
   }
+
+  @override
+  Future<Result<List<MutualFund>>> getMoneyMarketFund({String token, bool reload}) {
+    return _investmentService.getMoneyMarketFund(token: token);
+  }
+
+  @override
+  Future<Result<List<MutualFund>>> getDollarFund({String token}) {
+    return _investmentService.getDollarFund(token: token);
+  }
+
+  @override
+  Future<Result<List<CommercialPaper>>> getCommercialPaper({String token}) {
+    return _investmentService.getCommercialPaper(token: token);
+  }
+
+  @override
+  Future<Result<List<TreasuryBill>>> getTreasuryBill({String token}) {
+    return _investmentService.getTreasuryBill(token: token);
+  }
+
+
+  @override
+  Future<Result<List<EuroBond>>> getEuroBond({String token}) {
+    return _investmentService.getEuroBond(token: token);
+  }
+
+  @override
+  Future<Result<List<FGNBond>>> getFGNBond({String token}) {
+    return _investmentService.getFGNBond(token: token);
+  }
+
+  @override
+  Future<Result<List<PromissoryNote>>> getPromissoryNotes({String token}) {
+    return _investmentService.getPromissoryNotes(token: token);
+  }
+
+  @override
+  Future<Result<List<CorporateBond>>> getCorporateBond({String token}) {
+    return _investmentService.getCorporateBond(token: token);
+  }
+
+  @override
+  Future<Result<List<TermInstrument>>> getDollarTermInstruments({String token}) {
+    return _investmentService.getDollarTermInstruments(token: token);
+  }
+
+  @override
+  Future<Result<List<TermInstrument>>> getNairaTermInstruments({String token}) {
+    return _investmentService.getNairaTermInstruments(token: token);
+  }
+
+
 
 
 
