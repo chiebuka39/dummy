@@ -6,6 +6,7 @@ import 'package:provider/provider.dart';
 import 'package:zimvest/animations/pop_up_menu.dart';
 import 'package:zimvest/data/models/payment/bank.dart';
 import 'package:zimvest/data/models/payment/card.dart';
+import 'package:zimvest/data/models/payment/card_payload.dart';
 import 'package:zimvest/data/view_models/identity_view_model.dart';
 import 'package:zimvest/data/view_models/payment_view_model.dart';
 import 'package:zimvest/screens/banks_cards/new_bank_screen.dart';
@@ -35,6 +36,8 @@ class _ManageCardsAndBankState extends State<ManageCardsAndBank>
   GlobalKey btnKey2 = GlobalKey();
   TabController _tabController;
 
+  CardPayload cardPayload;
+
   @override
   void initState() {
     _tabController = TabController(vsync: this, length: 2);
@@ -59,6 +62,13 @@ class _ManageCardsAndBankState extends State<ManageCardsAndBank>
     futures.add(paymentViewModel.getUserCards(identityViewModel.user.token));
     await Future.wait(futures);
     EasyLoading.showSuccess('Success');
+
+    var result1 = await paymentViewModel.registerNewCard(identityViewModel.user.token);
+    if(result.error == false){
+      setState(() {
+        cardPayload = result1.data;
+      });
+    }
   }
 
   @override

@@ -12,6 +12,7 @@ import 'package:zimvest/data/models/saving_plan.dart';
 import 'package:zimvest/data/view_models/identity_view_model.dart';
 import 'package:zimvest/data/view_models/payment_view_model.dart';
 import 'package:zimvest/data/view_models/savings_view_model.dart';
+import 'package:zimvest/screens/tabs/savings/add_fund.dart';
 import 'package:zimvest/screens/tabs/savings/create_aspire_screen.dart';
 import 'package:zimvest/styles/colors.dart';
 import 'package:zimvest/styles/styles.dart';
@@ -44,6 +45,8 @@ class _SavingsScreenState extends State<SavingsScreen>
   ABSPaymentViewModel paymentViewModel;
 
   List<ProductTransaction> productTransactions = [];
+
+  SavingPlanModel currentSavingPlan;
 
   @override
   void initState() {
@@ -109,10 +112,14 @@ class _SavingsScreenState extends State<SavingsScreen>
         padding: const EdgeInsets.only(bottom: 100),
         child: FloatingActionButton(
           child: Icon(Icons.add),
-          onPressed: () {
+          onPressed: () async{
             if(_zimType == 1){
-
-              Navigator.of(context).push(CreateZimvestWealthBoxScreen.route());
+              var result = await Navigator.of(context).push(CreateZimvestWealthBoxScreen.route());
+              if(result == true){
+                EasyLoading.show(status: 'loading...');
+                await fetchTransactions(savingViewModel.productTypes.first.id);
+                EasyLoading.dismiss();
+              }
             }else{
               Navigator.of(context).push(CreateZimvestAspireScreen.route());
             }
@@ -170,6 +177,9 @@ class _SavingsScreenState extends State<SavingsScreen>
                       children: [
                         SavingsActionWidget(
                           title: "Add funds",
+                          onTap: (){
+                            Navigator.of(context).push(AddFundScreen.route(savingViewModel.savingPlanModel.first));
+                          },
                         ),
                         XMargin(5),
                         SavingsActionWidget(

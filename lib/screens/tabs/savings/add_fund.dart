@@ -2,6 +2,7 @@ import 'package:circular_profile_avatar/circular_profile_avatar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:provider/provider.dart';
+import 'package:zimvest/data/models/saving_plan.dart';
 import 'package:zimvest/data/models/savings/funding_channels.dart';
 import 'package:zimvest/data/models/savings/savings_frequency.dart';
 import 'package:zimvest/data/view_models/identity_view_model.dart';
@@ -15,21 +16,24 @@ import 'package:zimvest/widgets/account_widgets.dart';
 import 'package:zimvest/widgets/appbars.dart';
 import 'package:zimvest/widgets/buttons.dart';
 
-class CreateZimvestWealthBoxScreen extends StatefulWidget {
-  static Route<dynamic> route() {
+class AddFundScreen extends StatefulWidget {
+  final SavingPlanModel savingPlan;
+
+  const AddFundScreen({Key key, this.savingPlan}) : super(key: key);
+  static Route<dynamic> route(SavingPlanModel savingPlan) {
     return MaterialPageRoute(
-        builder: (_) => CreateZimvestWealthBoxScreen(),
+        builder: (_) => AddFundScreen(savingPlan: savingPlan,),
         settings: RouteSettings(
-            name: CreateZimvestWealthBoxScreen().toStringShort()));
+            name: AddFundScreen().toStringShort()));
   }
 
   @override
-  _CreateZimvestWealthBoxScreenState createState() =>
-      _CreateZimvestWealthBoxScreenState();
+  _AddFundScreenState createState() =>
+      _AddFundScreenState();
 }
 
-class _CreateZimvestWealthBoxScreenState
-    extends State<CreateZimvestWealthBoxScreen> {
+class _AddFundScreenState
+    extends State<AddFundScreen> {
   bool haveBulkSum = false;
   bool selectedOthers = false;
 
@@ -44,7 +48,6 @@ class _CreateZimvestWealthBoxScreenState
   DateTime date;
   TextEditingController controller = TextEditingController();
 
-  var _agreed = false;
 
   @override
   Widget build(BuildContext context) {
@@ -59,11 +62,8 @@ class _CreateZimvestWealthBoxScreenState
       child: Scaffold(
         backgroundColor: Color(0xFFF8FBFB),
         appBar: ZimAppBar(
-          desc: "Our Zimvest Aspire plan allows you to conveniently "
-              "save a mimimum amount of ₦1000, either daily, "
-              "weekly or monthly for as long as you "
-              "want and get an interest of 14%",
-          title: "Create New Zimvest Wealth Box",
+          title: "Add Fund",
+          desc: "Add more money to your savings",
         ),
         body: Column(
           children: [
@@ -72,36 +72,16 @@ class _CreateZimvestWealthBoxScreenState
                 padding: const EdgeInsets.symmetric(horizontal: 20),
                 child: ListView(
                   children: [
-                    DropdownBorderInputWidget(
-                      title: "How often would you like to save",
-                      textColor: AppColors.kPrimaryColor,
-                      onSelect: (value) {
-                        setState(() {
-                          frequency = savingViewModel.savingFrequency
-                              .firstWhere((element) => element.name == value);
-                        });
-                      },
-                      items: savingViewModel.savingFrequency
-                          .map((e) => e.name)
-                          .toList(),
-                    ),
                     AmountWidgetBorder(
                       textColor: AppColors.kAccountTextColor,
                       onChange: (value) {
+                        print("ooo $value");
                         setState(() {
-                          targetAmmount = value;
+                          targetAmmount = value *100;
                         });
+                        print("ooo $targetAmmount");
                       },
-                      title: "Target amount",
-                    ),
-                    DateOfBirthBorderInputWidget(
-                      title: "Start Date",
-                      textColor: AppColors.kAccountTextColor,
-                      setDate: (value) {
-                        setState(() {
-                          date = value;
-                        });
-                      },
+                      title: "amount",
                     ),
                     DropdownBorderInputWidget(
                       title: "Funding source",
@@ -123,70 +103,23 @@ class _CreateZimvestWealthBoxScreenState
                     ),
                     _buildNoFunds(),
 
-                    Row(
-                      children: [
-                        Theme(
-                          data: ThemeData(
-                              unselectedWidgetColor: AppColors.kAccentColor),
-                          child: Checkbox(
-                            onChanged: (bool value) {
-                              setState(() {
-                                _agreed = value;
-                              });
-                            },
-                            value: _agreed,
-                            activeColor: AppColors.kAccentColor,
-                          ),
-                        ),
-                        XMargin(15),
-                        Expanded(
-                          child: RichText(
-                            text: TextSpan(
-                                style: TextStyle(
-                                    fontFamily: "Caros",
-                                    color: AppColors.kAccountTextColor,
-                                    fontSize: 10,
-                                    height: 1.5),
-                                children: [
-                                  TextSpan(text: "I agree that I will "),
-                                  TextSpan(
-                                      text: "50% of my interest accrued ",
-                                      style:
-                                          TextStyle(fontFamily: "Caros-Bold")),
-                                  TextSpan(
-                                      text:
-                                          "on this target savings if I fail to meet "),
-                                  TextSpan(
-                                      text: "at least 70% ",
-                                      style:
-                                          TextStyle(fontFamily: "Caros-Bold")),
-                                  TextSpan(
-                                      text:
-                                          "of my target amount at the point of withdrawal."),
-                                ]),
-                          ),
-                        ),
-                      ],
-                    ),
                     YMargin(20),
                     Builder(
                       builder: (context) {
                         return PrimaryButton(
-                          title: "Create Plan",
-                          onPressed:(_agreed == false || _hasFunds == false) ?null:  ()async {
+                          title: "Add Fund",
+                          onPressed:(_hasFunds == false) ?null:  ()async {
                             EasyLoading.show(status: "loading");
-                            var result = await savingViewModel.createWealthBox(
+                            var result = await savingViewModel.topUp(
                               token: identityViewModel.user.token,
                               cardId: paymentViewModel.userCards.first.id,
-                              frequency: frequency.id,
+                              custSavingId: widget.savingPlan.id,
                               fundingChannel: fundingChannel.id,
-                              startDate: date,
                               savingsAmount: targetAmmount
                             );
                             if(result.error == false){
                               EasyLoading.showSuccess("success",
                                   duration: Duration(seconds: 2));
-                              Navigator.of(context).pop(true);
                             }else{
                               EasyLoading.showError(result.errorMessage,
                                   duration: Duration(seconds: 2));

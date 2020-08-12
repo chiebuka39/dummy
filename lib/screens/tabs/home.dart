@@ -14,6 +14,7 @@ import 'package:sa_multi_tween/sa_multi_tween.dart';
 import 'package:simple_animations/simple_animations.dart';
 import 'package:zimvest/data/view_models/dashboard_view_model.dart';
 import 'package:zimvest/data/view_models/identity_view_model.dart';
+import 'package:zimvest/data/view_models/payment_view_model.dart';
 import 'package:zimvest/styles/colors.dart';
 import 'package:zimvest/styles/styles.dart';
 import 'package:zimvest/utils/enums.dart';
@@ -38,6 +39,7 @@ class DashboardScreen extends StatefulWidget {
 class _DashboardScreenState extends State<DashboardScreen> with AfterLayoutMixin<DashboardScreen> {
   ABSIdentityViewModel identityViewModel;
   ABSDashboardViewModel dashboardViewModel;
+  ABSPaymentViewModel paymentViewModel;
 
   PageController controller;
   PageController secondController;
@@ -71,9 +73,6 @@ class _DashboardScreenState extends State<DashboardScreen> with AfterLayoutMixin
       });
     });
     super.initState();
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      //EasyLoading.showSuccess('Use in initState!');
-    });
   }
 
   @override
@@ -81,6 +80,7 @@ class _DashboardScreenState extends State<DashboardScreen> with AfterLayoutMixin
     EasyLoading.show(status: 'loading...');
     await dashboardViewModel.getPortfolioValue(identityViewModel.user.token);
     EasyLoading.dismiss();
+    //await paymentViewModel.registerNewCard(identityViewModel.user.token);
   }
 
   final _tween = MultiTween<AniProps>()
@@ -95,6 +95,7 @@ class _DashboardScreenState extends State<DashboardScreen> with AfterLayoutMixin
   Widget build(BuildContext context) {
     identityViewModel = Provider.of(context);
     dashboardViewModel = Provider.of(context);
+    paymentViewModel = Provider.of(context);
     print("ffff ${identityViewModel.user.token}");
     return PlayAnimation<MultiTweenValues<AniProps>>(
       tween: _tween,

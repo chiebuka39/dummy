@@ -355,7 +355,7 @@ class _DateOfBirthBorderInputWidgetState extends State<DateOfBirthBorderInputWid
           YMargin(8),
           InkWell(
             onTap: (){
-              showDatePicker(context: context, initialDate: DateTime.utc(1994), firstDate: DateTime.utc(1930), lastDate: DateTime.utc(2030)).then((value) {
+              showDatePicker(context: context, initialDate: DateTime.now(), firstDate: DateTime.now(), lastDate: DateTime.utc(2030)).then((value) {
                 widget.setDate(value);
                 setState(() {
                   time = value;
@@ -370,7 +370,7 @@ class _DateOfBirthBorderInputWidgetState extends State<DateOfBirthBorderInputWid
                   border: Border.all(color: widget.error == true? Colors.redAccent : AppColors.kLightText),
                   borderRadius: BorderRadius.circular(4)),
               child: Row(children: [
-                Text(time == null?"":"${time.day}, ${time.year}", style: TextStyle(fontSize: 14, color: AppColors.kAccountTextColor),),
+                Text(time == null?"":AppUtils.getReadableDateShort(time), style: TextStyle(fontSize: 14, color: AppColors.kAccountTextColor),),
                 Spacer(),
                 SvgPicture.asset("images/bx-calendar2.svg")
               ],),

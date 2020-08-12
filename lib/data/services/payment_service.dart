@@ -1,7 +1,10 @@
+import 'dart:convert';
+
 import 'package:dio/dio.dart';
 import 'package:zimvest/data/models/dashboard.dart';
 import 'package:zimvest/data/models/payment/bank.dart';
 import 'package:zimvest/data/models/payment/card.dart';
+import 'package:zimvest/data/models/payment/card_payload.dart';
 import 'package:zimvest/data/models/payment/wallet.dart';
 import 'package:zimvest/data/models/user.dart';
 import 'package:zimvest/locator.dart';
@@ -15,6 +18,7 @@ abstract class ABSPaymentService {
   Future<Result<Wallet>> getWallet(String token);
   Future<Result<void>> setBankAsActive(String token,int bankId);
   Future<Result<List<Bank>>> getCustomerBank(String token);
+  Future<Result<CardPayload>> registerNewCard(String token);
   Future<Result<Bank>> addBank(
       {String token,
       int bankId,
@@ -401,6 +405,51 @@ class PaymentService extends ABSPaymentService {
           var wallet = Wallet.fromJson(response1['data']);
           wallet.hasWallet = true;
           result.data = wallet;
+        }
+      }
+    } on DioError catch (e) {
+      print("error $e}");
+      if(e.response != null ){
+        print(e.response.data);
+        result.errorMessage = e.response.data['message'];
+      }else{
+        print(e.toString());
+        result.errorMessage = "Sorry, We could not complete your request";
+      }
+      result.error = true;
+    }
+
+    return result;
+  }
+
+  @override
+  Future<Result<CardPayload>> registerNewCard(String token)async {
+    Result<CardPayload> result = Result(error: false);
+
+    var headers = {"Authorization": "Bearer $token"};
+
+
+    var url = "${AppStrings.baseUrl}zimvest.services.payment/api/cards/v2";
+
+    print("lll $url");
+    try {
+      var response = await dio.get(url, options: Options(headers: headers));
+      final int statusCode = response.statusCode;
+      var response1 = response.data;
+      print("iii ${response1}");
+
+      if (statusCode != 200) {
+        result.errorMessage = response1['message'];
+        result.error = true;
+      } else {
+        result.error = false;
+        if(response1['data'] == null){
+          
+
+        }else{
+          var wallet = json.decode(response1['data']); ;
+          result.data = CardPayload.fromJson(wallet);
+
         }
       }
     } on DioError catch (e) {

@@ -8,11 +8,9 @@ import 'package:zimvest/utils/strings.dart';
 abstract class ABSDashboardService{
   Future<Result<DashboardModel>> getPortfolioValue(String token);
   Future<Result<void>> getAssetDistribution(String token);
-  Future<Result<void>> getportfolioDistribution(String token);
-
+  Future<Result<PortfolioDistribution>> getPortfolioDistribution(String token);
 
 }
-
 class DashboardService extends ABSDashboardService{
   final dio = locator<Dio>();
   @override
@@ -84,8 +82,8 @@ class DashboardService extends ABSDashboardService{
   }
 
   @override
-  Future<Result<void>> getportfolioDistribution(String token) async{
-    Result<DashboardModel> result = Result(error: false);
+  Future<Result<PortfolioDistribution>> getPortfolioDistribution(String token) async{
+    Result<PortfolioDistribution> result = Result(error: false);
 
     var headers = {
       "Authorization":"Bearer $token"
@@ -105,18 +103,14 @@ class DashboardService extends ABSDashboardService{
         result.error = true;
       }else {
         result.error = false;
-//        var dashboardPortfolio = DashboardModel.fromJson(response1['data']);
-//        result.data = dashboardPortfolio;
+        var dashboardPortfolio = PortfolioDistribution.fromJson(response1['data']);
+        result.data = dashboardPortfolio;
       }
 
     }on DioError catch(e){
       print("error $e");
       result.error = true;
     }
-
     return result;
   }
-
-
-
 }

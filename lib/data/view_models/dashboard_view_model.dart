@@ -6,10 +6,16 @@ import 'package:zimvest/utils/result.dart';
 
 abstract class ABSDashboardViewModel extends ChangeNotifier{
   DashboardModel _dashboardModel = DashboardModel();
+  PortfolioDistribution _portfolioDistribution = PortfolioDistribution();
+
   DashboardModel get dashboardModel => _dashboardModel;
+  PortfolioDistribution get portfolioDistribution => _portfolioDistribution;
+
   set dashboardModel(DashboardModel value);
+  set portfolioDistribution(PortfolioDistribution value);
 
   Future<Result<void>> getPortfolioValue(String token);
+  Future<Result<PortfolioDistribution>> getPortfolioDistribution(String token);
 }
 
 class DashboardViewModel extends ABSDashboardViewModel{
@@ -17,6 +23,11 @@ class DashboardViewModel extends ABSDashboardViewModel{
 
   set dashboardModel(DashboardModel value){
     _dashboardModel = value;
+    notifyListeners();
+  }
+
+  set portfolioDistribution(PortfolioDistribution value){
+    _portfolioDistribution = value;
     notifyListeners();
   }
 
@@ -30,6 +41,17 @@ class DashboardViewModel extends ABSDashboardViewModel{
      }
      print(",,, ${result.data}");
      return result;
+  }
+
+  @override
+  Future<Result<PortfolioDistribution>> getPortfolioDistribution(String token)async {
+    var result =await _dashboardService.getPortfolioDistribution(token);
+
+    if(result.error == false){
+      portfolioDistribution = result.data;
+    }
+    print(",,, ${result.data}");
+    return result;
   }
 
 }

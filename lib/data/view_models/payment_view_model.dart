@@ -2,6 +2,7 @@ import 'package:flutter/foundation.dart';
 import 'package:zimvest/data/models/dashboard.dart';
 import 'package:zimvest/data/models/payment/bank.dart';
 import 'package:zimvest/data/models/payment/card.dart';
+import 'package:zimvest/data/models/payment/card_payload.dart';
 import 'package:zimvest/data/models/payment/wallet.dart';
 import 'package:zimvest/data/services/dashboard_service.dart';
 import 'package:zimvest/data/services/payment_service.dart';
@@ -37,6 +38,8 @@ abstract class ABSPaymentViewModel extends ChangeNotifier{
   Future<Result<void>> deleteBank(String token, int bankId);
   Future<Result<Bank>> addCard({String token, String cardNumber,
     String expiryDate, String cvv, String pin});
+  Future<Result<CardPayload>> registerNewCard(String token);
+
 }
 
 class PaymentViewModel extends ABSPaymentViewModel{
@@ -132,6 +135,11 @@ class PaymentViewModel extends ABSPaymentViewModel{
   Future<Result<Bank>> addCard({String token, String cardNumber, String expiryDate, String cvv, String pin}) {
     // TODO: implement addCard
     throw UnimplementedError();
+  }
+
+  @override
+  Future<Result<CardPayload>> registerNewCard(String token) {
+    return _paymentService.registerNewCard(token);
   }
 
 }

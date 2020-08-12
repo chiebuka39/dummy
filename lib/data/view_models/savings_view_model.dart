@@ -39,6 +39,17 @@ abstract class ABSSavingViewModel extends ChangeNotifier{
     int productId});
   Future<Result<List<FundingChannel>>> getFundingChannel({String token});
   Future<Result<List<SavingsFrequency>>> getSavingFrequency({String token});
+  Future<Result<SavingPlanModel>> createWealthBox({String token,
+    int cardId,
+    int frequency,
+    int fundingChannel,
+    double savingsAmount,
+    DateTime startDate,
+  });
+
+  Future<Result<void>> topUp({String token,
+    int cardId, int custSavingId, int fundingChannel,
+    double savingsAmount});
 }
 
 class SavingViewModel extends ABSSavingViewModel{
@@ -127,6 +138,32 @@ class SavingViewModel extends ABSSavingViewModel{
     }
     print(",,, ${result.data}");
     return result;
+  }
+
+  @override
+  Future<Result<SavingPlanModel>> createWealthBox({String token, int cardId,
+    int frequency, int fundingChannel,
+    double savingsAmount, DateTime startDate}) {
+    return _savingService.createWealthBox(token: token,
+      cardId: cardId,
+      frequency: frequency,
+      savingsAmount: savingsAmount,
+      fundingChannel: fundingChannel,
+      startDate: startDate
+    );
+  }
+
+
+  @override
+  Future<Result<void>> topUp({String token, int cardId,
+    int custSavingId, int fundingChannel,
+    double savingsAmount}) {
+    return _savingService.topUp(token: token,
+        cardId: cardId,
+        custSavingId: custSavingId,
+        savingsAmount: savingsAmount,
+        fundingChannel: fundingChannel,
+    );
   }
 
 }
