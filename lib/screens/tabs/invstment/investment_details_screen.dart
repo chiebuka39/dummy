@@ -19,6 +19,7 @@ import 'package:zimvest/styles/colors.dart';
 import 'package:zimvest/styles/styles.dart';
 import 'package:zimvest/utils/enums.dart';
 import 'package:zimvest/utils/margin.dart';
+import 'package:zimvest/utils/result.dart';
 import 'package:zimvest/utils/strings.dart';
 import 'package:zimvest/widgets/appbars.dart';
 import 'package:zimvest/widgets/buttons.dart';
@@ -27,11 +28,12 @@ import 'package:zimvest/widgets/line_chart.dart';
 class InvestmentDetailScreen extends StatefulWidget {
   final int id;
   final String title;
+  final String type;
 
-  const InvestmentDetailScreen({Key key, this.id, this.title}) : super(key: key);
-  static Route<dynamic> route({int id, String title}) {
+  const InvestmentDetailScreen({Key key, this.id, this.title, this.type ="mutual"}) : super(key: key);
+  static Route<dynamic> route({int id, String title,String type}) {
     return MaterialPageRoute(
-        builder: (_) => InvestmentDetailScreen(id: id,title: title,),
+        builder: (_) => InvestmentDetailScreen(id: id,title: title,type: type,),
         settings: RouteSettings(name: InvestmentDetailScreen().toStringShort()));
   }
   @override
@@ -67,10 +69,21 @@ class _InvestmentDetailScreenState extends State<InvestmentDetailScreen>
 
   @override
   void afterFirstLayout(BuildContext context)async {
+    Result<Fund> result;
     EasyLoading.show(status: 'loading...');
-    var result = await investmentViewModel.getFundDetails(
-        token: identityViewModel.user.token,
-        fundName: widget.title,fundId: widget.id.toString());
+    if(widget.type =="mutual"){
+      result = await investmentViewModel.getFundDetails(
+          token: identityViewModel.user.token,
+          fundName: widget.title,fundId: widget.id.toString());
+    }else if(widget.type == "fixed"){
+      result = await investmentViewModel.getFixedFundDetails(
+          token: identityViewModel.user.token,
+          fixedIncomeName: widget.title,fixedIncomeId: widget.id.toString());
+    }else{
+      result = await investmentViewModel.getTermFundDetails(
+          token: identityViewModel.user.token,
+          termInstrumentName: widget.title,termInstrumentId: widget.id.toString());
+    }
     if(result.error == false){
       EasyLoading.dismiss();
       setState(() {
@@ -88,7 +101,7 @@ class _InvestmentDetailScreenState extends State<InvestmentDetailScreen>
     investmentViewModel = Provider.of(context);
     return Scaffold(
       appBar: ZimAppBar(
-        title: "Zimvest Money Market Fund",
+        title: widget.type == "term" ?"Zimvest High yeild": "Zimvest Money Market Fund",
       ),
       body: fund == null ? Container(): Container(
         color: AppColors.kBg,
@@ -112,7 +125,7 @@ class _InvestmentDetailScreenState extends State<InvestmentDetailScreen>
                     Row(
                       children: [
                         Text(
-                          fund.instrumentName,
+                          fund?.instrumentName ??fund.instrumentType,
                           style: TextStyle(fontSize: 11, color: Color(0xFFa2bdc3)),
                         ),
                         Spacer(),
@@ -136,7 +149,7 @@ class _InvestmentDetailScreenState extends State<InvestmentDetailScreen>
                       Spacer(),
                       Row(
                         children: [
-                          Text(fund.averageYield,
+                          Text(fund?.averageYield ??"",
                             style: TextStyle(
                                 fontSize: 10,
                                 color: AppColors.kWhite),),

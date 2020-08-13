@@ -15,6 +15,11 @@ import 'package:zimvest/utils/strings.dart';
 abstract class ABSSavingService{
   Future<Result<List<ProductType>>> getProductTypes({String token});
 
+  Future<Result<void>> pauseSaving({String token,int savingModelId});
+  Future<Result<void>> continueSaving({String token,int savingModelId});
+  Future<Result<void>> withdrawFund({String token,int customerSavingId,
+    double amount, int customerBankId, String password});
+
   ///Get Customer's Savings information
   Future<Result<List<SavingPlanModel>>> getSavingPlans({String token});
 
@@ -503,6 +508,170 @@ class SavingService extends ABSSavingService{
         if(response1['message'] != null){
           result.errorMessage = response1['message'];
         }
+      }
+
+    }on DioError catch(e){
+      print("error $e}");
+      if(e.response != null ){
+        print(e.response.data);
+        if(e.response.data['message'] is String){
+          result.errorMessage = e.response.data['message'];
+        }
+
+      }else{
+        print(e.toString());
+        result.errorMessage = "Sorry, We could not complete your request";
+      }
+      result.error = true;
+    }
+
+    return result;
+  }
+
+  @override
+  Future<Result<void>> continueSaving({String token, int savingModelId}) async{
+    Result<void> result = Result(error: false);
+
+
+    var headers = {
+      HttpHeaders.authorizationHeader: "Bearer $token"
+    };
+    var body = {
+      "id": savingModelId,
+    };
+
+
+    var url = "${AppStrings.baseUrl}zimvest.services.savings/api/Savings/Continue";
+    print("url $url");
+    print("body $body");
+    try{
+      var response = await dio.post(url,options: Options(headers: headers),data: body);
+      final int statusCode = response.statusCode;
+      var response1 = response.data;
+      print("iii ${response1}");
+
+      if (statusCode != 200) {
+        result.errorMessage = response1['message'];
+        result.error = true;
+      }else if( statusCode == 201){
+        result.error = true;
+        if(response1['message'] != null){
+          result.errorMessage = response1['message'];
+        }
+      }
+      else {
+        result.error = false;
+      }
+
+    }on DioError catch(e){
+      print("error $e}");
+      if(e.response != null ){
+        print(e.response.data);
+        if(e.response.data['message'] is String){
+          result.errorMessage = e.response.data['message'];
+        }
+
+      }else{
+        print(e.toString());
+        result.errorMessage = "Sorry, We could not complete your request";
+      }
+      result.error = true;
+    }
+
+    return result;
+  }
+
+  @override
+  Future<Result<void>> pauseSaving({String token, int savingModelId}) async{
+    Result<void> result = Result(error: false);
+
+
+    var headers = {
+      HttpHeaders.authorizationHeader: "Bearer $token"
+    };
+    var body = {
+      "id": savingModelId,
+    };
+
+
+    var url = "${AppStrings.baseUrl}zimvest.services.savings/api/Savings/Pause";
+    print("url $url");
+    print("body $body");
+    try{
+      var response = await dio.post(url,options: Options(headers: headers),data: body);
+      final int statusCode = response.statusCode;
+      var response1 = response.data;
+      print("iii ${response1}");
+
+      if (statusCode != 200) {
+        result.errorMessage = response1['message'];
+        result.error = true;
+      }else if( statusCode == 201){
+        result.error = true;
+        if(response1['message'] != null){
+          result.errorMessage = response1['message'];
+        }
+      }
+      else {
+        result.error = false;
+      }
+
+    }on DioError catch(e){
+      print("error $e}");
+      if(e.response != null ){
+        print(e.response.data);
+        if(e.response.data['message'] is String){
+          result.errorMessage = e.response.data['message'];
+        }
+
+      }else{
+        print(e.toString());
+        result.errorMessage = "Sorry, We could not complete your request";
+      }
+      result.error = true;
+    }
+
+    return result;
+  }
+
+  @override
+  Future<Result<void>> withdrawFund({String token, int customerSavingId,
+    double amount, int customerBankId, String password}) async{
+    Result<void> result = Result(error: false);
+
+
+    var headers = {
+      HttpHeaders.authorizationHeader: "Bearer $token"
+    };
+    var body = {
+      "customerSavingId": customerSavingId,
+      "amount": amount,
+      "customerBankId": customerBankId,
+      "password": password,
+
+    };
+
+
+    var url = "${AppStrings.baseUrl}zimvest.services.savings/api/Savings/Pause";
+    print("url $url");
+    print("body $body");
+    try{
+      var response = await dio.post(url,options: Options(headers: headers),data: body);
+      final int statusCode = response.statusCode;
+      var response1 = response.data;
+      print("iii ${response1}");
+
+      if (statusCode != 200) {
+        result.errorMessage = response1['message'];
+        result.error = true;
+      }else if( statusCode == 201){
+        result.error = true;
+        if(response1['message'] != null){
+          result.errorMessage = response1['message'];
+        }
+      }
+      else {
+        result.error = false;
       }
 
     }on DioError catch(e){

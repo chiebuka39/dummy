@@ -1,6 +1,8 @@
 import 'dart:io';
+import 'dart:typed_data';
 
 import 'package:dio/dio.dart';
+import 'package:zimvest/data/models/investment/bank_payment_details.dart';
 import 'package:zimvest/data/models/investment/fixed_models.dart';
 import 'package:zimvest/data/models/investment/investment_fixed_fund.dart';
 import 'package:zimvest/data/models/investment/investment_fund_model.dart';
@@ -8,8 +10,10 @@ import 'package:zimvest/data/models/investment/investment_termed_fund.dart';
 import 'package:zimvest/data/models/investment/money_market_fund.dart';
 import 'package:zimvest/data/models/investment/mutual_item_detail.dart';
 import 'package:zimvest/data/models/investment/term_instruments.dart';
-import 'package:zimvest/data/models/product_transaction.dart';
-import 'package:zimvest/data/models/product_type.dart';
+
+import 'dart:async';
+import 'dart:convert';
+
 import 'package:zimvest/data/models/saving_plan.dart';
 import 'package:zimvest/data/models/savings/funding_channels.dart';
 import 'package:zimvest/data/models/savings/savings_frequency.dart';
@@ -28,6 +32,15 @@ abstract class ABSInvestmentService{
   Future<Result<List<TermInstrument>>> getDollarTermInstruments({String token});
   Future<Result<List<TermInstrument>>> getNairaTermInstruments({String token});
   Future<Result<List<MutualFund>>> getMoneyMarketFund({String token});
+  Future<Result<dynamic>> buyMoneyMarketFund({
+    String token,
+    int productId,
+    double amount,
+    int fundingChannel,
+    int cardId,
+    int directDebitFrequency,
+    File documentFile
+  });
   Future<Result<List<MutualFund>>> getDollarFund({String token});
   Future<Result<List<TreasuryBill>>> getTreasuryBill({String token});
   Future<Result<List<CommercialPaper>>> getCommercialPaper({String token});
@@ -37,6 +50,10 @@ abstract class ABSInvestmentService{
   Future<Result<List<CorporateBond>>> getCorporateBond({String token});
   Future<Result<Fund>> getFundDetails({String token,
     String fundName, String fundId});
+  Future<Result<Fund>> getFixedFundDetails({String token,
+    String fixedIncomeId, String fixedIncomeName});
+  Future<Result<Fund>> getTermFundDetails({String token,
+    String termInstrumentId, String termInstrumentName});
 
 
 
@@ -938,6 +955,170 @@ class InvestmentService extends ABSInvestmentService{
 
 
     var url = "${AppStrings.baseUrl}$microService/api/Dashboards/managefund?FundId=$fundId&FundName=$fundName";
+    print("url $url");
+    try{
+      var response = await dio.get(url,options: Options(headers: headers));
+      final int statusCode = response.statusCode;
+      var response1 = response.data;
+      print("iii ${response1}");
+
+      if (statusCode != 200) {
+        result.errorMessage = response1['message'];
+        result.error = true;
+      }else {
+        result.error = false;
+
+
+        result.data = Fund.fromJson(response1['data'] );
+      }
+
+    }on DioError catch(e){
+      print("error $e}");
+      if(e.response != null ){
+        print(e.response.data);
+        //result.errorMessage = e.response.data['message'];
+      }else{
+        print(e.toString());
+        result.errorMessage = "Sorry, We could not complete your request";
+      }
+      result.error = true;
+    }
+
+    return result;
+  }
+
+  @override
+  Future<Result<dynamic>>
+  buyMoneyMarketFund({String token,
+    int productId, double amount,
+    int fundingChannel, int cardId,
+    int directDebitFrequency,
+    File documentFile})async {
+    Result<dynamic> result = Result(error: false);
+
+
+    var headers = {
+      HttpHeaders.authorizationHeader: "Bearer $token"
+    };
+
+    FormData body;
+    if(fundingChannel == 1){
+
+    body = FormData.fromMap({
+      'ProductId':productId,
+      'Amount':amount,
+      'FundingChannel':fundingChannel,
+      'CardId':cardId,
+      'DirectDebitFrequency':directDebitFrequency,
+    });
+    }
+    else if(fundingChannel == 2){
+      Uint8List bytes;
+      if(documentFile != null){
+        bytes = await File(documentFile.path).readAsBytes();
+        String base64Encode(List<int> bytes) => base64.encode(bytes);
+      }
+      body = FormData.fromMap({
+        'ProductId':productId,
+        'Amount':amount,
+        'FundingChannel':fundingChannel,
+        'DirectDebitFrequency':-1,
+        "ProofOfPayment.DocumentFile": bytes == null ?'' :  base64Encode(bytes),
+      });
+    }
+
+
+    var url = "${AppStrings.baseUrl}$microService/api/MutualFunds/buymoneymarketfund";
+    print("url $url");
+    print("body ${body.fields}");
+    try{
+      var response = await dio.post(url,options: Options(headers: headers),data: body);
+      final int statusCode = response.statusCode;
+      var response1 = response.data;
+      print("iii ${response1}");
+
+      if (statusCode != 200) {
+        result.errorMessage = response1['message'];
+        result.error = true;
+      }else {
+        result.error = false;
+        if(documentFile == null && fundingChannel == 2){
+          result.data = BankPaymentDetails.fromJson(response1['data']);
+        }
+
+      }
+
+    }on DioError catch(e){
+      print("error $e}");
+      if(e.response != null ){
+        print(e.response.data);
+        //result.errorMessage = e.response.data['message'];
+      }else{
+        print(e.toString());
+        result.errorMessage = "Sorry, We could not complete your request";
+      }
+      result.error = true;
+    }
+
+    return result;
+  }
+
+  @override
+  Future<Result<Fund>> getFixedFundDetails({String token, String fixedIncomeId,
+    String fixedIncomeName}) async{
+    Result<Fund> result = Result(error: false);
+
+
+    var headers = {
+      HttpHeaders.authorizationHeader: "Bearer $token"
+    };
+
+
+    var url = "${AppStrings.baseUrl}$microService/api/Dashboards/managefixedincome?FixedIncomeId=$fixedIncomeId&FixedIncomeName=$fixedIncomeName";
+    print("url $url");
+    try{
+      var response = await dio.get(url,options: Options(headers: headers));
+      final int statusCode = response.statusCode;
+      var response1 = response.data;
+      print("iii ${response1}");
+
+      if (statusCode != 200) {
+        result.errorMessage = response1['message'];
+        result.error = true;
+      }else {
+        result.error = false;
+
+
+        result.data = Fund.fromJson(response1['data'] );
+      }
+
+    }on DioError catch(e){
+      print("error $e}");
+      if(e.response != null ){
+        print(e.response.data);
+        //result.errorMessage = e.response.data['message'];
+      }else{
+        print(e.toString());
+        result.errorMessage = "Sorry, We could not complete your request";
+      }
+      result.error = true;
+    }
+
+    return result;
+  }
+
+  @override
+  Future<Result<Fund>> getTermFundDetails({String token, String termInstrumentId,
+    String termInstrumentName}) async{
+    Result<Fund> result = Result(error: false);
+
+
+    var headers = {
+      HttpHeaders.authorizationHeader: "Bearer $token"
+    };
+
+
+    var url = "${AppStrings.baseUrl}$microService/api/Dashboards/manageterminstrument?TermInstrumentId=$termInstrumentId&TermInstrumentName=$termInstrumentName";
     print("url $url");
     try{
       var response = await dio.get(url,options: Options(headers: headers));

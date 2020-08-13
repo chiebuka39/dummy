@@ -14,6 +14,7 @@ import 'package:zimvest/data/view_models/payment_view_model.dart';
 import 'package:zimvest/data/view_models/savings_view_model.dart';
 import 'package:zimvest/screens/tabs/savings/add_fund.dart';
 import 'package:zimvest/screens/tabs/savings/create_aspire_screen.dart';
+import 'package:zimvest/screens/tabs/savings/withdraw_fund.dart';
 import 'package:zimvest/styles/colors.dart';
 import 'package:zimvest/styles/styles.dart';
 import 'package:zimvest/utils/enums.dart';
@@ -48,9 +49,12 @@ class _SavingsScreenState extends State<SavingsScreen>
 
   SavingPlanModel currentSavingPlan;
 
+  PageController _aspireController;
+
   @override
   void initState() {
     _zimType = 1;
+    _aspireController = PageController();
     amount = FlutterMoneyFormatter(
         amount: 10000000,
         settings: MoneyFormatterSettings(fractionDigits: 0, symbol: "\u20A6"));
@@ -110,22 +114,26 @@ class _SavingsScreenState extends State<SavingsScreen>
     return Scaffold(
       floatingActionButton: Padding(
         padding: const EdgeInsets.only(bottom: 100),
-        child: FloatingActionButton(
-          child: Icon(Icons.add),
-          onPressed: () async{
-            if(_zimType == 1){
-              var result = await Navigator.of(context).push(CreateZimvestWealthBoxScreen.route());
-              if(result == true){
-                EasyLoading.show(status: 'loading...');
-                await fetchTransactions(savingViewModel.productTypes.first.id);
-                EasyLoading.dismiss();
+        child: AnimatedOpacity(
+          duration: Duration(milliseconds: 300),
+          opacity: _zimType == 1 ? savingViewModel.savingPlanModel.isEmpty? 1:0:1,
+          child: FloatingActionButton(
+            child: Icon(Icons.add),
+            onPressed: () async{
+              if(_zimType == 1){
+                var result = await Navigator.of(context).push(CreateZimvestWealthBoxScreen.route());
+                if(result == true){
+                  EasyLoading.show(status: 'loading...');
+                  await fetchTransactions(savingViewModel.productTypes.first.id);
+                  EasyLoading.dismiss();
+                }
+              }else{
+                Navigator.of(context).push(CreateZimvestAspireScreen.route());
               }
-            }else{
-              Navigator.of(context).push(CreateZimvestAspireScreen.route());
-            }
 
-          },
-          backgroundColor: AppColors.kAccentColor,
+            },
+            backgroundColor: AppColors.kAccentColor,
+          ),
         ),
       ),
       body: Container(
@@ -177,13 +185,14 @@ class _SavingsScreenState extends State<SavingsScreen>
                       children: [
                         SavingsActionWidget(
                           title: "Add funds",
-                          onTap: (){
-                            Navigator.of(context).push(AddFundScreen.route(savingViewModel.savingPlanModel.first));
-                          },
+                          onTap: _handleMoveToAddScreen,
                         ),
                         XMargin(5),
                         SavingsActionWidget(
                           title: "Withdraw",
+                          onTap: (){
+                            _handleMoveToWithdrawScreen();
+                          },
                         )
                       ],
                     ),
@@ -305,7 +314,8 @@ class _SavingsScreenState extends State<SavingsScreen>
       result = Container(
         height: 140,
         width: double.infinity,
-        child: ListView(
+        child: PageView(
+          controller: _aspireController,
           scrollDirection: Axis.horizontal,
           children: savingViewModel.savingPlanModel
               .where((element) => element.productId != 1)
@@ -401,7 +411,32 @@ class _SavingsScreenState extends State<SavingsScreen>
     savingViewModel.getFundingChannel(token: identityViewModel.user.token);
     savingViewModel.getSavingFrequency(token: identityViewModel.user.token);
     paymentViewModel.getUserCards(identityViewModel.user.token);
+    paymentViewModel.getCustomerBank(identityViewModel.user.token);
     paymentViewModel.getWallet(identityViewModel.user.token);
+  }
+
+  void _handleMoveToAddScreen() {
+    if(_zimType == 1){
+      Navigator.of(context).push(AddFundScreen.route(savingViewModel.savingPlanModel.first));
+    }else{
+      List<SavingPlanModel> models =
+      savingViewModel.savingPlanModel
+          .where((element) => element.productId == 2).toList();
+      Navigator.of(context).push(AddFundScreen.route(models[_aspireController.page.toInt()]));
+    }
+
+  }
+
+  void _handleMoveToWithdrawScreen() {
+    if(_zimType == 1){
+      Navigator.of(context).push(WithdrawFundScreen.route(savingViewModel.savingPlanModel.first));
+    }else{
+      List<SavingPlanModel> models =
+      savingViewModel.savingPlanModel
+          .where((element) => element.productId == 2).toList();
+      Navigator.of(context).push(WithdrawFundScreen.route(models[_aspireController.page.toInt()]));
+    }
+
   }
 }
 

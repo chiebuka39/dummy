@@ -58,6 +58,10 @@ abstract class ABSSavingViewModel extends ChangeNotifier{
   Future<Result<AspireTarget>> calculateTargetSavings({String token,
     double bulkSum, int frequency,
     DateTime maturityDate, double targetAmount,bool isBulkSum});
+  Future<Result<void>> pauseSaving({String token,int savingModelId});
+  Future<Result<void>> continueSaving({String token,int savingModelId});
+  Future<Result<void>> withdrawFund({String token,int customerSavingId,
+    double amount, int customerBankId, String password});
 }
 
 class SavingViewModel extends ABSSavingViewModel{
@@ -211,6 +215,26 @@ class SavingViewModel extends ABSSavingViewModel{
       savingPlanModel = s;
     }
     return result;
+  }
+
+  @override
+  Future<Result<void>> continueSaving({String token, int savingModelId}) {
+    return _savingService.continueSaving(token: token,savingModelId: savingModelId);
+  }
+
+  @override
+  Future<Result<void>> pauseSaving({String token, int savingModelId}) {
+    return _savingService.pauseSaving(token: token,savingModelId: savingModelId);
+  }
+
+  @override
+  Future<Result<void>> withdrawFund({String token, double amount, int customerSavingId,int customerBankId, String password}) {
+    return _savingService.withdrawFund(token: token,
+        amount: amount,
+      customerBankId: customerBankId,
+      customerSavingId: customerSavingId,
+      password: password
+    );
   }
 
 }

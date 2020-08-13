@@ -13,6 +13,7 @@ import 'package:zimvest/data/models/investment/investment_termed_fund.dart';
 import 'package:zimvest/data/view_models/identity_view_model.dart';
 import 'package:zimvest/data/view_models/investment_view_model.dart';
 import 'package:zimvest/data/view_models/payment_view_model.dart';
+import 'package:zimvest/data/view_models/savings_view_model.dart';
 import 'package:zimvest/screens/tabs/invstment/add_fund.dart';
 import 'package:zimvest/screens/tabs/invstment/invest_direct.dart';
 import 'package:zimvest/screens/tabs/invstment/invest_high.dart';
@@ -25,6 +26,7 @@ import 'package:zimvest/utils/app_utils.dart';
 import 'package:zimvest/utils/enums.dart';
 import 'package:zimvest/utils/margin.dart';
 import 'package:zimvest/utils/strings.dart';
+import 'package:zimvest/utils/validator.dart';
 import 'package:zimvest/widgets/buttons.dart';
 import 'package:zimvest/widgets/line_chart.dart';
 
@@ -44,6 +46,7 @@ class _InvestmentScreenState extends State<InvestmentScreen>
   ABSInvestmentViewModel investmentViewModel;
   ABSIdentityViewModel identityViewModel;
   ABSPaymentViewModel paymentViewModel;
+  ABSSavingViewModel savingViewModel;
 
   @override
   void initState() {
@@ -74,6 +77,15 @@ class _InvestmentScreenState extends State<InvestmentScreen>
     } else {
       EasyLoading.showError("Error");
     }
+    getRequiredDetailsForForm();
+  }
+
+  void getRequiredDetailsForForm() {
+    savingViewModel.getFundingChannel(token: identityViewModel.user.token);
+    savingViewModel.getSavingFrequency(token: identityViewModel.user.token);
+    paymentViewModel.getUserCards(identityViewModel.user.token);
+    paymentViewModel.getCustomerBank(identityViewModel.user.token);
+    paymentViewModel.getWallet(identityViewModel.user.token);
   }
 
   @override
@@ -81,6 +93,7 @@ class _InvestmentScreenState extends State<InvestmentScreen>
     investmentViewModel = Provider.of(context);
     paymentViewModel = Provider.of(context);
     identityViewModel = Provider.of(context);
+    savingViewModel = Provider.of(context);
     return Scaffold(
       floatingActionButton: Padding(
         padding: const EdgeInsets.only(bottom: 100),
@@ -920,7 +933,8 @@ class InvestmentDetailContainerFixed extends StatelessWidget {
                   InkWell(
                     onTap: () {
                       Navigator.of(context)
-                          .push(InvestmentDetailScreen.route());
+                          .push(InvestmentDetailScreen.route(id: mutualFund.fixedIncomeId,
+                        title: mutualFund.fixedIncomeName,type:"fixed"));
                     },
                     child: SizedBox(
                       width: 85,
@@ -1053,7 +1067,8 @@ class InvestmentDetailContainerTerm extends StatelessWidget {
                   InkWell(
                     onTap: () {
                       Navigator.of(context)
-                          .push(InvestmentDetailScreen.route());
+                          .push(InvestmentDetailScreen.route(id: mutualFund.termInstrumentId,
+                          title: mutualFund.termInstrumentName,type: "term"));
                     },
                     child: SizedBox(
                       width: 85,

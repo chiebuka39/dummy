@@ -6,6 +6,7 @@ class Fund {
     this.accruedInterest,
     this.currentMarketBalance,
     this.instrumentName,
+    this.instrumentType,
     this.balance,
     this.currentValue,
   });
@@ -16,6 +17,7 @@ class Fund {
   String accruedInterest;
   String currentMarketBalance;
   String instrumentName;
+  String instrumentType;
   String balance;
   double currentValue;
 
@@ -26,6 +28,7 @@ class Fund {
     accruedInterest: json["accruedInterest"],
     currentMarketBalance: json["currentMarketBalance"],
     instrumentName: json["instrumentName"],
+    instrumentType: json["instrumentType"],
     balance: json["balance"],
     currentValue: json["currentValue"],
   );

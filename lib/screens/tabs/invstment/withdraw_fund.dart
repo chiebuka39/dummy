@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
+import 'package:zimvest/data/models/saving_plan.dart';
 import 'package:zimvest/styles/colors.dart';
 import 'package:zimvest/utils/margin.dart';
 import 'package:zimvest/widgets/account_widgets.dart';
@@ -7,10 +8,14 @@ import 'package:zimvest/widgets/appbars.dart';
 import 'package:zimvest/widgets/buttons.dart';
 
 class WithdrawFundScreen extends StatefulWidget {
-  static Route<dynamic> route() {
+  final SavingPlanModel savingPlan;
+
+  const WithdrawFundScreen({Key key, this.savingPlan}) : super(key: key);
+  static Route<dynamic> route([SavingPlanModel savingPlan]) {
     return MaterialPageRoute(
-        builder: (_) => WithdrawFundScreen(),
-        settings: RouteSettings(name: WithdrawFundScreen().toStringShort()));
+        builder: (_) => WithdrawFundScreen(savingPlan: savingPlan,),
+        settings: RouteSettings(
+            name: WithdrawFundScreen().toStringShort()));
   }
   @override
   _WithdrawFundScreenState createState() => _WithdrawFundScreenState();
@@ -22,6 +27,7 @@ class _WithdrawFundScreenState extends State<WithdrawFundScreen> {
 
   @override
   Widget build(BuildContext context) {
+
     return Scaffold(
       backgroundColor: Color(0xFFF8FBFB),
       appBar: ZimAppBar(title: "Add funds",desc: 'Use the form below to complete your withdrawal',),

@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/foundation.dart';
 import 'package:zimvest/data/models/investment/fixed_models.dart';
 import 'package:zimvest/data/models/investment/investment_fixed_fund.dart';
@@ -67,6 +69,15 @@ abstract class ABSInvestmentViewModel extends ChangeNotifier{
   Future<Result<List<TermInstrument>>> getNairaTermInstruments({String token});
   Future<Result<Fund>> getFundDetails({String token,
     String fundName, String fundId});
+  Future<Result<dynamic>> buyMoneyMarketFund({String token,
+    int productId, double amount,
+    int fundingChannel, int cardId,
+    int directDebitFrequency,
+    File documentFile});
+  Future<Result<Fund>> getFixedFundDetails({String token,
+    String fixedIncomeId, String fixedIncomeName});
+  Future<Result<Fund>> getTermFundDetails({String token,
+    String termInstrumentId, String termInstrumentName});
   void reset();
 }
 
@@ -268,6 +279,33 @@ class InvestmentViewModel extends ABSInvestmentViewModel{
   @override
   Future<Result<Fund>> getFundDetails({String token, String fundName, String fundId}) {
     return _investmentService.getFundDetails(token: token,fundId: fundId,fundName: fundName);
+  }
+
+  @override
+  Future<Result> buyMoneyMarketFund({String token, int productId, double amount, int fundingChannel,
+    int cardId, int directDebitFrequency,
+    File documentFile}) {
+    return _investmentService.buyMoneyMarketFund(
+      token: token,
+      productId: productId,
+      amount: amount,
+      fundingChannel: fundingChannel,
+      directDebitFrequency: directDebitFrequency,
+      cardId: cardId,
+      documentFile: documentFile
+    );
+  }
+
+  @override
+  Future<Result<Fund>> getFixedFundDetails({String token, String fixedIncomeId, String fixedIncomeName}) {
+    return _investmentService.getFixedFundDetails(token: token,fixedIncomeId: fixedIncomeId,fixedIncomeName: fixedIncomeName);
+  }
+
+  @override
+  Future<Result<Fund>> getTermFundDetails({String token, String termInstrumentId, String termInstrumentName}) {
+    return _investmentService.getTermFundDetails(token: token,
+        termInstrumentId: termInstrumentId,
+        termInstrumentName: termInstrumentName);
   }
 
 
