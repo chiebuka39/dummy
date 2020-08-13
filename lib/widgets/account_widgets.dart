@@ -324,16 +324,90 @@ class AmountWidgetBorder extends StatelessWidget {
         ],),);
   }
 }
+class FixedAmountWidgetBorder extends StatelessWidget {
+  final String title;
+
+  final String value;
+  final Color textColor;
+  final double labelSize;
+  const FixedAmountWidgetBorder({
+    Key key, this.title,
+    this.textColor = Colors.white, this.labelSize = 12, this.value,
+  }) : super(key: key);
+
+  String _formatNumber(String string) {
+    final format = NumberFormat.decimalPattern('en');
+    return format.format(int.parse(string));
+  }
+  @override
+  Widget build(BuildContext context) {
+    return Container(height: 90,
+
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            title,
+            style: TextStyle(color:textColor, fontSize: labelSize),
+          ),
+          YMargin(8),
+          Container(
+            height: 45,
+            padding: EdgeInsets.only(left: 10),
+            decoration: BoxDecoration(
+                color: Colors.transparent,
+                border: Border.all(color:  AppColors.kLightText),
+                borderRadius: BorderRadius.circular(4)),
+            child: Row(
+              children: [
+                Text("\u20A6"),
+                Expanded(
+                  child: TextFormField(
+                    initialValue: value,
+                    maxLines: 1,
+                    keyboardType: TextInputType.number,
+                    inputFormatters: [
+                      WhitelistingTextInputFormatter.digitsOnly,
+                      CurrencyPtBrInputFormatter(maxDigits: 11)
+                    ],
+                    onChanged: (value){
+                      String _onlyDigits = value.replaceAll(RegExp('[^0-9]'), "");
+                      double _doubleValue = double.parse(_onlyDigits) / 100;
+
+                    },
+                    style: TextStyle(color: AppColors.kAccountTextColor),
+                    decoration: InputDecoration(
+                        contentPadding: EdgeInsets.only(left: 10, bottom: 5),
+                        hintText: "",
+                        border: InputBorder.none,
+                        hintStyle: TextStyle(fontSize: 14, color: AppColors.kLightText2)),
+                  ),
+                ),
+              ],
+            ),
+          ),
+          YMargin(20)
+        ],),);
+  }
+}
 class DateOfBirthBorderInputWidget extends StatefulWidget {
 
   final String title;
   final bool error;
   final ValueChanged<DateTime> setDate;
   final Color textColor;
+  final DateTime startDate;
+  final DateTime initialDate;
+  final DateTime selected;
+  final DateTime endDate;
   const DateOfBirthBorderInputWidget({
     Key key, this.title,
     this.error = false,
-    this.textColor = Colors.white, this.setDate,
+    this.textColor = Colors.white,
+    this.setDate,
+    @required this.startDate,
+  @required this.initialDate,
+  @required this.endDate, this.selected,
   }) : super(key: key);
 
   @override
@@ -342,6 +416,12 @@ class DateOfBirthBorderInputWidget extends StatefulWidget {
 
 class _DateOfBirthBorderInputWidgetState extends State<DateOfBirthBorderInputWidget> {
   DateTime time;
+
+  @override
+  void initState() {
+    time = widget.selected;
+    super.initState();
+  }
   @override
   Widget build(BuildContext context) {
     return Container(height: 90,
@@ -355,7 +435,7 @@ class _DateOfBirthBorderInputWidgetState extends State<DateOfBirthBorderInputWid
           YMargin(8),
           InkWell(
             onTap: (){
-              showDatePicker(context: context, initialDate: DateTime.now(), firstDate: DateTime.now(), lastDate: DateTime.utc(2030)).then((value) {
+              showDatePicker(context: context, initialDate: widget.initialDate, firstDate: widget.startDate, lastDate: widget.endDate).then((value) {
                 widget.setDate(value);
                 setState(() {
                   time = value;
@@ -768,5 +848,70 @@ class _UploadWidgetState extends State<UploadWidget> {
     setState(() {
       _file = File(pickedFile.path);
     });
+  }
+}
+
+
+class FixedDateOfBirthBorderInputWidget extends StatefulWidget {
+
+  final String title;
+  final bool error;
+  final ValueChanged<DateTime> setDate;
+  final Color textColor;
+  final DateTime startDate;
+  final DateTime initialDate;
+  final DateTime endDate;
+  const FixedDateOfBirthBorderInputWidget({
+    Key key, this.title,
+    this.error = false,
+    this.textColor = Colors.white,
+    this.setDate,
+    @required this.startDate,
+    @required this.initialDate,
+    @required this.endDate,
+  }) : super(key: key);
+
+  @override
+  _FixedDateOfBirthBorderInputWidgetState createState() => _FixedDateOfBirthBorderInputWidgetState();
+}
+
+class _FixedDateOfBirthBorderInputWidgetState extends State<FixedDateOfBirthBorderInputWidget> {
+  DateTime time;
+  @override
+  Widget build(BuildContext context) {
+    return Container(height: 90,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            widget.title,
+            style: TextStyle(color:widget.error == true ?Colors.redAccent:  widget.textColor, fontSize: 12),
+          ),
+          YMargin(8),
+          InkWell(
+            onTap: (){
+              showDatePicker(context: context, initialDate: widget.initialDate, firstDate: widget.startDate, lastDate: widget.endDate).then((value) {
+                widget.setDate(value);
+                setState(() {
+                  time = value;
+                });
+              });
+            },
+            child: Container(
+              height: 45,
+              padding: EdgeInsets.symmetric(horizontal: 10),
+              decoration: BoxDecoration(
+                  color: Colors.transparent,
+                  border: Border.all(color: widget.error == true? Colors.redAccent : AppColors.kLightText),
+                  borderRadius: BorderRadius.circular(4)),
+              child: Row(children: [
+                Text(time == null?"":AppUtils.getReadableDateShort(time), style: TextStyle(fontSize: 14, color: AppColors.kAccountTextColor),),
+                Spacer(),
+                SvgPicture.asset("images/bx-calendar2.svg")
+              ],),
+            ),
+          ),
+          YMargin(20)
+        ],),);
   }
 }

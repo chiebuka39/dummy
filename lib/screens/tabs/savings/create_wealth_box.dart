@@ -40,7 +40,7 @@ class _CreateZimvestWealthBoxScreenState
   SavingsFrequency frequency;
   FundingChannel fundingChannel;
   bool _hasFunds = false;
-  double targetAmmount = 0;
+  double targetAmount = 0;
   DateTime date;
   TextEditingController controller = TextEditingController();
 
@@ -89,13 +89,16 @@ class _CreateZimvestWealthBoxScreenState
                       textColor: AppColors.kAccountTextColor,
                       onChange: (value) {
                         setState(() {
-                          targetAmmount = value;
+                          targetAmount = value;
                         });
                       },
                       title: "Target amount",
                     ),
                     DateOfBirthBorderInputWidget(
                       title: "Start Date",
+                      startDate: DateTime.now(),
+                      initialDate: DateTime.now(),
+                      endDate: DateTime.utc(2030),
                       textColor: AppColors.kAccountTextColor,
                       setDate: (value) {
                         setState(() {
@@ -181,7 +184,7 @@ class _CreateZimvestWealthBoxScreenState
                               frequency: frequency.id,
                               fundingChannel: fundingChannel.id,
                               startDate: date,
-                              savingsAmount: targetAmmount
+                              savingsAmount: targetAmount
                             );
                             if(result.error == false){
                               EasyLoading.showSuccess("success",

@@ -244,7 +244,7 @@ class _SavingsScreenState extends State<SavingsScreen>
                             ),
                             YMargin(5),
                             Text(
-                              "Successful",
+                              p.statusText,
                               style: TextStyle(
                                   fontSize: 10, color: AppColors.kLightText2),
                             )

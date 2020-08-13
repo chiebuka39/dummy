@@ -4,6 +4,7 @@ import 'package:flutter_money_formatter/flutter_money_formatter.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:zimvest/data/models/saving_plan.dart';
 import 'package:zimvest/styles/colors.dart';
+import 'package:zimvest/utils/app_utils.dart';
 import 'package:zimvest/utils/margin.dart';
 
 class SavingsActionWidget extends StatelessWidget {
@@ -185,7 +186,7 @@ class SavingsAspireContainer extends StatelessWidget {
               SizedBox(
                 width: 115,
                 child: Text(
-                  "Joined ${savingPlanModel.dateCreated.day} March, ${savingPlanModel.dateCreated.year}",
+                  "Joined ${AppUtils.getReadableDateShort(savingPlanModel.startDate)}",
                   style: TextStyle(fontSize: 10, color: Color(0xFFa2bdc3)),
                 ),
               ),

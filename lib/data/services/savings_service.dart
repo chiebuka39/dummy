@@ -4,6 +4,7 @@ import 'package:dio/dio.dart';
 import 'package:zimvest/data/models/product_transaction.dart';
 import 'package:zimvest/data/models/product_type.dart';
 import 'package:zimvest/data/models/saving_plan.dart';
+import 'package:zimvest/data/models/savings/aspire_target.dart';
 import 'package:zimvest/data/models/savings/funding_channels.dart';
 import 'package:zimvest/data/models/savings/savings_frequency.dart';
 import 'package:zimvest/data/models/user.dart';
@@ -27,6 +28,18 @@ abstract class ABSSavingService{
 
   Future<Result<List<SavingsFrequency>>> getSavingFrequency({String token});
   Future<Result<List<FundingChannel>>> getFundingChannel({String token});
+  Future<Result<AspireTarget>> calculateTargetSavings({
+    String token,
+    double bulkSum,
+    int frequency,
+    bool isBulkSum,
+    DateTime maturityDate,
+    double targetAmount,
+  });
+
+  Future<Result<SavingPlanModel>> createTargetSavings({int cardId,
+    int fundingChannel, int frequency, String planName, DateTime maturityDate,
+    DateTime startDate, int productId, double targetAmount, int savingsAmount, String token});
 
 
   Future<Result<List<ProductTransaction>>> getTransactionForProductType({String token, int productId});
@@ -360,6 +373,132 @@ class SavingService extends ABSSavingService{
       }else {
         result.error = false;
 
+        result.data = SavingPlanModel.fromJson(response1['data']);
+        if(response1['message'] != null){
+          result.errorMessage = response1['message'];
+        }
+      }
+
+    }on DioError catch(e){
+      print("error $e}");
+      if(e.response != null ){
+        print(e.response.data);
+        if(e.response.data['message'] is String){
+          result.errorMessage = e.response.data['message'];
+        }
+
+      }else{
+        print(e.toString());
+        result.errorMessage = "Sorry, We could not complete your request";
+      }
+      result.error = true;
+    }
+
+    return result;
+  }
+
+  @override
+  Future<Result<AspireTarget>> calculateTargetSavings({String token,
+    double bulkSum, int frequency,
+    DateTime maturityDate, double targetAmount,bool isBulkSum})async {
+    Result<AspireTarget> result = Result(error: false);
+
+
+    var headers = {
+      HttpHeaders.authorizationHeader: "Bearer $token"
+    };
+    var body = {
+      "bulkSum": bulkSum,
+      "frequency": frequency,
+      "isBulkSum": isBulkSum,
+      "maturityDate": maturityDate.toIso8601String(),
+      "targetAmount": targetAmount,
+    };
+
+
+    var url = "${AppStrings.baseUrl}zimvest.services.savings/api/Savings/Calculations/TargetSavings";
+    print("url $url");
+    print("body $body");
+    try{
+      var response = await dio.post(url,options: Options(headers: headers),data: body);
+      final int statusCode = response.statusCode;
+      var response1 = response.data;
+      print("iii ${response1}");
+
+      if (statusCode != 200) {
+        result.errorMessage = response1['message'];
+        result.error = true;
+      }else {
+        result.error = false;
+        result.data = AspireTarget.fromJson(response1['data']);
+        if(response1['message'] != null){
+          result.errorMessage = response1['message'];
+        }
+      }
+
+    }on DioError catch(e){
+      print("error $e}");
+      if(e.response != null ){
+        print(e.response.data);
+        if(e.response.data['message'] is String){
+          result.errorMessage = e.response.data['message'];
+        }
+
+      }else{
+        print(e.toString());
+        result.errorMessage = "Sorry, We could not complete your request";
+      }
+      result.error = true;
+    }
+
+    return result;
+  }
+
+  @override
+  Future<Result<SavingPlanModel>> createTargetSavings({int cardId,
+    int fundingChannel, int frequency, String planName, DateTime maturityDate,
+    DateTime startDate, int productId, double targetAmount,
+    int savingsAmount, String token}) async{
+    Result<SavingPlanModel> result = Result(error: false);
+
+
+    var headers = {
+      HttpHeaders.authorizationHeader: "Bearer $token"
+    };
+    var body = {
+      "cardId": cardId,
+      "frequency": frequency,
+      "fundingChannel": fundingChannel,
+      "maturityDate": maturityDate.toIso8601String(),
+      "startDate": startDate.toIso8601String(),
+      "targetAmount": targetAmount,
+      "productId": productId,
+      "planName": planName,
+      "savingsAmount": savingsAmount,
+    };
+
+
+    var url = "${AppStrings.baseUrl}zimvest.services.savings/api/v2/Savings/TargetSavings";
+    print("url $url");
+    print("body $body");
+    try{
+      var response = await dio.post(url,options: Options(headers: headers),data: body);
+      final int statusCode = response.statusCode;
+      var response1 = response.data;
+      print("iii ${response1}");
+
+      if (statusCode != 200) {
+        result.errorMessage = response1['message'];
+        result.error = true;
+      }else if( statusCode == 201){
+        result.error = true;
+        result.data = SavingPlanModel.fromJson(response1['data']);
+        if(response1['message'] != null){
+          result.errorMessage = response1['message'];
+        }
+      }
+      else {
+        result.error = false;
         result.data = SavingPlanModel.fromJson(response1['data']);
         if(response1['message'] != null){
           result.errorMessage = response1['message'];

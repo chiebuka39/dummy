@@ -2,6 +2,7 @@ import 'package:flutter/foundation.dart';
 import 'package:zimvest/data/models/product_transaction.dart';
 import 'package:zimvest/data/models/product_type.dart';
 import 'package:zimvest/data/models/saving_plan.dart';
+import 'package:zimvest/data/models/savings/aspire_target.dart';
 import 'package:zimvest/data/models/savings/funding_channels.dart';
 import 'package:zimvest/data/models/savings/savings_frequency.dart';
 
@@ -46,10 +47,17 @@ abstract class ABSSavingViewModel extends ChangeNotifier{
     double savingsAmount,
     DateTime startDate,
   });
+  Future<Result<SavingPlanModel>> createTargetSavings({int cardId,
+    int fundingChannel, int frequency, String planName, DateTime maturityDate,
+    DateTime startDate, int productId, double targetAmount,
+    int savingsAmount, String token});
 
   Future<Result<void>> topUp({String token,
     int cardId, int custSavingId, int fundingChannel,
     double savingsAmount});
+  Future<Result<AspireTarget>> calculateTargetSavings({String token,
+    double bulkSum, int frequency,
+    DateTime maturityDate, double targetAmount,bool isBulkSum});
 }
 
 class SavingViewModel extends ABSSavingViewModel{
@@ -164,6 +172,45 @@ class SavingViewModel extends ABSSavingViewModel{
         savingsAmount: savingsAmount,
         fundingChannel: fundingChannel,
     );
+  }
+
+  @override
+  Future<Result<AspireTarget>> calculateTargetSavings({String token,
+    double bulkSum, int frequency, DateTime maturityDate,
+    double targetAmount, bool isBulkSum}) {
+    return _savingService.calculateTargetSavings(
+      token: token,
+      bulkSum: bulkSum,
+      frequency: frequency,
+      maturityDate: maturityDate,
+      targetAmount: targetAmount,
+      isBulkSum: isBulkSum
+    );
+  }
+
+  @override
+  Future<Result<SavingPlanModel>> createTargetSavings({int cardId, int fundingChannel,
+    int frequency, String planName, DateTime maturityDate,
+    DateTime startDate, int productId, double targetAmount,
+    int savingsAmount, String token})async {
+    var result = await _savingService.createTargetSavings(
+        token: token,
+        savingsAmount: savingsAmount,
+        frequency: frequency,
+        maturityDate: maturityDate,
+        targetAmount: targetAmount,
+        startDate: startDate,
+        productId: productId,
+        fundingChannel: fundingChannel,
+        planName: planName,
+        cardId: cardId,
+    );
+    if(result.data != null){
+      var s = savingPlanModel;
+      s.add(result.data);
+      savingPlanModel = s;
+    }
+    return result;
   }
 
 }
