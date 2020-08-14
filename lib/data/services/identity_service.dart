@@ -55,7 +55,14 @@ class IdentityService extends ABSIdentityService{
 
     }on DioError catch(e){
       print("error $e");
+      print("ooop ${e.response.data}");
       result.error = true;
+      if(e.response != null ){
+        String message = e.response?.data['message'] ?? '';
+        result.errorMessage = message;
+
+      }
+
     }
 
     return result;
@@ -92,7 +99,7 @@ class IdentityService extends ABSIdentityService{
     String phoneNumber,
     String referralCode}) async{
 
-      Result<User> result = Result(error: false);
+      Result<void> result = Result(error: false);
 
       var body = {
         'email':email,
@@ -102,12 +109,35 @@ class IdentityService extends ABSIdentityService{
         "phoneNumber": phoneNumber,
       };
 
-      var url = "";
+
+      var url = "${AppStrings.baseUrl}zimvest.Onboarding.individual/api/IndividualOnboarding/registerindividual";
+      print("body $body");
+      print("url $url");
       try{
         var response = await dio.post(url, data: body);
+        final int statusCode = response.statusCode;
+        var response1 = response.data;
+        print("iii ${response1}");
+
+        if (statusCode != 200) {
+          result.errorMessage = response1['message'];
+          result.error = true;
+        }else {
+          result.error = false;
+
+        }
 
       }on DioError catch(e){
         result.error = true;
+        print("error ${e.toString()}");
+        print("ooop ${e.response.data}");
+        if(e.response != null ){
+          print(e.response.data);
+
+        }else{
+          print(e.toString());
+          result.errorMessage = "Sorry, We could not complete your request";
+        }
       }
 
       return result;
@@ -131,8 +161,6 @@ class IdentityService extends ABSIdentityService{
         result.error = true;
       }else {
         result.error = false;
-        var user = CompletedSections.fromJson(response1['data']);
-        result.data = user;
       }
 
     }on DioError catch(e){

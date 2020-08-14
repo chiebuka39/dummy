@@ -10,11 +10,21 @@ import 'package:zimvest/utils/result.dart';
 
 abstract class ABSIdentityViewModel extends ChangeNotifier{
   User _user;
+  bool _isValidPassword = false;
 
   User get user => _user;
+  bool get isValidPassword => _isValidPassword;
   set user(User value);
+  set isValidPassword(bool value);
   Future<Result<void>> login(String email, String password);
   Future<Result<CompletedSections>> checkCompletedSections({String token});
+  Future<Result<void>> registerIndividual({
+    String email, String password,
+    String firstName,
+    String lastName,
+    String phoneNumber,
+    String referralCode
+  });
 }
 
 class IdentityViewModel extends ABSIdentityViewModel{
@@ -25,6 +35,12 @@ class IdentityViewModel extends ABSIdentityViewModel{
   set user(User value) {
     _user = value;
     _localStorage.saveUserState(user);
+    notifyListeners();
+  }
+
+  @override
+  set isValidPassword(bool value) {
+    _isValidPassword = value;
     notifyListeners();
   }
 
@@ -56,6 +72,17 @@ class IdentityViewModel extends ABSIdentityViewModel{
   @override
   Future<Result<CompletedSections>> checkCompletedSections({String token}) {
     return _identityService.checkCompletedSections(token: token);
+  }
+
+  @override
+  Future<Result<void>> registerIndividual({String email, String password, String firstName, String lastName, String phoneNumber, String referralCode}) {
+    return _identityService.registerIndividual(
+      email: email,
+      password: password,
+      firstName: firstName,
+      lastName: lastName,
+      phoneNumber: phoneNumber
+    );
   }
 
 

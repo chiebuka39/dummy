@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:provider/provider.dart';
 import 'package:zimvest/data/view_models/identity_view_model.dart';
 import 'package:zimvest/screens/account/creat_account_screen.dart';
@@ -92,16 +93,16 @@ class _LoginScreenState extends State<LoginScreen> {
                       if(_emailError || _password == null){
                         return;
                       }
-                      setState(() {
-                        _loading = true;
-                      });
+                      EasyLoading.show(status: 'loading...');
                      var result = await _identityViewModel.login(_email, _password);
-                      setState(() {
-                        _loading = false;
-                      });
+
                      if(result.error == true){
+                       EasyLoading.showError(result.errorMessage,
+                           duration: Duration(seconds: 2));
                         print("login failed");
                       }else{
+                       EasyLoading.showSuccess("Log in successful",
+                           duration: Duration(seconds: 1));
                         Navigator.of(context).pushReplacement(MenuContainer.route());
                       }
                       //

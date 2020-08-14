@@ -1,8 +1,13 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:provider/provider.dart';
+import 'package:zimvest/data/view_models/identity_view_model.dart';
+import 'package:zimvest/screens/account/login_screen.dart';
 import 'package:zimvest/styles/colors.dart';
 import 'package:zimvest/utils/margin.dart';
+import 'package:zimvest/utils/result.dart';
 import 'package:zimvest/utils/validator.dart';
 import 'package:zimvest/widgets/account_widgets.dart';
 import 'package:zimvest/widgets/buttons.dart';
@@ -33,150 +38,206 @@ class _CreateAccountScreenState extends State<CreateAccountScreen> {
   bool _phoneNumberError = true;
   bool _passwordError = true;
 
+  ABSIdentityViewModel identityViewModel;
+
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-        backgroundColor: AppColors.kPrimaryColor,
-        body: SafeArea(
-          child: SingleChildScrollView(
-            child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 20),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  YMargin(11),
-                  Text(
-                    "Create account",
-                    style: TextStyle(
-                        color: AppColors.kWhite,
-                        fontSize: 20,
-                        fontFamily: "Caros-Bold"),
-                  ),
-                  YMargin(11),
-                  Text(
-                    "Set up your zimvest digital wealth account",
-                    style: TextStyle(
-                        color: AppColors.kLightText3,
-                        fontSize: 12,
-                        fontFamily: "Caros-Medium"),
-                  ),
-                  YMargin(40),
-                  TextWidget(title: "First name",onChange: (value){
-                    if(value.length < 2){
-                      _firstNameError = true;
-                    }else{
-                      _firstNameError = false;
-                    }
-                    _firstName = value;
-                    setState(() {});
-                  },error: autoValidate == true ? _firstNameError: false),
-
-                  TextWidget(title: "Last name",onChange: (value){
-                    if(value.length < 2){
-                      _lastNameError = true;
-                    }else{
-                      _lastNameError = false;
-                    }
-                    _lastName = value;
-                    setState(() {});
-                  },error: autoValidate == true ? _lastNameError: false,),
-                  TextWidget(title: "Email",
-                    textInputType: TextInputType.emailAddress,
-                    onChange: (value){
-                      if(EmailValidator.validate(value) == false){
-                        _emailError = true;
+    identityViewModel = Provider.of(context);
+    return GestureDetector(
+      onTap: (){
+        FocusScope.of(context).requestFocus(FocusNode());
+      },
+      child: Scaffold(
+          backgroundColor: AppColors.kPrimaryColor,
+          body: SafeArea(
+            child: SingleChildScrollView(
+              child: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 20),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    YMargin(11),
+                    Text(
+                      "Create account",
+                      style: TextStyle(
+                          color: AppColors.kWhite,
+                          fontSize: 20,
+                          fontFamily: "Caros-Bold"),
+                    ),
+                    YMargin(11),
+                    Text(
+                      "Set up your zimvest digital wealth account",
+                      style: TextStyle(
+                          color: AppColors.kLightText3,
+                          fontSize: 12,
+                          fontFamily: "Caros-Medium"),
+                    ),
+                    YMargin(40),
+                    TextWidget(title: "First name",onChange: (value){
+                      if(value.length < 2){
+                        _firstNameError = true;
                       }else{
-                        _emailError = false;
+                        _firstNameError = false;
                       }
-                      _email = value;
+                      _firstName = value;
                       setState(() {});
-                    },error: autoValidate == true ? _emailError: false
-                  ),
-                  TextWidget(title: "Phone Number",
-                    textInputType: TextInputType.phone,
-                    onChange: (value){
-                      if(value.length != 11){
-                        _phoneNumberError = true;
-                      }else{
-                        _phoneNumberError = false;
-                      }
-                      _phoneNumber = value;
-                      setState(() {});
-                    },error: autoValidate == true ? _phoneNumberError: false
-                  ),
-                  PasswordWidget(title: "Create Password",onChange: (password,isValidPassword){
-                    _password = password;
-                    _passwordError = !isValidPassword;
-                    setState(() {});
-                  }),
-                  YMargin(20),
-                  PrimaryButton(
-                    title: "Create account",
-                    onPressed: () {
-                      setState(() {
-                        autoValidate = true;
-                      });
-                      print("$autoValidate auto");
-                    },
-                  ),
-                  YMargin(10),
-                  Center(
-                      child: Container(
-                        width: 250,
-                        child: RichText(
-                          textAlign: TextAlign.center,
-                          text: TextSpan(
-                          children: [
-                            TextSpan(
-                              text: "By clicking “Create account”, you agree to zimest’s",
-                              style: TextStyle(fontSize: 10)
-                            ),
-                            TextSpan(
-                              text: " terms and conditions",
-                              recognizer: TapGestureRecognizer()..onTap = (){
-                                print("kkk");
-                              },
-                              style: TextStyle(fontSize: 10, color: AppColors.kAccentColor)
-                            ),
+                    },error: autoValidate == true ? _firstNameError: false),
 
-                            TextSpan(
-                              text: " and",
-                              style: TextStyle(fontSize: 10,)
-                            ),
-                            TextSpan(
-                                text: " privacy policy",
-                                style: TextStyle(fontSize: 10, color: AppColors.kAccentColor),
-                              recognizer: TapGestureRecognizer()..onTap = (){
-                                print("harry");
-                              },
-                            ),
-                          ]
-                        ),),
+                    TextWidget(title: "Last name",onChange: (value){
+                      if(value.length < 2){
+                        _lastNameError = true;
+                      }else{
+                        _lastNameError = false;
+                      }
+                      _lastName = value;
+                      setState(() {});
+                    },error: autoValidate == true ? _lastNameError: false,),
+                    TextWidget(title: "Email",
+                      textInputType: TextInputType.emailAddress,
+                      onChange: (value){
+                        if(EmailValidator.validate(value) == false){
+                          _emailError = true;
+                        }else{
+                          _emailError = false;
+                        }
+                        _email = value;
+                        setState(() {});
+                      },error: autoValidate == true ? _emailError: false
+                    ),
+                    TextWidget(title: "Phone Number",
+                      textInputType: TextInputType.phone,
+                      onChange: (value){
+                        if(value.length != 11){
+                          _phoneNumberError = true;
+                        }else{
+                          _phoneNumberError = false;
+                        }
+                        _phoneNumber = value;
+                        setState(() {});
+                      },error: autoValidate == true ? _phoneNumberError: false
+                    ),
+                    PasswordWidget(title: "Create Password",onChange: (String password,isValidPassword){
+                      print("oooo  onchanged valid $isValidPassword ");
+                      _password = password;
+                      _passwordError = !isValidPass(password);
+
+                      setState(() {});
+                    }),
+                    YMargin(20),
+                    PrimaryButton(
+                      title: "Create account",
+                      onPressed: () {
+                        setState(() {
+                          autoValidate = true;
+                        });
+                        if(_passwordError || _emailError || _firstNameError|| _lastNameError||_phoneNumberError){
+                          print("$_phoneNumberError $_firstNameError $_lastNameError $_emailError, $_passwordError");
+                          return;
+                        }
+                        registerUser();
+                        print("$autoValidate auto");
+                      },
+                    ),
+                    YMargin(10),
+                    Center(
+                        child: Container(
+                          width: 250,
+                          child: RichText(
+                            textAlign: TextAlign.center,
+                            text: TextSpan(
+                            children: [
+                              TextSpan(
+                                text: "By clicking “Create account”, you agree to zimest’s",
+                                style: TextStyle(fontSize: 10)
+                              ),
+                              TextSpan(
+                                text: " terms and conditions",
+                                recognizer: TapGestureRecognizer()..onTap = (){
+                                  print("kkk");
+                                },
+                                style: TextStyle(fontSize: 10, color: AppColors.kAccentColor)
+                              ),
+
+                              TextSpan(
+                                text: " and",
+                                style: TextStyle(fontSize: 10,)
+                              ),
+                              TextSpan(
+                                  text: " privacy policy",
+                                  style: TextStyle(fontSize: 10, color: AppColors.kAccentColor),
+                                recognizer: TapGestureRecognizer()..onTap = (){
+                                  print("harry");
+                                },
+                              ),
+                            ]
+                          ),),
+                        )),
+                    YMargin(46),
+                    FlatButton(
+                      onPressed: () {
+                        Navigator.of(context).push(LoginScreen.route());
+                      },
+                      child: Center(
+                          child: RichText(
+                        text: TextSpan(children: [
+                          TextSpan(
+                              text: "Have an account?",
+                              style: TextStyle(fontFamily: "Caros-Medium")),
+                          TextSpan(
+                              text: " Log in",
+                              style: TextStyle(
+                                  fontFamily: "Caros-Bold",
+                                  color: AppColors.kAccentColor))
+                        ]),
                       )),
-                  YMargin(46),
-                  FlatButton(
-                    onPressed: () {},
-                    child: Center(
-                        child: RichText(
-                      text: TextSpan(children: [
-                        TextSpan(
-                            text: "Have an account?",
-                            style: TextStyle(fontFamily: "Caros-Medium")),
-                        TextSpan(
-                            text: " Log in",
-                            style: TextStyle(
-                                fontFamily: "Caros-Bold",
-                                color: AppColors.kAccentColor))
-                      ]),
-                    )),
-                  ),
-                ],
+                    ),
+                  ],
+                ),
               ),
             ),
-          ),
-        ));
+          )),
+    );
+  }
+
+  Future registerUser() async {
+    EasyLoading.show(status: 'loading...');
+    
+    Result<void> result = await identityViewModel.registerIndividual(
+          email: _email.toLowerCase(),
+          phoneNumber:_phoneNumber,
+          firstName: _firstName,
+          lastName: _lastName,
+      password: _password
+    );
+    
+    if(result.error == false){
+      EasyLoading.showSuccess("Registration successful, you can log in now",
+          duration: Duration(seconds: 2));
+      Navigator.of(context).push(LoginScreen.route());
+    }else{
+      EasyLoading.showError("Error");
+    }
+  }
+  String lowerCase = r'^(?=.*?[a-z])';
+  String upperCase = r'^(?=.*?[A-Z])';
+  String specialChar =
+      r'^(?=.*?[)(\][)(|:};{?.="\u0027%!+<@>#\$/&*~^_-`,\u005C\u002D])';
+
+  String oneNumber = r'^(?=.*?[0-9])';
+  final caps1 = RegExp(r'^[a-zA-Z0-9]+$');
+  final caps = RegExp(r'^(?=.*?[A-Z])',unicode: true);
+  bool isValidPass(String password) {
+    bool hasCaps = caps.hasMatch(password);
+    //bool hasNum = RegExp(oneNumber,unicode: true).hasMatch(password);
+    bool hasLower = RegExp(lowerCase,unicode: true).hasMatch(password);
+    bool hasSpecial = RegExp(specialChar,unicode: true).hasMatch(password);
+
+    //print("regex $hasCaps $hasLower $hasSpecial ${password.length >= 8}");
+    return hasCaps == true && hasSpecial == true && hasLower == true && password.length >= 8;
   }
 }
+
+
 
 class PasswordValidity extends StatelessWidget {
   final bool isValid;

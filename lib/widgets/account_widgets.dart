@@ -7,6 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:zimvest/animations/select_dialog.dart';
+import 'package:zimvest/data/view_models/identity_view_model.dart';
 import 'package:zimvest/payment/input_formaters.dart';
 import 'package:zimvest/screens/account/creat_account_screen.dart';
 import 'package:zimvest/styles/colors.dart';
@@ -45,6 +46,7 @@ class TextWidget extends StatelessWidget {
                 borderRadius: BorderRadius.circular(4)),
             child: TextFormField(
               onChanged: onChange,
+              textCapitalization: TextCapitalization.sentences,
               keyboardType: textInputType,
               style: TextStyle(color: AppColors.kAccountTextColor),
               decoration: InputDecoration(
@@ -595,8 +597,8 @@ class PasswordWidget extends StatefulWidget {
 
 class _PasswordWidgetState extends State<PasswordWidget> {
   String password = "";
-  bool isValidPassword = false;
   bool islowerCase = false;
+  bool isValidPassword = false;
   bool isuperCase = false;
   bool isnumber = false;
   bool isEightChar = false;
@@ -604,8 +606,11 @@ class _PasswordWidgetState extends State<PasswordWidget> {
   bool ispattern = false;
   String isVisible;
   PasswordStrengthBloc passwordStrengthBloc = PasswordStrengthBloc();
+
+  bool obscure = true;
   @override
   Widget build(BuildContext context) {
+
     passwordStrengthBloc.add(OnTextChangedEvent(text: password));
     return BlocListener<PasswordStrengthBloc,PasswordStrengthState>(
       listener: (context,state){
@@ -614,16 +619,17 @@ class _PasswordWidgetState extends State<PasswordWidget> {
           passwordStrengthBloc.add(PasswordRegEx(passwordtext: state.text));
         }
         if (state is ValidPassword) {
-          isValidPassword = true;
           islowerCase = true;
           isuperCase = true;
           isnumber = true;
           isEightChar = true;
           isspecialChar = true;
           ispattern = true;
+          isValidPassword = true;
+          print("kkkkkk");
         }
         if (state is InvalidPassword) {
-          isValidPassword = state.isInvalidPassword;
+          isValidPassword = false;
           if (state.passwordValidation['lowerCase'] != null &&
               state.passwordValidation['lowerCase']) {
             islowerCase = true;
@@ -654,7 +660,9 @@ class _PasswordWidgetState extends State<PasswordWidget> {
           } else {
             isnumber = false;
           }
+          //
         }
+        //widget.onChange(password,isValidPassword);
       },
       bloc:passwordStrengthBloc,
       child:BlocBuilder<PasswordStrengthBloc, PasswordStrengthState>(
@@ -673,20 +681,38 @@ class _PasswordWidgetState extends State<PasswordWidget> {
                   decoration: BoxDecoration(
                       color: AppColors.kLightText,
                       borderRadius: BorderRadius.circular(4)),
-                  child: TextFormField(
-                    keyboardType: TextInputType.text,
-                    onChanged: (value){
-                      setState(() {
-                        password = value;
-                      });
-                      widget.onChange(password,isValidPassword);
-                    },
-                    style: TextStyle(color: AppColors.kAccountTextColor),
-                    decoration: InputDecoration(
-                        contentPadding: EdgeInsets.only(left: 10, bottom: 5),
-                        hintText: "",
-                        border: InputBorder.none,
-                        hintStyle: TextStyle(fontSize: 14)),
+                  child: Row(
+                    children: [
+                      Expanded(
+                        child: TextFormField(
+                          obscureText: obscure,
+                          keyboardType: TextInputType.text,
+                          onChanged: (value){
+
+                            setState(() {
+                              password = value;
+                            });
+
+                            widget.onChange(password,false);
+                          },
+                          style: TextStyle(color: AppColors.kAccountTextColor),
+                          decoration: InputDecoration(
+                              contentPadding: EdgeInsets.only(left: 10, bottom: 5),
+                              hintText: "",
+                              border: InputBorder.none,
+                              hintStyle: TextStyle(fontSize: 14)),
+                        ),
+                      ),
+                      GestureDetector(
+                          onTap: (){
+                            setState(() {
+                              obscure = !obscure;
+                            });
+                          },
+                          child: Icon(obscure == true ? Icons.visibility: Icons.visibility_off,size: 17,
+                            color: AppColors.kAccountTextColor,)),
+                      XMargin(10)
+                    ],
                   ),
                 ),
                 YMargin(5),
@@ -709,7 +735,7 @@ class _PasswordWidgetState extends State<PasswordWidget> {
     );
   }
 }
-class LoginPasswordWidget extends StatelessWidget {
+class LoginPasswordWidget extends StatefulWidget {
   final String title;
   final bool error;
   final ValueChanged<String> onChange;
@@ -718,31 +744,54 @@ class LoginPasswordWidget extends StatelessWidget {
   }) : super(key: key);
 
   @override
+  _LoginPasswordWidgetState createState() => _LoginPasswordWidgetState();
+}
+
+class _LoginPasswordWidgetState extends State<LoginPasswordWidget> {
+  bool obscure = true;
+  @override
   Widget build(BuildContext context) {
     return Container(height: 115,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
-            title,
-            style: TextStyle(color:error == true ?Colors.redAccent: Colors.white, fontSize: 12),
+            widget.title,
+            style: TextStyle(color:widget.error == true ?Colors.redAccent: Colors.white, fontSize: 12),
           ),
           YMargin(8),
           Container(
             height: 45,
             decoration: BoxDecoration(
                 color: AppColors.kLightText,
-                border: Border.all(color: error == true? Colors.redAccent : Colors.transparent),
+                border: Border.all(color: widget.error == true? Colors.redAccent : Colors.transparent),
                 borderRadius: BorderRadius.circular(4)),
-            child: TextFormField(
-              onChanged: onChange,
-              keyboardType: TextInputType.emailAddress,
-              style: TextStyle(color: AppColors.kAccountTextColor),
-              decoration: InputDecoration(
-                  contentPadding: EdgeInsets.only(left: 10, bottom: 5),
-                  hintText: "",
-                  border: InputBorder.none,
-                  hintStyle: TextStyle(fontSize: 14)),
+            child: Row(
+              children: [
+                Expanded(
+                  child: TextFormField(
+                    obscureText: obscure,
+                    onChanged: widget.onChange,
+                    keyboardType: TextInputType.emailAddress,
+                    style: TextStyle(color: AppColors.kAccountTextColor),
+                    decoration: InputDecoration(
+                        contentPadding: EdgeInsets.only(left: 10, bottom: 5),
+                        hintText: "",
+                        border: InputBorder.none,
+
+                        hintStyle: TextStyle(fontSize: 14)),
+                  ),
+                ),
+                GestureDetector(
+                  onTap: (){
+                    setState(() {
+                      obscure = !obscure;
+                    });
+                  },
+                    child: Icon(obscure == true ? Icons.visibility: Icons.visibility_off,size: 17,
+                      color: AppColors.kAccountTextColor,)),
+                XMargin(10)
+              ],
             ),
           ),
 
