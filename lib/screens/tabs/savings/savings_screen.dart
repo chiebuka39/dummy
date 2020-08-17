@@ -21,6 +21,7 @@ import 'package:zimvest/utils/enums.dart';
 import 'package:zimvest/utils/margin.dart';
 import 'package:zimvest/utils/result.dart';
 import 'package:zimvest/utils/strings.dart';
+import 'package:zimvest/widgets/appbars.dart';
 import 'package:zimvest/widgets/buttons.dart';
 import 'package:zimvest/widgets/line_chart.dart';
 import 'package:zimvest/widgets/savings.dart';
@@ -136,46 +137,21 @@ class _SavingsScreenState extends State<SavingsScreen>
           ),
         ),
       ),
+      appBar: ZimAppBar(
+        title: "My Savings",
+        desc: "You are a zimvest classic client. Are you ready to invest?",
+      ),
       body: Container(
         color: AppColors.kBg,
         child: SafeArea(
           child: CustomScrollView(
             slivers: [
-              SliverList(
+              SliverToBoxAdapter(child: Column(children: [
+                YMargin(20),
+                buildSavingsType(),
+              ],),),
+              savingViewModel.savingsTransactions[_zimType]  == null ? SliverList(
                 delegate: SliverChildListDelegate([
-                  Row(
-                    children: [
-                      Spacer(),
-                      CircularProfileAvatar(
-                        AppStrings.avatar,
-                        radius: 17,
-                      ),
-                      XMargin(20)
-                    ],
-                  ),
-                  YMargin(10),
-                  Padding(
-                    padding: const EdgeInsets.only(left: 20),
-                    child: Text(
-                      "My Savings",
-                      style: TextStyle(
-                          fontSize: 20,
-                          fontFamily: "Caros-Bold",
-                          color: Color(0xFF0b2328)),
-                    ),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.only(left: 20, top: 11),
-                    child: Text(
-                      "You are a zimvest classic client. Are you ready to invest?",
-                      style: TextStyle(
-                          fontSize: 12,
-                          fontFamily: "Caros",
-                          color: Color(0xFF324d53)),
-                    ),
-                  ),
-                  YMargin(20),
-                  buildSavingsType(),
                   YMargin(15),
                   getSavingItem(),
                   YMargin(15),
@@ -208,7 +184,8 @@ class _SavingsScreenState extends State<SavingsScreen>
                   _buildSavingsActivities(),
                   YMargin(20),
                 ]),
-              ),
+              ):
+              SavingsEmpty(),
               savingViewModel.savingsTransactions[_zimType]  == null? SliverToBoxAdapter():SliverList(
                 delegate: SliverChildListDelegate(List.generate(
                     savingViewModel.savingsTransactions[_zimType].length > 4
@@ -437,6 +414,27 @@ class _SavingsScreenState extends State<SavingsScreen>
       Navigator.of(context).push(WithdrawFundScreen.route(models[_aspireController.page.toInt()]));
     }
 
+  }
+}
+
+class SavingsEmpty extends StatelessWidget {
+  const SavingsEmpty({
+    Key key,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return SliverToBoxAdapter(child: Column(children: [
+      YMargin(50),
+      Image.asset("images/empty.png", height: 80,),
+      YMargin(20),
+      Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 20),
+        child: Text("You don’t have any activity yet, "
+            "get started with one of our products to start your investment journey",
+          style: TextStyle(fontSize: 12),textAlign: TextAlign.center,),
+      )
+    ],),);
   }
 }
 

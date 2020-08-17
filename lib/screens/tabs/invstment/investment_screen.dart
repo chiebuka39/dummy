@@ -715,11 +715,12 @@ class SavingsActionWidget extends StatelessWidget {
   final String title;
   final VoidCallback onTap;
   final String icon;
+  final double width;
   const SavingsActionWidget({
     Key key,
     this.title,
     this.onTap,
-    this.icon = "savings",
+    this.icon = "savings", this.width = 120,
   }) : super(key: key);
 
   @override
@@ -728,7 +729,7 @@ class SavingsActionWidget extends StatelessWidget {
       onTap: onTap,
       child: Container(
         height: 40,
-        width: 120,
+        width: width,
         decoration: BoxDecoration(
             color: AppColors.kPrimaryColor,
             borderRadius: BorderRadius.circular(5)),

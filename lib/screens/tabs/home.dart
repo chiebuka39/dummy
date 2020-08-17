@@ -7,14 +7,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 
 
-import 'package:flutter_money_formatter/flutter_money_formatter.dart';
-import 'package:flutter_svg/flutter_svg.dart';
+
 import 'package:provider/provider.dart';
 import 'package:sa_multi_tween/sa_multi_tween.dart';
 import 'package:simple_animations/simple_animations.dart';
 import 'package:zimvest/data/view_models/dashboard_view_model.dart';
 import 'package:zimvest/data/view_models/identity_view_model.dart';
 import 'package:zimvest/data/view_models/payment_view_model.dart';
+import 'package:zimvest/data/view_models/savings_view_model.dart';
 import 'package:zimvest/styles/colors.dart';
 import 'package:zimvest/styles/styles.dart';
 import 'package:zimvest/utils/enums.dart';
@@ -40,6 +40,7 @@ class _DashboardScreenState extends State<DashboardScreen> with AfterLayoutMixin
   ABSIdentityViewModel identityViewModel;
   ABSDashboardViewModel dashboardViewModel;
   ABSPaymentViewModel paymentViewModel;
+  ABSSavingViewModel savingViewModel;
 
   PageController controller;
   PageController secondController;
@@ -79,6 +80,7 @@ class _DashboardScreenState extends State<DashboardScreen> with AfterLayoutMixin
   void afterFirstLayout(BuildContext context) async{
     EasyLoading.show(status: 'loading...');
     await dashboardViewModel.getPortfolioValue(identityViewModel.user.token);
+    var r1 = await savingViewModel.getSavingPlans(token: identityViewModel.user.token);
     EasyLoading.dismiss();
     //await paymentViewModel.registerNewCard(identityViewModel.user.token);
   }
@@ -96,6 +98,7 @@ class _DashboardScreenState extends State<DashboardScreen> with AfterLayoutMixin
     identityViewModel = Provider.of(context);
     dashboardViewModel = Provider.of(context);
     paymentViewModel = Provider.of(context);
+    savingViewModel = Provider.of(context);
     print("ffff ${identityViewModel.user.token}");
     return PlayAnimation<MultiTweenValues<AniProps>>(
       tween: _tween,
@@ -133,7 +136,6 @@ class _DashboardScreenState extends State<DashboardScreen> with AfterLayoutMixin
                     },
                   ),
                   HeaderPage(
-
                     amount: dashboardViewModel.dashboardModel.nairaPortfolio,
                     moveToPrev: () {
                       headerController.animateToPage(1,
@@ -159,7 +161,7 @@ class _DashboardScreenState extends State<DashboardScreen> with AfterLayoutMixin
                 ],
               ),
             ),
-            Expanded(
+            savingViewModel.savingPlanModel == null ? SizedBox():Expanded(
               child: Transform.translate(
                 offset: value.get(AniProps.offset),
                 child: Container(
