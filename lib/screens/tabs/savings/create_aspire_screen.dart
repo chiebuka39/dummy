@@ -36,7 +36,7 @@ class _CreateZimvestAspireScreenState extends State<CreateZimvestAspireScreen> {
   double targetAmount;
   double savingAmount;
   DateTime maturityDate;
-  DateTime startDate = DateTime.now();
+  DateTime startDate;
   double bulkSum;
   SavingsFrequency frequency;
   AspireTarget aspireTarget;
@@ -90,6 +90,7 @@ class _CreateZimvestAspireScreenState extends State<CreateZimvestAspireScreen> {
                     },title: "Target amount",),
                   DateOfBirthBorderInputWidget(title: "Maturity Date",
                     textColor: AppColors.kAccountTextColor,
+                    selected: maturityDate,
                     startDate: DateTime.now().add(Duration(days: 90)),
                     initialDate: DateTime.now().add(Duration(days: 90)),
                     endDate: DateTime.utc(2030),
@@ -186,28 +187,30 @@ class _CreateZimvestAspireScreenState extends State<CreateZimvestAspireScreen> {
                   DateOfBirthBorderInputWidget(
                     startDate: DateTime.now(),
                     initialDate: DateTime.now(),
-                    endDate: DateTime.utc(2030),
+                    selected: startDate,
+                    endDate: maturityDate.subtract(Duration(days: 93)),
                     setDate: (value){
                       setState(() {
                         startDate = value;
-                        maturityDate = null;
                       });
                     },
                     title: "Start Date",textColor: AppColors.kAccountTextColor,
                   ),
-                  DateOfBirthBorderInputWidget(
-                    key: Key("ppp"),
-                    startDate: startDate.add(Duration(days: 90)),
-                    selected: maturityDate,
-                    initialDate: startDate.add(Duration(days: 90)),
-                    endDate: DateTime.utc(2030),
-                    setDate: (value){
-                      setState(() {
-                        maturityDate = value;
-                      });
-                    },
-                    title: "End Date",textColor: AppColors.kAccountTextColor
-                    ,),
+                  IgnorePointer(
+                    child: DateOfBirthBorderInputWidget(
+                      key: Key("ppp"),
+                      startDate: DateTime.now().add(Duration(days: 90)),
+                      selected: maturityDate,
+                      initialDate: DateTime.now().add(Duration(days: 90)),
+                      endDate: DateTime.utc(2030),
+                      setDate: (value){
+                        setState(() {
+                          maturityDate = value;
+                        });
+                      },
+                      title: "End Date",textColor: AppColors.kAccountTextColor
+                      ,),
+                  ),
                   DropdownBorderInputWidget(
                     key: Key("pppe"),
                     title: "Select Funding source",
@@ -281,7 +284,7 @@ class _CreateZimvestAspireScreenState extends State<CreateZimvestAspireScreen> {
                       return PrimaryButton(
                         title: "Create Plan",
                         onPressed: (startDate != null &&
-                            maturityDate != null  && fundingChannel != null) ? ()async{
+                            maturityDate != null  && fundingChannel != null && _agreed == true) ? ()async{
                           EasyLoading.show(status: "loading");
 
                           var result = await savingViewModel.createTargetSavings(
@@ -296,8 +299,9 @@ class _CreateZimvestAspireScreenState extends State<CreateZimvestAspireScreen> {
                             fundingChannel: fundingChannel.id,
                             planName: _planName
                           );
+                          print("kkkkk ${result.error} -- ${result.errorMessage}");
                           if(result.error == false){
-                            EasyLoading.showSuccess("success",
+                            EasyLoading.showSuccess(result?.errorMessage ??"success",
                                 duration: Duration(seconds: 2));
                             Navigator.of(context).pop();
                           }else{

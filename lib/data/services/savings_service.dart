@@ -113,7 +113,7 @@ class SavingService extends ABSSavingService{
 
 
     var url = "${AppStrings.baseUrl}zimvest.services.savings/api/Savings"
-        "/Customers/Transactions?ProductTypeId=$productId";
+        "/Customers/Transactions?productId=$productId";
     print("url $url");
     try{
       var response = await dio.get(url,options: Options(headers: headers));
@@ -318,6 +318,12 @@ class SavingService extends ABSSavingService{
       if (statusCode != 200) {
         result.errorMessage = response1['message'];
         result.error = true;
+      }else if( statusCode == 201){
+        result.error = false;
+        result.data = SavingPlanModel.fromJson(response1['data']);
+        if(response1['message'] != null){
+          result.errorMessage = response1['message'];
+        }
       }else {
         result.error = false;
 
@@ -440,7 +446,6 @@ class SavingService extends ABSSavingService{
           result.errorMessage = response1['message'];
         }
       }
-
     }on DioError catch(e){
       print("error $e}");
       if(e.response != null ){
@@ -491,18 +496,15 @@ class SavingService extends ABSSavingService{
       final int statusCode = response.statusCode;
       var response1 = response.data;
       print("iii ${response1}");
+      print("111i ${statusCode}");
 
-      if (statusCode != 200) {
+      if (statusCode != 200 && statusCode != 201) {
+        print("oooooooogggggggggggg");
         result.errorMessage = response1['message'];
         result.error = true;
-      }else if( statusCode == 201){
-        result.error = true;
-        result.data = SavingPlanModel.fromJson(response1['data']);
-        if(response1['message'] != null){
-          result.errorMessage = response1['message'];
-        }
       }
       else {
+        print("33333333333333oooooooo");
         result.error = false;
         result.data = SavingPlanModel.fromJson(response1['data']);
         if(response1['message'] != null){
@@ -511,6 +513,7 @@ class SavingService extends ABSSavingService{
       }
 
     }on DioError catch(e){
+      print("errrrrrrrr");
       print("error $e}");
       if(e.response != null ){
         print(e.response.data);

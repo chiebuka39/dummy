@@ -13,6 +13,7 @@ import 'package:sa_multi_tween/sa_multi_tween.dart';
 import 'package:simple_animations/simple_animations.dart';
 import 'package:zimvest/data/view_models/dashboard_view_model.dart';
 import 'package:zimvest/data/view_models/identity_view_model.dart';
+import 'package:zimvest/data/view_models/investment_view_model.dart';
 import 'package:zimvest/data/view_models/payment_view_model.dart';
 import 'package:zimvest/data/view_models/savings_view_model.dart';
 import 'package:zimvest/styles/colors.dart';
@@ -41,6 +42,7 @@ class _DashboardScreenState extends State<DashboardScreen> with AfterLayoutMixin
   ABSDashboardViewModel dashboardViewModel;
   ABSPaymentViewModel paymentViewModel;
   ABSSavingViewModel savingViewModel;
+  ABSInvestmentViewModel investmentViewModel;
 
   PageController controller;
   PageController secondController;
@@ -53,7 +55,7 @@ class _DashboardScreenState extends State<DashboardScreen> with AfterLayoutMixin
 
   double currentIndexPage = 0;
 
-  ZimType _zimType;
+  ZimType2 _zimType;
 
   @override
   void initState() {
@@ -63,7 +65,7 @@ class _DashboardScreenState extends State<DashboardScreen> with AfterLayoutMixin
     thirdController = PageController();
     headerController = PageController();
 
-    _zimType = ZimType.WEALTH;
+    _zimType = ZimType2.ZIM_HIGH;
     _aspireOptions = ["", ""];
     _wealthOptions = ["", "", ""];
     _mutualOptions = ["", ""];
@@ -80,8 +82,11 @@ class _DashboardScreenState extends State<DashboardScreen> with AfterLayoutMixin
   void afterFirstLayout(BuildContext context) async{
     EasyLoading.show(status: 'loading...');
     await dashboardViewModel.getPortfolioValue(identityViewModel.user.token);
-    var r1 = await savingViewModel.getSavingPlans(token: identityViewModel.user.token);
+    var r1 = await investmentViewModel.getTermFundValuation(token: identityViewModel.user.token);
     EasyLoading.dismiss();
+    var r2 = await investmentViewModel.getFixedFundValuation(token: identityViewModel.user.token);
+    var r3 = await savingViewModel.getSavingPlans(token: identityViewModel.user.token);
+
     //await paymentViewModel.registerNewCard(identityViewModel.user.token);
   }
 
@@ -99,6 +104,7 @@ class _DashboardScreenState extends State<DashboardScreen> with AfterLayoutMixin
     dashboardViewModel = Provider.of(context);
     paymentViewModel = Provider.of(context);
     savingViewModel = Provider.of(context);
+    investmentViewModel = Provider.of(context);
     print("ffff ${identityViewModel.user.token}");
     return PlayAnimation<MultiTweenValues<AniProps>>(
       tween: _tween,
@@ -161,7 +167,11 @@ class _DashboardScreenState extends State<DashboardScreen> with AfterLayoutMixin
                 ],
               ),
             ),
-            savingViewModel.savingPlanModel == null ? SizedBox():Expanded(
+            investmentViewModel.termFunds == null ? Expanded(
+              child: Container(
+                color: Colors.white,
+              ),
+            ):Expanded(
               child: Transform.translate(
                 offset: value.get(AniProps.offset),
                 child: Container(
@@ -274,72 +284,86 @@ class _DashboardScreenState extends State<DashboardScreen> with AfterLayoutMixin
 
   Widget _buildZimDots() {
     Widget result;
+    print("kk ${investmentViewModel.termFunds.length}");
     switch (_zimType) {
-      case ZimType.WEALTH:
+      case ZimType2.ZIM_HIGH:
         result = DotsIndicator(
             decorator: DotsDecorator(
                 activeColor: AppColors.kPrimaryColor,
                 size: Size.fromRadius(3),
                 activeSize: Size.fromRadius(3)),
-            dotsCount: _wealthOptions.length,
+            dotsCount: investmentViewModel.termFunds.length,
             position: currentIndexPage);
         break;
-      case ZimType.ASPIRE:
+      case ZimType2.ZIM_FIXED:
         result = DotsIndicator(
             decorator: DotsDecorator(
                 activeColor: AppColors.kPrimaryColor,
                 size: Size.fromRadius(3),
                 activeSize: Size.fromRadius(3)),
-            dotsCount: _aspireOptions.length,
+            dotsCount: investmentViewModel.fixedFunds.length,
             position: currentIndexPage);
         break;
-      case ZimType.MUTUAL:
-        return SizedBox();
+      case ZimType2.SAVINGS:
+        if(savingViewModel.savingPlanModel.isEmpty){
+          result = SizedBox();
+        }else{
+          result =  DotsIndicator(
+              decorator: DotsDecorator(
+                  activeColor: AppColors.kPrimaryColor,
+                  size: Size.fromRadius(3),
+                  activeSize: Size.fromRadius(3)),
+              dotsCount: savingViewModel.savingPlanModel.length,
+              position: currentIndexPage);
+        }
+
         break;
     }
-    return DotsIndicator(
-        decorator: DotsDecorator(
-            activeColor: AppColors.kPrimaryColor,
-            size: Size.fromRadius(3),
-            activeSize: Size.fromRadius(3)),
-        dotsCount: _zimType == ZimType.WEALTH
-            ? _wealthOptions.length
-            : _aspireOptions.length,
-        position: currentIndexPage);
+    return result;
   }
 
   Widget _buildZimSelectedDetails() {
     Widget result;
     switch (_zimType) {
-      case ZimType.WEALTH:
-        result = PageView(
-          controller: controller,
-          scrollDirection: Axis.horizontal,
-          children: [
-            ZimCategoryWidget(amount: dashboardViewModel.dashboardModel.nairaPortfolio),
-            ZimCategoryWidget(amount: dashboardViewModel.dashboardModel.nairaPortfolio),
-            ZimAspireCategoryWidget(
-              amount: dashboardViewModel.dashboardModel.nairaPortfolio,
-              completion: 30,
-            ),
-          ],
-        );
+      case ZimType2.ZIM_HIGH:
+        if(investmentViewModel.termFunds.isEmpty){
+          result =  SizedBox(child: Text("No items found"),);
+        }else{
+          result = PageView(
+            controller: controller,
+            scrollDirection: Axis.horizontal,
+            children: investmentViewModel.termFunds.map((e)
+            => ZimCategoryWidget(amount: e.currentValue,
+              title: e.termInstrumentName,rate: e.percentageInterest,),).toList(),
+          );
+        }
         break;
-      case ZimType.ASPIRE:
-        result = PageView(
-          controller: aspireController,
-          scrollDirection: Axis.horizontal,
-          children: [
-            ZimAspireCategoryWidget(
-              amount: dashboardViewModel.dashboardModel.nairaPortfolio,
-              completion: 30,
-            ),
-            ZimCategoryWidget(amount: dashboardViewModel.dashboardModel.nairaPortfolio),
-          ],
-        );
+      case ZimType2.ZIM_FIXED:
+        if(investmentViewModel.fixedFunds.isEmpty){
+          result =  SizedBox(child: Text("No items found"),);
+        }else{
+          result = PageView(
+            controller: aspireController,
+            scrollDirection: Axis.horizontal,
+            children: investmentViewModel.fixedFunds.map((e)
+            => ZimCategoryWidget(amount: e.currentValue,
+              title: e.fixedIncomeName,rate: e.percentageInterest,),).toList(),
+          );
+        }
+
         break;
-      case ZimType.MUTUAL:
-        result = Text("No plans yet");
+      case ZimType2.SAVINGS:
+        if(savingViewModel.savingPlanModel.isEmpty){
+          result =  SizedBox(child: Text("No items found"),);
+        }else{
+          result = PageView(
+            controller: aspireController,
+            scrollDirection: Axis.horizontal,
+            children: savingViewModel.savingPlanModel.map((e)
+            => ZimCategoryWidget(amount: e.targetAmount.toString(),
+              title: e.planName,rate: "9%",),).toList(),
+          );
+        }
         break;
     }
     return Container(height: 110, child: result);
@@ -358,36 +382,42 @@ class _DashboardScreenState extends State<DashboardScreen> with AfterLayoutMixin
           children: [
             XMargin(10),
             ZimSelectedButton(
-              title: "Zimvest Wealth Box",
+              title: "Zimvest High yield",
               onTap: () {
                 setState(() {
-                  _zimType = ZimType.WEALTH;
+                  _zimType = ZimType2.ZIM_HIGH;
                   currentIndexPage = 0;
                 });
               },
-              type: ZimType.WEALTH,
+              type: ZimType2.ZIM_HIGH,
               selectedType: _zimType,
             ),
             ZimSelectedButton(
-              title: "Zimvest Aspire",
-              onTap: () {
-                setState(() {
-                  _zimType = ZimType.ASPIRE;
-                  currentIndexPage = 0;
-                });
+              title: "Zimvest Fixed Income",
+              onTap: () async{
+                  setState(() {
+                    _zimType = ZimType2.ZIM_FIXED;
+                    currentIndexPage = 0;
+                  });
+
+
               },
-              type: ZimType.ASPIRE,
+              type: ZimType2.ZIM_FIXED,
               selectedType: _zimType,
             ),
             ZimSelectedButton(
-              title: "Zimvest Mutual",
-              onTap: () {
-                setState(() {
-                  _zimType = ZimType.MUTUAL;
-                  currentIndexPage = 0;
-                });
+              title: "Zimvest Savings",
+              onTap: () async{
+
+                  setState(() {
+                    _zimType = ZimType2.SAVINGS;
+                    currentIndexPage = 0;
+                  });
+
+
+
               },
-              type: ZimType.MUTUAL,
+              type: ZimType2.SAVINGS,
               selectedType: _zimType,
             ),
           ],
@@ -537,10 +567,12 @@ class HeaderPage extends StatelessWidget {
 class ZimCategoryWidget extends StatelessWidget {
   const ZimCategoryWidget({
     Key key,
-    @required this.amount,
+    @required this.amount, this.title ="", this.rate ="",
   }) : super(key: key);
 
   final String amount;
+  final String title;
+  final String rate;
 
   @override
   Widget build(BuildContext context) {
@@ -560,17 +592,10 @@ class ZimCategoryWidget extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    "Zimvest wealth balance",
+                    title,
                     style: AppStyles.tinyTitle,
                   ),
-                  YMargin(4),
-                  Text(
-                    amount,
-                    style: TextStyle(
-                        color: AppColors.kWhite,
-                        fontSize: 16,
-                        fontFamily: "Caros-Bold"),
-                  ),
+
                 ],
               ),
               Spacer(),

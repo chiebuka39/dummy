@@ -150,42 +150,7 @@ class _SavingsScreenState extends State<SavingsScreen>
                 YMargin(20),
                 buildSavingsType(),
               ],),),
-              savingViewModel.savingsTransactions[_zimType]  == null ? SliverList(
-                delegate: SliverChildListDelegate([
-                  YMargin(15),
-                  getSavingItem(),
-                  YMargin(15),
-                  Padding(
-                    padding: const EdgeInsets.only(left: 20),
-                    child: Row(
-                      children: [
-                        SavingsActionWidget(
-                          title: "Add funds",
-                          onTap: _handleMoveToAddScreen,
-                        ),
-                        XMargin(5),
-                        SavingsActionWidget(
-                          title: "Withdraw",
-                          onTap: (){
-                            _handleMoveToWithdrawScreen();
-                          },
-                        )
-                      ],
-                    ),
-                  ),
-                  YMargin(20),
-                  PauseSavingsWidget(
-                    active: false,
-                  ),
-                  YMargin(15),
-                  _buildTrackYourSavingsHeader(),
-                  showSavingsGraph == true ? LineChartSample2() : SizedBox(),
-                  YMargin(30),
-                  _buildSavingsActivities(),
-                  YMargin(20),
-                ]),
-              ):
-              SavingsEmpty(),
+              _buildBody(),
               savingViewModel.savingsTransactions[_zimType]  == null? SliverToBoxAdapter():SliverList(
                 delegate: SliverChildListDelegate(List.generate(
                     savingViewModel.savingsTransactions[_zimType].length > 4
@@ -253,6 +218,44 @@ class _SavingsScreenState extends State<SavingsScreen>
     );
   }
 
+  Widget _buildBody() {
+    return savingViewModel.savingPlanModel.where((element) => element.productId == _zimType).isEmpty  ? SavingsEmpty():  SliverList(
+              delegate: SliverChildListDelegate([
+                YMargin(15),
+                getSavingItem(),
+                YMargin(15),
+                Padding(
+                  padding: const EdgeInsets.only(left: 20),
+                  child: Row(
+                    children: [
+                      SavingsActionWidget(
+                        title: "Add funds",
+                        onTap: _handleMoveToAddScreen,
+                      ),
+                      XMargin(5),
+                      SavingsActionWidget(
+                        title: "Withdraw",
+                        onTap: (){
+                          _handleMoveToWithdrawScreen();
+                        },
+                      )
+                    ],
+                  ),
+                ),
+                YMargin(20),
+                PauseSavingsWidget(
+                  active: false,
+                ),
+                YMargin(15),
+                _buildTrackYourSavingsHeader(),
+                showSavingsGraph == true ? LineChartSample2() : SizedBox(),
+                YMargin(30),
+                _buildSavingsActivities(),
+                YMargin(20),
+              ]),
+            );
+  }
+
   Row buildSavingsType() {
     return Row(
       children: savingViewModel.productTypes.map((e) => ZimSelectedButton2(
@@ -265,7 +268,7 @@ class _SavingsScreenState extends State<SavingsScreen>
           setState(() {
             _zimType = e.id;
           });
-          await fetchTransactions(e.id,showLoader:true );
+          await fetchTransactions(e.id,showLoader:true);
         },
         type: e.id,
         selectedType: _zimType,

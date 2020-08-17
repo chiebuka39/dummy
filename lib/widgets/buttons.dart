@@ -4,8 +4,8 @@ import 'package:zimvest/utils/enums.dart';
 
 class ZimSelectedButton extends StatelessWidget {
   final VoidCallback onTap;
-  final ZimType type;
-  final ZimType selectedType;
+  final ZimType2 type;
+  final ZimType2 selectedType;
   final String title;
   final double leftMargin;
   const ZimSelectedButton({
