@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'dart:io';
+import 'dart:typed_data';
 
 import 'package:dio/dio.dart';
 import 'package:zimvest/data/models/completed_sections.dart';
@@ -17,8 +18,30 @@ abstract class ABSSettingsService{
   Future<Result<String>> getBvn({String token});
   Future<Result<CompletedSections>> getCompletedSections({String token});
   Future<Result<void>> uploadIdentification({String token, File file, String id});
+  Future<Result<void>> updateNotoficationSettings({String token,
+    bool receiveEmailUpdateOnInvestment,
+    bool receiveEmailUpdateOnSavings, bool subscribeToNewsLetter});
   Future<Result<void>> uploadUtilityBill({String token, File file});
   Future<Result<void>> updateResidentialAddress({String token, String address, int state});
+  Future<Result<void>> updateBvn({String token, String bvn});
+  Future<Result<void>> updateKin({
+    String token,
+    String fullName,
+    int relationship,
+    String email,
+    String phoneNumber,
+  });
+  Future<Result<void>> updateProfile({
+    String token,
+    String firstName,
+    String lastName,
+    String email,
+    String phoneNumber,
+    String dOB,
+    int gender,
+    int maritalStatus,
+    String profile
+  });
 
 }
 
@@ -322,6 +345,170 @@ class SettingsService extends ABSSettingsService{
 
     }on DioError catch(e){
       print("error ${e.response.data}");
+      result.error = true;
+    }
+
+    return result;
+  }
+
+  @override
+  Future<Result<void>> updateNotoficationSettings({String token,
+    bool receiveEmailUpdateOnInvestment,
+    bool receiveEmailUpdateOnSavings,
+    bool subscribeToNewsLetter}) async{
+    Result<void> result = Result(error: false);
+
+    var headers = {
+      HttpHeaders.authorizationHeader: "Bearer $token"
+    };
+    var url = "${AppStrings.baseUrl}zimvest.onboarding.individual/api/Profiles/notificationsettings";
+
+    var body = {
+      "receiveEmailUpdateOnInvestment":receiveEmailUpdateOnInvestment,
+      "receiveEmailUpdateOnSavings":receiveEmailUpdateOnSavings,
+      "subscribeToNewsLetter":subscribeToNewsLetter
+    };
+
+    print("lll $url");
+    try{
+      var response = await dio.post(url, options: Options(headers: headers),data: body);
+      final int statusCode = response.statusCode;
+      var response1 = response.data;
+      print("iii ${response1}");
+
+      if (statusCode != 200) {
+        result.errorMessage = response1['message'];
+        result.error = true;
+      }else {
+        result.error = false;
+      }
+
+    }on DioError catch(e){
+      print("error ${e.response.data}");
+      result.error = true;
+    }
+
+    return result;
+  }
+
+  @override
+  Future<Result<void>> updateBvn({String token, String bvn})async {
+    Result<void> result = Result(error: false);
+
+    var headers = {
+      HttpHeaders.authorizationHeader: "Bearer $token"
+    };
+    var url = "${AppStrings.baseUrl}zimvest.onboarding.individual/api/Profiles/bvn";
+
+    var body = {
+      "bvn":bvn,
+    };
+
+    print("lll $url");
+    try{
+      var response = await dio.post(url, options: Options(headers: headers),data: body);
+      final int statusCode = response.statusCode;
+      var response1 = response.data;
+      print("iii ${response1}");
+
+      if (statusCode != 200) {
+        result.errorMessage = response1['message'];
+        result.error = true;
+      }else {
+        result.error = false;
+      }
+
+    }on DioError catch(e){
+      print("error ${e.response.data}");
+      result.error = true;
+    }
+
+    return result;
+  }
+
+  @override
+  Future<Result<void>> updateProfile({String token, String firstName,
+    String lastName, String email, String phoneNumber,
+    String dOB, int gender, int maritalStatus, String profile}) async{
+    Result<void> result = Result(error: false);
+    Uint8List base64Decode(String source) => base64.decode(source);
+
+    var headers = {
+      HttpHeaders.authorizationHeader: "Bearer $token"
+    };
+    var url = "${AppStrings.baseUrl}zimvest.onboarding.individual/api/Profiles";
+
+    var body = FormData.fromMap({
+      "FirstName":firstName,
+      "LastName":lastName,
+      "PhoneNumber":phoneNumber,
+      "Email":email,
+      "Gender":gender,
+      "DOB":dOB,
+      "MaritalStatus":maritalStatus,
+      "Form":MultipartFile.fromBytes(base64Decode(profile))
+    });
+
+    print("lll $url");
+    try{
+      var response = await dio.patch(url, options: Options(headers: headers),data: body);
+      final int statusCode = response.statusCode;
+      var response1 = response.data;
+      print("iii ${response1}");
+
+      if (statusCode != 200) {
+        result.errorMessage = response1['message'];
+        result.error = true;
+      }else {
+        result.error = false;
+      }
+
+    }on DioError catch(e){
+      print("error ${e.response.data}");
+      result.error = true;
+    }
+
+    return result;
+  }
+
+  @override
+  Future<Result<void>> updateKin({String token, String fullName,
+    int relationship, String email, String phoneNumber}) async{
+    Result<void> result = Result(error: false);
+
+
+    var headers = {
+      HttpHeaders.authorizationHeader: "Bearer $token"
+    };
+    var url = "${AppStrings.baseUrl}zimvest.onboarding.individual/api/NextOfKins";
+
+    var body = {
+      "fullName":fullName,
+      "relationship":relationship,
+      "email":email,
+      "phoneNumber":phoneNumber,
+
+    };
+
+
+    print("lll $url");
+    print("lll $body");
+    try{
+      var response = await dio.post(url, options: Options(headers: headers),data: body);
+      final int statusCode = response.statusCode;
+      var response1 = response.data;
+      print("iii ${response1}");
+
+      if (statusCode != 200) {
+        result.errorMessage = response1['message'];
+        result.error = true;
+      }else {
+        result.error = false;
+      }
+
+    }on DioError catch(e){
+      print("error ${e.response.data}");
+      print("error22 $e");
       result.error = true;
     }
 

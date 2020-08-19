@@ -123,7 +123,7 @@ class _NotificationFormWidgetState extends State<NotificationFormWidget> with Af
           YMargin(20),
           PrimaryButton(
             title: "Update",
-            onPressed: (){},
+            onPressed: _updateNotificationSettings,
           ),
           YMargin(20)
 
@@ -131,5 +131,20 @@ class _NotificationFormWidgetState extends State<NotificationFormWidget> with Af
       ],),
     );
   }
+
+  _updateNotificationSettings()async{
+    EasyLoading.show(status: 'loading...');
+    var result = await settingsViewModel.updateNotoficationSettings(
+        token: identityViewModel.user.token,
+        receiveEmailUpdateOnSavings: _receiveEmailForSavings,
+      receiveEmailUpdateOnInvestment: _receiveEmailForInvestment,
+      subscribeToNewsLetter: _receiveNewsLetter
+    );
+    if (result.error == false ) {
+      EasyLoading.showSuccess("Success");
+    } else {
+      EasyLoading.showError("Error");
+    }
+          }
 }
 

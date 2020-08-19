@@ -252,20 +252,54 @@ class _ProfileFormWidgetState extends State<ProfileFormWidget> with AfterLayoutM
         DropdownBorderInputWidget(title: "Gender",
           textColor: Colors.black,items: genderList,
           source: genderList[gender-1],
+            onSelect: (value){
+              setState(() {
+                gender = genderList.indexOf(value)+1;
+              });
+            }
         ),
         DropdownBorderInputWidget(title: "Marital Status",textColor: Colors.black,
           items: maritalList,
+          onSelect: (value){
+            setState(() {
+              maritalStatus = maritalList.indexOf(value)+1;
+            });
+          },
           source: maritalList[maritalStatus-1],
         ),
         YMargin(10),
         PrimaryButton(
           title: "Update",
-          onPressed: (){},
+          onPressed: dob == null ||
+              gender==null || maritalStatus == null || emailController.text.isEmpty||
+            phoneController.text.isEmpty || firstNameController.text.isEmpty ||
+          lastNameController.text.isEmpty
+              ? null: _updateProfile,
         ),
         YMargin(20)
 
       ],),
     );
+  }
+
+  _updateProfile()async{
+    EasyLoading.show(status: 'loading...');
+    var i1 = await settingsViewModel.updateProfile(
+        token: identityViewModel.user.token,
+        firstName: firstNameController.text,
+      lastName: lastNameController.text,
+      email: emailController.text,
+      phoneNumber: phoneController.text,
+      dOB: dob.toIso8601String(),
+      maritalStatus: maritalStatus,
+      gender: gender,
+
+    );
+    if (i1.error == false ) {
+      EasyLoading.showSuccess("Success");
+    } else {
+      EasyLoading.showError("Error");
+    }
   }
 }
 
@@ -320,14 +354,25 @@ class _BvnFormWidgetState extends State<BvnFormWidget> with AfterLayoutMixin<Bvn
 
         PrimaryButton(
           title: "Update",
-          onPressed: _bvnName.text.isEmpty ? null: (){
-
-          },
+          onPressed: _bvnName.text.isEmpty ? null: _updateBvn,
         ),
         YMargin(20)
 
       ],),
     );
+  }
+
+  _updateBvn()async{
+    EasyLoading.show(status: 'loading...');
+    var i1 = await settingsViewModel.updateBvn(
+        token: identityViewModel.user.token,
+      bvn: _bvnName.text
+    );
+    if (i1.error == false ) {
+      EasyLoading.showSuccess("Success");
+    } else {
+      EasyLoading.showError("Error");
+    }
   }
 }
 

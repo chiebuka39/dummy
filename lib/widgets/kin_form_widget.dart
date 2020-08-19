@@ -77,6 +77,11 @@ class _KinFormWidgetState extends State<KinFormWidget> with AfterLayoutMixin<Kin
           title: "Relationship",
           items: relationshipList,textColor: Colors.black,
           source: relationshipList[relationship],
+          onSelect: (value){
+            setState(() {
+              relationship = relationshipList.indexOf(value);
+            });
+          },
         ),
         TextWidgetBorder(
           title: "Email of Next of kin",
@@ -90,12 +95,29 @@ class _KinFormWidgetState extends State<KinFormWidget> with AfterLayoutMixin<Kin
 
         PrimaryButton(
           title: "Update",
-          onPressed: (){},
+          onPressed: kinName.text.isNotEmpty &&
+              kinNumber.text.isNotEmpty && kinEmail.text.isNotEmpty? _updateKin:null,
         ),
         YMargin(20)
 
       ],),
     );
+  }
+  _updateKin()async{
+
+    EasyLoading.show(status: 'loading...');
+    var i1 = await settingsViewModel.updateKin(
+        token: identityViewModel.user.token,
+      email: kinEmail.text,
+      phoneNumber: kinNumber.text,
+      fullName: kinName.text,
+      relationship: relationship+1
+    );
+    if (i1.error == false ) {
+      EasyLoading.showSuccess("Success");
+    } else {
+      EasyLoading.showError("Error");
+    }
   }
 }
 

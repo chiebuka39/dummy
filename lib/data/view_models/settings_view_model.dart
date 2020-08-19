@@ -1,3 +1,4 @@
+
 import 'dart:io';
 
 import 'package:flutter/foundation.dart';
@@ -41,6 +42,16 @@ abstract class ABSSettingsViewModel extends ChangeNotifier{
   Future<Result<void>> uploadUtilityBill({String token, File file});
   Future<Result<void>> updateResidentialAddress({String token,
     String address, int state});
+  Future<Result<void>> updateNotoficationSettings({String token,
+    bool receiveEmailUpdateOnInvestment,
+    bool receiveEmailUpdateOnSavings,
+    bool subscribeToNewsLetter});
+  Future<Result<void>> updateBvn({String token, String bvn});
+  Future<Result<void>> updateProfile({String token, String firstName,
+    String lastName, String email, String phoneNumber,
+    String dOB, int gender, int maritalStatus, String profile1});
+  Future<Result<void>> updateKin({String token, String fullName,
+    int relationship, String email, String phoneNumber});
 }
 
 class SettingsViewModel extends ABSSettingsViewModel{
@@ -171,6 +182,52 @@ class SettingsViewModel extends ABSSettingsViewModel{
     }
 
     return result;
+  }
+
+  @override
+  Future<Result<void>> updateNotoficationSettings({String token, bool receiveEmailUpdateOnInvestment,
+    bool receiveEmailUpdateOnSavings, bool subscribeToNewsLetter}) {
+    return _settingsService.updateNotoficationSettings(
+      token: token,
+      receiveEmailUpdateOnInvestment: receiveEmailUpdateOnInvestment,
+      receiveEmailUpdateOnSavings: receiveEmailUpdateOnSavings,
+      subscribeToNewsLetter: subscribeToNewsLetter
+    );
+  }
+
+  @override
+  Future<Result<void>> updateBvn({String token, String bvn}) {
+    return _settingsService.updateBvn(token: token,bvn: bvn);
+  }
+
+  @override
+  Future<Result<void>> updateProfile({String token, String firstName, String lastName, String email,
+    String phoneNumber, String dOB, int gender, int maritalStatus, String profile1}) async{
+
+
+    return _settingsService.updateProfile(
+      token: token,
+      lastName: lastName,
+      firstName: firstName,
+      email: email,
+      phoneNumber: phoneNumber,
+      maritalStatus: maritalStatus,
+      gender: gender,
+      dOB: dOB,
+        profile:profile.photoFile
+    );
+  }
+
+  @override
+  Future<Result<void>> updateKin({String token, String fullName,
+    int relationship, String email, String phoneNumber}) {
+   return _settingsService.updateKin(
+     fullName: fullName,
+     token: token,
+     relationship: relationship,
+     email: email,
+     phoneNumber: phoneNumber
+   );
   }
 
 
