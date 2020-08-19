@@ -224,7 +224,7 @@ class _InvestmentScreenState extends State<InvestmentScreen>
                 delegate: SliverChildListDelegate([
                   _buildListOfFunds(),
                   YMargin(20),
-                  _buildSavingsActivities(),
+                  _buildActivitiesOptions(),
                   YMargin(20),
                 ]),
               ),
@@ -257,12 +257,53 @@ class _InvestmentScreenState extends State<InvestmentScreen>
 
     return result;
   }
+  Widget _buildActivitiesOptions() {
+    Widget result;
+    switch(_zimType){
+      case ZimInvestmentType.MUTUAL_FUNDS:
+        if(investmentViewModel.mutualFunds == null){
+//          result = Column(children: [
+//            Image.asset("images/none.png"),
+//            Text("oooo"),
+//          ],);
+          result = SizedBox();
+        }else if(investmentViewModel.mutualFunds.isEmpty){
+          result = SizedBox();
+        }else{
+          result = _buildSavingsActivities();
+        }
+
+        break;
+      case ZimInvestmentType.FIXED:
+        if(investmentViewModel.fixedFunds == null){
+
+          result = SizedBox();
+        }else if(investmentViewModel.fixedFunds.isEmpty){
+          result = SizedBox();
+        }else{
+          result = _buildSavingsActivities();
+        }
+        break;
+      case ZimInvestmentType.HIGH_YIELD:
+        if(investmentViewModel.termFunds == null){
+
+          result = SizedBox();
+        }else if(investmentViewModel.termFunds.isEmpty){
+          result = SizedBox();
+        }else{
+          result = _buildSavingsActivities();
+        }
+        break;
+    }
+
+    return result;
+  }
 
   Widget _buildMutualFundList() {
     if(investmentViewModel.mutualFunds == null){
       return Container(
-        width: 150,
-        height: 140,
+        width: 0,
+        height: 0,
         decoration: BoxDecoration(
           color: Colors.transparent
         ),
@@ -282,8 +323,8 @@ class _InvestmentScreenState extends State<InvestmentScreen>
   Widget _buildFixedFundList(Widget result) {
     if(investmentViewModel.fixedFunds == null){
       result = Container(
-        width: 150,
-        height: 140,
+        width: 0,
+        height: 0,
         decoration: BoxDecoration(
           color: Colors.transparent
         ),
@@ -304,8 +345,8 @@ class _InvestmentScreenState extends State<InvestmentScreen>
   Widget _buildHighFundList(Widget result) {
     if(investmentViewModel.termFunds == null){
       result = Container(
-        width: 150,
-        height: 140,
+        width: 0,
+        height: 0,
         decoration: BoxDecoration(
           color: Colors.transparent
         ),
@@ -344,39 +385,45 @@ class _InvestmentScreenState extends State<InvestmentScreen>
   Widget _buildMutualActivities() {
     Widget result;
     if(investmentViewModel.mutualFundsActivity == null){
-      result =  SliverToBoxAdapter(child: SizedBox());
+      result =  emptyActvities();
     }else{
       if(investmentViewModel.mutualFundsActivity.isNotEmpty){
         result = InvestementActivitiesWidget(activities: investmentViewModel.mutualFundsActivity);
       }else{
-        result = SliverToBoxAdapter(
-          child: Container(
-            height: 100,
-            child: Center(
-              child: Text("You don't have any activity yet"),
-            ),
-          ),
-        );
+        result = emptyActvities();
       }
     }
    return result;
   }
+
+  SliverToBoxAdapter emptyActvities() {
+    return SliverToBoxAdapter(
+        child: Column(
+          children: [
+            Image.asset("images/none.png",height: 100,),
+            Container(
+              height: 100,
+              width: 250,
+              child: Center(
+                child: Text("You don’t have any activity yet, Get started with "
+                    "one of our products to start your savings journey",
+                  style: TextStyle(fontSize: 12, color: AppColors.kAccountTextColor),
+                  textAlign: TextAlign.center,),
+              ),
+            ),
+          ],
+        ),
+      );
+  }
   Widget _buildFixedActivities() {
     Widget result;
     if(investmentViewModel.fixedFundsActivity == null){
-      result =  SliverToBoxAdapter(child: SizedBox());
+      result = emptyActvities();
     }else{
       if(investmentViewModel.fixedFundsActivity.isNotEmpty){
         result = InvestementActivitiesWidget(activities: investmentViewModel.fixedFundsActivity);
       }else{
-        result = SliverToBoxAdapter(
-          child: Container(
-            height: 100,
-            child: Center(
-              child: Text("You don't have any activity yet"),
-            ),
-          ),
-        );
+        result = emptyActvities();
       }
     }
    return result;
@@ -384,19 +431,12 @@ class _InvestmentScreenState extends State<InvestmentScreen>
   Widget _buildTermActivities() {
     Widget result;
     if(investmentViewModel.termedFundsActivity == null){
-      result =  SliverToBoxAdapter(child: SizedBox());
+      result = emptyActvities();
     }else{
       if(investmentViewModel.termedFundsActivity.isNotEmpty){
         result = InvestementActivitiesWidget(activities: investmentViewModel.termedFundsActivity);
       }else{
-        result = SliverToBoxAdapter(
-          child: Container(
-            height: 100,
-            child: Center(
-              child: Text("You don't have any activity yet"),
-            ),
-          ),
-        );
+        result = emptyActvities();
       }
     }
    return result;
