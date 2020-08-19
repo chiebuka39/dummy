@@ -66,7 +66,7 @@ class _FundWalletState extends State<FundWallet> {
               YMargin(20),
               Row(
                 children: [
-                  Text("Zenith Bank", style: TextStyle(
+                  Text("Account name", style: TextStyle(
                       fontSize: 14,
                       fontFamily: "Caros-Bold",
                       color: AppColors.kAccountTextColor),),
@@ -93,7 +93,7 @@ class _FundWalletState extends State<FundWallet> {
           ),
           YMargin(20),
           Container(
-            height: 128,
+            height: 150,
             width: double.infinity,
             margin: EdgeInsets.symmetric(horizontal: 20),
             padding: EdgeInsets.all( 10),
@@ -120,11 +120,12 @@ class _FundWalletState extends State<FundWallet> {
                 YMargin(20),
                 Row(
                   children: [
-                    Text("Zenith Bank", style: TextStyle(
-                        fontSize: 14,
-                        fontFamily: "Caros-Bold",
-                        color: AppColors.kAccountTextColor),),
-                    Spacer(),
+                    Flexible(
+                      child: Text("Applicable transaction charge", style: TextStyle(
+                          fontSize: 14,
+                          fontFamily: "Caros-Bold",
+                          color: AppColors.kAccountTextColor),),
+                    ),
                     Text("Ayomikun Oladejo", style: TextStyle(
                         fontSize: 13,
                         color: AppColors.kAccountTextColor),),
@@ -133,12 +134,12 @@ class _FundWalletState extends State<FundWallet> {
                 YMargin(20),
                 Row(
                   children: [
-                    Text("Account name", style: TextStyle(
+                    Text("Total amount to be funded", style: TextStyle(
                         fontSize: 14,
                         fontFamily: "Caros-Bold",
                         color: AppColors.kAccountTextColor),),
                     Spacer(),
-                    Text("2134758794", style: TextStyle(
+                    Text("0.00", style: TextStyle(
                         fontSize: 13,
                         color: AppColors.kAccountTextColor),),
                   ],
@@ -168,4 +169,6 @@ class _FundWalletState extends State<FundWallet> {
       ),
     );
   }
+
+
 }

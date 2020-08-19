@@ -1,9 +1,16 @@
+import 'package:after_layout/after_layout.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
+import 'package:provider/provider.dart';
+import 'package:zimvest/data/models/payment/wallet.dart';
+import 'package:zimvest/data/view_models/identity_view_model.dart';
+import 'package:zimvest/data/view_models/payment_view_model.dart';
 import 'package:zimvest/screens/tabs/invstment/investment_screen.dart';
 import 'package:zimvest/screens/wallet/fund_wallet.dart';
 import 'package:zimvest/styles/colors.dart';
+import 'package:zimvest/utils/app_utils.dart';
 import 'package:zimvest/utils/margin.dart';
 import 'package:zimvest/widgets/appbars.dart';
 
@@ -17,16 +24,41 @@ class WalletScreen extends StatefulWidget {
   _WalletScreenState createState() => _WalletScreenState();
 }
 
-class _WalletScreenState extends State<WalletScreen> {
+class _WalletScreenState extends State<WalletScreen> with AfterLayoutMixin<WalletScreen> {
+
+  ABSIdentityViewModel identityViewModel;
+  ABSPaymentViewModel paymentViewModel;
+
+  Wallet wallet;
+  List<WalletTransaction> transactions = [];
+  @override
+  void afterFirstLayout(BuildContext context)async {
+    EasyLoading.show(status: 'loading...');
+    var i1 = await paymentViewModel.getWallet(identityViewModel.user.token);
+    var i2 = await paymentViewModel.getWalletTransactions(identityViewModel.user.token);
+    if (i1.error == false ) {
+      setState(() {
+        wallet = i1.data;
+        transactions = i2.data;
+      });
+      EasyLoading.showSuccess("Success");
+    } else {
+      EasyLoading.showError("Error");
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
+    identityViewModel = Provider.of(context);
+    paymentViewModel = Provider.of(context);
+
     return Scaffold(
       backgroundColor: AppColors.kBg,
       appBar: ZimAppBar(
         title: "My Wallet",
         desc: "You can manage your wallet here",
       ),
-      body: CustomScrollView(
+      body: wallet == null ? SizedBox(): CustomScrollView(
         slivers: [
           SliverList(delegate: SliverChildListDelegate([
             Container(
@@ -45,7 +77,7 @@ class _WalletScreenState extends State<WalletScreen> {
                     fontSize: 12,
                   ),),
                 YMargin(10),
-                Text("\$ 10,000,000.00",
+                Text("\u20A6 ${wallet.balance}",
                   style: TextStyle(
                       color: AppColors.kWhite,
                       fontSize: 24,
@@ -61,7 +93,7 @@ class _WalletScreenState extends State<WalletScreen> {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    Text("2134758794",
+                    Text(wallet.walletNum,
                       style: TextStyle(
                         color: AppColors.kWhite,
                         fontSize: 16,
@@ -88,57 +120,18 @@ class _WalletScreenState extends State<WalletScreen> {
             _buildSavingsActivities(),
             YMargin(20),
           ]),),
-          SliverList(delegate: SliverChildListDelegate(
-            List.generate(4, (index) {
-              return Container(
-                decoration: BoxDecoration(
-                    border: Border(
-                        bottom: BorderSide(
-                            width: .5, color: AppColors.kLightText))),
-                margin: EdgeInsets.symmetric(horizontal: 20),
-                height: 55,
-                child: Row(
-                  children: [
-                    Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          "Wallet funding",
-                          style: TextStyle(
-                              color: Color(0xFF324d53), fontSize: 12),
-                        ),
-                        YMargin(5),
-                        Text(
-                          "Mon, April 13 2020",
-                          style: TextStyle(
-                              fontSize: 10, color: AppColors.kLightText2),
-                        )
-                      ],
-                    ),
-                    Spacer(),
-                    Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      crossAxisAlignment: CrossAxisAlignment.end,
-                      children: [
-                        Text(
-                          "\$ 400.00",
-                          style: TextStyle(
-                              fontSize: 12, color: AppColors.kGreen),
-                        ),
-                        YMargin(5),
-                        Text(
-                          "Failed",
-                          style: TextStyle(
-                              fontSize: 10, color: AppColors.kLightText2),
-                        )
-                      ],
-                    )
-                  ],
-                ),
-              );
-            })
-          ),)
+          transactions.isEmpty ?SliverToBoxAdapter(child: Column(children: [
+            YMargin(50),
+            Image.asset("images/none.png", height: 100,),
+            YMargin(30),
+            SizedBox(
+              width: 250,
+              child: Text("You don’t have any activity yet, "
+                  "Get started with one of our products to "
+                  "start your savings journey",textAlign: TextAlign.center,
+                style: TextStyle(color: AppColors.kAccountTextColor,fontSize: 12),),
+            ),
+          ],),): WalletTransactionsWidget(transactions: transactions,)
         ],
       ),
     );
@@ -264,5 +257,68 @@ class _WalletScreenState extends State<WalletScreen> {
         ],
       ),
     );
+  }
+}
+
+class WalletTransactionsWidget extends StatelessWidget {
+  final List<WalletTransaction> transactions;
+  const WalletTransactionsWidget({
+    Key key, this.transactions,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return SliverList(delegate: SliverChildListDelegate(
+      List.generate(transactions.length > 4 ? 4:transactions.length, (index) {
+        WalletTransaction transaction = transactions[index];
+        return Container(
+          decoration: BoxDecoration(
+              border: Border(
+                  bottom: BorderSide(
+                      width: .5, color: AppColors.kLightText))),
+          margin: EdgeInsets.symmetric(horizontal: 20),
+          height: 55,
+          child: Row(
+            children: [
+              Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    transaction.narration,
+                    style: TextStyle(
+                        color: Color(0xFF324d53), fontSize: 12),
+                  ),
+                  YMargin(5),
+                  Text(
+                    AppUtils.getReadableDate(transaction.dateFilter),
+                    style: TextStyle(
+                        fontSize: 10, color: AppColors.kLightText2),
+                  )
+                ],
+              ),
+              Spacer(),
+              Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.end,
+                children: [
+                  Text(
+                    "\$ ${transaction.amount}",
+                    style: TextStyle(
+                        fontSize: 12, color: AppColors.kGreen),
+                  ),
+                  YMargin(5),
+                  Text(
+                    transaction.transactionStatus,
+                    style: TextStyle(
+                        fontSize: 10, color: AppColors.kLightText2),
+                  )
+                ],
+              )
+            ],
+          ),
+        );
+      })
+    ),);
   }
 }

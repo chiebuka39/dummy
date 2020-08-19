@@ -33,6 +33,8 @@ abstract class ABSPaymentService {
         String pin});
   Future<Result<List<String>>> validateBank(
       {String token, int customerId, String accountNum, String bankCode});
+  Future<Result<List<WalletTransaction>>> getWalletTransactions(String token);
+  Future<Result<void>> paymentConfirmation(String token, String trnasactionRef);
 }
 
 class PaymentService extends ABSPaymentService {
@@ -344,11 +346,10 @@ class PaymentService extends ABSPaymentService {
       "pin": pin,
     };
 
-    var url = "${AppStrings.baseUrl}zimvest.services.payment/api/"
-        "cards";
+    var url = "${AppStrings.baseUrl}zimvest.services.payment/api/cards/v2";
 
     try {
-      var response = await dio.post(url, options: Options(headers: headers),data: body);
+      var response = await dio.get(url, options: Options(headers: headers));
       final int statusCode = response.statusCode;
       var response1 = response.data;
       //print("iii ${response1}");
@@ -447,10 +448,94 @@ class PaymentService extends ABSPaymentService {
           
 
         }else{
-          var wallet = json.decode(response1['data']); ;
+          var wallet = json.decode(response1['data']);
           result.data = CardPayload.fromJson(wallet);
 
         }
+      }
+    } on DioError catch (e) {
+      print("error $e}");
+      if(e.response != null ){
+        print(e.response.data);
+        result.errorMessage = e.response.data['message'];
+      }else{
+        print(e.toString());
+        result.errorMessage = "Sorry, We could not complete your request";
+      }
+      result.error = true;
+    }
+
+    return result;
+  }
+
+  @override
+  Future<Result<List<WalletTransaction>>> getWalletTransactions(String token) async{
+    Result<List<WalletTransaction>> result = Result(error: false);
+
+    var headers = {"Authorization": "Bearer $token"};
+
+
+    var url = "${AppStrings.baseUrl}zimvest.services.wallet/api/Wallet/WalletTransaction";
+
+    print("lll $url");
+    try {
+      var response = await dio.get(url, options: Options(headers: headers));
+      final int statusCode = response.statusCode;
+      var response1 = response.data;
+      print("iii ${response1}");
+
+      if (statusCode != 200) {
+        result.errorMessage = response1['message'];
+        result.error = true;
+      } else {
+        result.error = false;
+        List<WalletTransaction> cards = [];
+        (response1['data'] as List).forEach((chaList) {
+          //initialize Chat Object
+          cards.add(WalletTransaction.fromJson(chaList));
+        });
+        result.data = cards;
+
+      }
+    } on DioError catch (e) {
+      print("error $e}");
+      if(e.response.data is Map ){
+        print(e.response.data);
+        result.errorMessage = e.response.data['message'];
+      }else{
+        print(e.toString());
+        result.errorMessage = "Sorry, We could not complete your request";
+      }
+      result.error = true;
+    }
+
+    return result;
+  }
+
+  @override
+  Future<Result<void>> paymentConfirmation(String token, String trnasactionRef) async{
+    Result<Bank> result = Result(error: false);
+
+    var headers = {"Authorization": "Bearer $token"};
+    var body = {
+      "transactionReference": trnasactionRef,
+    };
+
+    var url = "${AppStrings.baseUrl}zimvest.services.payment/api/cards/v2/paymentconfirmations";
+
+    try {
+      var response = await dio.post(url, options: Options(headers: headers),data: body);
+      final int statusCode = response.statusCode;
+      var response1 = response.data;
+      print("iii ${response1}");
+
+      if (statusCode != 200) {
+        result.errorMessage = response1['message'];
+        result.error = true;
+      } else {
+        result.error = false;
+
+        //result.data = Bank.fromJsonMain(response1['data']);
       }
     } on DioError catch (e) {
       print("error $e}");

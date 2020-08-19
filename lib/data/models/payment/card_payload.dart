@@ -12,9 +12,11 @@ class CardPayload {
     this.paymentoptions,
     this.txref,
     this.integrityHash,
+    this.encKey,
   });
 
   String pbfPubKey;
+  String encKey;
   String amount;
   String country;
   String currency;
@@ -29,6 +31,7 @@ class CardPayload {
 
   factory CardPayload.fromJson(Map<String, dynamic> json) => CardPayload(
     pbfPubKey: json["PBFPubKey"],
+    encKey: json["EncryptionKey"],
     amount: json["amount"],
     country: json["country"],
     currency: json["currency"],

@@ -15,6 +15,7 @@ import 'package:zimvest/screens/analysis/investment_persona_screen.dart';
 import 'package:zimvest/screens/banks_cards/manage_banks_cards.dart';
 import 'package:zimvest/screens/my_planner/target_planner.dart';
 import 'package:zimvest/screens/tabs.dart';
+import 'package:zimvest/screens/wallet/wallet_screen.dart';
 import 'package:zimvest/styles/colors.dart';
 import 'package:zimvest/utils/margin.dart';
 import 'package:zimvest/utils/strings.dart';
@@ -83,6 +84,9 @@ class _MenuContainerState extends State<MenuContainer> {
                     icon: "wallet",
                     title: "My wallet",
                     left: 0.4 * screenWidth,
+                    onTap: (){
+                      Navigator.of(context).push(WalletScreen.route());
+                    },
                   ),
                   SideMenuItem(
                     hasDropdown: true,

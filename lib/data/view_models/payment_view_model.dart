@@ -12,14 +12,17 @@ import 'package:zimvest/utils/result.dart';
 abstract class ABSPaymentViewModel extends ChangeNotifier{
 
   List<Bank> _userBanks = [];
+  List<WalletTransaction> _walletTransactions = [];
   List<PaymentCard> _userCards = [];
   List<Bank> get userBanks => _userBanks;
   List<PaymentCard> get userCards => _userCards;
 
   Wallet _wallet;
   Wallet get wallet => _wallet;
+  List<WalletTransaction> get walletTransaction => _walletTransactions;
 
   set userBanks(List<Bank> value);
+  set walletTransaction(List<WalletTransaction> value);
   set wallet(Wallet value);
   set userCards(List<PaymentCard> value);
 
@@ -29,6 +32,7 @@ abstract class ABSPaymentViewModel extends ChangeNotifier{
   Future<Result<List<Bank>>> getCustomerBank(String token);
   Future<Result<List<PaymentCard>>> getUserCards(String token);
   Future<Result<Wallet>> getWallet(String token);
+  Future<Result<List<WalletTransaction>>> getWalletTransactions(String token);
   Future<Result<Bank>> addBank(
       {String token,
         int bankId,
@@ -39,6 +43,7 @@ abstract class ABSPaymentViewModel extends ChangeNotifier{
   Future<Result<Bank>> addCard({String token, String cardNumber,
     String expiryDate, String cvv, String pin});
   Future<Result<CardPayload>> registerNewCard(String token);
+  Future<Result<void>> paymentConfirmation(String token, String trnasactionRef);
 
 }
 
@@ -47,6 +52,11 @@ class PaymentViewModel extends ABSPaymentViewModel{
 
   set userBanks(List<Bank> value){
     _userBanks = value;
+    notifyListeners();
+  }
+
+  set walletTransaction(List<WalletTransaction> value){
+    _walletTransactions = value;
     notifyListeners();
   }
 
@@ -140,6 +150,21 @@ class PaymentViewModel extends ABSPaymentViewModel{
   @override
   Future<Result<CardPayload>> registerNewCard(String token) {
     return _paymentService.registerNewCard(token);
+  }
+
+  @override
+  Future<Result<List<WalletTransaction>>> getWalletTransactions(String token) async{
+    var result =  await _paymentService.getWalletTransactions(token);
+
+    if(result.error == false){
+      walletTransaction = result.data;
+    }
+    return result;
+  }
+
+  @override
+  Future<Result<void>> paymentConfirmation(String token, String trnasactionRef) {
+    return _paymentService.paymentConfirmation(token, trnasactionRef);
   }
 
 }

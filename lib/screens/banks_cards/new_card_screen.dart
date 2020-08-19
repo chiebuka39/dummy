@@ -90,34 +90,12 @@ class _NewCardScreenState extends State<NewCardScreen> with AfterLayoutMixin<New
             YMargin(20),
             PrimaryButton(
               title: "Add Card",
-              onPressed: processTransaction,
+              onPressed: (){},
             )
           ],),
         ),
       ),
     );
   }
-  processTransaction() async {
-    // Get a reference to RavePayInitializer
-    var initializer = RavePayInitializer(
-        amount: 500, publicKey: "FLWPUBK_TEST-0b9b992382ff9c21794196be85bb49ad-X",
-        encryptionKey: "FLWSECK_TEST8dc18f6e5200")
-      ..country = "NG"
-      ..currency = "NGN"
-      ..email = cardPayload.customerEmail
-      ..fName = cardPayload.customerFirstname
-      ..lName = cardPayload.customerLastname
-      ..narration ="Add card"?? ''
-      ..txRef = cardPayload.txref
 
-      ..acceptCardPayments = true
-      ..staging = true
-      ..isPreAuth = false
-      ..displayFee = true;
-
-    // Initialize and get the transaction result
-    RaveResult response = await RavePayManager()
-        .prompt(context: context, initializer: initializer);
-   print("response ${response.rawResponse}");
-  }
 }
