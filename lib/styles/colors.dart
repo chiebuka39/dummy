@@ -17,4 +17,12 @@ class AppColors {
   static var kRed = Color(0xFFd14747);
 
   static var kGreen = Color(0xFF2ab750);
+
+  static List<Color> donutColor =  [
+    AppColors.kPrimaryColor,
+    Color(0xFF324d53),
+    AppColors.kLightText,
+    AppColors.kAccountTextColor,
+
+  ];
 }

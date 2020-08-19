@@ -3,11 +3,13 @@ import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:hive/hive.dart';
 import 'package:provider/provider.dart';
 import 'package:zimvest/data/local/user_local.dart';
+import 'package:zimvest/data/services/account_settings_service.dart';
 import 'package:zimvest/data/view_models/dashboard_view_model.dart';
 import 'package:zimvest/data/view_models/identity_view_model.dart';
 import 'package:zimvest/data/view_models/investment_view_model.dart';
 import 'package:zimvest/data/view_models/payment_view_model.dart';
 import 'package:zimvest/data/view_models/savings_view_model.dart';
+import 'package:zimvest/data/view_models/settings_view_model.dart';
 import 'package:zimvest/locator.dart';
 import 'package:zimvest/onboarding/onboarding_screen.dart';
 import 'package:zimvest/screens/account/login_screen.dart';
@@ -48,7 +50,8 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProvider<ABSDashboardViewModel>(create: (_) => DashboardViewModel(),),
         ChangeNotifierProvider<ABSPaymentViewModel>(create: (_) => PaymentViewModel(),),
         ChangeNotifierProvider<ABSSavingViewModel>(create: (_) => SavingViewModel(),),
-        ChangeNotifierProvider<ABSInvestmentViewModel>(create: (_) => InvestmentViewModel(),)
+        ChangeNotifierProvider<ABSInvestmentViewModel>(create: (_) => InvestmentViewModel(),),
+        ChangeNotifierProvider<ABSSettingsViewModel>(create: (_) => SettingsViewModel(),)
       ],
       child: FlutterEasyLoading(
         child: MaterialApp(

@@ -217,6 +217,11 @@ class _InvestmentScreenState extends State<InvestmentScreen>
                     ),
                   ),
                   YMargin(15),
+
+                ]),
+              ),
+              SliverList(
+                delegate: SliverChildListDelegate([
                   _buildListOfFunds(),
                   YMargin(20),
                   _buildSavingsActivities(),

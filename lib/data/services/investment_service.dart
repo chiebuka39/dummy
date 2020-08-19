@@ -96,9 +96,10 @@ class InvestmentService extends ABSInvestmentService{
 
     }on DioError catch(e){
       print("error $e}");
-      if(e.response != null ){
+      print("erroreeee ${e.response.data}");
+      if(e.response.data is Map ){
         print(e.response.data);
-        //result.errorMessage = e.response.data['message'];
+        result.errorMessage = e.response.data['message'];
       }else{
         print(e.toString());
         result.errorMessage = "Sorry, We could not complete your request";
@@ -142,8 +143,9 @@ class InvestmentService extends ABSInvestmentService{
 
     }on DioError catch(e){
       print("error $e}");
-      if(e.response != null ){
+      if(e.response?.data  is Map ){
         print(e.response.data);
+
         result.errorMessage = e.response.data['message'];
       }else{
         print(e.toString());
@@ -187,9 +189,9 @@ class InvestmentService extends ABSInvestmentService{
 
     }on DioError catch(e){
       print("error $e}");
-      if(e.response != null ){
+      if(e.response.data is Map ){
         print(e.response.data);
-        result.errorMessage = e.response.data['message'];
+        result.errorMessage = e.response?.data['message'];
       }else{
         print(e.toString());
         result.errorMessage = "Sorry, We could not complete your request";
@@ -371,7 +373,7 @@ class InvestmentService extends ABSInvestmentService{
 
     }on DioError catch(e){
       print("error $e}");
-      if(e.response != null ){
+      if(e.response is Map ){
         print(e.response.data);
         result.errorMessage = e.response.data['message'];
       }else{
@@ -429,152 +431,6 @@ class InvestmentService extends ABSInvestmentService{
     return result;
   }
 
-
-  @override
-  Future<Result<List<SavingsFrequency>>> getSavingFrequency({String token})async {
-    Result<List<SavingsFrequency>> result = Result(error: false);
-
-
-    var headers = {
-      HttpHeaders.authorizationHeader: "Bearer $token"
-    };
-
-
-    var url = "${AppStrings.baseUrl}$microService/api/Products/Frequencies";
-    print("url $url");
-    try{
-      var response = await dio.get(url,options: Options(headers: headers));
-      final int statusCode = response.statusCode;
-      var response1 = response.data;
-      print("iii ${response1}");
-
-      if (statusCode != 200) {
-        result.errorMessage = response1['message'];
-        result.error = true;
-      }else {
-        result.error = false;
-        List<SavingsFrequency> freq = [];
-        (response1['data'] as List).forEach((chaList) {
-          //initialize Chat Object
-          freq.add(SavingsFrequency.fromJson(chaList));
-        });
-        result.data = freq;
-      }
-
-    }on DioError catch(e){
-      print("error $e}");
-      if(e.response != null ){
-        print(e.response.data);
-        //result.errorMessage = e.response.data['message'];
-      }else{
-        print(e.toString());
-        result.errorMessage = "Sorry, We could not complete your request";
-      }
-      result.error = true;
-    }
-
-    return result;
-  }
-
-  @override
-  Future<Result<List<FundingChannel>>> getFundingChannel({String token})async {
-    Result<List<FundingChannel>> result = Result(error: false);
-
-
-    var headers = {
-      HttpHeaders.authorizationHeader: "Bearer $token"
-    };
-
-
-    var url = "${AppStrings.baseUrl}$microService/api/Products/FundingChannels";
-    print("url $url");
-    try{
-      var response = await dio.get(url,options: Options(headers: headers));
-      final int statusCode = response.statusCode;
-      var response1 = response.data;
-      print("iii ${response1}");
-
-      if (statusCode != 200) {
-        result.errorMessage = response1['message'];
-        result.error = true;
-      }else {
-        result.error = false;
-        List<FundingChannel> channels = [];
-        (response1['data'] as List).forEach((chaList) {
-          //initialize Chat Object
-          channels.add(FundingChannel.fromJson(chaList));
-        });
-        result.data = channels;
-      }
-
-    }on DioError catch(e){
-      print("error $e}");
-      if(e.response != null ){
-        print(e.response.data);
-        //result.errorMessage = e.response.data['message'];
-      }else{
-        print(e.toString());
-        result.errorMessage = "Sorry, We could not complete your request";
-      }
-      result.error = true;
-    }
-
-    return result;
-  }
-
-  @override
-  Future<Result<SavingPlanModel>> createWealthBox({String token,
-    String cardId, int frequency, int fundingChannel,
-    double savingsAmount, DateTime startDate}) async{
-    Result<SavingPlanModel> result = Result(error: false);
-
-
-    var headers = {
-      HttpHeaders.authorizationHeader: "Bearer $token"
-    };
-    var body = {
-      "cardId": cardId,
-      "frequency": frequency,
-      "fundingChannel": fundingChannel,
-      "savingsAmount": savingsAmount,
-      "startDate": startDate.toIso8601String()
-    };
-
-
-    var url = "${AppStrings.baseUrl}$microService/api/v2/Savings/ZimvestSavings";
-    print("url $url");
-    try{
-      var response = await dio.post(url,options: Options(headers: headers),data: body);
-      final int statusCode = response.statusCode;
-      var response1 = response.data;
-      print("iii ${response1}");
-
-      if (statusCode != 200) {
-        result.errorMessage = response1['message'];
-        result.error = true;
-      }else {
-        result.error = false;
-
-        result.data = SavingPlanModel.fromJson(response1['data']);
-        if(response1['message'] != null){
-          result.errorMessage = response1['message'];
-        }
-      }
-
-    }on DioError catch(e){
-      print("error $e}");
-      if(e.response != null ){
-        print(e.response.data);
-        //result.errorMessage = e.response.data['message'];
-      }else{
-        print(e.toString());
-        result.errorMessage = "Sorry, We could not complete your request";
-      }
-      result.error = true;
-    }
-
-    return result;
-  }
 
   @override
   Future<Result<List<CommercialPaper>>> getCommercialPaper({String token})async {
@@ -1018,6 +874,7 @@ class InvestmentService extends ABSInvestmentService{
         bytes = await File(documentFile.path).readAsBytes();
         String base64Encode(List<int> bytes) => base64.encode(bytes);
       }
+
       body = FormData.fromMap({
         'ProductId':productId,
         'Amount':amount,

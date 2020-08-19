@@ -64,13 +64,14 @@ class TextMultiLineWidget extends StatelessWidget {
   final ValueChanged<String> onChange;
   final String title;
   final bool error;
+  final TextEditingController controller;
   final Color textColor;
 
   const TextMultiLineWidget({
     Key key, this.title,
     this.onChange,
     this.error = false,
-    this.textColor = Colors.black,
+    this.textColor = Colors.black, this.controller,
   }) : super(key: key);
 
   @override
@@ -91,6 +92,7 @@ class TextMultiLineWidget extends StatelessWidget {
                 border: Border.all(color: error == true? Colors.redAccent : AppColors.kLightText),
                 borderRadius: BorderRadius.circular(4)),
             child: TextFormField(
+              controller: controller,
               onChanged: onChange,
               maxLines: 4,
               minLines: 1,
@@ -110,6 +112,7 @@ class TextMultiLineWidget extends StatelessWidget {
 class TextWidgetBorder extends StatelessWidget {
   final ValueChanged<String> onChange;
   final String title;
+  final TextEditingController controller;
   final bool error;
   final double bottomMargin;
   final Color textColor;
@@ -122,6 +125,7 @@ class TextWidgetBorder extends StatelessWidget {
     this.textColor = Colors.white,
     this.labelSize = 12, this.bottomMargin = 20,
     this.keyboardType = TextInputType.text,
+    this.controller,
   }) : super(key: key);
 
   @override
@@ -142,6 +146,7 @@ class TextWidgetBorder extends StatelessWidget {
                 border: Border.all(color: error == true? Colors.redAccent : AppColors.kLightText),
                 borderRadius: BorderRadius.circular(4)),
             child: TextFormField(
+              controller: controller,
               onChanged: onChange,
               keyboardType: keyboardType,
               style: TextStyle(color: AppColors.kAccountTextColor),
@@ -449,7 +454,7 @@ class DateOfBirthBorderInputWidget extends StatelessWidget {
         ],),);
   }
 }
-class DropdownBorderInputWidget extends StatefulWidget {
+class DropdownBorderInputWidget extends StatelessWidget {
 
   final String title;
   final String source;
@@ -466,50 +471,36 @@ class DropdownBorderInputWidget extends StatefulWidget {
     this.textColor = Colors.white,this.labelSize = 12, this.items, this.bottomMargin = 20, this.onSelect, this.source,
   }) : super(key: key);
 
-  @override
-  _DropdownBorderInputWidgetState createState() => _DropdownBorderInputWidgetState();
-}
 
-class _DropdownBorderInputWidgetState extends State<DropdownBorderInputWidget> {
-  int _checkboxValue;
-  String _source;
 
-  @override
-  void initState() {
-    _source = widget.source;
-    super.initState();
-  }
 
   @override
   Widget build(BuildContext context) {
-    return Container(height: 70+widget.bottomMargin,
+    return Container(height: 70+bottomMargin,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
-            widget.title,
-            style: TextStyle(color: widget.textColor, fontSize: widget.labelSize),
+            title,
+            style: TextStyle(color: textColor, fontSize: labelSize),
           ),
           YMargin(8),
           InkWell(
             onTap: (){
               SelectDialog.showModal<String>(
                 context,
-                label: widget.title,
+                label: title,
                 constraints: BoxConstraints(
                   maxHeight: 350,
                   maxWidth: MediaQuery.of(context).size.width * 0.7
                 ),
                 titleStyle: TextStyle(color: Colors.brown),
                 showSearchBox: false,
-                selectedValue: _source,
+                selectedValue: source,
                 backgroundColor: Colors.white,
-                items: widget.items,
+                items: items,
                 onChange: (String selected) {
-                    widget.onSelect(selected);
-                    setState(() {
-                      _source = selected;
-                    });
+                    onSelect(selected);
                 },
               );
             },
@@ -521,16 +512,17 @@ class _DropdownBorderInputWidgetState extends State<DropdownBorderInputWidget> {
                   border: Border.all(color:  AppColors.kLightText),
                   borderRadius: BorderRadius.circular(4)),
               child: Row(children: [
-                Text(_source ?? "", style: TextStyle(fontSize: 14, color: AppColors.kPrimaryColor),),
+                Text(source ?? "", style: TextStyle(fontSize: 14, color: AppColors.kPrimaryColor),),
                 Spacer(),
                 Icon(Icons.keyboard_arrow_down, size: 23,)
               ],),
             ),
           ),
-          YMargin(widget.bottomMargin)
+          YMargin(bottomMargin)
         ],),);
   }
 }
+
 class EmailWidget extends StatelessWidget {
   final String title;
   final ValueChanged<String> onChange;
@@ -837,8 +829,10 @@ class LoginPasswordOutlineWidget extends StatelessWidget {
 }
 
 class UploadWidget extends StatefulWidget {
+  final ValueChanged<File> onSave;
+  final String title;
   const UploadWidget({
-    Key key,
+    Key key, this.onSave, this.title,
   }) : super(key: key);
 
   @override
@@ -850,22 +844,35 @@ class _UploadWidgetState extends State<UploadWidget> {
   final picker = ImagePicker();
   @override
   Widget build(BuildContext context) {
-    return Container(child: Column(children: [
-      _file == null ? Container(
-        height: 100,
-        decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(5),
-            color: Colors.white,
-            boxShadow: AppUtils.getBoxShaddow2
-        ),
+    return Container(child: Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+      Text(widget.title,
+        style: TextStyle(fontSize: 10,color: AppColors.kAccountTextColor),),
+      YMargin(10),
+      _file == null ? GestureDetector(
+        onTap: getImage,
+        child: Container(
+          height: 100,
+          decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(5),
+              color: Colors.white,
+              boxShadow: AppUtils.getBoxShaddow2
+          ),
+          child: Center(child: Text("Click to choose an image", style: TextStyle(fontSize: 12),),),
 
+        ),
       ):ClipRRect(
         borderRadius: BorderRadius.circular(5),
         child: Image.file(_file, fit: BoxFit.fitWidth,height: 100,width: double.infinity,),
       ),
       YMargin(15),
       InkWell(
-        onTap: getImage,
+        onTap: (){
+          if(_file != null){
+            widget.onSave(_file);
+          }
+        },
         child: Container(
           height: 40,
           width: double.infinity,
@@ -879,7 +886,7 @@ class _UploadWidgetState extends State<UploadWidget> {
     ],),);
   }
   Future getImage() async {
-    final pickedFile = await picker.getImage(source: ImageSource.camera);
+    final pickedFile = await picker.getImage(source: ImageSource.gallery);
 
     setState(() {
       _file = File(pickedFile.path);

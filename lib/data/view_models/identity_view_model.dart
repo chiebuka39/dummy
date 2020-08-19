@@ -1,6 +1,7 @@
 import 'package:flutter/foundation.dart';
 import 'package:zimvest/data/local/user_local.dart';
 import 'package:zimvest/data/models/completed_sections.dart';
+import 'package:zimvest/data/models/individual/profile.dart';
 import 'package:zimvest/data/models/savings/funding_channels.dart';
 import 'package:zimvest/data/models/secondary_state.dart';
 import 'package:zimvest/data/models/user.dart';
@@ -25,6 +26,7 @@ abstract class ABSIdentityViewModel extends ChangeNotifier{
     String phoneNumber,
     String referralCode
   });
+  Future<Result<Profile>> getProfileDetail();
 }
 
 class IdentityViewModel extends ABSIdentityViewModel{
@@ -82,6 +84,13 @@ class IdentityViewModel extends ABSIdentityViewModel{
       firstName: firstName,
       lastName: lastName,
       phoneNumber: phoneNumber
+    );
+  }
+
+  @override
+  Future<Result<Profile>> getProfileDetail() {
+    return _identityService.getProfileDetail(
+        token: user.token
     );
   }
 

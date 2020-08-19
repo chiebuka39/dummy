@@ -1,7 +1,12 @@
 import 'dart:io';
 
+import 'package:after_layout/after_layout.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_easyloading/flutter_easyloading.dart';
+import 'package:provider/provider.dart';
+import 'package:zimvest/data/view_models/identity_view_model.dart';
+import 'package:zimvest/data/view_models/settings_view_model.dart';
 import 'package:zimvest/styles/colors.dart';
 import 'package:zimvest/utils/margin.dart';
 import 'package:zimvest/widgets/account_widgets.dart';
@@ -12,17 +17,40 @@ class NotificationFormWidget extends StatefulWidget {
   _NotificationFormWidgetState createState() => _NotificationFormWidgetState();
 }
 
-class _NotificationFormWidgetState extends State<NotificationFormWidget> {
+class _NotificationFormWidgetState extends State<NotificationFormWidget> with AfterLayoutMixin<NotificationFormWidget> {
   bool _receiveEmailForInvestment = false;
   bool _receiveEmailForSavings = false;
-  bool _receiveNewsLetter = true;
+  bool _receiveNewsLetter = false;
+
+  ABSSettingsViewModel settingsViewModel;
+  ABSIdentityViewModel identityViewModel;
 
 
+
+  @override
+  void afterFirstLayout(BuildContext context) async{
+    EasyLoading.show(status: 'loading...');
+    var result = await settingsViewModel.getNotificationSettings(token: identityViewModel.user.token);
+    if (result.error == false ) {
+
+      setState(() {
+        _receiveEmailForInvestment = result.data.receiveEmailUpdateOnInvestment;
+         _receiveEmailForSavings = result.data.receiveEmailUpdateOnSavings;
+         _receiveNewsLetter = result.data.subscribeToNewsLetter;
+      });
+
+      EasyLoading.showSuccess("Success");
+    } else {
+      EasyLoading.showError("Error");
+    }
+  }
 
 
 
   @override
   Widget build(BuildContext context) {
+    settingsViewModel = Provider.of(context);
+    identityViewModel = Provider.of(context);
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 20),
       child: Column(
@@ -91,7 +119,13 @@ class _NotificationFormWidgetState extends State<NotificationFormWidget> {
                 ),
               )
             ],),
-          )
+          ),
+          YMargin(20),
+          PrimaryButton(
+            title: "Update",
+            onPressed: (){},
+          ),
+          YMargin(20)
 
 
       ],),

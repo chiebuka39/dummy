@@ -7,8 +7,8 @@ import 'package:zimvest/utils/strings.dart';
 
 abstract class ABSDashboardService{
   Future<Result<DashboardModel>> getPortfolioValue(String token);
-  Future<Result<void>> getAssetDistribution(String token);
-  Future<Result<PortfolioDistribution>> getPortfolioDistribution(String token);
+  Future<Result<AssetDistribution>> getAssetDistribution(String token);
+  Future<Result<List<PortfolioDistribution>>> getPortfolioDistribution(String token);
 
 }
 class DashboardService extends ABSDashboardService{
@@ -48,8 +48,8 @@ class DashboardService extends ABSDashboardService{
   }
 
   @override
-  Future<Result<void>> getAssetDistribution(String token)async {
-    Result<DashboardModel> result = Result(error: false);
+  Future<Result<AssetDistribution>> getAssetDistribution(String token)async {
+    Result<AssetDistribution> result = Result(error: false);
 
     var headers = {
       "Authorization":"Bearer $token"
@@ -69,8 +69,8 @@ class DashboardService extends ABSDashboardService{
         result.error = true;
       }else {
         result.error = false;
-//        var dashboardPortfolio = DashboardModel.fromJson(response1['data']);
-//        result.data = dashboardPortfolio;
+        var dashboardPortfolio = AssetDistribution.fromJson(response1['data']);
+        result.data = dashboardPortfolio;
       }
 
     }on DioError catch(e){
@@ -82,8 +82,8 @@ class DashboardService extends ABSDashboardService{
   }
 
   @override
-  Future<Result<PortfolioDistribution>> getPortfolioDistribution(String token) async{
-    Result<PortfolioDistribution> result = Result(error: false);
+  Future<Result<List<PortfolioDistribution>>> getPortfolioDistribution(String token) async{
+    Result<List<PortfolioDistribution>> result = Result(error: false);
 
     var headers = {
       "Authorization":"Bearer $token"
@@ -103,8 +103,12 @@ class DashboardService extends ABSDashboardService{
         result.error = true;
       }else {
         result.error = false;
-        var dashboardPortfolio = PortfolioDistribution.fromJson(response1['data']);
-        result.data = dashboardPortfolio;
+        List<PortfolioDistribution> types = [];
+        (response1['data'] as List).forEach((chaList) {
+          //initialize Chat Object
+          types.add(PortfolioDistribution.fromJson(chaList));
+        });
+        result.data = types;
       }
 
     }on DioError catch(e){

@@ -1,9 +1,14 @@
+import 'dart:io';
+
 import 'package:dio/dio.dart';
 import 'package:zimvest/data/models/completed_sections.dart';
+import 'package:zimvest/data/models/individual/profile.dart';
 import 'package:zimvest/data/models/user.dart';
 import 'package:zimvest/locator.dart';
 import 'package:zimvest/utils/result.dart';
 import 'package:zimvest/utils/strings.dart';
+
+import 'account_settings_service.dart';
 
 abstract class ABSIdentityService{
   Future<Result<User>> login({String email, String password});
@@ -19,12 +24,13 @@ abstract class ABSIdentityService{
     String newPassword});
   Future<Result<void>> initiatePasswordReset({String email});
   Future<Result<CompletedSections>> checkCompletedSections({String token});
+  Future<Result<Profile>> getProfileDetail({String token});
   Future<Result<void>> confirmEmail({String token, int userId});
   Future<Result<void>> changePassword({String currentPassword, String newPassword, String confirmPassword});
 
 }
 
-class IdentityService extends ABSIdentityService{
+class IdentityService extends ABSIdentityService {
   final dio = locator<Dio>();
   @override
   Future<Result<User>> login({String email, String password}) async{
@@ -161,6 +167,38 @@ class IdentityService extends ABSIdentityService{
         result.error = true;
       }else {
         result.error = false;
+      }
+
+    }on DioError catch(e){
+      print("error $e");
+      result.error = true;
+    }
+
+    return result;
+  }
+
+  @override
+  Future<Result<Profile>> getProfileDetail({String token}) async{
+    Result<Profile> result = Result(error: false);
+
+    var headers = {
+      HttpHeaders.authorizationHeader: "Bearer $token"
+    };
+    var url = "${AppStrings.baseUrl}zimvest.onboarding.individual/api/Profiles";
+
+    print("lll $url");
+    try{
+      var response = await dio.get(url, options: Options(headers: headers));
+      final int statusCode = response.statusCode;
+      var response1 = response.data;
+      print("iii ${response1}");
+
+      if (statusCode != 200) {
+        result.errorMessage = response1['message'];
+        result.error = true;
+      }else {
+        result.error = false;
+        result.data = Profile.fromJson(response1['data']);
       }
 
     }on DioError catch(e){

@@ -1,5 +1,6 @@
 import 'package:charts_flutter/flutter.dart' as charts;
 import 'package:flutter/material.dart';
+import 'package:zimvest/data/models/dashboard.dart';
 import 'package:zimvest/styles/colors.dart';
 
 class DonutPieChart extends StatelessWidget {
@@ -9,9 +10,9 @@ class DonutPieChart extends StatelessWidget {
   DonutPieChart(this.seriesList, {this.animate});
 
   /// Creates a [PieChart] with sample data and no transition.
-  factory DonutPieChart.withSampleData() {
+  factory DonutPieChart.withSampleData(List<PortfolioDistribution> distr) {
     return new DonutPieChart(
-      _createSampleData(),
+      _createSampleData(distr),
       // Disable animations for image tests.
       animate: false,
     );
@@ -33,12 +34,12 @@ class DonutPieChart extends StatelessWidget {
   }
 
   /// Create one series with sample hard coded data.
-  static List<charts.Series<LinearSales, int>> _createSampleData() {
-    final data = [
-      new LinearSales(0, 100,charts.ColorUtil.fromDartColor(AppColors.kPrimaryColor),),
-      new LinearSales(75, 75,charts.ColorUtil.fromDartColor(Color(0xFF324d53))),
-      new LinearSales(2, 25,charts.ColorUtil.fromDartColor(AppColors.kLightText)),
-    ];
+  static List<charts.Series<LinearSales, int>> _createSampleData(List<PortfolioDistribution> distr) {
+    final data = List.generate(distr.length, (index) => LinearSales(
+        distr[index].percentageShare.toInt(), distr[index].percentageShare.toInt(),
+        charts.ColorUtil.fromDartColor(AppColors.donutColor[index])));
+
+
 
     return [
       new charts.Series<LinearSales, int>(

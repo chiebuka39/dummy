@@ -87,7 +87,8 @@ class _DashboardScreenState extends State<DashboardScreen> with AfterLayoutMixin
     var r2 = await investmentViewModel.getFixedFundValuation(token: identityViewModel.user.token);
     var r3 = await savingViewModel.getSavingPlans(token: identityViewModel.user.token);
 
-    //await paymentViewModel.registerNewCard(identityViewModel.user.token);
+    await dashboardViewModel.getAssetDistribution(identityViewModel.user.token);
+    await dashboardViewModel.getPortfolioDistribution(identityViewModel.user.token);
   }
 
   final _tween = MultiTween<AniProps>()
@@ -192,71 +193,7 @@ class _DashboardScreenState extends State<DashboardScreen> with AfterLayoutMixin
                         YMargin(6),
                         _buildZimDots(),
                         YMargin(20),
-                        Container(
-                          height: 200,
-                          width: double.infinity,
-                          child: PageView(
-                            physics: NeverScrollableScrollPhysics(),
-                            controller: thirdController,
-                            children: [
-                              Row(
-                                children: [
-                                  Opacity(
-                                      opacity: 0,
-                                      child: IconButton(
-                                        icon: Icon(Icons.arrow_back_ios),
-                                        onPressed: () {},
-                                      )),
-                                  Spacer(),
-                                  Container(
-                                      height: 200,
-                                      width: 200,
-                                      child: DonutPieChart.withSampleData()),
-                                  Spacer(),
-                                  IconButton(
-                                    icon: Icon(Icons.arrow_forward_ios),
-                                    onPressed: () {
-                                      print("ooo");
-                                      thirdController.animateToPage(1,
-                                          duration: Duration(milliseconds: 300),
-                                          curve: Curves.easeIn);
-                                    },
-                                  )
-                                ],
-                              ),
-                              Row(
-                                children: [
-                                  IconButton(
-                                    icon: Icon(Icons.arrow_back_ios),
-                                    onPressed: () {
-                                      thirdController.animateToPage(0,
-                                          duration: Duration(milliseconds: 300),
-                                          curve: Curves.easeIn);
-                                    },
-                                  ),
-                                  Spacer(),
-                                  Container(
-                                      height: 200,
-                                      width: 250,
-                                      child: SimpleBarChart.withSampleData()),
-                                  Spacer(),
-                                  Opacity(
-                                    opacity: 0,
-                                    child: IconButton(
-                                      icon: Icon(Icons.arrow_forward_ios),
-                                      onPressed: () {
-                                        print("ooo");
-                                        thirdController.animateToPage(1,
-                                            duration: Duration(milliseconds: 300),
-                                            curve: Curves.easeIn);
-                                      },
-                                    ),
-                                  )
-                                ],
-                              ),
-                            ],
-                          ),
-                        ),
+                        StatsWidget(thirdController: thirdController),
                         Container(
                           height: 160,
                           child: PageView(
@@ -287,22 +224,32 @@ class _DashboardScreenState extends State<DashboardScreen> with AfterLayoutMixin
     print("kk ${investmentViewModel.termFunds.length}");
     switch (_zimType) {
       case ZimType2.ZIM_HIGH:
-        result = DotsIndicator(
-            decorator: DotsDecorator(
-                activeColor: AppColors.kPrimaryColor,
-                size: Size.fromRadius(3),
-                activeSize: Size.fromRadius(3)),
-            dotsCount: investmentViewModel.termFunds.length,
-            position: currentIndexPage);
+        if(investmentViewModel.termFunds.isEmpty){
+          result = SizedBox();
+        }else{
+          result = DotsIndicator(
+              decorator: DotsDecorator(
+                  activeColor: AppColors.kPrimaryColor,
+                  size: Size.fromRadius(3),
+                  activeSize: Size.fromRadius(3)),
+              dotsCount: investmentViewModel.termFunds.length,
+              position: currentIndexPage);
+        }
+
         break;
       case ZimType2.ZIM_FIXED:
-        result = DotsIndicator(
-            decorator: DotsDecorator(
-                activeColor: AppColors.kPrimaryColor,
-                size: Size.fromRadius(3),
-                activeSize: Size.fromRadius(3)),
-            dotsCount: investmentViewModel.fixedFunds.length,
-            position: currentIndexPage);
+        if(investmentViewModel.fixedFunds.isEmpty){
+          result = SizedBox();
+        }else{
+          result = DotsIndicator(
+              decorator: DotsDecorator(
+                  activeColor: AppColors.kPrimaryColor,
+                  size: Size.fromRadius(3),
+                  activeSize: Size.fromRadius(3)),
+              dotsCount: investmentViewModel.fixedFunds.length,
+              position: currentIndexPage);
+        }
+
         break;
       case ZimType2.SAVINGS:
         if(savingViewModel.savingPlanModel.isEmpty){
@@ -424,6 +371,94 @@ class _DashboardScreenState extends State<DashboardScreen> with AfterLayoutMixin
         ),
       ),
     );
+  }
+}
+
+class StatsWidget extends StatelessWidget {
+  const StatsWidget({
+    Key key,
+    @required this.thirdController,
+  }) : super(key: key);
+
+  final PageController thirdController;
+
+  @override
+  Widget build(BuildContext context) {
+    ABSDashboardViewModel dashboardViewModel = Provider.of(context);
+    //print("llll ${dashboardViewModel.assetDistribution.model.length}");
+    return Container(
+      height: 200,
+      width: double.infinity,
+      child: PageView(
+        physics: NeverScrollableScrollPhysics(),
+        controller: thirdController,
+        children: [
+          _buildDonut(dashboardViewModel),
+          Row(
+            children: [
+              IconButton(
+                icon: Icon(Icons.arrow_back_ios),
+                onPressed: () {
+                  thirdController.animateToPage(0,
+                      duration: Duration(milliseconds: 300),
+                      curve: Curves.easeIn);
+                },
+              ),
+              Spacer(),
+              Container(
+                  height: 200,
+                  width: 250,
+                  child: SimpleBarChart.withSampleData()),
+              Spacer(),
+              Opacity(
+                opacity: 0,
+                child: IconButton(
+                  icon: Icon(Icons.arrow_forward_ios),
+                  onPressed: () {
+                    print("ooo");
+                    thirdController.animateToPage(1,
+                        duration: Duration(milliseconds: 300),
+                        curve: Curves.easeIn);
+                  },
+                ),
+              )
+            ],
+          ),
+        ],
+      ),
+    );
+  }
+
+  Row _buildDonut(ABSDashboardViewModel dashboardViewModel) {
+    return Row(
+          children: [
+            Opacity(
+                opacity: 0,
+                child: IconButton(
+                  icon: Icon(Icons.arrow_back_ios),
+                  onPressed: () {},
+                )),
+            Spacer(),
+            Container(
+                height: 200,
+                width: 200,
+                child: dashboardViewModel.portfolioDistribution.where(
+                        (element) => element.percentageShare > 0).length > 0 ?
+                DonutPieChart.withSampleData(dashboardViewModel.portfolioDistribution):Container(
+                  child: Center(child: Image.asset("images/no_portfolio.png", height: 150,),),
+                )),
+            Spacer(),
+            IconButton(
+              icon: Icon(Icons.arrow_forward_ios),
+              onPressed: () {
+                print("ooo");
+                thirdController.animateToPage(1,
+                    duration: Duration(milliseconds: 300),
+                    curve: Curves.easeIn);
+              },
+            )
+          ],
+        );
   }
 }
 

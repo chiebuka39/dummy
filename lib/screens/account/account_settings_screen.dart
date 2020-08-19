@@ -1,14 +1,22 @@
 import 'dart:io';
 
+import 'package:after_layout/after_layout.dart';
 import 'package:circular_profile_avatar/circular_profile_avatar.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:provider/provider.dart';
+import 'package:zimvest/data/models/completed_sections.dart';
+import 'package:zimvest/data/models/individual/profile.dart';
+import 'package:zimvest/data/view_models/identity_view_model.dart';
+import 'package:zimvest/data/view_models/settings_view_model.dart';
 import 'package:zimvest/styles/colors.dart';
 import 'package:zimvest/utils/app_utils.dart';
 import 'package:zimvest/utils/margin.dart';
 import 'package:zimvest/utils/strings.dart';
 import 'package:zimvest/widgets/account_widgets.dart';
+import 'package:zimvest/widgets/appbars.dart';
 import 'package:zimvest/widgets/buttons.dart';
 import 'package:zimvest/widgets/kin_form_widget.dart';
 import 'package:zimvest/widgets/kyc_form_widget.dart';
@@ -24,97 +32,76 @@ class AccountSettingScreen extends StatefulWidget {
   _AccountSettingScreenState createState() => _AccountSettingScreenState();
 }
 
-class _AccountSettingScreenState extends State<AccountSettingScreen> {
-
-  bool showProfile = true;
+class _AccountSettingScreenState extends State<AccountSettingScreen> with AfterLayoutMixin<AccountSettingScreen> {
+  ABSSettingsViewModel settingsViewModel;
+  ABSIdentityViewModel identityViewModel;
+  bool showProfile = false;
   bool showBvn = false;
   bool showKYC = false;
   bool showKin = false;
   bool showNotifications = false;
+  CompletedSections _completedSections;
+
+  @override
+  void afterFirstLayout(BuildContext context) async{
+    EasyLoading.show(status: 'loading...');
+    var i1 = await settingsViewModel.getCompletedSections(token: identityViewModel.user.token);
+    if (i1.error == false ) {
+
+      setState(() {
+        _completedSections = i1.data;
+      });
+      EasyLoading.showSuccess("Success");
+    } else {
+      EasyLoading.showError("Error");
+    }
+  }
+
+
 
   @override
   Widget build(BuildContext context) {
+    settingsViewModel = Provider.of(context);
+    identityViewModel = Provider.of(context);
     return Scaffold(
       backgroundColor: Color(0xFFf8fbfb),
-      body: Column(
-        children: [
-          Container(
-            height: 120,
-            color: AppColors.kWhite,
-            child: SafeArea(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                YMargin(15),
-                Row(
-                  children: [
-                    InkWell(
-                      onTap: (){
-                        Navigator.of(context).pop();
-                      },
-                      child: Container(
-                        child: Row(children: [
-                          XMargin(20),
-                          Icon(Icons.arrow_back_ios, color: AppColors.kAccentColor,size: 18,),
-                          XMargin(3),
-                          Text("Go back",style: TextStyle(fontSize: 12, color: AppColors.kAccentColor),)
-                        ],),
-                      ),
-                    ),
-                    Spacer(),
-                    CircularProfileAvatar(
-                      AppStrings.avatar,
-                      radius: 17,
-                    ),
-                    XMargin(20)
-                  ],
-                ),
-                YMargin(15),
-                Padding(
-                  padding: const EdgeInsets.only(left: 20),
-                  child: Text("Account Settings", style: TextStyle(fontFamily: "Caros-Bold", fontSize: 16),),
-                )
-
-              ],),
-            ),
-          ),
-          Expanded(child: ListView(
-            padding: EdgeInsets.only(top: 0),
-            children: [
-            AccountSectionHeader(title: "Profile Information",onTap: (){
-              setState(() {
-                showProfile = !showProfile;
-              });
-            },show: showProfile,),
-            showProfile ? ProfileFormWidget(): SizedBox(),
-            AccountSectionHeader(title: "BVN Information",onTap: (){
-              setState(() {
-                showBvn = !showBvn;
-              });
-            },show: showBvn,),
-             showBvn ? BvnFormWidget(): SizedBox(),
-              AccountSectionHeader(title: "Next of kin information",onTap: (){
-                setState(() {
-                  showKin = !showKin;
-                });
-              },show: showKin,),
-              showKin ? KinFormWidget():SizedBox(),
-              AccountSectionHeader(title: "Notification Settings",onTap: (){
-                setState(() {
-                  showNotifications = !showNotifications;
-                });
-              },show: showNotifications,),
-              showNotifications ? NotificationFormWidget():SizedBox(),
-              AccountSectionHeader(title: "KYC Information",onTap: (){
-                setState(() {
-                  showKYC = !showKYC;
-                });
-              },show: showKYC,attention: true,),
-              showKYC ? KYCFormWidget(): SizedBox()
-          ],),),
-
-        ],
+      appBar: ZimAppBar(
+        title: "Account settings",
       ),
+      body: _completedSections == null ? SizedBox(): ListView(
+        padding: EdgeInsets.only(top: 0),
+        children: [
+        AccountSectionHeader(title: "Profile Information",onTap: (){
+          setState(() {
+            showProfile = !showProfile;
+          });
+        },show: showProfile,attention: !_completedSections.isProfileInformationProvided,),
+        showProfile ? ProfileFormWidget(): SizedBox(),
+        AccountSectionHeader(title: "BVN Information",onTap: (){
+          setState(() {
+            showBvn = !showBvn;
+          });
+        },show: showBvn,attention: !_completedSections.isBvnProvided),
+         showBvn ? BvnFormWidget(): SizedBox(),
+          AccountSectionHeader(title: "Next of kin information",onTap: (){
+            setState(() {
+              showKin = !showKin;
+            });
+          },show: showKin,attention: !_completedSections.isNextOfKinProvided),
+          showKin ? KinFormWidget():SizedBox(),
+          AccountSectionHeader(title: "Notification Settings",onTap: (){
+            setState(() {
+              showNotifications = !showNotifications;
+            });
+          },show: showNotifications,attention: !_completedSections.isNotificationConfigured),
+          showNotifications ? NotificationFormWidget():SizedBox(),
+          AccountSectionHeader(title: "KYC Information",onTap: (){
+            setState(() {
+              showKYC = !showKYC;
+            });
+          },show: showKYC,attention: !_completedSections.isKycProvided),
+          showKYC ? KYCFormWidget(): SizedBox()
+      ],),
     );
   }
 }
@@ -170,7 +157,7 @@ class ProfileFormWidget extends StatefulWidget {
   _ProfileFormWidgetState createState() => _ProfileFormWidgetState();
 }
 
-class _ProfileFormWidgetState extends State<ProfileFormWidget> {
+class _ProfileFormWidgetState extends State<ProfileFormWidget> with AfterLayoutMixin<ProfileFormWidget> {
   bool _firstNameError = false;
 
   bool _lastNameError = false;
@@ -179,10 +166,48 @@ class _ProfileFormWidgetState extends State<ProfileFormWidget> {
 
   String _lastName;
 
+  int gender = 1;
+  int maritalStatus = 1;
+
+  TextEditingController firstNameController = TextEditingController();
+  TextEditingController lastNameController = TextEditingController();
+  TextEditingController emailController = TextEditingController();
+  TextEditingController phoneController = TextEditingController();
+  DateTime dob;
+
   bool autoValidate = false;
+  ABSSettingsViewModel settingsViewModel;
+  ABSIdentityViewModel identityViewModel;
+
+
+
+  @override
+  void afterFirstLayout(BuildContext context) async{
+    EasyLoading.show(status: 'loading...');
+    var i1 = await settingsViewModel.getProfileDetail(token: identityViewModel.user.token);
+    if (i1.error == false ) {
+      firstNameController.text = i1.data.firstName;
+      lastNameController.text = i1.data.lastName;
+      emailController.text = i1.data.email;
+      phoneController.text = i1.data.phoneNumber;
+      setState(() {
+        dob = i1.data.dob;
+        maritalStatus = i1.data.maritalStatus;
+        gender = i1.data.gender;
+      });
+      EasyLoading.showSuccess("Success");
+    } else {
+      EasyLoading.showError("Error");
+    }
+  }
+  final genderList = ["Male", "Female"];
+  final maritalList = ["Single","Married"];
 
   @override
   Widget build(BuildContext context) {
+    settingsViewModel = Provider.of(context);
+    identityViewModel = Provider.of(context);
+
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 20),
       child: Column(children: [
@@ -195,7 +220,9 @@ class _ProfileFormWidgetState extends State<ProfileFormWidget> {
           }
           _firstName = value;
           setState(() {});
-        },error: autoValidate ? _firstNameError: false,),
+        },error: autoValidate ? _firstNameError: false,
+         controller: firstNameController,
+        ),
 
         TextWidgetBorder(title: "Last name", onChange: (value){
           if(value.length < 2){
@@ -205,14 +232,31 @@ class _ProfileFormWidgetState extends State<ProfileFormWidget> {
           }
           _lastName = value;
           setState(() {});
-        },error: autoValidate ? _lastNameError: false,textColor: Colors.black,),
-        TextWidgetBorder(title: "Email",textColor: Colors.black,),
-        TextWidgetBorder(title: "Phone Number",textColor: Colors.black,),
-        DateOfBirthBorderInputWidget(title: "Date of Birth",textColor: Colors.black,),
+        },
+          controller: lastNameController,
+          error: autoValidate ? _lastNameError: false,textColor: Colors.black,),
+        TextWidgetBorder(title: "Email",
+          textColor: Colors.black,
+          controller: emailController,
+        ),
+        TextWidgetBorder(title: "Phone Number",textColor: Colors.black,
+          keyboardType: TextInputType.phone,
+          controller: phoneController,
+        ),
+        DateOfBirthBorderInputWidget(
+          title: "Date of Birth",textColor: Colors.black,
+          initialDate: DateTime.utc(1930),
+          selected: dob ?? DateTime.now(),
+          startDate: DateTime.utc(1990), endDate: DateTime.utc(2030),
+        ),
         DropdownBorderInputWidget(title: "Gender",
-          textColor: Colors.black,items: ["Male", "Female"],),
+          textColor: Colors.black,items: genderList,
+          source: genderList[gender-1],
+        ),
         DropdownBorderInputWidget(title: "Marital Status",textColor: Colors.black,
-          items: ["Married", "Single","Engaged"],),
+          items: maritalList,
+          source: maritalList[maritalStatus-1],
+        ),
         YMargin(10),
         PrimaryButton(
           title: "Update",
@@ -230,32 +274,55 @@ class BvnFormWidget extends StatefulWidget {
   _BvnFormWidgetState createState() => _BvnFormWidgetState();
 }
 
-class _BvnFormWidgetState extends State<BvnFormWidget> {
+class _BvnFormWidgetState extends State<BvnFormWidget> with AfterLayoutMixin<BvnFormWidget>{
+  ABSSettingsViewModel settingsViewModel;
+  ABSIdentityViewModel identityViewModel;
   bool _bvnError = false;
 
-  String _bvnName;
+  TextEditingController _bvnName = TextEditingController();
 
 
   bool autoValidate = false;
 
   @override
+  void afterFirstLayout(BuildContext context) async{
+    EasyLoading.show(status: 'loading...');
+    var i1 = await settingsViewModel.getBvn(token: identityViewModel.user.token);
+    if (i1.error == false ) {
+      _bvnName.text = i1.data;
+
+
+      EasyLoading.showSuccess("Success");
+    } else {
+      EasyLoading.showError("Error");
+    }
+  }
+
+  @override
   Widget build(BuildContext context) {
+    settingsViewModel = Provider.of(context);
+    identityViewModel = Provider.of(context);
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 20),
       child: Column(children: [
         YMargin(20),
         PrimaryButton(
           color: AppColors.kPrimaryColor,
-          title: "Your BVN is 000000000",
+          title: "Your BVN is ${_bvnName.text}",
           onPressed: (){},
         ),
         YMargin(20),
 
-        TextWidgetBorder(title: "BVN",textColor: Colors.black,),
+        TextWidgetBorder(title: "BVN",
+          textColor: Colors.black,
+          controller: _bvnName,
+        ),
 
         PrimaryButton(
           title: "Update",
-          onPressed: (){},
+          onPressed: _bvnName.text.isEmpty ? null: (){
+
+          },
         ),
         YMargin(20)
 

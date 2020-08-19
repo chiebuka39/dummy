@@ -32,7 +32,10 @@ class SimpleBarChart extends StatelessWidget {
       new OrdinalSales(year:'2014', sales:5, barColor: charts.ColorUtil.fromDartColor(AppColors.kPrimaryColor),),
       new OrdinalSales(year:'2015', sales:25, barColor: charts.ColorUtil.fromDartColor(AppColors.kPrimaryColor),),
       new OrdinalSales(year:'2016', sales:100, barColor: charts.ColorUtil.fromDartColor(AppColors.kPrimaryColor),),
-      new OrdinalSales(year:'2017', sales:75, barColor: charts.ColorUtil.fromDartColor(AppColors.kPrimaryColor),),
+      new OrdinalSales(year:'2017', sales:100, barColor: charts.ColorUtil.fromDartColor(AppColors.kPrimaryColor),),
+      new OrdinalSales(year:'2018', sales:100, barColor: charts.ColorUtil.fromDartColor(AppColors.kPrimaryColor),),
+      new OrdinalSales(year:'2019', sales:100, barColor: charts.ColorUtil.fromDartColor(AppColors.kPrimaryColor),),
+      new OrdinalSales(year:'2020', sales:100, barColor: charts.ColorUtil.fromDartColor(AppColors.kPrimaryColor),),
     ];
 
     return [
