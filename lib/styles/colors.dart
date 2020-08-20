@@ -15,6 +15,7 @@ class AppColors {
   static const kBg = Color(0xfff8fbfb);
 
   static var kRed = Color(0xFFd14747);
+  static var kRed2 = Color(0xFFe02020);
 
   static var kGreen = Color(0xFF2ab750);
 

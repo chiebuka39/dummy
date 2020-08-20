@@ -106,7 +106,8 @@ class _DashboardScreenState extends State<DashboardScreen> with AfterLayoutMixin
     paymentViewModel = Provider.of(context);
     savingViewModel = Provider.of(context);
     investmentViewModel = Provider.of(context);
-    print("ffff ${identityViewModel.user.token}");
+    print("ffff ${identityViewModel.user.expires.toIso8601String()}");
+
     return PlayAnimation<MultiTweenValues<AniProps>>(
       tween: _tween,
       duration: _tween.duration,
@@ -482,6 +483,7 @@ class HeaderPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    ABSIdentityViewModel identityViewModel = Provider.of(context);
     return Container(
       height: 255,
       width: double.infinity,
@@ -512,7 +514,7 @@ class HeaderPage extends StatelessWidget {
                                 fontSize: 16, color: AppColors.kWhite),
                           ),
                           Text(
-                            "Ayomikun,",
+                            identityViewModel.user.fullname.split(" ").first,
                             style: TextStyle(
                                 fontSize: 16,
                                 fontFamily: "Caros-Medium",

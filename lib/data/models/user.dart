@@ -31,7 +31,7 @@ class User{
       fullname: map['fullName'],
       profileCode: map['profileCode'] ?? '',
       isRegistrationVerified: map['isRegistrationVerified'] ?? '',
-      expires: DateTime.now(),
+      expires:map['expires'] == null ? DateTime.now().add(Duration(minutes: 30)):DateTime.fromMillisecondsSinceEpoch(map['expires'] * 1000),
       token: map['token']
     );
   }

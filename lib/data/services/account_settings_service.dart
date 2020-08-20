@@ -101,7 +101,13 @@ class SettingsService extends ABSSettingsService{
         result.error = true;
       }else {
         result.error = false;
-        result.data = Kin.fromJson(response1['data']);
+        if(response1['data'] == null){
+          result.data = Kin(fullName: "",
+              relationship: "Aunty",phoneNumber: "",customerId: 0000, email: "");
+        }else{
+          result.data = Kin.fromJson(response1['data']);
+        }
+
       }
 
     }on DioError catch(e){
@@ -133,7 +139,12 @@ class SettingsService extends ABSSettingsService{
         result.error = true;
       }else {
         result.error = false;
-        result.data = Notification.fromJson(response1['data']);
+        if(response1['data'] == null){
+          result.data = Notification();
+        }else{
+          result.data = Notification.fromJson(response1['data']);
+        }
+
       }
 
     }on DioError catch(e){
@@ -307,7 +318,12 @@ class SettingsService extends ABSSettingsService{
         result.error = true;
       }else {
         result.error = false;
-        result.data = response1['data']['bvn'];
+        if(response1['data'] == null){
+          result.data = "";
+        }else{
+          result.data = response1['data']['bvn'];
+        }
+
       }
 
     }on DioError catch(e){

@@ -118,6 +118,7 @@ class TextWidgetBorder extends StatelessWidget {
   final Color textColor;
   final double labelSize;
   final TextInputType keyboardType;
+
   const TextWidgetBorder({
     Key key, this.title,
     this.onChange,
@@ -158,6 +159,65 @@ class TextWidgetBorder extends StatelessWidget {
             ),
           ),
           YMargin(bottomMargin)
+        ],),);
+  }
+}
+class TextWidgetDropdownBorder extends StatelessWidget {
+  final ValueChanged<String> onChange;
+  final String title;
+  final TextEditingController controller;
+  final bool error;
+  final double bottomMargin;
+  final Color textColor;
+  final double labelSize;
+  final TextInputType keyboardType;
+
+  const TextWidgetDropdownBorder({
+    Key key, this.title,
+    this.onChange,
+    this.error = false,
+    this.textColor = Colors.white,
+    this.labelSize = 12, this.bottomMargin = 20,
+    this.keyboardType = TextInputType.text,
+    this.controller,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(height: 80+bottomMargin,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          YMargin(bottomMargin),
+          Row(
+            children: [
+              Text(
+                title,
+                style: TextStyle(color:error == true ?Colors.redAccent:  textColor, fontSize: labelSize),
+              ),
+              Icon(Icons.arrow_drop_down),
+            ],
+          ),
+          YMargin(8),
+          Container(
+            height: 45,
+            decoration: BoxDecoration(
+                color: Colors.transparent,
+                border: Border.all(color: error == true? Colors.redAccent : AppColors.kLightText),
+                borderRadius: BorderRadius.circular(4)),
+            child: TextFormField(
+              controller: controller,
+              onChanged: onChange,
+              keyboardType: keyboardType,
+              style: TextStyle(color: AppColors.kAccountTextColor),
+              decoration: InputDecoration(
+                  contentPadding: EdgeInsets.only(left: 10, bottom: 5),
+                  hintText: "",
+                  border: InputBorder.none,
+                  hintStyle: TextStyle(fontSize: 14, color: AppColors.kLightText2)),
+            ),
+          ),
+
         ],),);
   }
 }
@@ -331,6 +391,86 @@ class AmountWidgetBorder extends StatelessWidget {
         ],),);
   }
 }
+class AmountWidgetDropdownBorder extends StatelessWidget {
+  final ValueChanged<double> onChange;
+  final VoidCallback onChangeTitle;
+  final String title;
+  final bool error;
+  final String initialValue;
+  final TextEditingController controller;
+  final Color textColor;
+  final double labelSize;
+  const AmountWidgetDropdownBorder({
+    Key key, this.title,
+    this.onChange,
+    this.error = false,
+    this.textColor = Colors.white, this.labelSize = 12, this.controller, this.onChangeTitle, this.initialValue,
+  }) : super(key: key);
+
+  String _formatNumber(String string) {
+    final format = NumberFormat.decimalPattern('en');
+    return format.format(int.parse(string));
+  }
+  @override
+  Widget build(BuildContext context) {
+    return Container(height: 100,
+
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          YMargin(20),
+          GestureDetector(
+            onTap: onChangeTitle,
+            child: Row(
+              children: [
+                Text(
+                  title,
+                  style: TextStyle(color:error == true ?Colors.redAccent:  textColor, fontSize: labelSize),
+                ),
+                Icon(Icons.arrow_drop_down),
+              ],
+            ),
+          ),
+          YMargin(8),
+          Container(
+            height: 45,
+            padding: EdgeInsets.only(left: 10),
+            decoration: BoxDecoration(
+                color: Colors.transparent,
+                border: Border.all(color: error == true? Colors.redAccent : AppColors.kLightText),
+                borderRadius: BorderRadius.circular(4)),
+            child: Row(
+              children: [
+                Text("\u20A6"),
+                Expanded(
+                  child: TextFormField(
+                    initialValue: initialValue,
+                    maxLines: 1,
+                    keyboardType: TextInputType.number,
+                    inputFormatters: [
+                      WhitelistingTextInputFormatter.digitsOnly,
+                      CurrencyPtBrInputFormatter(maxDigits: 11)
+                    ],
+                    onChanged: (value){
+                      String _onlyDigits = value.replaceAll(RegExp('[^0-9]'), "");
+                      double _doubleValue = double.parse(_onlyDigits) / 100;
+                      onChange(_doubleValue);
+                    },
+                    style: TextStyle(color: AppColors.kAccountTextColor),
+                    decoration: InputDecoration(
+                        contentPadding: EdgeInsets.only(left: 10, bottom: 5),
+                        hintText: "",
+                        border: InputBorder.none,
+                        hintStyle: TextStyle(fontSize: 14, color: AppColors.kLightText2)),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ],),);
+  }
+}
+
 class FixedAmountWidgetBorder extends StatelessWidget {
   final String title;
 
