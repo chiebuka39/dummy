@@ -58,9 +58,9 @@ class _ScreenContainerState extends State<ScreenContainer> {
                 elevation: 10,
                 child: Container(
                   height: 80,
-                  color: AppColors.kPrimaryColor,
+                  color: AppColors.kBottomNav,
                   padding: EdgeInsets.only(
-                    top: 20,
+                    top: 15,
                   ),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceAround,
@@ -73,7 +73,7 @@ class _ScreenContainerState extends State<ScreenContainer> {
                           });
                         },
                         title: 'Dashboard',
-                        image: "home",
+                        image: "dash",
                         isSelected: _currentIndex == 0 ? true : false,
                       ),
                       BottomNavEntry(
@@ -83,7 +83,7 @@ class _ScreenContainerState extends State<ScreenContainer> {
                           });
                         },
                         title: 'Savings',
-                        image: "savings",
+                        image: "coin-stack",
                         isSelected: _currentIndex == 1 ? true : false,
                       ),
                       BottomNavEntry(
@@ -93,7 +93,7 @@ class _ScreenContainerState extends State<ScreenContainer> {
                           });
                         },
                         title: 'Investments',
-                        image: "investments",
+                        image: "invest",
                         isSelected: _currentIndex == 2 ? true : false,
                       ),
                       BottomNavEntry(

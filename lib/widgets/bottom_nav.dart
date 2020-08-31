@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:zimvest/styles/colors.dart';
+import 'package:zimvest/utils/margin.dart';
 
 
 class BottomNavEntry extends StatelessWidget {
@@ -27,19 +28,21 @@ class BottomNavEntry extends StatelessWidget {
       child: AnimatedContainer(
         color: Colors.transparent,
         duration: Duration(milliseconds: 300),
-        height: 40,
+        height: 60,
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
-            SvgPicture.asset("images/$image.svg", height: 23,color: isSelected ? AppColors.kAccentColor: AppColors.kLightText,),
+            SvgPicture.asset("images/$image.svg", color: isSelected ? AppColors.kAccentColor: AppColors.kLightTitleText,),
+            YMargin(6),
             Text(
               title,
               style: TextStyle(
-                color: isSelected ? AppColors.kAccentColor: AppColors.kLightText,
+                color: isSelected ? AppColors.kAccentColor: AppColors.kLightTitleText,
                 fontFamily: 'Caros',
                 fontSize: 10,
               ),
             ),
+            Spacer()
 
           ],
         ),

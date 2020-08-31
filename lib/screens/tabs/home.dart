@@ -5,6 +5,7 @@ import 'package:circular_profile_avatar/circular_profile_avatar.dart';
 import 'package:dots_indicator/dots_indicator.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 
 
 
@@ -27,6 +28,7 @@ import 'package:zimvest/widgets/circular_progress.dart';
 import 'package:zimvest/widgets/donut_chart.dart';
 import 'package:zimvest/widgets/generic_widgets.dart';
 import 'package:supercharged/supercharged.dart';
+import 'package:zimvest/widgets/home/section_widgets.dart';
 
 
 
@@ -188,26 +190,26 @@ class _DashboardScreenState extends State<DashboardScreen> with AfterLayoutMixin
                     child: ListView(
                       padding: EdgeInsets.only(top: 5),
                       children: [
-                        _buildZimSelector(),
-                        YMargin(5),
-                        _buildZimSelectedDetails(),
-                        YMargin(6),
-                        _buildZimDots(),
+                        YMargin(30),
+                        SectionWidgets(content: AppStrings.wealthBox,),
                         YMargin(20),
-                        StatsWidget(thirdController: thirdController),
-                        Container(
-                          height: 160,
-                          child: PageView(
-                            controller: secondController,
-                            scrollDirection: Axis.horizontal,
-                            children: [
-                              SecondaryActivityWidget(),
-                              SecondaryActivityWidget(
-                                bg: AppColors.kAccentColor,
-                              )
-                            ],
-                          ),
-                        ),
+                        SectionWidgets(
+                          img: 'aspire_img',
+                          title: "Save with Zimvest Aspire",
+                          content: AppStrings.aspireContent,),
+                        YMargin(20),
+                        SectionWidgets(
+                          bgColor: AppColors.kInstruments,
+                          img: 'yield_img',
+                          title: "Invest with Zimvest High yield",
+                          content: AppStrings.yieldContent,),
+                        YMargin(20),
+                        SectionWidgets(
+                          bgColor: AppColors.kInstruments,
+                          img: 'fixed_img',
+                          title: "Invest in Zimvest Fixed Income",
+                          content: AppStrings.fixedContent,),
+                        YMargin(100),
                       ],
                     ),
                   ),
@@ -374,6 +376,8 @@ class _DashboardScreenState extends State<DashboardScreen> with AfterLayoutMixin
     );
   }
 }
+
+
 
 class StatsWidget extends StatelessWidget {
   const StatsWidget({

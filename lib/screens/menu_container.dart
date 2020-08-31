@@ -51,7 +51,7 @@ class _MenuContainerState extends State<MenuContainer> {
           Container(
             color: AppColors.kPrimaryColor,
             child: SafeArea(
-              child: Column(
+              child: ListView(
                 children: [
                   YMargin(5),
                   Row(
@@ -130,7 +130,7 @@ class _MenuContainerState extends State<MenuContainer> {
                       Navigator.of(context).push(ManageCardsAndBank.route());
                     },
                   ),
-                  Spacer(),
+                  YMargin(60),
                   SideMenuItem(
                     icon: "account",
                     title: "Account Settings",
