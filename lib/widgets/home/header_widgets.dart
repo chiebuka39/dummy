@@ -164,72 +164,95 @@ class _HeaderPageState extends State<HeaderPage> {
 
   void showGraphs(BuildContext context) {
     showCupertinoModalBottomSheet(context: context, builder: (context, controller){
-      return Container(
-
-        child: Scaffold(
-          body: Column(children: [
-            YMargin(20),
-            Row(
-              children: [
-                IconButton(icon: Icon(Icons.navigate_before),
-                    onPressed: (){
-
-                    }),
-                Spacer(),
-                Text("Portfolio Distribution", style: TextStyle(
-                    fontSize: 16,
-                    fontFamily: "Caros-Bold",
-                    color: AppColors.kPrimaryColor2
-                ),),
-                Spacer(),
-                IconButton(icon: Icon(Icons.navigate_next),
-                    onPressed: (){
-
-                    }),
-              ],
-            ),
-            buildDonut(dashboardViewModel),
-            Container(
-              height: 67,
-              width: double.infinity,
-              color: Color(0xFFF4F4F4),
-              child: Row(
-                children: [
-                  Container(
-                    width: 6,
-                    decoration: BoxDecoration(
-                      color: AppColors.donutColor[0]
-                    ),
-                  ),
-                  XMargin(26),
-                  Expanded(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Row(
-                          children: [
-                            Text("Fixed Income", style: TextStyle(
-                                fontFamily: "Caros-Bold", fontSize: 12),),
-                            Spacer(),
-                            Text("50%", style: TextStyle(color: AppColors.kPrimaryColor2,fontSize: 12, fontFamily: "Caros-Bold"),),
-                            XMargin(30)
-                          ],
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.only(top: 7),
-                          child: Text("\u20A6 3,000,000", style: TextStyle(fontSize: 12),),
-                        )
-                      ],
-                    ),
-                  ),
-                ],
-              ),
-            )
-          ],),
-        ),
-      );
+      return GraphsWidget(dashboardViewModel: dashboardViewModel);
 
     });
+  }
+}
+
+class GraphsWidget extends StatefulWidget {
+  const GraphsWidget({
+    Key key,
+    @required this.dashboardViewModel,
+  }) : super(key: key);
+
+  final ABSDashboardViewModel dashboardViewModel;
+
+  @override
+  _GraphsWidgetState createState() => _GraphsWidgetState();
+}
+
+class _GraphsWidgetState extends State<GraphsWidget> {
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+
+      child: Scaffold(
+        body: Column(children: [
+          YMargin(20),
+          Row(
+            children: [
+              IconButton(icon: Icon(Icons.navigate_before),
+                  onPressed: (){
+
+                  }),
+              Spacer(),
+              Text("Portfolio Distribution", style: TextStyle(
+                  fontSize: 16,
+                  fontFamily: "Caros-Bold",
+                  color: AppColors.kPrimaryColor2
+              ),),
+              Spacer(),
+              IconButton(icon: Icon(Icons.navigate_next),
+                  onPressed: (){
+
+                  }),
+            ],
+          ),
+          buildDonut(widget.dashboardViewModel),
+
+            ...widget.dashboardViewModel.portfolioDistribution.asMap().map((index, value) {
+        return MapEntry(index, Container(
+          height: 67,
+          width: double.infinity,
+          color: Color(0xFFF4F4F4),
+          child: Row(
+            children: [
+              Container(
+                width: 6,
+                decoration: BoxDecoration(
+                    color: AppColors.donutColor[index]
+                ),
+              ),
+              XMargin(26),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Row(
+                      children: [
+                        Text(value.portfolioName, style: TextStyle(
+                            fontFamily: "Caros-Bold", fontSize: 12),),
+                        Spacer(),
+                        Text("${value.percentageShare}%", style: TextStyle(color: AppColors.kPrimaryColor2,fontSize: 12, fontFamily: "Caros-Bold"),),
+                        XMargin(30)
+                      ],
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.only(top: 7),
+                      child: Text("\u20A6 3,000,000", style: TextStyle(fontSize: 12),),
+                    )
+                  ],
+                ),
+              ),
+            ],
+          ),
+        ));
+            }).values.toList()
+
+        ],),
+      ),
+    );
   }
 }
