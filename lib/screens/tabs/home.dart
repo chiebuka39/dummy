@@ -6,6 +6,7 @@ import 'package:dots_indicator/dots_indicator.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 
 
 
@@ -28,6 +29,7 @@ import 'package:zimvest/widgets/circular_progress.dart';
 import 'package:zimvest/widgets/donut_chart.dart';
 import 'package:zimvest/widgets/generic_widgets.dart';
 import 'package:supercharged/supercharged.dart';
+import 'package:zimvest/widgets/home/header_widgets.dart';
 import 'package:zimvest/widgets/home/section_widgets.dart';
 
 
@@ -191,6 +193,30 @@ class _DashboardScreenState extends State<DashboardScreen> with AfterLayoutMixin
                       padding: EdgeInsets.only(top: 5),
                       children: [
                         YMargin(30),
+                        Container(
+
+                          decoration: BoxDecoration(
+                            border: Border.all(color: AppColors.kLightTitleText,width: 0.25),
+                            borderRadius: BorderRadius.circular(5),
+                            color: AppColors.kWhite,
+                            boxShadow: [
+                              BoxShadow(
+                                color: AppColors.kLightTitleText.withOpacity(0.08),
+                                blurRadius: 4,
+                                offset: Offset(0,2)
+                              )
+                            ]
+                          ),
+                          padding: EdgeInsets.symmetric(horizontal: 20),
+                          margin: EdgeInsets.symmetric(horizontal: 20),
+                          height: 50,
+                          child: Row(children: [
+                              SvgPicture.asset("images/port.svg"),
+                            XMargin(20),
+                            Text("View your portfolio distribution")
+                          ],),
+                        ),
+                        YMargin(20),
                         SectionWidgets(content: AppStrings.wealthBox,),
                         YMargin(20),
                         SectionWidgets(
@@ -379,231 +405,9 @@ class _DashboardScreenState extends State<DashboardScreen> with AfterLayoutMixin
 
 
 
-class StatsWidget extends StatelessWidget {
-  const StatsWidget({
-    Key key,
-    @required this.thirdController,
-  }) : super(key: key);
-
-  final PageController thirdController;
-
-  @override
-  Widget build(BuildContext context) {
-    ABSDashboardViewModel dashboardViewModel = Provider.of(context);
-    //print("llll ${dashboardViewModel.assetDistribution.model.length}");
-    return Container(
-      height: 200,
-      width: double.infinity,
-      child: PageView(
-        physics: NeverScrollableScrollPhysics(),
-        controller: thirdController,
-        children: [
-          _buildDonut(dashboardViewModel),
-          Row(
-            children: [
-              IconButton(
-                icon: Icon(Icons.arrow_back_ios),
-                onPressed: () {
-                  thirdController.animateToPage(0,
-                      duration: Duration(milliseconds: 300),
-                      curve: Curves.easeIn);
-                },
-              ),
-              Spacer(),
-              Container(
-                  height: 200,
-                  width: 250,
-                  child: SimpleBarChart.withSampleData()),
-              Spacer(),
-              Opacity(
-                opacity: 0,
-                child: IconButton(
-                  icon: Icon(Icons.arrow_forward_ios),
-                  onPressed: () {
-                    print("ooo");
-                    thirdController.animateToPage(1,
-                        duration: Duration(milliseconds: 300),
-                        curve: Curves.easeIn);
-                  },
-                ),
-              )
-            ],
-          ),
-        ],
-      ),
-    );
-  }
-
-  Row _buildDonut(ABSDashboardViewModel dashboardViewModel) {
-    return Row(
-          children: [
-            Opacity(
-                opacity: 0,
-                child: IconButton(
-                  icon: Icon(Icons.arrow_back_ios),
-                  onPressed: () {},
-                )),
-            Spacer(),
-            Container(
-                height: 200,
-                width: 200,
-                child: dashboardViewModel.portfolioDistribution.where(
-                        (element) => element.percentageShare > 0).length > 0 ?
-                DonutPieChart.withSampleData(dashboardViewModel.portfolioDistribution):Container(
-                  child: Center(child: Image.asset("images/no_portfolio.png", height: 150,),),
-                )),
-            Spacer(),
-            IconButton(
-              icon: Icon(Icons.arrow_forward_ios),
-              onPressed: () {
-                print("ooo");
-                thirdController.animateToPage(1,
-                    duration: Duration(milliseconds: 300),
-                    curve: Curves.easeIn);
-              },
-            )
-          ],
-        );
-  }
-}
-
-class HeaderPage extends StatelessWidget {
-  const HeaderPage({
-    Key key,
-    @required this.amount,
-    this.moveToPrev,
-    this.moveToNext,
-    this.title = "My Dollar portfolio balance", this.bg = "layer_2", this.showLastWidget = true,
-  }) : super(key: key);
 
 
-  final String amount;
-  final VoidCallback moveToPrev;
-  final VoidCallback moveToNext;
-  final String title;
-  final String bg;
-  final bool showLastWidget;
 
-
-  @override
-  Widget build(BuildContext context) {
-    ABSIdentityViewModel identityViewModel = Provider.of(context);
-    return Container(
-      height: 255,
-      width: double.infinity,
-      decoration: BoxDecoration(color: bg == "header_bg"?AppColors.kAccentColor: AppColors.kPrimaryColor),
-      child: Stack(
-        children: [
-          Positioned(
-              left: 0,
-              right: 0,
-              child: Image.asset(
-                "images/$bg.png",
-                width: double.infinity,
-              )),
-          SafeArea(
-            child: Column(
-              children: [
-                YMargin(20),
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 20),
-                  child: Row(
-                    children: [
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            "Welcome back",
-                            style: TextStyle(
-                                fontSize: 16, color: AppColors.kWhite),
-                          ),
-                          Text(
-                            identityViewModel.user.fullname.split(" ").first,
-                            style: TextStyle(
-                                fontSize: 16,
-                                fontFamily: "Caros-Medium",
-                                color: AppColors.kWhite),
-                          ),
-                        ],
-                      ),
-                      Spacer(),
-                      NotificationIdentifier(),
-                      XMargin(12),
-                      CircularProfileAvatar(
-                        AppStrings.avatar,
-                        radius: 17,
-                      )
-                    ],
-                  ),
-                ),
-                YMargin(25),
-                Row(
-                  children: [
-                    IconButton(
-                      icon: Icon(
-                        Icons.arrow_back_ios,
-                        color: Colors.white.withOpacity(moveToPrev ==null ? 0:0.5),
-                        size: 18,
-                      ),
-                      onPressed: moveToPrev,
-                    ),
-                    Spacer(),
-                    Column(
-                      children: [
-                        Text(
-                          title,
-                          style: TextStyle(
-                              color: bg == "header_bg"?AppColors.kPrimaryColor2: AppColors.kLightTitleText, fontSize: 13),
-                        ),
-                        YMargin(5),
-                        Text(
-                          amount,
-                          style: TextStyle(
-                              fontFamily: "Caros-Bold",
-                              color: AppColors.kWhite,
-                              fontSize: 27),
-                        ),
-                      ],
-                    ),
-                    Spacer(),
-                    IconButton(
-                      icon: Icon(
-                        Icons.arrow_forward_ios,
-                        color: Colors.white.withOpacity(moveToNext == null ?0:0.5),
-                        size: 18,
-                      ),
-                      onPressed: moveToNext,
-                    ),
-                  ],
-                ),
-                YMargin(15),
-                showLastWidget == true? Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 20),
-                  child: Row(
-                    children: [
-                      Text(
-                        "Accrued Interest",
-                        style: AppStyles.tinyTitle,
-                      ),
-                      XMargin(10),
-                      Text(
-                        amount,
-                        style: TextStyle(
-                            color: AppColors.kWhite,
-                            fontSize: 12,
-                            fontFamily: "Caros-Bold"),
-                      ),
-                    ],
-                  ),
-                ):SizedBox()
-              ],
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-}
 
 class ZimCategoryWidget extends StatelessWidget {
   const ZimCategoryWidget({

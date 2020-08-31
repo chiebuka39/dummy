@@ -29,7 +29,7 @@ class DonutPieChart extends StatelessWidget {
         defaultRenderer: new charts.ArcRendererConfig(
 
             strokeWidthPx: 0,
-            arcWidth: 40,
+            arcWidth: 50,
             arcRendererDecorators: [new charts.ArcLabelDecorator()]));
   }
 
@@ -48,16 +48,9 @@ class DonutPieChart extends StatelessWidget {
           measureFn: (LinearSales sales, _) => sales.sales,
           data: data,
           colorFn: (LinearSales series, _) => series.barColor,
-          insideLabelStyleAccessorFn: (LinearSales row, i) {
-            if(i == 2){
-              return charts.TextStyleSpec(fontSize: 14, color: charts.Color.black);;
-            }else{
-              return charts.TextStyleSpec(fontSize: 14, color: charts.Color.white);
-            }
 
-          },
 
-          labelAccessorFn: (LinearSales row, _) => '${row.year}%')
+          labelAccessorFn: (LinearSales row, _) => '')
     ];
   }
 }
