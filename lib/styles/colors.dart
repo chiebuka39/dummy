@@ -7,6 +7,7 @@ class AppColors {
   static const kBottomNav = Color(0xffF8FBFB);
   static const kPrimaryColor2 = Color(0xff0b2328);
   static const kLightText = Color(0xffdeeaed);
+  static const kLightText4 = Color(0xffd7E9195);
   static const kLightText2 = Color(0xFFa2bdc3);
   static const kAccountTextColor = Color(0xFF324d53);
   static const kLightText3 = Color(0xFF708a8f);
@@ -26,6 +27,11 @@ class AppColors {
     Color(0xFF324d53),
     AppColors.kLightText,
     AppColors.kAccountTextColor,
+    AppColors.kPrimaryColor2,
+    AppColors.kAccentColor,
+    AppColors.kInstruments,
+    AppColors.kLightText3,
+    AppColors.kLightText2,
 
   ];
 }

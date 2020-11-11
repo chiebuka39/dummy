@@ -6,7 +6,7 @@ class ProductTransaction{
   int status;
   String statusText;
   String transactionDescription;
-  int transactionType;
+  String transactionType;
 
   ProductTransaction({this.id, this.amount, this.dateCreated,
     this.dateUpdated,this.status,

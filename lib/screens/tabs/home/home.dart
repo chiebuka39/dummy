@@ -29,6 +29,7 @@ import 'package:zimvest/widgets/circular_progress.dart';
 import 'package:zimvest/widgets/donut_chart.dart';
 import 'package:zimvest/widgets/generic_widgets.dart';
 import 'package:supercharged/supercharged.dart';
+import 'package:zimvest/widgets/home/graph_widgets.dart';
 import 'package:zimvest/widgets/home/header_widgets.dart';
 import 'package:zimvest/widgets/home/section_widgets.dart';
 
@@ -193,28 +194,35 @@ class _DashboardScreenState extends State<DashboardScreen> with AfterLayoutMixin
                       padding: EdgeInsets.only(top: 5),
                       children: [
                         YMargin(30),
-                        Container(
+                        GestureDetector(
+                          onTap: (){
+                            showCupertinoModalBottomSheet(context: context, builder: (context, controller){
+                              return GraphsWidget(dashboardViewModel: dashboardViewModel);
+                            });
+                          },
+                          child: Container(
 
-                          decoration: BoxDecoration(
-                            border: Border.all(color: AppColors.kLightTitleText,width: 0.25),
-                            borderRadius: BorderRadius.circular(5),
-                            color: AppColors.kWhite,
-                            boxShadow: [
-                              BoxShadow(
-                                color: AppColors.kLightTitleText.withOpacity(0.08),
-                                blurRadius: 4,
-                                offset: Offset(0,2)
-                              )
-                            ]
+                            decoration: BoxDecoration(
+                              border: Border.all(color: AppColors.kLightTitleText,width: 0.25),
+                              borderRadius: BorderRadius.circular(5),
+                              color: AppColors.kWhite,
+                              boxShadow: [
+                                BoxShadow(
+                                  color: AppColors.kLightTitleText.withOpacity(0.08),
+                                  blurRadius: 4,
+                                  offset: Offset(0,2)
+                                )
+                              ]
+                            ),
+                            padding: EdgeInsets.symmetric(horizontal: 20),
+                            margin: EdgeInsets.symmetric(horizontal: 20),
+                            height: 50,
+                            child: Row(children: [
+                                SvgPicture.asset("images/port.svg"),
+                              XMargin(20),
+                              Text("View your portfolio distribution")
+                            ],),
                           ),
-                          padding: EdgeInsets.symmetric(horizontal: 20),
-                          margin: EdgeInsets.symmetric(horizontal: 20),
-                          height: 50,
-                          child: Row(children: [
-                              SvgPicture.asset("images/port.svg"),
-                            XMargin(20),
-                            Text("View your portfolio distribution")
-                          ],),
                         ),
                         YMargin(20),
                         SectionWidgets(content: AppStrings.wealthBox,),

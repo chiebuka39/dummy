@@ -52,6 +52,7 @@ dependencies:
   after_layout: ^1.0.7+2
   flutter_easyloading: ^1.1.4
   rave_flutter: ^0.0.9-alpha+1
+  skeleton_loader: ^1.0.2+1
 
 
 dependency_overrides:

@@ -38,7 +38,7 @@ class StatsWidget extends StatelessWidget {
               Container(
                   height: 200,
                   width: 250,
-                  child: SimpleBarChart.withSampleData()),
+                  child: SimpleBarChart.withSampleData(dashboardViewModel.assetDistribution)),
               Spacer(),
               Opacity(
                 opacity: 0,

@@ -20,6 +20,7 @@ import 'package:zimvest/utils/strings.dart';
 
 import 'data/models/secondary_state.dart';
 import 'data/models/user.dart';
+import 'new_screens/landing_screen.dart';
 
 
 void main()async {
@@ -84,7 +85,7 @@ class _MyAppState extends State<MyApp> {
 
             visualDensity: VisualDensity.adaptivePlatformDensity,
           ),
-          home:_localStorage.getSecondaryState().isLoggedIn == false ?  OnboardingScreen(): MenuContainer(),
+          home:_localStorage.getSecondaryState().isLoggedIn == false ?  LandingScreen(): MenuContainer(),
         ),
       ),
     );

@@ -689,6 +689,7 @@ class EmailWidget extends StatelessWidget {
                 border: Border.all(color: error == true? Colors.redAccent : Colors.transparent),
                 borderRadius: BorderRadius.circular(4)),
             child: TextFormField(
+              initialValue: "testex.testex@mailinator.com",
               keyboardType: TextInputType.emailAddress,
               style: TextStyle(color: AppColors.kAccountTextColor),
               onChanged: onChange,
@@ -889,6 +890,7 @@ class _LoginPasswordWidgetState extends State<LoginPasswordWidget> {
               children: [
                 Expanded(
                   child: TextFormField(
+                    initialValue: "Password@1",
                     obscureText: obscure,
                     onChanged: widget.onChange,
                     keyboardType: TextInputType.emailAddress,

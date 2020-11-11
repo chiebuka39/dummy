@@ -239,3 +239,10 @@ class AppUtils{
     }
   }
 }
+
+extension DurationUtils on int {
+  Duration seconds() {
+    return Duration(seconds: this);
+  }
+
+}
