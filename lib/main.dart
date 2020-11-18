@@ -12,6 +12,8 @@ import 'package:zimvest/data/view_models/payment_view_model.dart';
 import 'package:zimvest/data/view_models/savings_view_model.dart';
 import 'package:zimvest/data/view_models/settings_view_model.dart';
 import 'package:zimvest/locator.dart';
+import 'package:zimvest/new_screens/account/temp_login_screen.dart';
+import 'package:zimvest/new_screens/navigation/home_screen.dart';
 import 'package:zimvest/onboarding/onboarding_screen.dart';
 import 'package:zimvest/screens/account/login_screen.dart';
 import 'package:path_provider/path_provider.dart' as path_provider;
@@ -82,10 +84,11 @@ class _MyAppState extends State<MyApp> {
           theme: ThemeData(
             fontFamily: "Caros",
             primarySwatch: Colors.blue,
+            bottomSheetTheme: BottomSheetThemeData(backgroundColor: Colors.transparent),
 
             visualDensity: VisualDensity.adaptivePlatformDensity,
           ),
-          home:_localStorage.getSecondaryState().isLoggedIn == false ?  LandingScreen(): MenuContainer(),
+          home:_localStorage.getSecondaryState().isLoggedIn == false ?  HomeScreen(): MenuContainer(),
         ),
       ),
     );

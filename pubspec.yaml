@@ -53,6 +53,10 @@ dependencies:
   flutter_easyloading: ^1.1.4
   rave_flutter: ^0.0.9-alpha+1
   skeleton_loader: ^1.0.2+1
+  local_auth: ^0.6.3+4
+  flushbar: ^1.10.4
+  smooth_page_indicator: ^0.2.0
+
 
 
 dependency_overrides:
@@ -109,6 +113,21 @@ flutter:
     - family: Caros
       fonts:
         - asset: fonts/Caros.otf
+    - family: Airbnb-ExtraBold
+      fonts:
+        - asset: fonts/AirbnbCerealExtraBold.ttf
+    - family: Airbnb-Bold
+      fonts:
+        - asset: fonts/AirbnbCerealBold.ttf
+    - family: Airbnb-Light
+      fonts:
+        - asset: fonts/AirbnbCerealLight.ttf
+    - family: Airbnb-Medium
+      fonts:
+        - asset: fonts/AirbnbCerealMedium.ttf
+    - family: Airbnb
+      fonts:
+        - asset: fonts/AirbnbCerealBook.ttf
   #
   # For details regarding fonts from package dependencies,
   # see https://flutter.dev/custom-fonts/#from-packages

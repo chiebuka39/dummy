@@ -3,6 +3,10 @@ class AppStrings{
   static String baseUrl = 'https://dev.moneypal.ng/';
 
   static String state = "state";
+  static String nairaSymbol = "\u20A6";
+  static String fontBold = "Airbnb-Bold";
+  static String fontMedium = "Airbnb-Medium";
+  static String fontNormal = "Airbnb";
 
   static String fieldReq = "This field is required";
 

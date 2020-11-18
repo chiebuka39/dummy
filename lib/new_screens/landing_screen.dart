@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:zimvest/new_screens/account/create_account.dart';
+import 'package:zimvest/new_screens/account/login_screen.dart';
 import 'package:zimvest/styles/colors.dart';
 import 'package:zimvest/utils/margin.dart';
+import 'package:zimvest/widgets/buttons.dart';
 
 class LandingScreen extends StatefulWidget {
   @override
@@ -18,19 +20,15 @@ class _LandingScreenState extends State<LandingScreen> {
           Spacer(flex: 4,),
           Text("Zimvest", style: TextStyle(fontSize: 30, fontFamily: "Caros-Medium"),),
           YMargin(190),
-          Container(
-            height: 55,
-            width: 200,
-            decoration: BoxDecoration(
-              color: AppColors.kPrimaryColor,
-              borderRadius: BorderRadius.circular(15)
-            ),
-            child: Center(child: Text("Create Account",
-              style: TextStyle(color: Colors.white,fontSize: 13),),),
+          PrimaryButtonNew(
+              onTap: (){
+                Navigator.of(context).push(CreateAccountScreen.route());
+              },
+            title: "Create Account",
           ),
           YMargin(45),
           FlatButton(onPressed: (){
-            Navigator.of(context).push(CreateAccountScreen.route());
+            Navigator.of(context).push(LoginScreen.route());
           }, child: Text("Log In",style: TextStyle(fontFamily: "Caros-Medium"),)),
           Spacer(),
         ],),
@@ -38,3 +36,5 @@ class _LandingScreenState extends State<LandingScreen> {
     );
   }
 }
+
+

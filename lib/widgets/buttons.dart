@@ -229,3 +229,31 @@ class OutlinePrimaryButton extends StatelessWidget {
     );
   }
 }
+
+class PrimaryButtonNew extends StatelessWidget {
+  const PrimaryButtonNew({
+    Key key, this.onTap, this.width = 200, this.height = 55, this.title,
+  }) : super(key: key);
+
+  final VoidCallback onTap;
+  final double width;
+  final double height;
+  final String title;
+
+  @override
+  Widget build(BuildContext context) {
+    return GestureDetector(
+      onTap: onTap,
+      child: Container(
+        height: height,
+        width: width,
+        decoration: BoxDecoration(
+            color: AppColors.kPrimaryColor,
+            borderRadius: BorderRadius.circular(15)
+        ),
+        child: Center(child: Text(title,
+          style: TextStyle(color: Colors.white,fontSize: 13),),),
+      ),
+    );
+  }
+}
