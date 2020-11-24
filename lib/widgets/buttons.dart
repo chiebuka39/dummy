@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:zimvest/styles/colors.dart';
 import 'package:zimvest/utils/enums.dart';
+import 'package:zimvest/utils/strings.dart';
 
 class ZimSelectedButton extends StatelessWidget {
   final VoidCallback onTap;
@@ -252,7 +253,7 @@ class PrimaryButtonNew extends StatelessWidget {
             borderRadius: BorderRadius.circular(15)
         ),
         child: Center(child: Text(title,
-          style: TextStyle(color: Colors.white,fontSize: 13),),),
+          style: TextStyle(color: Colors.white,fontSize: 13,fontFamily: AppStrings.fontNormal),),),
       ),
     );
   }

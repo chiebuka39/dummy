@@ -14,6 +14,7 @@ import 'package:zimvest/data/view_models/settings_view_model.dart';
 import 'package:zimvest/locator.dart';
 import 'package:zimvest/new_screens/account/temp_login_screen.dart';
 import 'package:zimvest/new_screens/navigation/home_screen.dart';
+import 'package:zimvest/new_screens/tabs.dart';
 import 'package:zimvest/onboarding/onboarding_screen.dart';
 import 'package:zimvest/screens/account/login_screen.dart';
 import 'package:path_provider/path_provider.dart' as path_provider;
@@ -88,7 +89,7 @@ class _MyAppState extends State<MyApp> {
 
             visualDensity: VisualDensity.adaptivePlatformDensity,
           ),
-          home:_localStorage.getSecondaryState().isLoggedIn == false ?  HomeScreen(): MenuContainer(),
+          home:_localStorage.getSecondaryState().isLoggedIn == false ?  TabsContainer(): MenuContainer(),
         ),
       ),
     );

@@ -32,7 +32,7 @@ class BottomNavEntry extends StatelessWidget {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
-            SvgPicture.asset("images/$image.svg", color: isSelected ? AppColors.kAccentColor: AppColors.kLightTitleText,),
+            SvgPicture.asset("images/new/$image.svg", color: isSelected ? AppColors.kAccentColor: AppColors.kLightTitleText,),
             YMargin(6),
             Text(
               title,
