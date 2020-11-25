@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="38.482" height="38.482" viewBox="0 0 38.482 38.482">
+  <defs>
+    <clipPath id="clip-path">
+      <path id="Combined_Shape" data-name="Combined Shape" d="M4.188,8.975V5.385H.6a.6.6,0,1,1,0-1.2H4.188V.6a.6.6,0,1,1,1.2,0V4.188h3.59a.6.6,0,0,1,0,1.2H5.385v3.59a.6.6,0,0,1-1.2,0Z" transform="translate(15 15)" fill="#484848"/>
+    </clipPath>
+  </defs>
+  <g id="Addd" transform="translate(-0.466 -0.466)">
+    <circle id="Oval" cx="18.991" cy="18.991" r="18.991" transform="translate(0.716 0.716)" fill="none" stroke="#d8d8d8" stroke-miterlimit="10" stroke-width="0.5" opacity="0.72"/>
+    <circle id="Oval-2" data-name="Oval" cx="14.182" cy="14.182" r="14.182" transform="translate(5.318 5.318)" fill="#d8d8d8"/>
+    <path id="Combined_Shape-2" data-name="Combined Shape" d="M4.188,8.975V5.385H.6a.6.6,0,1,1,0-1.2H4.188V.6a.6.6,0,1,1,1.2,0V4.188h3.59a.6.6,0,0,1,0,1.2H5.385v3.59a.6.6,0,0,1-1.2,0Z" transform="translate(15 15)" fill="#484848"/>
+  </g>
+</svg>
