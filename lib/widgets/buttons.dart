@@ -234,10 +234,13 @@ class OutlinePrimaryButton extends StatelessWidget {
 class PrimaryButtonNew extends StatelessWidget {
   const PrimaryButtonNew({
     Key key, this.onTap, this.width = 200, this.height = 55, this.title,
+    this.bg = AppColors.kPrimaryColor, this.textColor = Colors.white,
   }) : super(key: key);
 
   final VoidCallback onTap;
   final double width;
+  final Color bg;
+  final Color textColor;
   final double height;
   final String title;
 
@@ -249,11 +252,11 @@ class PrimaryButtonNew extends StatelessWidget {
         height: height,
         width: width,
         decoration: BoxDecoration(
-            color: AppColors.kPrimaryColor,
+            color: bg,
             borderRadius: BorderRadius.circular(15)
         ),
         child: Center(child: Text(title,
-          style: TextStyle(color: Colors.white,fontSize: 13,fontFamily: AppStrings.fontNormal),),),
+          style: TextStyle(color: textColor,fontSize: 13,fontFamily: AppStrings.fontNormal),),),
       ),
     );
   }

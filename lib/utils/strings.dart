@@ -7,6 +7,8 @@ class AppStrings{
   static String fontBold = "Airbnb-Bold";
   static String fontMedium = "Airbnb-Medium";
   static String fontNormal = "Airbnb";
+  static String url = 'https://firebasestorage.googleapis.com/v0/b/tick-bc0e3.appspot.com/o/pexels-anete-lusina-5723322.'
+      'jpg?alt=media&token=4858ef91-820b-4ff3-aae7-a02ce3507c6d';
 
   static String fieldReq = "This field is required";
 

@@ -6,11 +6,14 @@ import 'package:zimvest/utils/strings.dart';
 class ActionBoxWidget extends StatelessWidget {
   const ActionBoxWidget({
     Key key,@required this.title,@required this.desc, this.img,
+    this.color = AppColors.kGrey, this.textColor = AppColors.kWhite,
   }) : super(key: key);
 
   final String title;
   final String desc;
   final String img;
+  final Color color;
+  final Color textColor;
 
   @override
   Widget build(BuildContext context) {
@@ -20,7 +23,7 @@ class ActionBoxWidget extends StatelessWidget {
       padding: EdgeInsets.only(left: 20, right:20,top: 30),
       width: double.infinity,
       decoration: BoxDecoration(
-          color: AppColors.kGrey,
+          color: color,
           borderRadius: BorderRadius.circular(15)
       ),
       child: Row(
@@ -29,7 +32,7 @@ class ActionBoxWidget extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(title, style: TextStyle(
-                  color: AppColors.kGreyText,
+                  color: textColor,
                   fontSize: 15,
                   fontFamily: AppStrings.fontMedium
               ),),
@@ -38,7 +41,7 @@ class ActionBoxWidget extends StatelessWidget {
                 width: 180,
                 child: Text(desc, style: TextStyle(
                     fontSize: 11,
-                    color: AppColors.kGreyText,height: 1.6
+                    color: textColor,height: 1.6
                 ),),
               )
             ],),

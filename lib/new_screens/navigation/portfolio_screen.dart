@@ -1,8 +1,11 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_money_formatter/flutter_money_formatter.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 import 'package:percent_indicator/percent_indicator.dart';
+import 'package:zimvest/new_screens/navigation/wealth/aspire_box_details.dart';
+import 'package:zimvest/new_screens/navigation/wealth/wealth_box_details.dart';
 import 'package:zimvest/styles/colors.dart';
 import 'package:zimvest/utils/app_utils.dart';
 import 'package:zimvest/utils/margin.dart';
@@ -69,7 +72,7 @@ class _PortfolioScreenState extends State<PortfolioScreen> {
                     width: tabWidth,
                     height: 40,
                     decoration: BoxDecoration(
-                        color: AppColors.kGrey,
+                        color: AppColors.kPrimaryColorLight,
                         borderRadius: BorderRadius.circular(13)),
                     child: Stack(
                       children: <Widget>[
@@ -80,7 +83,7 @@ class _PortfolioScreenState extends State<PortfolioScreen> {
                             width: tabWidth / 2,
                             height: 40,
                             decoration: BoxDecoration(
-                                color: AppColors.kGreyText,
+                                color: AppColors.kPrimaryColor,
                                 borderRadius: BorderRadius.circular(13)),
                           ),
                         ),
@@ -102,7 +105,7 @@ class _PortfolioScreenState extends State<PortfolioScreen> {
                                       fontSize: 12,
                                       color: showInvest == false
                                           ? Colors.white
-                                          : AppColors.kGreyText),
+                                          : AppColors.kPrimaryColor),
                                 ))),
                               )),
                               Expanded(
@@ -120,7 +123,7 @@ class _PortfolioScreenState extends State<PortfolioScreen> {
                                       fontSize: 12,
                                       color: showInvest == true
                                           ? Colors.white
-                                          : AppColors.kGreyText),
+                                          : AppColors.kPrimaryColor),
                                 ))),
                               )),
                             ],
@@ -190,8 +193,12 @@ class SavingsInvestmentCashWidget extends StatelessWidget {
     Key key,
   }) : super(key: key);
 
+
+
   @override
   Widget build(BuildContext context) {
+    List<String> goals = ["Rent","Gift","Good Vibes","Football","Basketball",""];
+    List<String> goals1 = ["Rent","Gift","Good Vibes","Football","Basketball",""];
     return SliverPadding(
       sliver: SliverList(
           delegate: SliverChildListDelegate([
@@ -205,65 +212,71 @@ class SavingsInvestmentCashWidget extends StatelessWidget {
           amount: 100000,
         ),
         YMargin(25),
-        Container(
-          height: 154,
-          width: double.infinity,
-          padding: EdgeInsets.symmetric(horizontal: 15, vertical: 15),
-          decoration: BoxDecoration(
-            color: AppColors.kGreyBg,
-            borderRadius: BorderRadius.circular(11),
-          ),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              YMargin(3),
-              Text("Zimvest WealthBox"),
-              Spacer(),
-              Row(
-                children: [
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        "Balance",
-                        style: TextStyle(
-                            fontSize: 12,
-                            fontFamily: AppStrings.fontNormal,
-                            color: AppColors.kGreyText),
-                      ),
-                      YMargin(10),
-                      Text(
-                        "${AppStrings.nairaSymbol}500,000",
-                        style: TextStyle(
-                            color: AppColors.kGreyText,
-                            fontFamily: AppStrings.fontMedium),
-                      )
-                    ],
-                  ),
-                  Spacer(),
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.end,
-                    children: [
-                      Text(
-                        "Interest P.A",
-                        style: TextStyle(
-                            fontSize: 12,
-                            fontFamily: AppStrings.fontNormal,
-                            color: AppColors.kGreyText),
-                      ),
-                      YMargin(10),
-                      Text(
-                        "5.5%",
-                        textAlign: TextAlign.end,
-                        style: TextStyle(
-                            color: AppColors.kGreyText,
-                            fontFamily: AppStrings.fontMedium),
-                      )
-                    ],
-                  ),
-                ],
-              )
-            ],
+        GestureDetector(
+          onTap: (){
+            Navigator.push(context, WealthBoxDetailsScreen.route());
+          },
+          child: Container(
+            height: 154,
+            width: double.infinity,
+            padding: EdgeInsets.symmetric(horizontal: 15, vertical: 15),
+            decoration: BoxDecoration(
+              color: AppColors.kWhite,
+              boxShadow: AppUtils.getBoxShaddow,
+              borderRadius: BorderRadius.circular(11),
+            ),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                YMargin(3),
+                Text("Zimvest WealthBox"),
+                Spacer(),
+                Row(
+                  children: [
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          "Balance",
+                          style: TextStyle(
+                              fontSize: 12,
+                              fontFamily: AppStrings.fontNormal,
+                              color: AppColors.kGreyText),
+                        ),
+                        YMargin(10),
+                        Text(
+                          "${AppStrings.nairaSymbol}500,000",
+                          style: TextStyle(
+                              color: AppColors.kGreyText,
+                              fontFamily: AppStrings.fontMedium),
+                        )
+                      ],
+                    ),
+                    Spacer(),
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.end,
+                      children: [
+                        Text(
+                          "Interest P.A",
+                          style: TextStyle(
+                              fontSize: 12,
+                              fontFamily: AppStrings.fontNormal,
+                              color: AppColors.kGreyText),
+                        ),
+                        YMargin(10),
+                        Text(
+                          "5.5%",
+                          textAlign: TextAlign.end,
+                          style: TextStyle(
+                              color: AppColors.kGreyText,
+                              fontFamily: AppStrings.fontMedium),
+                        )
+                      ],
+                    ),
+                  ],
+                )
+              ],
+            ),
           ),
         ),
         YMargin(30),
@@ -285,9 +298,9 @@ class SavingsInvestmentCashWidget extends StatelessWidget {
             ),
           ],
         ),
-        ...List.generate((6 / 2).round(), (index) {
-          print("ppmm ${index} >>>> ${(6 / 2).round() - 1}");
-          if (6.isOdd && ((6 / 2).round() - 1) == index) {
+        ...List.generate((goals.length / 2).round(), (index) {
+          print("ppmm ${index} >>>> ${(goals.length / 2).round() - 1}");
+          if (goals.length.isOdd && ((goals.length / 2).round() - 1) == index) {
             return Padding(
               padding: const EdgeInsets.only(top: 20),
               child: Row(
@@ -311,26 +324,28 @@ class SavingsInvestmentCashWidget extends StatelessWidget {
               ),
             );
           }
-          if (6.isEven && ((6 / 2).round() - 1) == index) {
+          if (goals.length.isEven && ((goals.length / 2).round() - 1) == index) {
+            String goal = goals1.removeAt(0);
             return Padding(
               padding: const EdgeInsets.only(top: 20),
               child: Row(
                 children: [
-                  buildAspireContainer(),
+                  AspireContainerWidget(goal: goal,),
                   XMargin(20),
                   buildNewGoal(),
                 ],
               ),
             );
           }
-
+          String goal1 = goals1.removeAt(0);
+          String goal2 = goals1.removeAt(0);
           return Padding(
             padding: const EdgeInsets.only(top: 20),
             child: Row(
               children: [
-                buildAspireContainer(),
+                AspireContainerWidget(goal: goal1,),
                 XMargin(20),
-                buildAspireContainer(),
+                AspireContainerWidget(goal: goal2,),
               ],
             ),
           );
@@ -352,71 +367,92 @@ class SavingsInvestmentCashWidget extends StatelessWidget {
 
 class AspireContainerWidget extends StatelessWidget {
   const AspireContainerWidget({
-    Key key,
+    Key key, this.goal,
   }) : super(key: key);
+  final String goal;
 
   @override
   Widget build(BuildContext context) {
     return Expanded(
       child: GestureDetector(
         onTap: (){
-          showCupertinoModalBottomSheet(context: context, builder: (context,scroll){
-            return WealthBoxDetailsWidget();
-          });
+          Navigator.push(context, AspireDetailsScreen.route(goal));
         },
-        child: Container(
-          padding: EdgeInsets.symmetric(horizontal: 15, vertical: 15),
-          height: 154,
-          decoration: BoxDecoration(
-              color: AppColors.kGreyBg, borderRadius: BorderRadius.circular(13)),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                "Rent",
-                style: TextStyle(
-                    fontFamily: AppStrings.fontMedium,
-                    color: AppColors.kGreyText),
-              ),
-              Spacer(),
-              Row(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Container(
+
+              height: 154,
+              decoration: BoxDecoration(
+                  color: AppColors.kGreyBg, borderRadius: BorderRadius.circular(13)),
+              child: Stack(
                 children: [
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        "Balance",
-                        style: TextStyle(
-                            fontSize: 10,
-                            fontFamily: AppStrings.fontNormal,
-                            color: AppColors.kGreyText),
-                      ),
-                      YMargin(8),
-                      Text(
-                        "${AppStrings.nairaSymbol}500,000",
-                        style: TextStyle(
-                            fontFamily: AppStrings.fontMedium, fontSize: 12),
-                      )
-                    ],
-                  ),
-                  Spacer(),
-                  CircularPercentIndicator(
-                    radius: 30.0,
-                    lineWidth: 3.0,
-                    animation: true,
-                    percent: 0.7,
-                    center: new Text(
-                      "7%",
-                      style:
-                          new TextStyle(fontWeight: FontWeight.bold, fontSize: 7),
+                  Hero(
+                    tag: goal,
+                    child: ClipRRect(
+                      borderRadius: BorderRadius.circular(13),
+                      child: CachedNetworkImage(imageUrl: 'https://firebasestorage.googleapis.com/v0/b/tick-bc0e3.appspot.com/o/pexels-anete-lusina-5723322.'
+                          'jpg?alt=media&token=4858ef91-820b-4ff3-aae7-a02ce3507c6d',height: 154,fit: BoxFit.fill,),
                     ),
-                    circularStrokeCap: CircularStrokeCap.round,
-                    progressColor: AppColors.kPrimaryColor,
-                  )
+                  ),
+                  Container(
+                    decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(13),
+                      color: Colors.black.withOpacity(0.2)
+                    ),
+                  ),
+                  Positioned.fill(
+                    child: Padding(
+                      padding: EdgeInsets.symmetric(horizontal: 15, vertical: 15),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+
+                          Spacer(),
+                          Row(
+                            children: [
+
+                              Spacer(),
+                              CircularPercentIndicator(
+                                radius: 30.0,
+                                lineWidth: 3.0,
+                                animation: true,
+                                percent: 0.7,
+                                center: new Text(
+                                  "7%",
+                                  style:
+                                      new TextStyle(fontWeight: FontWeight.bold, fontSize: 8,
+                                          color: AppColors.kWhite),
+                                ),
+                                circularStrokeCap: CircularStrokeCap.round,
+                                progressColor: AppColors.kPrimaryColor,
+                              )
+                            ],
+                          )
+                        ],
+                      ),
+                    ),
+                  ),
+
                 ],
-              )
-            ],
-          ),
+              ),
+            ),
+            YMargin(10),
+            Text(
+              goal,
+              style: TextStyle(
+                  fontSize: 10,
+                  fontFamily: AppStrings.fontNormal,
+                  color: AppColors.kGreyText),
+            ),
+            YMargin(8),
+            Text(
+              "${AppStrings.nairaSymbol}500,000",
+              style: TextStyle(
+                  fontFamily: AppStrings.fontMedium, fontSize: 12),
+            )
+          ],
         ),
       ),
     );
@@ -437,7 +473,7 @@ class AspireNewGoalWidget extends StatelessWidget {
         padding: EdgeInsets.symmetric(horizontal: 15, vertical: 15),
         height: 154,
         decoration: BoxDecoration(
-            color: AppColors.kGreyBg, borderRadius: BorderRadius.circular(13)),
+             borderRadius: BorderRadius.circular(13)),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.center,
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -445,7 +481,7 @@ class AspireNewGoalWidget extends StatelessWidget {
             SvgPicture.asset("images/new/Addd.svg"),
             Text(
               "Create New Goal",
-              style: TextStyle(fontSize: 12, fontFamily: AppStrings.fontMedium),
+              style: TextStyle(fontSize: 12, fontFamily: AppStrings.fontMedium, color: AppColors.kPrimaryColor),
             )
           ],
         ),

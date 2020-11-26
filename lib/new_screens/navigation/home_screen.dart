@@ -205,14 +205,15 @@ class _HomeScreenState extends State<HomeScreen> {
                 height: 120,
                   child: Timeline1(actions: ['Verify Identity','Fund Wallet'],)),
               ActionBoxWidget(title: "Save with Zimvest wealth box", desc: "This savings plan assists you save in a "
-                  "disciplined manner."),
+                  "disciplined manner.",color: AppColors.kWealth,),
               ActionBoxWidget(title: "Save with Zimvest Aspire", desc: "This savings plan assists you save in a "
-                  "disciplined manner."),
+                  "disciplined manner.",color: AppColors.kAspire),
               ActionBoxWidget(title: "Invest in Zimvest High Yield", desc: "This savings plan assists you save in a "
-                  "disciplined manner."),
+                  "disciplined manner.",color: AppColors.kHighYield),
 
               ActionBoxWidget(title: "Invest in Zimvest Fixed Income",desc: "This savings plan assists you save in a "
-                  "disciplined manner.",),
+                  "disciplined manner.",color: AppColors.kFixed),
+              YMargin(50)
             ],
           ),
         ),

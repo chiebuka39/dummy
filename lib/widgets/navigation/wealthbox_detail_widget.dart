@@ -2,12 +2,15 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:percent_indicator/circular_percent_indicator.dart';
 import 'package:zimvest/new_screens/account/temp_login_screen.dart';
+import 'package:zimvest/new_screens/funding/withdraw_screen.dart';
 import 'package:zimvest/new_screens/navigation/portfolio_screen.dart';
+import 'package:zimvest/new_screens/funding/top_up_screen.dart';
 import 'package:zimvest/styles/colors.dart';
 import 'package:zimvest/utils/app_utils.dart';
 import 'package:zimvest/utils/margin.dart';
 import 'package:zimvest/utils/strings.dart';
 import 'package:zimvest/widgets/navigation/wealth_activites.dart';
+import 'package:zimvest/widgets/navigation/wealth_more.dart';
 import 'package:zimvest/widgets/navigation/wealthbox_activity.dart';
 
 class WealthBoxDetailsWidget extends StatelessWidget {
@@ -39,7 +42,11 @@ class WealthBoxDetailsWidget extends StatelessWidget {
                     fontSize: 15, fontFamily: AppStrings.fontBold
                 ),),
                 Spacer(),
-                IconButton(icon: Icon(Icons.more_horiz_rounded), onPressed: (){})
+                IconButton(icon: Icon(Icons.more_horiz_rounded), onPressed: (){
+                  showModalBottomSheet < Null > (context: context, builder: (BuildContext context) {
+                    return WealthMore();
+                  },isScrollControlled: true);
+                })
               ],
             ),
             YMargin(30),
@@ -159,40 +166,50 @@ class WealthBoxDetailsWidget extends StatelessWidget {
               children: [
                 Expanded(
                   child: Center(
-                    child: Container(child: Column(children: [
-                      Container(
-                          height:35,
-                          width: 35,
-                          decoration: BoxDecoration(
-                              color: AppColors.kGreyBg,
-                              shape: BoxShape.circle
-                          ),
-                          child: Center(child: SvgPicture.asset("images/new/top_up.svg"))),
-                      YMargin(12),
-                      Text("Top Up", style: TextStyle(
-                          fontSize: 12,
-                          fontFamily: AppStrings.fontNormal
-                      ),)
-                    ],),),
+                    child: GestureDetector(
+                      onTap:(){
+                        Navigator.of(context).push(TopUpScreen.route());
+      },
+                      child: Container(child: Column(children: [
+                        Container(
+                            height:35,
+                            width: 35,
+                            decoration: BoxDecoration(
+                                color: AppColors.kGreyBg,
+                                shape: BoxShape.circle
+                            ),
+                            child: Center(child: SvgPicture.asset("images/new/top_up.svg"))),
+                        YMargin(12),
+                        Text("Top Up", style: TextStyle(
+                            fontSize: 12,
+                            fontFamily: AppStrings.fontNormal
+                        ),)
+                      ],),),
+                    ),
                   ),
                 ),
                 Expanded(
                   child: Center(
-                    child: Container(child: Column(children: [
-                      Container(
-                          height:35,
-                          width: 35,
-                          decoration: BoxDecoration(
-                              color: AppColors.kGreyBg,
-                              shape: BoxShape.circle
-                          ),
-                          child: Center(child: SvgPicture.asset("images/new/top_up.svg"))),
-                      YMargin(12),
-                      Text("Withdraw", style: TextStyle(
-                          fontSize: 12,
-                          fontFamily: AppStrings.fontNormal
-                      ),)
-                    ],),),
+                    child: GestureDetector(
+                      onTap: (){
+                        Navigator.of(context).push(WithdrawWealthScreen.route());
+                      },
+                      child: Container(child: Column(children: [
+                        Container(
+                            height:35,
+                            width: 35,
+                            decoration: BoxDecoration(
+                                color: AppColors.kGreyBg,
+                                shape: BoxShape.circle
+                            ),
+                            child: Center(child: SvgPicture.asset("images/new/top_up.svg"))),
+                        YMargin(12),
+                        Text("Withdraw", style: TextStyle(
+                            fontSize: 12,
+                            fontFamily: AppStrings.fontNormal
+                        ),)
+                      ],),),
+                    ),
                   ),
                 ),
                 Expanded(

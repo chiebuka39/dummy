@@ -30,7 +30,7 @@ class _WealthScreenState extends State<WealthScreen> {
                   width: 115,
                   height: 28,
                   decoration: BoxDecoration(
-                      color: AppColors.kGrey,
+                      color: AppColors.kPrimaryColorLight,
                       borderRadius: BorderRadius.circular(14)
                   ),
                   child: Row(
@@ -39,7 +39,7 @@ class _WealthScreenState extends State<WealthScreen> {
                       SvgPicture.asset("images/gift.svg"),
                       XMargin(6),
                       Text("Earn Free Cash",
-                        style: TextStyle(fontSize: 10,fontFamily: AppStrings.fontNormal),)
+                        style: TextStyle(fontSize: 10,fontFamily: AppStrings.fontBold, color: AppColors.kPrimaryColor),)
                     ],),
                 )
               ],
@@ -53,7 +53,7 @@ class _WealthScreenState extends State<WealthScreen> {
                 width: tabWidth,
                 height: 40,
                 decoration: BoxDecoration(
-                    color: AppColors.kGrey,
+                    color: AppColors.kPrimaryColorLight,
                     borderRadius: BorderRadius.circular(13)),
                 child: Stack(
                   children: <Widget>[
@@ -64,7 +64,7 @@ class _WealthScreenState extends State<WealthScreen> {
                         width: tabWidth/2,
                         height: 40,
                         decoration: BoxDecoration(
-                            color: AppColors.kGreyText,
+                            color: AppColors.kPrimaryColor,
                             borderRadius: BorderRadius.circular(13)),
                       ),
                     ),
@@ -84,7 +84,7 @@ class _WealthScreenState extends State<WealthScreen> {
                                           "Save",
                                           style: TextStyle(
                                               fontSize: 12,
-                                              color: showInvest == false?Colors.white:AppColors.kGreyText
+                                              color: showInvest == false?Colors.white:AppColors.kPrimaryColor
                                           ),
                                         ))),
                               )),
@@ -100,7 +100,7 @@ class _WealthScreenState extends State<WealthScreen> {
                                         child: Text(
                                           "Invest",
                                           style: TextStyle(fontSize: 12,
-                                          color: showInvest == true?Colors.white:AppColors.kGreyText),
+                                          color: showInvest == true?Colors.white:AppColors.kPrimaryColor),
                                         ))),
                               )),
                         ],
@@ -115,14 +115,14 @@ class _WealthScreenState extends State<WealthScreen> {
           YMargin(30),
           showInvest ?Expanded(child: Column(children: [
             ActionBoxWidget(title: "Zimvest High Yield", desc: "This savings plan assists you save in a "
-                "disciplined manner."),
+                "disciplined manner.", color: AppColors.kHighYield,),
             ActionBoxWidget(title: "Zimvest Fixed Income", desc: "This savings plan assists you save in a "
-                "disciplined manner."),
+                "disciplined manner.", color: AppColors.kFixed),
           ],)):Expanded(child: Column(children: [
             ActionBoxWidget(title: "Zimvest wealth box", desc: "This savings plan assists you save in a "
-                "disciplined manner."),
+                "disciplined manner.", color: AppColors.kWealth),
             ActionBoxWidget(title: "Zimvest Aspire", desc: "This savings plan assists you save in a "
-                "disciplined manner."),
+                "disciplined manner.", color: AppColors.kAspire),
           ],)),
 
         ],),
