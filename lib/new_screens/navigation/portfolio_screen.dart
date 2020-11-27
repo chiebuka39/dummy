@@ -5,6 +5,8 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 import 'package:percent_indicator/percent_indicator.dart';
 import 'package:zimvest/new_screens/navigation/wealth/aspire_box_details.dart';
+import 'package:zimvest/new_screens/navigation/wealth/investment_details.dart';
+import 'package:zimvest/new_screens/navigation/widgets/money_title_widget.dart';
 import 'package:zimvest/new_screens/navigation/wealth/wealth_box_details.dart';
 import 'package:zimvest/styles/colors.dart';
 import 'package:zimvest/utils/app_utils.dart';
@@ -490,40 +492,7 @@ class AspireNewGoalWidget extends StatelessWidget {
   }
 }
 
-class MoneyTitleWidget extends StatelessWidget {
-  const MoneyTitleWidget({
-    Key key,
-    this.amount,
-  }) : super(key: key);
 
-  final double amount;
-  @override
-  Widget build(BuildContext context) {
-    return Row(
-      children: [
-        Transform.translate(
-            offset: Offset(0, -4),
-            child: Text(
-              AppStrings.nairaSymbol,
-              style: TextStyle(fontSize: 14),
-            )),
-        XMargin(2),
-        Text(
-          FlutterMoneyFormatter(amount: amount).output.withoutFractionDigits,
-          style: TextStyle(fontSize: 25, fontFamily: AppStrings.fontMedium),
-        ),
-        XMargin(3),
-        Transform.translate(
-          offset: Offset(0, -4),
-          child: Text(
-            ".00",
-            style: TextStyle(fontSize: 14, fontFamily: AppStrings.fontMedium),
-          ),
-        ),
-      ],
-    );
-  }
-}
 
 class PortfolioInvestmentWidget extends StatefulWidget {
   const PortfolioInvestmentWidget({
@@ -549,7 +518,7 @@ class _PortfolioInvestmentWidgetState extends State<PortfolioInvestmentWidget> {
             children: [
               Container(
                 width: 100,
-                height: 60,
+                height: 50,
                 child: Stack(
                   children: [
                     Row(
@@ -560,7 +529,9 @@ class _PortfolioInvestmentWidgetState extends State<PortfolioInvestmentWidget> {
                                 naira = true;
                               });
                             },
-                            child: Text("Naira")),
+                            child: Text("Naira", style: TextStyle(
+                                color: naira ? AppColors.kPrimaryColor: AppColors.kTextColor,
+                                fontSize: 12,fontFamily: naira ? AppStrings.fontMedium: AppStrings.fontNormal),)),
                         Spacer(),
                         GestureDetector(
                             onTap: () {
@@ -568,16 +539,17 @@ class _PortfolioInvestmentWidgetState extends State<PortfolioInvestmentWidget> {
                                 naira = false;
                               });
                             },
-                            child: Text("Dollar")),
+                            child: Text("Dollar",style: TextStyle(
+                                color: naira ? AppColors.kTextColor:AppColors.kPrimaryColor, fontSize: 12,fontFamily:naira ? AppStrings.fontNormal: AppStrings.fontMedium))),
                       ],
                     ),
                     AnimatedPositioned(
-                        top: 25,
-                        left: naira ? 5 : 62,
+                        top: 20,
+                        left: naira ? 5 : 70,
                         child: Container(
                           height: 3,
-                          width: 30,
-                          decoration: BoxDecoration(color: AppColors.kGreyText),
+                          width: 20,
+                          decoration: BoxDecoration(color:  AppColors.kPrimaryColor),
                         ),
                         duration: Duration(milliseconds: 300))
                   ],
@@ -585,33 +557,118 @@ class _PortfolioInvestmentWidgetState extends State<PortfolioInvestmentWidget> {
               )
             ],
           ),
-          YMargin(MediaQuery.of(context).size.height > 700 ? 300 : 200),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              SizedBox(
-                  width: 200,
-                  child: Text(
-                    "You currently don’t have a Investing plan",
-                    textAlign: TextAlign.center,
-                    style: TextStyle(
-                        fontFamily: AppStrings.fontNormal,
-                        color: AppColors.kGreyText,
-                        height: 1.6),
-                  )),
-            ],
-          ),
-          YMargin(40),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              PrimaryButtonNew(
-                title: "Start Saving",
-              ),
-            ],
-          ),
+         naira? EmptyInvstmentWidget():Column(
+           crossAxisAlignment: CrossAxisAlignment.start,
+           children: [
+              Text("Total Balance", style: TextStyle(fontSize: 12,
+                  color: AppColors.kTextColor.withOpacity(0.4)),),
+             YMargin(12),
+             MoneyTitleWidget(amount: 820000,),
+             ...List.generate(4, (index) => InvestmentItemWidget()),
+             YMargin(52),
+         ],),
+
         ]),
       ),
     );
+  }
+}
+
+class InvestmentItemWidget extends StatelessWidget {
+  const InvestmentItemWidget({
+    Key key,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return GestureDetector(
+      onTap: (){
+        Navigator.push(context, InvestmentDetailsScreen.route());
+      },
+      child: Container(
+        margin: EdgeInsets.only(top: 25),
+        padding: EdgeInsets.all(11),
+        height: 154,
+        width: double.infinity,
+        decoration: BoxDecoration(
+          color: AppColors.kWhite,
+          boxShadow: AppUtils.getBoxShaddow,
+          borderRadius: BorderRadius.circular(11)
+        ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+           Text("Child Education", style: TextStyle(fontSize: 13,
+               fontFamily: AppStrings.fontMedium),),
+            YMargin(8),
+            Text("Zimvest high yield Naira 30 days", style: TextStyle(fontSize: 11, color: AppColors.kTextColor,
+                fontFamily: AppStrings.fontLight),),
+            Spacer(),
+            Row(children: [
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                   Text("Balance", style: TextStyle(fontSize: 11,
+                       fontFamily: AppStrings.fontNormal,
+                       color: AppColors.kTextColor),),
+                  YMargin(8),
+                  Text("${AppStrings.nairaSymbol}5,000,000", style: TextStyle(fontSize: 11,
+                      fontFamily: AppStrings.fontMedium,
+                      color: AppColors.kTextColor),),
+              ],),
+              Spacer(),
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.end,
+                children: [
+                   Text("Balance", style: TextStyle(fontSize: 11,
+                       fontFamily: AppStrings.fontNormal,
+                       color: AppColors.kTextColor),),
+                  YMargin(8),
+                  Text("10%", style: TextStyle(fontSize: 11,
+                      fontFamily: AppStrings.fontMedium,
+                      color: AppColors.kWealthDark),),
+              ],)
+            ],),
+            YMargin(8)
+        ],),
+      ),
+    );
+  }
+}
+
+class EmptyInvstmentWidget extends StatelessWidget {
+  const EmptyInvstmentWidget({
+    Key key,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(children: [
+      YMargin(MediaQuery.of(context).size.height > 700 ? 300 : 200),
+      Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          SizedBox(
+              width: 200,
+              child: Text(
+                "You currently don’t have a Investing plan",
+                textAlign: TextAlign.center,
+                style: TextStyle(
+                    fontFamily: AppStrings.fontNormal,
+                    color: AppColors.kGreyText,
+                    height: 1.6),
+              )),
+        ],
+      ),
+      YMargin(40),
+      Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          PrimaryButtonNew(
+            title: "Start Saving",
+          ),
+        ],
+      ),
+    ],);
   }
 }

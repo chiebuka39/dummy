@@ -30,7 +30,7 @@ class WealthBoxActivity extends StatelessWidget {
             ),)
           ],),
         Spacer(),
-        Text("${AppStrings.nairaSymbol}15.06")
+        Text("${AppStrings.nairaSymbol}15.06", style: TextStyle(fontSize: 12, fontFamily: AppStrings.fontNormal),)
       ],),
     );
   }
