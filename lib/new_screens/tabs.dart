@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:zimvest/data/models/payment/wallet.dart';
+import 'package:zimvest/new_screens/navigation/WalletScreen.dart';
 import 'package:zimvest/new_screens/navigation/home_screen.dart';
 import 'package:zimvest/new_screens/navigation/portfolio_screen.dart';
 import 'package:zimvest/new_screens/navigation/wealth_screen.dart';
+import 'package:zimvest/new_screens/navigation/transactions_screen.dart';
 import 'package:zimvest/screens/tabs/home/home.dart';
 import 'package:zimvest/screens/tabs/invstment/investment_screen.dart';
 import 'package:zimvest/screens/tabs/savings/savings_screen.dart';
@@ -32,8 +35,8 @@ class _TabsContainerState extends State<TabsContainer> {
     HomeScreen(),
     WealthScreen(),
     PortfolioScreen(),
-    Container(),
-    Container(),
+    TransactionsScreen(),
+    WalletScreen(),
   ];
 
   // initial index of the bottom nav
