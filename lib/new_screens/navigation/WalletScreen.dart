@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
+import 'package:zimvest/new_screens/funding/wallet/exchange/exchange_to_dollars.dart';
+import 'package:zimvest/new_screens/funding/wallet/verification_needed_screen.dart';
+import 'package:zimvest/new_screens/funding/wallet/wallet_withdraw_to.dart';
 import 'package:zimvest/new_screens/funding/withdraw_screen.dart';
 import 'package:zimvest/new_screens/navigation/widgets/money_title_widget.dart';
 import 'package:zimvest/new_screens/navigation/widgets/transaction_item_widget.dart';
@@ -68,7 +71,7 @@ class _WalletScreenState extends State<WalletScreen> {
                                   child: Center(
                                     child: GestureDetector(
                                       onTap:(){
-                                        //Navigator.of(context).push(TopUpScreen.route());
+                                        Navigator.of(context).push(WalletWithdrawToScreen.route());
                                       },
                                       child: Container(child: Column(children: [
                                         Container(
@@ -114,6 +117,79 @@ class _WalletScreenState extends State<WalletScreen> {
                                 ),
                                 Expanded(
                                   child: Center(
+                                    child: GestureDetector(
+                                      onTap: (){
+                                        Navigator.push(context, ExchangeToDollarsScreen.route(true));
+                                      },
+                                      child: Container(child: Column(children: [
+                                        Container(
+                                            height:35,
+                                            width: 35,
+                                            decoration: BoxDecoration(
+                                                color: AppColors.kWhite,
+                                                shape: BoxShape.circle
+                                            ),
+                                            child: Center(child: SvgPicture.asset("images/new/swap.svg",color: AppColors.kPrimaryColor,))),
+                                        YMargin(12),
+                                        Text("Exchange", style: TextStyle(
+                                            fontSize: 12,color: AppColors.kWhite,
+                                            fontFamily: AppStrings.fontNormal
+                                        ),)
+                                      ],),),
+                                    ),
+                                  ),
+                                ),
+                              ],),
+
+                          ],),
+                        ),
+                        Container(
+
+                          child: Column(children: [
+                            Text("Naira Wallet", style: TextStyle(color: AppColors.kWhite),),
+                            YMargin(15),
+                            Row(
+                              children: [
+                                Spacer(),
+                                MoneyTitleWidget(amount: 200000,textColor: AppColors.kWhite,),
+                                Spacer(),
+                              ],
+                            ),
+                            YMargin(10),
+                            Text("Balance", style: TextStyle(color: AppColors.kWhite,fontSize: 11,
+                                fontFamily: AppStrings.fontNormal),),
+                            YMargin(30),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Center(
+                                  child: GestureDetector(
+                                    onTap:(){
+                                      Navigator.of(context).push(WalletWithdrawToScreen.route());
+                                    },
+                                    child: Container(child: Column(children: [
+                                      Container(
+                                          height:35,
+                                          width: 35,
+                                          decoration: BoxDecoration(
+                                              color: AppColors.kWhite,
+                                              shape: BoxShape.circle
+                                          ),
+                                          child: Center(child: SvgPicture.asset("images/new/withdraw1.svg", color: AppColors.kPrimaryColor,))),
+                                      YMargin(12),
+                                      Text("Withdraw", style: TextStyle(
+                                          fontSize: 12,color: AppColors.kWhite,
+                                          fontFamily: AppStrings.fontNormal
+                                      ),)
+                                    ],),),
+                                  ),
+                                ),
+                                XMargin(68),
+                                Center(
+                                  child: GestureDetector(
+                                    onTap: (){
+                                      Navigator.push(context, ExchangeToDollarsScreen.route(false));
+                                    },
                                     child: Container(child: Column(children: [
                                       Container(
                                           height:35,
@@ -134,7 +210,7 @@ class _WalletScreenState extends State<WalletScreen> {
                               ],),
 
                           ],),
-                        )
+                        ),
                       ],),
 
                     ),

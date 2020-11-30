@@ -261,3 +261,52 @@ class PrimaryButtonNew extends StatelessWidget {
     );
   }
 }
+
+class RoundedNextButton extends StatelessWidget {
+  const RoundedNextButton({
+    Key key, this.onTap,
+  }) : super(key: key);
+
+  final VoidCallback onTap;
+
+  @override
+  Widget build(BuildContext context) {
+    return Center(
+      child: GestureDetector(
+        onTap: onTap,
+        child: Container(
+          width: 74,
+          height: 74,
+          child: Stack(
+            children: [
+              Container(
+                width: 74,
+                height: 74,
+                decoration: BoxDecoration(
+                    shape: BoxShape.circle,
+                    color: AppColors.kPrimaryColorLight
+                ),
+
+              ),
+              Positioned(
+                left: 0,
+                right: 0,
+                top: 7,
+
+                child: Container(
+                  width: 60,
+                  height: 60,
+                  decoration: BoxDecoration(
+                      shape: BoxShape.circle,
+                      color: AppColors.kPrimaryColor
+                  ),
+                  child: Center(child: Icon(Icons.navigate_next,color: Colors.white,),),
+                ),
+              )
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}
