@@ -1,0 +1,46 @@
+# Starter pipeline
+# Start with a minimal pipeline that you can customize to build and deploy your code.
+# Add steps that build, run tests, deploy, and more:
+# https://aka.ms/yaml
+
+variables:
+  projectDirectory: 'Zimvest.MobileApp'
+
+
+trigger:
+- master
+- develop
+
+jobs:
+  - job: Android
+    pool:
+      vmImage: 'macOS-latest'
+
+    - task: FlutterInstall@0
+        inputs:
+          channel: 'stable'
+          version: 'latest'
+
+    - task: FlutterBuild@0
+        inputs:
+          target: apk
+          projectDirectory: $(projectDirectory)
+
+    - task: AndroidSigning@3
+        displayName: 'Signing and aligning APK file(s) **/*.apk'
+        inputs:
+          apkFiles: '**/*.apk'
+          apksign: true
+          apksignerKeystoreFile: key.jks
+          apksignerKeystorePassword: $(keypassword)
+          apksignerKeystoreAlias: $(key)
+          apksignerKeyPassword: $(keypassword)
+
+    - task: CopyFiles@2
+        inputs:
+          contents: '**/*.apk'
+          targetFolder: '$(build.artifactStagingDirectory)'
+
+    - task: PublishBuildArtifacts@1
+        inputs:
+          artifactName: 'drop'
