@@ -5,12 +5,14 @@ import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 import 'package:timelines/timelines.dart';
 import 'package:zimvest/new_screens/portfolio_breakdown/dollar_portfolio_breakdown.dart';
 import 'package:zimvest/new_screens/portfolio_breakdown/naira_portfolio_breakdown.dart';
+import 'package:zimvest/new_screens/profile/profile_screen.dart';
 import 'package:zimvest/styles/colors.dart';
 import 'package:zimvest/utils/margin.dart';
 import 'package:zimvest/utils/strings.dart';
 import 'package:zimvest/widgets/home/action_box_widgets.dart';
 
 class HomeScreen extends StatefulWidget {
+
   @override
   _HomeScreenState createState() => _HomeScreenState();
 }
@@ -35,13 +37,18 @@ class _HomeScreenState extends State<HomeScreen> {
                 padding: const EdgeInsets.symmetric(horizontal: 20),
                 child: Row(
                   children: [
-                    Container(
-                        height: 34,
-                        width: 34,
-                        decoration: BoxDecoration(
-                            shape: BoxShape.circle, color: AppColors.kGrey),
-                        child:
-                            Center(child: SvgPicture.asset("images/profile.svg"))),
+                    GestureDetector(
+                      onTap:(){
+            Navigator.of(context).push(ProfileScreen.route());
+        },
+                      child: Container(
+                          height: 34,
+                          width: 34,
+                          decoration: BoxDecoration(
+                              shape: BoxShape.circle, color: AppColors.kGrey),
+                          child:
+                              Center(child: SvgPicture.asset("images/profile.svg"))),
+                    ),
                     XMargin(20),
                     Text("Hi, Emmanuel"),
                     Spacer(),
