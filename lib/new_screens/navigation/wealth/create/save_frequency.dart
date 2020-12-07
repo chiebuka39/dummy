@@ -4,6 +4,7 @@ import 'package:zimvest/new_screens/navigation/wealth/create/save_daily_screen.d
 import 'package:zimvest/utils/margin.dart';
 import 'package:zimvest/utils/strings.dart';
 import 'package:zimvest/widgets/buttons.dart';
+import 'package:zimvest/widgets/navigation/checkBox.dart';
 
 class SaveFrequencyScreen extends StatefulWidget {
   static Route<dynamic> route() {
@@ -17,8 +18,7 @@ class SaveFrequencyScreen extends StatefulWidget {
 }
 
 class _SaveFrequencyScreenState extends State<SaveFrequencyScreen> {
-  Widget check = SvgPicture.asset("images/check.svg");
-  Widget checkEmpty = SvgPicture.asset("images/check_empty.svg");
+
   int frequency = 0;
   @override
   Widget build(BuildContext context) {

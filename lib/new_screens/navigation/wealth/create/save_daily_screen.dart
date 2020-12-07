@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:zimvest/new_screens/funding/choose_funding_source.dart';
+import 'package:zimvest/new_screens/navigation/wealth/create/choose_start_screen.dart';
 import 'package:zimvest/payment/input_formaters.dart';
 import 'package:zimvest/styles/colors.dart';
 import 'package:zimvest/utils/margin.dart';
@@ -84,7 +85,11 @@ class _SavingDailyScreenState extends State<SavingDailyScreen> {
                 YMargin(70),
 
 
-                RoundedNextButton(),
+                RoundedNextButton(
+                  onTap: (){
+                    Navigator.push(context, ChooseStartScreen.route());
+                  },
+                ),
                 YMargin(65),
                 Expanded(
                   child: Row(children: [
