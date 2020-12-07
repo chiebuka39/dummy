@@ -14,10 +14,10 @@ class AppColors {
   static const kGreyText = Color(0xff484848);
   static const kGreyBg = Color(0xffE8E8E8);
   static const kGrey = Color(0xffE9E9E9);
-  static const kWealth = Color(0xff12CA70);
+  static const kWealth = Color(0xffF49493);
   static const kWealthDark = Color(0xff06B856);
-  static const kAspire = Color(0xffF49493);
-  static const kFixed = Color(0xff9881EE);
+  static const kAspire = Color(0xff9881EE);
+  static const kFixed = Color(0xff12CA70);
   static const kHighYield = Color(0xff52AAFF);
   static const kLightText4 = Color(0xffd7E9195);
   static const kLightText2 = Color(0xFFa2bdc3);

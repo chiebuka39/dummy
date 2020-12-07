@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:zimvest/new_screens/profile/next_of_kin.dart';
+import 'package:zimvest/new_screens/profile/verification_details_screen.dart';
 import 'package:zimvest/new_screens/profile/widgets/profile_widgets.dart';
 import 'package:zimvest/styles/colors.dart';
 import 'package:zimvest/utils/app_utils.dart';
@@ -204,6 +205,9 @@ class _AccountScreenState extends State<AccountScreen> {
                 title: "Next of Kin",
               ),
               ProfileWidget(
+                onClick: (){
+                  Navigator.push(context, VerificationDetailsScreen.route());
+                },
                 title: "Verification details",
                 emergency: true,
                 padding: 0,
