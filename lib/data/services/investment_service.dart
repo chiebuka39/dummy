@@ -444,7 +444,7 @@ class InvestmentService extends ABSInvestmentService {
         result.error = true;
       } else {
         result.error = false;
-        result.data = CommercialPaper.fromJson(jsonDecode(response1));
+        result.data = CommercialPaper.fromJson(response1);
       }
     } on DioError catch (e) {
       print("error $e}");
@@ -485,7 +485,7 @@ class InvestmentService extends ABSInvestmentService {
         //   //initialize Chat Object
         //   channels.add(CorporateBond.fromJson(chaList));
         // });
-        result.data = CorporateBond.fromJson(jsonDecode(response1));
+        result.data = CorporateBond.fromJson(response1);
       }
     } on DioError catch (e) {
       print("error $e}");
@@ -526,7 +526,7 @@ class InvestmentService extends ABSInvestmentService {
         //   //initialize Chat Object
         //   channels.add(EuroBond.fromJson(chaList));
         // });
-        result.data = EuroBond.fromJson(jsonDecode(response1));
+        result.data = EuroBond.fromJson(response1);
       }
     } on DioError catch (e) {
       print("error $e}");
@@ -567,7 +567,7 @@ class InvestmentService extends ABSInvestmentService {
         //   //initialize Chat Object
         //   channels.add(FGNBond.fromJson(chaList));
         // });
-        result.data = FGNBond.fromJson(jsonDecode(response1));
+        result.data = FGNBond.fromJson(response1);
       }
     } on DioError catch (e) {
       print("error $e}");
