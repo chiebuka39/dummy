@@ -9,31 +9,37 @@ import 'package:zimvest/utils/strings.dart';
 import 'package:zimvest/widgets/buttons.dart';
 import 'package:zimvest/widgets/navigation/checkBox.dart';
 
-class ChooseStartScreen extends StatefulWidget {
-  const ChooseStartScreen({
+class ChooseDuedateScreen extends StatefulWidget {
+  const ChooseDuedateScreen({
     Key key,
   }) : super(key: key);
   static Route<dynamic> route() {
     return MaterialPageRoute(
-        builder: (_) => ChooseStartScreen(),
+        builder: (_) => ChooseDuedateScreen(),
         settings:
-        RouteSettings(name: ChooseStartScreen().toStringShort()));
+        RouteSettings(name: ChooseDuedateScreen().toStringShort()));
   }
 
   @override
-  _ChooseStartScreenState createState() => _ChooseStartScreenState();
+  _ChooseDuedateScreenState createState() => _ChooseDuedateScreenState();
 }
 
-class _ChooseStartScreenState extends State<ChooseStartScreen> {
+class _ChooseDuedateScreenState extends State<ChooseDuedateScreen> {
 
   DateTime _time;
 
-  bool today = true;
+  int _index = 0;
 
 
   @override
   Widget build(BuildContext context) {
-    
+    List<String> dates = [
+      '3 Months',
+      '6 Months',
+      '1 Year',
+      '2 years',
+      '5 years',
+    ];
     return GestureDetector(
       onTap: (){
         FocusScope.of(context).requestFocus(new FocusNode());
@@ -49,7 +55,7 @@ class _ChooseStartScreenState extends State<ChooseStartScreen> {
             },
           ),
           backgroundColor: Colors.transparent,
-          title: Text("Create Zimvest WealthBox",
+          title: Text("Create Zimvest Aspire",
             style: TextStyle(color: Colors.black87,fontSize: 14),),
         ),
         body: GestureDetector(
@@ -62,29 +68,31 @@ class _ChooseStartScreenState extends State<ChooseStartScreen> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 YMargin(40),
-                Text("Start Date", style: TextStyle(fontSize: 15,
+                Text("How long would you like to save for ?", style: TextStyle(fontSize: 15,
                     color: AppColors.kGreyText,
                     fontFamily: AppStrings.fontBold),),
-                YMargin(12),
-                InkWell(
+
+                ...List.generate(dates.length, (index) => InkWell(
                   onTap: (){
                     setState(() {
-
+                        _index = index;
                     });
                   },
                   child: Container(
                     height: 50,
+                    margin: EdgeInsets.only(top: 12),
                     child: Row(
                       children: [
-                        Text("I’ll start today", style: TextStyle(fontSize: 13),),
+                        Text(dates[index], style: TextStyle(fontSize: 13),),
                         Spacer(),
                         AnimatedSwitcher(
                             duration: Duration(milliseconds: 600),
-                            child: today == true ?check: checkEmpty)
+                            child: _index == index ?check: checkEmpty)
                       ],
                     ),
                   ),
-                ),
+                ),),
+
                 YMargin(20),
                 GestureDetector(
                   onTap: ()async{
@@ -117,13 +125,7 @@ class _ChooseStartScreenState extends State<ChooseStartScreen> {
                     ),
                   ),
                 ),
-                YMargin(10),
-                SizedBox(
-                  width: 300,
-                  child: Text("You can always top up your savings anytime "
-                      "once you create this savings plan", style: TextStyle(
-                      fontSize: 10,height: 1.6),),
-                ),
+
                 YMargin(70),
 
 

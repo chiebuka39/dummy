@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 import 'package:timelines/timelines.dart';
+import 'package:zimvest/new_screens/navigation/wealth/aspire/aspire_box_screen.dart';
 import 'package:zimvest/new_screens/navigation/wealth/create/wealth_box_screen.dart';
 import 'package:zimvest/new_screens/navigation/wealth_screen.dart';
 import 'package:zimvest/new_screens/portfolio_breakdown/dollar_portfolio_breakdown.dart';
@@ -218,7 +219,11 @@ class _HomeScreenState extends State<HomeScreen> {
                 Navigator.push(context, WealthBoxScreen.route());
               },),
               ActionBoxWidget(title: "Save with Zimvest Aspire", desc: "This savings plan assists you save in a "
-                  "disciplined manner.",color: AppColors.kAspire),
+                  "disciplined manner.",color: AppColors.kAspire,
+                onTap: (){
+                  Navigator.push(context, AspireSavingScreen.route());
+                },
+              ),
               ActionBoxWidget(title: "Invest in Zimvest High Yield", desc: "This savings plan assists you save in a "
                   "disciplined manner.",color: AppColors.kHighYield),
 

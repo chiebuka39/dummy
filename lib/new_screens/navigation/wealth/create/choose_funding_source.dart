@@ -1,10 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:zimvest/new_screens/funding/savings_summary.dart';
-import 'package:zimvest/new_screens/funding/select_bank_account.dart';
+import 'package:zimvest/new_screens/navigation/wealth/create/savings_summary.dart';
 import 'package:zimvest/new_screens/profile/widgets/verification_failed_widget.dart';
-import 'package:zimvest/payment/input_formaters.dart';
 import 'package:zimvest/styles/colors.dart';
 import 'package:zimvest/utils/margin.dart';
 import 'package:zimvest/utils/strings.dart';
