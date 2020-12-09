@@ -521,7 +521,9 @@ class EmptyInvstmentWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Column(children: [
-      YMargin(MediaQuery.of(context).size.height > 700 ? 300 : 200),
+      YMargin(MediaQuery.of(context).size.height > 700 ? 100 : 50),
+      SvgPicture.asset("images/new/empty3.svg",),
+      YMargin(20),
       Row(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [

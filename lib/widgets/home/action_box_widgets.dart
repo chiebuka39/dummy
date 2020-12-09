@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:zimvest/styles/colors.dart';
 import 'package:zimvest/utils/margin.dart';
 import 'package:zimvest/utils/strings.dart';
 
 class ActionBoxWidget extends StatelessWidget {
   const ActionBoxWidget({
-    Key key,@required this.title,@required this.desc, this.img,
+    Key key,@required this.title,@required this.desc, this.img = 'wealth1',
     this.color = AppColors.kGrey, this.textColor = AppColors.kWhite, this.onTap,
   }) : super(key: key);
 
@@ -36,18 +37,20 @@ class ActionBoxWidget extends StatelessWidget {
               children: [
                 Text(title, style: TextStyle(
                     color: textColor,
-                    fontSize: 15,
+                    fontSize: 12,
                     fontFamily: AppStrings.fontMedium
                 ),),
                 YMargin(10),
                 SizedBox(
-                  width: 180,
+                  width: 160,
                   child: Text(desc, style: TextStyle(
-                      fontSize: 11,
+                      fontSize: 10,
                       color: textColor,height: 1.6
                   ),),
                 )
               ],),
+            Spacer(),
+            SvgPicture.asset("images/new/$img.svg", width: 120,)
           ],
         ),
       ),

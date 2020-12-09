@@ -89,7 +89,7 @@ class _MyAppState extends State<MyApp> {
 
             visualDensity: VisualDensity.adaptivePlatformDensity,
           ),
-          home:_localStorage.getSecondaryState().isLoggedIn == false ?  TabsContainer(): MenuContainer(),
+          home:_localStorage.getSecondaryState().isLoggedIn == false ?  LandingScreen(): MenuContainer(),
         ),
       ),
     );

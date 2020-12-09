@@ -25,6 +25,7 @@ class AppColors {
   static const kLightText3 = Color(0xFF708a8f);
   static const kLightTitleText = Color(0xff7e9195);
   static const kSecondaryText = Color(0xFF7B8CB6);
+  static const kSecondaryBoldText = Color(0xFF000D60);
   static const kLightBG = Color(0xfff8fbfb);
   static const kAccentColor = Color(0xffbf9931);
   static const kInstruments = Color(0xffF5EBD0);

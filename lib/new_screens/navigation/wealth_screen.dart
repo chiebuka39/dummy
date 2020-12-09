@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:zimvest/new_screens/navigation/widgets/earn_free_cash.dart';
 import 'package:zimvest/styles/colors.dart';
 import 'package:zimvest/utils/margin.dart';
 import 'package:zimvest/utils/strings.dart';
@@ -26,22 +27,7 @@ class _WealthScreenState extends State<WealthScreen> {
 
                 Text("Wealth", style: TextStyle(fontSize: 16, fontFamily: AppStrings.fontBold),),
                 Spacer(),
-                Container(
-                  width: 115,
-                  height: 28,
-                  decoration: BoxDecoration(
-                      color: AppColors.kPrimaryColorLight,
-                      borderRadius: BorderRadius.circular(14)
-                  ),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      SvgPicture.asset("images/gift.svg"),
-                      XMargin(6),
-                      Text("Earn Free Cash",
-                        style: TextStyle(fontSize: 10,fontFamily: AppStrings.fontBold, color: AppColors.kPrimaryColor),)
-                    ],),
-                )
+                EarnFreeCashWidget()
               ],
             ),
           ),
@@ -115,14 +101,14 @@ class _WealthScreenState extends State<WealthScreen> {
           YMargin(30),
           showInvest ?Expanded(child: Column(children: [
             ActionBoxWidget(title: "Zimvest High Yield", desc: "This savings plan assists you save in a "
-                "disciplined manner.", color: AppColors.kHighYield,),
+                "disciplined manner.", color: AppColors.kHighYield,img: 'high',),
             ActionBoxWidget(title: "Zimvest Fixed Income", desc: "This savings plan assists you save in a "
-                "disciplined manner.", color: AppColors.kFixed),
+                "disciplined manner.", color: AppColors.kFixed,img: 'fixed',),
           ],)):Expanded(child: Column(children: [
             ActionBoxWidget(title: "Zimvest wealth box", desc: "This savings plan assists you save in a "
                 "disciplined manner.", color: AppColors.kWealth),
             ActionBoxWidget(title: "Zimvest Aspire", desc: "This savings plan assists you save in a "
-                "disciplined manner.", color: AppColors.kAspire),
+                "disciplined manner.", color: AppColors.kAspire, img: 'aspire',),
           ],)),
 
         ],),
