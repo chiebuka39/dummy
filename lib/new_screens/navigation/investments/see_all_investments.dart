@@ -90,7 +90,7 @@ class _AllDollarInvestmentsState extends State<AllDollarInvestments> {
             ),
             onPressed: () => Navigator.pop(context)),
         title: Text(
-          "Zimvest High Yield Dollar ${widget.title}",
+          "Zimvest High Yield Dollar ${widget.title} Days",
           style: TextStyle(
               fontSize: 13,
               fontFamily: AppStrings.fontMedium,
@@ -102,7 +102,7 @@ class _AllDollarInvestmentsState extends State<AllDollarInvestments> {
       body: ListView.builder(
         itemBuilder: (context, index) => Padding(
           padding: const EdgeInsets.symmetric(horizontal:20.0),
-          child: InvestmentCardDollar(
+          child: InvestmentCardNaira(
             height: 5,
             investmentDuration: widget.title,
             percentage: "6.67",

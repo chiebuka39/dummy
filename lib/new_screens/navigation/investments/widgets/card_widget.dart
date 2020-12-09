@@ -17,7 +17,7 @@ class InvestmentCardNaira extends StatelessWidget {
     @required this.percentage,
     @required this.minimumAmount,
     @required this.maximumAmount,
-    this.height = 3,
+    this.height = 3.5,
     this.width = 1.3,
   }) : super(key: key);
   @override
@@ -37,12 +37,12 @@ class InvestmentCardNaira extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              "Zimvest High Yield Naira $investmentDuration",
+              "Zimvest High Yield Naira $investmentDuration Days",
               style: TextStyle(fontSize: 11, fontFamily: AppStrings.fontBold),
             ),
             YMargin(8),
             Text(
-              "$percentage P.A",
+              "$percentage% P.A",
               style: TextStyle(
                   fontSize: 11,
                   color: AppColors.kWealthDark,
@@ -137,12 +137,12 @@ class InvestmentCardDollar extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              "Zimvest High Yield Dollar $investmentDuration",
+              "Zimvest High Yield Dollar $investmentDuration Days",
               style: TextStyle(fontSize: 11, fontFamily: AppStrings.fontBold),
             ),
             YMargin(8),
             Text(
-              "$percentage P.A",
+              "$percentage% P.A",
               style: TextStyle(
                   fontSize: 11,
                   color: AppColors.kWealthDark,
@@ -163,7 +163,7 @@ class InvestmentCardDollar extends StatelessWidget {
                     ),
                     YMargin(8),
                     Text(
-                      "$minimumAmount.00",
+                      "${AppStrings.dollarSymbol}$minimumAmount.00",
                       style: TextStyle(
                           fontSize: 11,
                           fontFamily: AppStrings.fontMedium,
@@ -184,7 +184,7 @@ class InvestmentCardDollar extends StatelessWidget {
                     ),
                     YMargin(8),
                     Text(
-                      "Above $maximumAmount.00",
+                      "Above ${AppStrings.dollarSymbol}$maximumAmount.00",
                       style: TextStyle(
                           fontSize: 11,
                           fontFamily: AppStrings.fontMedium,
