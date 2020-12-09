@@ -18,48 +18,56 @@ class WealthBoxActivities extends StatelessWidget {
       decoration: BoxDecoration(
         color: Colors.transparent,
       ),
-      child: Column(children: [
-        YMargin(10),
-        Center(child: Container(
-          width: 30,
-          height: 5,
-          decoration: BoxDecoration(
-              color: Colors.white,
-              borderRadius: BorderRadius.circular(5)
+      child: Column(
+        children: [
+          YMargin(10),
+          Center(
+            child: Container(
+              width: 30,
+              height: 5,
+              decoration: BoxDecoration(
+                  color: Colors.white, borderRadius: BorderRadius.circular(5)),
+            ),
           ),
-        ),),
-        YMargin(20),
-        Expanded(child: Container(
-          width: double.infinity,
-          decoration: BoxDecoration(
-              color:Colors.white,
-              borderRadius: BorderRadius.only(
-                  topLeft: Radius.circular(25),
-                  topRight: Radius.circular(25)
-              )
-          ),
-          child: ListView(
-
-            children: [
-              YMargin(20),
-              Row(
-                children: [
-                  IconButton(icon: Icon(Icons.close), onPressed: (){
-                      Navigator.of(context).pop();
-                  }),
-                ],
-              ),
-              Padding(
-                padding: const EdgeInsets.only(left: 20),
-                child: Text("Activities", style: TextStyle(fontSize: 16,
-                    fontFamily: AppStrings.fontBold, color: AppColors.kGreyText),),
-              ),
-              ...List.generate(15, (index) {
-                return WealthBoxActivity();
-              })
-            ],),
-        ))
-      ],),
+          YMargin(20),
+          Expanded(
+              child: Container(
+            width: double.infinity,
+            decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.only(
+                    topLeft: Radius.circular(25),
+                    topRight: Radius.circular(25))),
+            child: ListView(
+              children: [
+                YMargin(20),
+                Row(
+                  children: [
+                    IconButton(
+                        icon: Icon(Icons.close),
+                        onPressed: () {
+                          Navigator.of(context).pop();
+                        }),
+                  ],
+                ),
+                Padding(
+                  padding: const EdgeInsets.only(left: 20),
+                  child: Text(
+                    "Activities",
+                    style: TextStyle(
+                        fontSize: 16,
+                        fontFamily: AppStrings.fontBold,
+                        color: AppColors.kGreyText),
+                  ),
+                ),
+                ...List.generate(15, (index) {
+                  return WealthBoxActivity();
+                })
+              ],
+            ),
+          ))
+        ],
+      ),
     );
   }
 }
