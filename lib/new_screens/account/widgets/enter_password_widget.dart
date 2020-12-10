@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:zimvest/styles/colors.dart';
 import 'package:zimvest/utils/margin.dart';
 import 'package:zimvest/widgets/buttons.dart';
@@ -16,6 +17,7 @@ class EnterPasswordWidget extends StatefulWidget {
 
 class _EnterPasswordWidgetState extends State<EnterPasswordWidget> {
   bool obscureText = true;
+  String password = '';
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -40,6 +42,11 @@ class _EnterPasswordWidgetState extends State<EnterPasswordWidget> {
                   child: Transform.translate(
                     offset:  Offset(0,-2),
                     child: TextField(
+                      onChanged: (value){
+                        setState(() {
+                          password = value;
+                        });
+                      },
                       obscureText: obscureText,
                       decoration: InputDecoration(
                           border: InputBorder.none,
@@ -57,17 +64,16 @@ class _EnterPasswordWidgetState extends State<EnterPasswordWidget> {
           ),
           YMargin(10),
           Row(children: [
-            Text("At least 8+ character", style: TextStyle(fontSize: 9),),
-            YMargin(2),
-            Icon(Icons.check, size: 10,),
-            Spacer(),
-            Text("At least 1 number", style: TextStyle(fontSize: 9),),
-            YMargin(2),
-            Icon(Icons.check, size: 10,),
-            Spacer(),
-            Text("At least one symbol", style: TextStyle(fontSize: 9),),
-            YMargin(2),
-            Icon(Icons.check, size: 10,),
+            password.length >= 8 ?PasswordCheck(title: '8+ characters',)
+                :PasswordError(title: '8+ characters',),
+            XMargin(5),
+            hasSpecial(password) ? PasswordCheck(title: '1 Special Character',flex: 3,)
+                :PasswordError(title: '1 Special Character',flex: 3,),
+            XMargin(5),
+            hasNum(password) ?PasswordCheck(title: '1+ Number',)
+                : PasswordError(title: '1+ Number',),
+
+
           ],),
           Spacer(),
           RoundedNextButton(
@@ -87,11 +93,72 @@ class _EnterPasswordWidgetState extends State<EnterPasswordWidget> {
   final caps = RegExp(r'^(?=.*?[A-Z])',unicode: true);
   bool isValidPass(String password) {
 
-    bool hasNum = RegExp(oneNumber,unicode: true).hasMatch(password);
-    bool hasSpecial = RegExp(specialChar,unicode: true).hasMatch(password);
+
 
     //print("regex $hasCaps $hasLower $hasSpecial ${password.length >= 8}");
-    return  hasSpecial == true && hasNum == true && password.length >= 8;
+    return  hasSpecial(password) == true && hasNum(password) == true && password.length >= 8;
   }
 
+  bool hasNum(String password){
+    return RegExp(oneNumber,unicode: true).hasMatch(password);
+  }
+
+  bool hasSpecial(String password){
+    return RegExp(specialChar,unicode: true).hasMatch(password);
+  }
+}
+
+class PasswordCheck extends StatelessWidget {
+  const PasswordCheck({
+    Key key, this.title, this.flex = 2,
+  }) : super(key: key);
+  final String title;
+  final int flex;
+
+  @override
+  Widget build(BuildContext context) {
+    return Expanded(
+      flex: flex,
+      child: Container(
+          height: 22,
+          decoration: BoxDecoration(
+            color: AppColors.kFixed.withOpacity(0.2),
+            borderRadius: BorderRadius.circular(12)
+          ),
+          child: Row(
+            children: [
+              SvgPicture.asset("images/new/p_check.svg"),
+              XMargin(5),
+              Text(title, style: TextStyle(fontSize: 9),),
+            ],
+          )),
+    );
+  }
+}
+class PasswordError extends StatelessWidget {
+  const PasswordError({
+    Key key, this.title, this.flex = 2,
+  }) : super(key: key);
+  final String title;
+  final int flex;
+
+  @override
+  Widget build(BuildContext context) {
+    return Expanded(
+      flex: flex,
+      child: Container(
+          height: 22,
+          decoration: BoxDecoration(
+            color: AppColors.kWealth.withOpacity(0.2),
+            borderRadius: BorderRadius.circular(12)
+          ),
+          child: Row(
+            children: [
+              SvgPicture.asset("images/new/p_error.svg"),
+              XMargin(5),
+              Text(title, style: TextStyle(fontSize: 9),),
+            ],
+          )),
+    );
+  }
 }
