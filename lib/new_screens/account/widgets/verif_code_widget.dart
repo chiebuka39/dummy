@@ -4,23 +4,25 @@ import 'package:zimvest/utils/margin.dart';
 import 'package:zimvest/utils/strings.dart';
 import 'package:zimvest/widgets/buttons.dart';
 
-class CreatePinWidget extends StatefulWidget {
-  const CreatePinWidget({
+class VerifCodeWidget extends StatefulWidget {
+  const VerifCodeWidget({
     Key key, this.onNext,
   }) : super(key: key);
 
   final VoidCallback onNext;
 
   @override
-  _CreatePinWidgetState createState() => _CreatePinWidgetState();
+  _VerifCodeWidgetState createState() => _VerifCodeWidgetState();
 }
 
-class _CreatePinWidgetState extends State<CreatePinWidget> {
+class _VerifCodeWidgetState extends State<VerifCodeWidget> {
 
   String pin1 = "";
   String pin2 = "";
   String pin3 = "";
   String pin4 = "";
+  String pin5 = "";
+  String pin6 = "";
 
   @override
   Widget build(BuildContext context) {
@@ -31,81 +33,126 @@ class _CreatePinWidgetState extends State<CreatePinWidget> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           YMargin(50),
-          Text("Create Zimvest Pin", style: TextStyle(fontFamily: AppStrings.fontMedium),),
+          Text("Enter Verification Code", style: TextStyle(fontFamily: AppStrings.fontMedium),),
           YMargin(12),
           SizedBox(
             width: 225,
-            child: Text("This code would be used for every transaction on Zimvest", style: TextStyle(
+            child: Text("Please enter the code that was sent to jondave@aza.com", style: TextStyle(
                 fontSize: 11,color: Colors.black54, fontFamily: AppStrings.fontNormal
             ),),
           ),
           YMargin(50),
           Row(children: [
-            AnimatedContainer(
-              duration: Duration(milliseconds: 300),
-              height: 51,
-              width: 46,
-              decoration: pin1.isEmpty ?  BoxDecoration(
-                  color: Color(0xFFF9F2DD),
-                  border: Border.all(color: AppColors.kPrimaryColor),
-                  borderRadius: BorderRadius.circular(7)
-              ): BoxDecoration(
-                  color: Color(0xFFE7E7E7),
-                  borderRadius: BorderRadius.circular(7)
-              ),
-              child: Center(
-                child: Text(pin1,style: TextStyle(fontSize: 20),),
-              ),
-            ),
-            XMargin(25),
-            AnimatedContainer(
-              duration: Duration(milliseconds: 300),
-              height: 51,
-              width: 46,
-              decoration: (pin1.isNotEmpty && pin2.isEmpty) ? BoxDecoration(
-                  color: Color(0xFFF9F2DD),
-                  border: Border.all(color: AppColors.kPrimaryColor),
-                  borderRadius: BorderRadius.circular(7)
-              ):BoxDecoration(
-                  color: Color(0xFFE7E7E7),
-                  borderRadius: BorderRadius.circular(7)
-              ),
-              child: Center(
-                child: Text(pin2,style: TextStyle(fontSize: 20),),
+            Expanded(
+              child: AnimatedContainer(
+                duration: Duration(milliseconds: 300),
+                height: 51,
+
+                decoration: pin1.isEmpty ?  BoxDecoration(
+                    color: Color(0xFFF9F2DD),
+                    border: Border.all(color: AppColors.kPrimaryColor),
+                    borderRadius: BorderRadius.circular(7)
+                ): BoxDecoration(
+                    color: Color(0xFFE7E7E7),
+                    borderRadius: BorderRadius.circular(7)
+                ),
+                child: Center(
+                  child: Text(pin1,style: TextStyle(fontSize: 20),),
+                ),
               ),
             ),
-            XMargin(25),
-            AnimatedContainer(
-              duration: Duration(milliseconds: 300),
-              height: 51,
-              width: 46,
-              decoration:(pin1.isNotEmpty && pin2.isNotEmpty && pin3.isEmpty) ? BoxDecoration(
-                  color: Color(0xFFF9F2DD),
-                  border: Border.all(color: AppColors.kPrimaryColor),
-                  borderRadius: BorderRadius.circular(7)
-              ): BoxDecoration(
-                  color: Color(0xFFE7E7E7),
-                  borderRadius: BorderRadius.circular(7)
-              ),
-              child: Center(
-                child: Text(pin3,style: TextStyle(fontSize: 20),),
+            XMargin(11),
+            Expanded(
+              child: AnimatedContainer(
+                duration: Duration(milliseconds: 300),
+                height: 51,
+               
+                decoration: (pin1.isNotEmpty && pin2.isEmpty) ? BoxDecoration(
+                    color: Color(0xFFF9F2DD),
+                    border: Border.all(color: AppColors.kPrimaryColor),
+                    borderRadius: BorderRadius.circular(7)
+                ):BoxDecoration(
+                    color: Color(0xFFE7E7E7),
+                    borderRadius: BorderRadius.circular(7)
+                ),
+                child: Center(
+                  child: Text(pin2,style: TextStyle(fontSize: 20),),
+                ),
               ),
             ),
-            XMargin(25),
-            AnimatedContainer(
-              duration: Duration(milliseconds: 300),
-              height: 51,
-              width: 46,
-              decoration:(pin1.isNotEmpty && pin2.isNotEmpty && pin3.isNotEmpty && pin4.isEmpty) ? BoxDecoration(
-                  color: Color(0xFFF9F2DD),
-                  border: Border.all(color: AppColors.kPrimaryColor),
-                  borderRadius: BorderRadius.circular(7)
-              ):  BoxDecoration(
-                  color: Color(0xFFE7E7E7),
-                  borderRadius: BorderRadius.circular(7)
+            XMargin(11),
+            Expanded(
+              child: AnimatedContainer(
+                duration: Duration(milliseconds: 300),
+                height: 51,
+                decoration:(pin1.isNotEmpty && pin2.isNotEmpty && pin3.isEmpty) ? BoxDecoration(
+                    color: Color(0xFFF9F2DD),
+                    border: Border.all(color: AppColors.kPrimaryColor),
+                    borderRadius: BorderRadius.circular(7)
+                ): BoxDecoration(
+                    color: Color(0xFFE7E7E7),
+                    borderRadius: BorderRadius.circular(7)
+                ),
+                child: Center(
+                  child: Text(pin3,style: TextStyle(fontSize: 20),),
+                ),
               ),
-              child: Center(
-                child: Text(pin4,style: TextStyle(fontSize: 20),),
+            ),
+            XMargin(11),
+            Expanded(
+              child: AnimatedContainer(
+                duration: Duration(milliseconds: 300),
+                height: 51,
+               
+                decoration:(pin1.isNotEmpty && pin2.isNotEmpty && pin3.isNotEmpty && pin4.isEmpty) ? BoxDecoration(
+                    color: Color(0xFFF9F2DD),
+                    border: Border.all(color: AppColors.kPrimaryColor),
+                    borderRadius: BorderRadius.circular(7)
+                ):  BoxDecoration(
+                    color: Color(0xFFE7E7E7),
+                    borderRadius: BorderRadius.circular(7)
+                ),
+                child: Center(
+                  child: Text(pin4,style: TextStyle(fontSize: 20),),
+                ),
+              ),
+            ),
+            XMargin(11),
+            Expanded(
+              child: AnimatedContainer(
+                duration: Duration(milliseconds: 300),
+                height: 51,
+
+                decoration:(pin1.isNotEmpty && pin2.isNotEmpty && pin3.isNotEmpty && pin4.isNotEmpty && pin5.isEmpty) ? BoxDecoration(
+                    color: Color(0xFFF9F2DD),
+                    border: Border.all(color: AppColors.kPrimaryColor),
+                    borderRadius: BorderRadius.circular(7)
+                ):  BoxDecoration(
+                    color: Color(0xFFE7E7E7),
+                    borderRadius: BorderRadius.circular(7)
+                ),
+                child: Center(
+                  child: Text(pin4,style: TextStyle(fontSize: 20),),
+                ),
+              ),
+            ),
+            XMargin(11),
+            Expanded(
+              child: AnimatedContainer(
+                duration: Duration(milliseconds: 300),
+                height: 51,
+
+                decoration:(pin1.isNotEmpty && pin2.isNotEmpty && pin3.isNotEmpty && pin4.isNotEmpty && pin5.isNotEmpty && pin6.isEmpty) ? BoxDecoration(
+                    color: Color(0xFFF9F2DD),
+                    border: Border.all(color: AppColors.kPrimaryColor),
+                    borderRadius: BorderRadius.circular(7)
+                ):  BoxDecoration(
+                    color: Color(0xFFE7E7E7),
+                    borderRadius: BorderRadius.circular(7)
+                ),
+                child: Center(
+                  child: Text(pin4,style: TextStyle(fontSize: 20),),
+                ),
               ),
             ),
           ],),

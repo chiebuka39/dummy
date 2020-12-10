@@ -1,11 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:zimvest/styles/colors.dart';
 import 'package:zimvest/utils/margin.dart';
+import 'package:zimvest/widgets/buttons.dart';
 
 class EnterPasswordWidget extends StatefulWidget {
   const EnterPasswordWidget({
-    Key key,
+    Key key, this.onNext,
   }) : super(key: key);
+
+  final VoidCallback onNext;
 
   @override
   _EnterPasswordWidgetState createState() => _EnterPasswordWidgetState();
@@ -67,16 +70,8 @@ class _EnterPasswordWidgetState extends State<EnterPasswordWidget> {
             Icon(Icons.check, size: 10,),
           ],),
           Spacer(),
-          Center(
-            child: Container(
-              width: 64,
-              height: 64,
-              decoration: BoxDecoration(
-                shape: BoxShape.circle,
-                color: AppColors.kPrimaryColor
-              ),
-              child: Center(child: Icon(Icons.navigate_next,color: Colors.white,),),
-            ),
+          RoundedNextButton(
+            onTap: widget.onNext,
           ),
           YMargin(120)
 

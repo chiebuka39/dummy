@@ -1,11 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:zimvest/styles/colors.dart';
 import 'package:zimvest/utils/margin.dart';
+import 'package:zimvest/widgets/buttons.dart';
 
 class EnterPhoneWidget extends StatelessWidget {
   const EnterPhoneWidget({
-    Key key,
+    Key key, this.onNext,
   }) : super(key: key);
+  final VoidCallback onNext;
+
 
   @override
   Widget build(BuildContext context) {
@@ -36,16 +39,8 @@ class EnterPhoneWidget extends StatelessWidget {
             ),
           ),
           Spacer(),
-          Center(
-            child: Container(
-              width: 64,
-              height: 64,
-              decoration: BoxDecoration(
-                  shape: BoxShape.circle,
-                  color: AppColors.kPrimaryColor
-              ),
-              child: Center(child: Icon(Icons.navigate_next,color: Colors.white,),),
-            ),
+          RoundedNextButton(
+            onTap: onNext,
           ),
           YMargin(120)
         ],),
