@@ -78,19 +78,17 @@ class _MyAppState extends State<MyApp> {
         ChangeNotifierProvider<ABSSettingsViewModel>(create: (_) => SettingsViewModel(),),
         ChangeNotifierProvider<ABSOthersViewModel>(create: (_) => OthersViewModel(),)
       ],
-      child: FlutterEasyLoading(
-        child: MaterialApp(
-          title: 'Zimvest',
-          debugShowCheckedModeBanner: false,
-          theme: ThemeData(
-            fontFamily: "Caros",
-            primarySwatch: Colors.blue,
-            bottomSheetTheme: BottomSheetThemeData(backgroundColor: Colors.transparent),
+      child: MaterialApp(
+        title: 'Zimvest',
+        debugShowCheckedModeBanner: false,
+        theme: ThemeData(
+          fontFamily: "Caros",
+          primarySwatch: Colors.blue,
+          bottomSheetTheme: BottomSheetThemeData(backgroundColor: Colors.transparent),
 
-            visualDensity: VisualDensity.adaptivePlatformDensity,
-          ),
-          home:_localStorage.getSecondaryState().isLoggedIn == false ?  LandingScreen(): MenuContainer(),
+          visualDensity: VisualDensity.adaptivePlatformDensity,
         ),
+        home:_localStorage.getSecondaryState().isLoggedIn == false ?  LandingScreen(): TabsContainer(),
       ),
     );
   }
