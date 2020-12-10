@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:zimvest/new_screens/navigation/investments/high_yield_investment_details_naira.dart';
 import 'package:zimvest/new_screens/navigation/investments/see_all_investments.dart';
 import 'package:zimvest/new_screens/navigation/investments/widgets/card_widget.dart';
 import 'package:zimvest/styles/colors.dart';
@@ -32,7 +33,8 @@ class _HighYieldNairaScreenState extends State<HighYieldNairaScreen> {
                     ),
                     GestureDetector(
                       onTap: () {
-                        Navigator.push(context, AllNairaInvestments.route("30"));
+                        Navigator.push(
+                            context, AllNairaInvestments.route("30"));
                       },
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -59,11 +61,15 @@ class _HighYieldNairaScreenState extends State<HighYieldNairaScreen> {
                         child: ListView.builder(
                           itemCount: 15,
                           scrollDirection: Axis.horizontal,
-                          itemBuilder: (context, index) => InvestmentCardNaira(
-                            investmentDuration: "30",
-                            percentage: "6.67",
-                            minimumAmount: "5,000,000",
-                            maximumAmount: "50,000,000",
+                          itemBuilder: (context, index) => GestureDetector(
+                            onTap: () => Navigator.push(
+                                context, HighYieldDetails.route("30")),
+                            child: InvestmentCardNaira(
+                              investmentDuration: "30",
+                              percentage: "6.67",
+                              minimumAmount: "5,000,000",
+                              maximumAmount: "50,000,000",
+                            ),
                           ),
                         ),
                       )
@@ -89,8 +95,9 @@ class _HighYieldNairaScreenState extends State<HighYieldNairaScreen> {
                           color: AppColors.kTextColor),
                     ),
                     GestureDetector(
-                     onTap: () {
-                        Navigator.push(context, AllNairaInvestments.route("60"));
+                      onTap: () {
+                        Navigator.push(
+                            context, AllNairaInvestments.route("60"));
                       },
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -147,8 +154,9 @@ class _HighYieldNairaScreenState extends State<HighYieldNairaScreen> {
                           color: AppColors.kTextColor),
                     ),
                     GestureDetector(
-                     onTap: () {
-                        Navigator.push(context, AllNairaInvestments.route("90"));
+                      onTap: () {
+                        Navigator.push(
+                            context, AllNairaInvestments.route("90"));
                       },
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -206,7 +214,8 @@ class _HighYieldNairaScreenState extends State<HighYieldNairaScreen> {
                     ),
                     GestureDetector(
                       onTap: () {
-                        Navigator.push(context, AllNairaInvestments.route("180"));
+                        Navigator.push(
+                            context, AllNairaInvestments.route("180"));
                       },
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -264,7 +273,8 @@ class _HighYieldNairaScreenState extends State<HighYieldNairaScreen> {
                     ),
                     GestureDetector(
                       onTap: () {
-                        Navigator.push(context, AllNairaInvestments.route("270"));
+                        Navigator.push(
+                            context, AllNairaInvestments.route("270"));
                       },
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -322,7 +332,8 @@ class _HighYieldNairaScreenState extends State<HighYieldNairaScreen> {
                     ),
                     GestureDetector(
                       onTap: () {
-                        Navigator.push(context, AllNairaInvestments.route("365"));
+                        Navigator.push(
+                            context, AllNairaInvestments.route("365"));
                       },
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
