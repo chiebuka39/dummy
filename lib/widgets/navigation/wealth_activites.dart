@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:zimvest/data/models/product_transaction.dart';
 import 'package:zimvest/styles/colors.dart';
 import 'package:zimvest/utils/margin.dart';
 import 'package:zimvest/utils/strings.dart';
@@ -8,8 +9,10 @@ import 'package:zimvest/widgets/navigation/wealthbox_activity.dart';
 
 class WealthBoxActivities extends StatelessWidget {
   const WealthBoxActivities({
-    Key key,
+    Key key, this.transactions,
   }) : super(key: key);
+
+  final List<ProductTransaction> transactions;
 
   @override
   Widget build(BuildContext context) {
@@ -54,8 +57,8 @@ class WealthBoxActivities extends StatelessWidget {
                 child: Text("Activities", style: TextStyle(fontSize: 16,
                     fontFamily: AppStrings.fontBold, color: AppColors.kGreyText),),
               ),
-              ...List.generate(15, (index) {
-                return WealthBoxActivity();
+              ...List.generate(transactions.length, (index) {
+                return WealthBoxActivity(productTransaction: transactions[index],);
               })
             ],),
         ))

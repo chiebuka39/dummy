@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:percent_indicator/circular_percent_indicator.dart';
+import 'package:provider/provider.dart';
+import 'package:zimvest/data/models/saving_plan.dart';
+import 'package:zimvest/data/view_models/savings_view_model.dart';
 import 'package:zimvest/new_screens/funding/top_up_screen.dart';
 import 'package:zimvest/new_screens/funding/withdraw_screen.dart';
 import 'package:zimvest/new_screens/navigation/portfolio_screen.dart';
@@ -15,9 +18,12 @@ import 'package:zimvest/widgets/navigation/wealthbox_activity.dart';
 import 'package:zimvest/widgets/navigation/wealthbox_detail_widget.dart';
 
 class WealthBoxDetailsScreen extends StatefulWidget {
-  static Route<dynamic> route() {
+  final SavingPlanModel savingsPlanModel;
+
+  const WealthBoxDetailsScreen({Key key, this.savingsPlanModel}) : super(key: key);
+  static Route<dynamic> route(SavingPlanModel savingsPlanModel) {
     return MaterialPageRoute(
-        builder: (_) => WealthBoxDetailsScreen(),
+        builder: (_) => WealthBoxDetailsScreen(savingsPlanModel: savingsPlanModel,),
         settings:
         RouteSettings(name: WealthBoxDetailsScreen().toStringShort()));
   }
@@ -26,8 +32,19 @@ class WealthBoxDetailsScreen extends StatefulWidget {
 }
 
 class _WealthBoxDetailsScreenState extends State<WealthBoxDetailsScreen> {
+  SavingPlanModel savingsPlanModel;
+
+  ABSSavingViewModel savingViewModel;
+
+  @override
+  void initState() {
+   savingsPlanModel = widget.savingsPlanModel;
+    super.initState();
+  }
   @override
   Widget build(BuildContext context) {
+    savingViewModel = Provider.of(context);
+    print("ooo ${savingViewModel.savingsTransactions[1]}");
     return Scaffold(
       backgroundColor: AppColors.kWealth,
       appBar: AppBar(
@@ -52,7 +69,7 @@ class _WealthBoxDetailsScreenState extends State<WealthBoxDetailsScreen> {
                     Row(
                       children: [
                         XMargin(20),
-                        Text("Zimvest WealthBox", style: TextStyle(
+                        Text(savingsPlanModel.planName, style: TextStyle(
                             fontSize: 15, fontFamily: AppStrings.fontBold
                         ),),
                         Spacer(),
@@ -74,7 +91,7 @@ class _WealthBoxDetailsScreenState extends State<WealthBoxDetailsScreen> {
                               color: AppColors.kSecondaryText),),
                           YMargin(10),
                           MoneyTitleWidget(
-                            amount: 100000,
+                            amount: savingsPlanModel.amountSaved,
                           ),
                           YMargin(25),
                           Row(children: [
@@ -92,7 +109,7 @@ class _WealthBoxDetailsScreenState extends State<WealthBoxDetailsScreen> {
                                   offset: Offset(-8,0),
                                   child: Row(children: [
                                     Icon(Icons.arrow_drop_up_outlined),
-                                    Text("${AppStrings.nairaSymbol}2,000",
+                                    Text("${AppStrings.nairaSymbol}${savingsPlanModel.accruedInterest}",
                                       style: TextStyle(fontFamily: AppStrings.fontMedium, color: AppColors.kWealthDark,fontSize: 11),),
                                     XMargin(5),
                                     Text("Past 24h",
@@ -111,7 +128,7 @@ class _WealthBoxDetailsScreenState extends State<WealthBoxDetailsScreen> {
                                       fontSize: 11
                                   ),),
                                 YMargin(4),
-                                Text("5%",
+                                Text("${savingsPlanModel.interestRate}%",
                                   style: TextStyle(fontSize: 11,fontFamily: AppStrings.fontMedium, color: AppColors.kWealthDark),),
                               ],),
                           ],),
@@ -202,7 +219,7 @@ class _WealthBoxDetailsScreenState extends State<WealthBoxDetailsScreen> {
                         GestureDetector(
                           onTap: (){
                             showModalBottomSheet < Null > (context: context, builder: (BuildContext context) {
-                              return WealthBoxActivities();
+                              return WealthBoxActivities(transactions:savingViewModel.savingsTransactions[1],);
                             },isScrollControlled: true);
                           },
                           child: Text("See all", style: TextStyle(fontSize: 11,
@@ -210,8 +227,9 @@ class _WealthBoxDetailsScreenState extends State<WealthBoxDetailsScreen> {
                         )
                       ],),
                     ),
-                    ...List.generate(4, (index) {
-                      return WealthBoxActivity();
+                    ...List.generate(savingViewModel.savingsTransactions[1].length > 4? 4
+                        :savingViewModel.savingsTransactions[1].length, (index) {
+                      return WealthBoxActivity(productTransaction: savingViewModel.savingsTransactions[1][index],);
                     })
 
                   ],

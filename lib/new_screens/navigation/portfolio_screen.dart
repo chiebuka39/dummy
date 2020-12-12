@@ -190,12 +190,14 @@ class _SavingsSectionState extends State<SavingsSection> with AfterLayoutMixin<S
        r1.data.forEach((element) {
         totalBalance = totalBalance + element.amountSaved;
       });
-      if(savingViewModel.productTypes.isNotEmpty){
-        //await fetchTransactions(savingViewModel.productTypes.first.id);
-      }
+
       setState(() {
         loading = false;
       });
+
+      if(savingViewModel.productTypes.isNotEmpty){
+        await fetchTransactions(savingViewModel.productTypes.first.id);
+      }
 
       //getRequiredDetailsForForm();
     }else{
@@ -231,7 +233,7 @@ class _SavingsSectionState extends State<SavingsSection> with AfterLayoutMixin<S
   Widget build(BuildContext context) {
     savingViewModel = Provider.of(context);
     identityViewModel = Provider.of(context);
-    return loading == true ?SavingsInvestmentLoadingWidget():
+    return loading == true ?SavingsInvestmentLoadingWidget(): wealthBox == null && aspirePlans.isEmpty ? SavingsInvestmentWidget():
     SavingsInvestmentCashWidget(wealthBox: wealthBox,aspirePlans: aspirePlans,totalBalance: totalBalance,);
   }
 }
@@ -324,7 +326,7 @@ class SavingsInvestmentCashWidget extends StatelessWidget {
         YMargin(25),
         wealthBox == null ? SizedBox(): GestureDetector(
           onTap: (){
-            Navigator.push(context, WealthBoxDetailsScreen.route());
+            Navigator.push(context, WealthBoxDetailsScreen.route(wealthBox));
           },
           child: Container(
             height: 154,
