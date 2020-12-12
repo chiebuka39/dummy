@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:zimvest/new_screens/navigation/wealth/aspire/choose_due_screen.dart';
 import 'package:zimvest/new_screens/navigation/wealth/create/choose_funding_source.dart';
 
 import 'package:zimvest/payment/input_formaters.dart';
@@ -129,7 +130,7 @@ class _ChooseStartScreenState extends State<ChooseStartScreen> {
 
                 RoundedNextButton(
                   onTap: (){
-                    Navigator.push(context, ChooseFundingScreen.route());
+                    Navigator.push(context, ChooseDuedateScreen.route());
                   },
                 ),
                 YMargin(65),

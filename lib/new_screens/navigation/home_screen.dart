@@ -3,8 +3,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 import 'package:timelines/timelines.dart';
+import 'package:zimvest/new_screens/navigation/wealth/aspire/aspire_box_screen.dart';
 import 'package:zimvest/new_screens/navigation/wealth/create/wealth_box_screen.dart';
 import 'package:zimvest/new_screens/navigation/wealth_screen.dart';
+import 'package:zimvest/new_screens/navigation/widgets/earn_free_cash.dart';
 import 'package:zimvest/new_screens/portfolio_breakdown/dollar_portfolio_breakdown.dart';
 import 'package:zimvest/new_screens/portfolio_breakdown/naira_portfolio_breakdown.dart';
 import 'package:zimvest/new_screens/profile/profile_screen.dart';
@@ -54,22 +56,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     XMargin(20),
                     Text("Hi, Emmanuel"),
                     Spacer(),
-                    Container(
-                      width: 115,
-                      height: 28,
-                      decoration: BoxDecoration(
-                        color: AppColors.kGrey,
-                        borderRadius: BorderRadius.circular(14)
-                      ),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                        SvgPicture.asset("images/gift.svg"),
-                        XMargin(6),
-                        Text("Earn Free Cash",
-                          style: TextStyle(fontSize: 10,fontFamily: AppStrings.fontNormal),)
-                      ],),
-                    )
+                    EarnFreeCashWidget()
                   ],
                 ),
               ),
@@ -87,30 +74,33 @@ class _HomeScreenState extends State<HomeScreen> {
                         children: [
                           Text("Naira Portfolio",
                             style: TextStyle(
-                                fontFamily: AppStrings.fontMedium),),
+                              fontSize: 12,
+                              color: AppColors.kSecondaryText,
+                                fontFamily: AppStrings.fontNormal),),
                           YMargin(12),
                           Row(children: [
                             Transform.translate(
                                 offset:Offset(0,-4),
-                                child: Text(AppStrings.nairaSymbol, style: TextStyle(fontSize: 14),)),
+                                child: Text(AppStrings.nairaSymbol, style: TextStyle(fontSize: 14,color: AppColors.kSecondaryBoldText),)),
                             XMargin(2),
                             Text("000,000",
-                              style: TextStyle(fontSize: 25, fontFamily: AppStrings.fontMedium),),
+                              style: TextStyle(fontSize: 25, fontFamily: AppStrings.fontMedium,
+                                  color: AppColors.kSecondaryBoldText),),
                             XMargin(3),
                             Transform.translate(
                               offset:Offset(0,-4),
                               child: Text(".00",
-                                style: TextStyle(fontSize: 14, fontFamily: AppStrings.fontMedium),),
+                                style: TextStyle(fontSize: 14, fontFamily: AppStrings.fontMedium,color: AppColors.kSecondaryBoldText),),
                             ),
                           ],),
                           YMargin(16),
                           Row(children: [
-                            Icon(Icons.arrow_drop_up_outlined),
+                            Icon(Icons.arrow_drop_up_outlined,color: AppColors.kFixed),
                             Text("${AppStrings.nairaSymbol}0",
-                              style: TextStyle(fontFamily: AppStrings.fontMedium),),
+                              style: TextStyle(fontFamily: AppStrings.fontMedium,color: AppColors.kFixed),),
                             XMargin(5),
                             Text("(0.00%)",
-                              style: TextStyle(fontFamily: AppStrings.fontMedium),),
+                              style: TextStyle(fontFamily: AppStrings.fontMedium,color: AppColors.kFixed),),
                             XMargin(5),
                             Text("Past 24h",
                               style: TextStyle(),),
@@ -122,9 +112,9 @@ class _HomeScreenState extends State<HomeScreen> {
                                   Navigator.of(context).push(NairaPortfolioBreakdownScreen.route());
                                 },
                                 child: Row(children: [
-                                  Text("Portfolio Breakdown", style: TextStyle(color: AppColors.kGreyText,
+                                  Text("Portfolio Breakdown", style: TextStyle(color: AppColors.kPrimaryColor,
                                       fontSize: 11,fontFamily: AppStrings.fontNormal),),
-                                  Icon(Icons.navigate_next_rounded, color: AppColors.kGreyText,size: 19,)
+                                  Icon(Icons.navigate_next_rounded, color: AppColors.kPrimaryColor,size: 19,)
                                 ],),
                               ),
                             )
@@ -194,7 +184,8 @@ class _HomeScreenState extends State<HomeScreen> {
                   effect:  WormEffect(
                       dotWidth: 8,
                       dotHeight: 8,
-                      activeDotColor: AppColors.kGreyText
+                      dotColor: AppColors.kGreyBg,
+                      activeDotColor: AppColors.kPrimaryColor
                   ),  // your preferred effect
                   onDotClicked: (index){
 
@@ -218,12 +209,16 @@ class _HomeScreenState extends State<HomeScreen> {
                 Navigator.push(context, WealthBoxScreen.route());
               },),
               ActionBoxWidget(title: "Save with Zimvest Aspire", desc: "This savings plan assists you save in a "
-                  "disciplined manner.",color: AppColors.kAspire),
+                  "disciplined manner.",color: AppColors.kAspire,img: 'aspire',
+                onTap: (){
+                  Navigator.push(context, AspireSavingScreen.route());
+                },
+              ),
               ActionBoxWidget(title: "Invest in Zimvest High Yield", desc: "This savings plan assists you save in a "
-                  "disciplined manner.",color: AppColors.kHighYield),
+                  "disciplined manner.",color: AppColors.kHighYield, img: 'high',),
 
               ActionBoxWidget(title: "Invest in Zimvest Fixed Income",desc: "This savings plan assists you save in a "
-                  "disciplined manner.",color: AppColors.kFixed),
+                  "disciplined manner.",color: AppColors.kFixed,img: 'fixed',),
               YMargin(50)
             ],
           ),

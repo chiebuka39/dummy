@@ -105,6 +105,7 @@ class _MyAppState extends State<MyApp> {
               ? TabsContainer()
               : MenuContainer(),
         ),
+        // home:_localStorage.getSecondaryState().isLoggedIn == false ?  LandingScreen(): TabsContainer(),
       ),
     );
   }

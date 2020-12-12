@@ -1,12 +1,20 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:zimvest/new_screens/navigation/investments/investment_high_yield_screen.dart';
+import 'package:zimvest/new_screens/navigation/investments/naira/investment_high_yield_screen.dart';
 import 'package:zimvest/styles/colors.dart';
 import 'package:zimvest/utils/margin.dart';
 import 'package:zimvest/utils/strings.dart';
 import 'package:zimvest/widgets/home/action_box_widgets.dart';
 
 class WealthScreen extends StatefulWidget {
+    static Route<dynamic> route() {
+    return MaterialPageRoute(
+      builder: (_) => WealthScreen(),
+      settings: RouteSettings(
+        name: WealthScreen().toStringShort(),
+      ),
+    );
+  }
 
   @override
   _WealthScreenState createState() => _WealthScreenState();

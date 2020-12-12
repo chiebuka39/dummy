@@ -30,7 +30,9 @@ class _CreateAccountScreenState extends State<CreateAccountScreen> {
         iconTheme: IconThemeData(color: Colors.black87),
         leading: IconButton(
           icon: Icon(Icons.clear,size: 20,),
-          onPressed: (){},
+          onPressed: (){
+            Navigator.pop(context);
+          },
         ),
         backgroundColor: Colors.transparent,
         title: Text("Create Account",

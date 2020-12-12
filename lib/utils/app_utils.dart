@@ -1,4 +1,7 @@
+import 'package:flushbar/flushbar.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/svg.dart';
+import 'package:zimvest/utils/strings.dart';
 
 class AppUtils{
   static List<BoxShadow> getBoxShaddow = [
@@ -243,6 +246,23 @@ class AppUtils{
     }else{
       return "${time}th";
     }
+  }
+
+  static showError(BuildContext context){
+    Flushbar(
+      borderColor: Color(0xFFF53232),
+      backgroundColor: Color(0xFFFBCBCB),
+      margin: EdgeInsets.symmetric(horizontal: 20),
+      padding: EdgeInsets.all(12),
+      borderRadius:14,
+      icon: SvgPicture.asset("images/new/fail.svg"),
+      flushbarPosition: FlushbarPosition.TOP,
+      titleText: Text("Login Failed!",
+        style: TextStyle(fontSize: 11,fontFamily: AppStrings.fontMedium, color: Color(0xFFF53232)),),
+      messageText: Text("Error! The email address or password is incorrect",
+        style: TextStyle(fontSize: 9,fontFamily: AppStrings.fontNormal,color: Color(0xFFF53232)),),
+      duration:  Duration(seconds: 3),
+    )..show(context);
   }
 }
 

@@ -1,12 +1,10 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="109.2" height="109.2" viewBox="0 0 109.2 109.2">
+<svg xmlns="http://www.w3.org/2000/svg" width="45.2" height="45.2" viewBox="0 0 45.2 45.2">
   <g id="_Success" data-name="!Success" transform="translate(0.1 0.1)">
-    <g id="_Success-2" data-name="!Success">
-      <g id="Success">
-        <circle id="Oval" cx="46" cy="46" r="46" transform="translate(9 9)" fill="none" stroke="red" stroke-miterlimit="10" stroke-width="0.4" opacity="0.272"/>
-        <circle id="Oval-2" data-name="Oval" cx="54.5" cy="54.5" r="54.5" fill="none" stroke="red" stroke-miterlimit="10" stroke-width="0.2" opacity="0.201"/>
-        <circle id="Oval-3" data-name="Oval" cx="30.5" cy="30.5" r="30.5" transform="translate(24 24)" fill="#f53232" opacity="0.348"/>
-        <path id="Shape" d="M12.806,14.269,7.286,8.748,1.765,14.269A1.034,1.034,0,0,1,.3,12.806L5.823,7.286.3,1.765A1.034,1.034,0,0,1,1.765.3L7.286,5.823,12.806.3a1.034,1.034,0,0,1,1.463,1.463L8.748,7.286l5.521,5.521a1.034,1.034,0,0,1-1.463,1.463Z" transform="translate(47 47)" fill="#f53232"/>
-      </g>
+    <g id="Success">
+      <circle id="Oval" cx="18.991" cy="18.991" r="18.991" transform="translate(3.716 3.716)" fill="none" stroke="red" stroke-miterlimit="10" stroke-width="0.4" opacity="0.272"/>
+      <circle id="Oval-2" data-name="Oval" cx="22.5" cy="22.5" r="22.5" fill="none" stroke="red" stroke-miterlimit="10" stroke-width="0.2" opacity="0.201"/>
+      <circle id="Oval-3" data-name="Oval" cx="12.592" cy="12.592" r="12.592" transform="translate(9.908 9.908)" fill="#f53232" opacity="0.348"/>
+      <path id="Shape" d="M5.235,6.016,3.008,3.788.78,6.016a.468.468,0,0,1-.655-.052.468.468,0,0,1-.052-.655L2.3,3.081.073.853A.468.468,0,0,1,.125.2.468.468,0,0,1,.78.147L3.008,2.374,5.235.147A.468.468,0,0,1,5.891.2a.468.468,0,0,1,.052.655L3.715,3.081,5.943,5.308a.468.468,0,0,1-.052.655.538.538,0,0,1-.375.163A.39.39,0,0,1,5.235,6.016Z" transform="translate(19.404 19.404)" fill="#f53232"/>
     </g>
   </g>
 </svg>

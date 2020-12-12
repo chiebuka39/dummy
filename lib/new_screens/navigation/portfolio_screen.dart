@@ -587,34 +587,34 @@ class EmptyInvstmentWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      children: [
-        YMargin(MediaQuery.of(context).size.height > 700 ? 300 : 200),
-        Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            SizedBox(
-                width: 200,
-                child: Text(
-                  "You currently don’t have a Investing plan",
-                  textAlign: TextAlign.center,
-                  style: TextStyle(
-                      fontFamily: AppStrings.fontNormal,
-                      color: AppColors.kGreyText,
-                      height: 1.6),
-                )),
-          ],
-        ),
-        YMargin(40),
-        Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            PrimaryButtonNew(
-              title: "Start Investing",
-            ),
-          ],
-        ),
-      ],
-    );
+    return Column(children: [
+      YMargin(MediaQuery.of(context).size.height > 700 ? 100 : 50),
+      SvgPicture.asset("images/new/empty3.svg",),
+      YMargin(20),
+      Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          SizedBox(
+              width: 200,
+              child: Text(
+                "You currently don’t have a Investing plan",
+                textAlign: TextAlign.center,
+                style: TextStyle(
+                    fontFamily: AppStrings.fontNormal,
+                    color: AppColors.kGreyText,
+                    height: 1.6),
+              )),
+        ],
+      ),
+      YMargin(40),
+      Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          PrimaryButtonNew(
+            title: "Start Saving",
+          ),
+        ],
+      ),
+    ],);
   }
 }

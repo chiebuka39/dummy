@@ -1,5 +1,14 @@
+import 'dart:io';
+
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:hive/hive.dart';
+import 'package:provider/provider.dart';
+import 'package:zimvest/data/models/secondary_state.dart';
+import 'package:zimvest/data/view_models/identity_view_model.dart';
+import 'package:zimvest/data/view_models/investment_view_model.dart';
+import 'package:zimvest/new_screens/account/login_screen.dart';
 import 'package:zimvest/new_screens/profile/account_screen.dart';
 import 'package:zimvest/new_screens/profile/widgets/profile_widgets.dart';
 import 'package:zimvest/styles/colors.dart';
@@ -18,8 +27,12 @@ class ProfileScreen extends StatefulWidget {
 }
 
 class _ProfileScreenState extends State<ProfileScreen> {
+  ABSInvestmentViewModel _investmentViewModel;
+  ABSIdentityViewModel _identityViewModel;
   @override
   Widget build(BuildContext context) {
+    _identityViewModel = Provider.of(context);
+    _investmentViewModel = Provider.of(context);
     return Scaffold(
       appBar: AppBar(
         elevation: 0,
@@ -58,10 +71,73 @@ class _ProfileScreenState extends State<ProfileScreen> {
           ProfileWidget(title: "Earn Free Cash",icon: 'earn',),
           ProfileWidget(title: "Rate App",icon: 'rate',),
           ProfileWidget(title: "About Zimvest",icon: 'about',),
-          ProfileWidget(title: "Log Out",icon: 'log-out',),
+          ProfileWidget(title: "Log Out",icon: 'log-out',onClick: (){
+            _showConfirmLogoutDialog(context);
+          },),
         ],),
       ),
     );
+  }
+
+  void _showConfirmLogoutDialog(BuildContext context) {
+    var content = new Text('Do you want to log out');
+    if (Platform.isIOS) {
+      showDialog(
+          context: context,
+          builder: (BuildContext context) {
+            return new CupertinoAlertDialog(
+              content: content,
+              actions: <Widget>[
+                new CupertinoDialogAction(
+                    child: const Text('Yes'),
+                    isDestructiveAction: true,
+                    onPressed: () {
+                      _logout(context);
+                    }),
+                new CupertinoDialogAction(
+                  child: const Text('No'),
+                  isDefaultAction: true,
+                  onPressed: () {
+                    Navigator.pop(context);
+                  },
+                ),
+              ],
+            );
+          });
+    } else {
+      showDialog(
+          context: context,
+          builder: (BuildContext context) {
+            return new AlertDialog(
+              content: content,
+              actions: <Widget>[
+                new FlatButton(
+                    onPressed: () {
+                      _logout(context);
+                    },
+                    child: new Text('Yes')),
+                new FlatButton(
+                    onPressed: () {
+                      Navigator.pop(context);
+                    },
+                    child: new Text('No'))
+              ],
+            );
+          });
+    }
+  }
+
+  void _logout(BuildContext context) {
+
+    final box = Hive.box(AppStrings.state);
+    box.put("user", null);
+    box.put("state", SecondaryState(false));
+    _investmentViewModel.reset();
+    Navigator.of(context, rootNavigator: true).pop();
+    Navigator.pushAndRemoveUntil(
+        context,
+        MaterialPageRoute(builder: (context) => LoginScreen()),
+            (Route<dynamic> route) => false);
   }
 }
 

@@ -1,4 +1,7 @@
-<svg id="Profile" xmlns="http://www.w3.org/2000/svg" width="13.995" height="17.5" viewBox="0 0 13.995 17.5">
-  <path id="Fill_1" data-name="Fill 1" d="M7,0C3.224,0,0,.6,0,2.975s3.2,3,7,3c3.774,0,7-.594,7-2.975s-3.2-3-7-3" transform="translate(0 11.528)" fill="#484848"/>
-  <path id="Fill_4" data-name="Fill 4" d="M4.63,9.261A4.63,4.63,0,1,0,0,4.63a4.614,4.614,0,0,0,4.63,4.63" transform="translate(2.367 0)" fill="#484848" opacity="0.4"/>
+<svg id="Profile" xmlns="http://www.w3.org/2000/svg" width="34" height="34" viewBox="0 0 34 34">
+  <circle id="Oval" cx="17" cy="17" r="17" fill="#d7a81e" opacity="0.145"/>
+  <g id="Profile-2" data-name="Profile" transform="translate(10 8)">
+    <path id="Fill_1" data-name="Fill 1" d="M7,0C3.224,0,0,.6,0,2.975s3.2,3,7,3c3.774,0,7-.594,7-2.975s-3.2-3-7-3" transform="translate(0 11.528)" fill="#d7a81e"/>
+    <path id="Fill_4" data-name="Fill 4" d="M4.63,9.261A4.63,4.63,0,1,0,0,4.63a4.614,4.614,0,0,0,4.63,4.63" transform="translate(2.367 0)" fill="#d7a81e" opacity="0.4"/>
+  </g>
 </svg>
