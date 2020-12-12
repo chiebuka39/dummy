@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:simple_animations/simple_animations.dart';
+import 'package:zimvest/data/view_models/identity_view_model.dart';
 import 'package:zimvest/new_screens/account/widgets/choose_gender_widget.dart';
 import 'package:zimvest/new_screens/account/widgets/create_pin_widget.dart';
 import 'package:zimvest/new_screens/account/widgets/enter_dob_widget.dart';
@@ -30,6 +32,12 @@ class _CreateAccountScreenState extends State<CreateAccountScreen>
   Animation<double> size;
   double value = 0.125;
   PageController pageController = PageController();
+
+  //user details
+
+
+  ABSIdentityViewModel identityViewModel;
+
   @override
   void initState() {
     controller.duration = Duration(milliseconds: 300);
@@ -38,6 +46,7 @@ class _CreateAccountScreenState extends State<CreateAccountScreen>
   }
   @override
   Widget build(BuildContext context) {
+    identityViewModel = Provider.of(context);
     return Scaffold(
       appBar: AppBar(
         elevation: 0,
@@ -74,8 +83,10 @@ class _CreateAccountScreenState extends State<CreateAccountScreen>
                 children: [
 
                   EnterMailWidget(
-                    onNext: (){
-
+                    onNext: (value){
+                      setState(() {
+                        identityViewModel.email = value;
+                      });
                       controller.play();
 
 
@@ -84,8 +95,9 @@ class _CreateAccountScreenState extends State<CreateAccountScreen>
                     },
                   ),
                   EnterPasswordWidget(
-                    onNext: (){
+                    onNext: (value){
                       setState(() {
+                        identityViewModel.password = value;
                         size = 0.25.tweenTo(0.375).animatedBy(controller);
                         controller.reset();
                       });
@@ -95,8 +107,10 @@ class _CreateAccountScreenState extends State<CreateAccountScreen>
                     },
                   ),
                   EnterNameWidget(
-                    onNext: (){
+                    onNext: (first,last){
                       setState(() {
+                        identityViewModel.firstName = first;
+                        identityViewModel.lastName = last;
                         size = 0.375.tweenTo(0.5).animatedBy(controller);
                         controller.reset();
                       });
@@ -106,8 +120,9 @@ class _CreateAccountScreenState extends State<CreateAccountScreen>
                     },
                   ),
                   EnterPhoneWidget(
-                    onNext: (){
+                    onNext: (value){
                     setState(() {
+                      identityViewModel.phoneNumber = value;
                       size = 0.5.tweenTo(0.625).animatedBy(controller);
                       controller.reset();
                     });
@@ -116,8 +131,10 @@ class _CreateAccountScreenState extends State<CreateAccountScreen>
                         duration: Duration(milliseconds: 300), curve: Curves.easeIn);
                   },),
                   ChooseGenderWidget(
-                      onNext: (){
+                      onNext: (value){
+
                         setState(() {
+                          identityViewModel.gender = value;
                           size = 0.625.tweenTo(0.75).animatedBy(controller);
                           controller.reset();
                         });
@@ -127,8 +144,9 @@ class _CreateAccountScreenState extends State<CreateAccountScreen>
                       }
                   ),
                   EnterDOBWidget(
-                    onNext: (){
+                    onNext: (value){
                       setState(() {
+                        identityViewModel.dob = value;
                         size = 0.75.tweenTo(0.875).animatedBy(controller);
                         controller.reset();
                       });

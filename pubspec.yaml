@@ -50,7 +50,6 @@ dependencies:
   simple_animations: ^2.2.1
   password_criteria: ^0.1.4
   after_layout: ^1.0.7+2
-  flutter_easyloading: ^1.1.4
   cached_network_image: ^2.3.3
   rave_flutter: ^0.0.9-alpha+1
   skeleton_loader: ^1.0.2+1
@@ -59,6 +58,8 @@ dependencies:
   smooth_page_indicator: ^0.2.0
   timelines: ^0.0.2+1
   percent_indicator: ^2.1.8
+  flutter_easyloading: ^2.2.1
+  keyboard_actions: ^3.3.1+1
 
 
 

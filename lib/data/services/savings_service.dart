@@ -161,6 +161,7 @@ class SavingService extends ABSSavingService{
 
     var url = "${AppStrings.baseUrl}zimvest.services.savings/api/Savings/Customers";
     print("url $url");
+    print("url $headers");
     try{
       var response = await dio.get(url,options: Options(headers: headers));
       final int statusCode = response.statusCode;
@@ -181,7 +182,7 @@ class SavingService extends ABSSavingService{
       }
 
     }on DioError catch(e){
-      print("error $e}");
+      print("error000 ${e.response}");
       if(e.response != null ){
         print(e.response.data);
         //result.errorMessage = e.response.data['message'];

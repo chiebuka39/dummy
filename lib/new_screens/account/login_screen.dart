@@ -28,7 +28,7 @@ class _LoginScreenState extends State<LoginScreen> {
   bool obscureText2 = true;
   bool autoValidate = false;
   String _email;
-  String _password;
+  String _password = "";
   bool _emailError = false;
 
   @override

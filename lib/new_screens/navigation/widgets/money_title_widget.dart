@@ -7,10 +7,11 @@ import 'package:zimvest/utils/strings.dart';
 class MoneyTitleWidget extends StatelessWidget {
   const MoneyTitleWidget({
     Key key,
-    this.amount, this.textColor = AppColors.kTextColor,
+    this.amount, this.textColor = AppColors.kTextColor, this.amountt,
   }) : super(key: key);
 
   final double amount;
+  final String amountt;
   final Color textColor;
   @override
   Widget build(BuildContext context) {
@@ -24,7 +25,7 @@ class MoneyTitleWidget extends StatelessWidget {
             )),
         XMargin(2),
         Text(
-          FlutterMoneyFormatter(amount: amount).output.withoutFractionDigits,
+          amount == null ? amountt:FlutterMoneyFormatter(amount: amount).output.withoutFractionDigits,
           style: TextStyle(fontSize: 25, fontFamily: AppStrings.fontMedium,color: textColor),
         ),
         XMargin(3),

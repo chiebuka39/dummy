@@ -2,6 +2,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:percent_indicator/percent_indicator.dart';
+import 'package:zimvest/data/models/saving_plan.dart';
 import 'package:zimvest/styles/colors.dart';
 import 'package:zimvest/utils/margin.dart';
 import 'package:zimvest/utils/strings.dart';
@@ -10,7 +11,7 @@ class AspireContainerWidget extends StatelessWidget {
   const AspireContainerWidget({
     Key key, this.goal,
   }) : super(key: key);
-  final String goal;
+  final SavingPlanModel goal;
 
   @override
   Widget build(BuildContext context) {
@@ -81,7 +82,7 @@ class AspireContainerWidget extends StatelessWidget {
             ),
             YMargin(10),
             Text(
-              goal,
+              goal.planName,
               style: TextStyle(
                   fontSize: 10,
                   fontFamily: AppStrings.fontNormal,
@@ -89,7 +90,7 @@ class AspireContainerWidget extends StatelessWidget {
             ),
             YMargin(8),
             Text(
-              "${AppStrings.nairaSymbol}500,000",
+              "${AppStrings.nairaSymbol}${goal.amountSaved}",
               style: TextStyle(
                   fontFamily: AppStrings.fontMedium, fontSize: 12),
             )

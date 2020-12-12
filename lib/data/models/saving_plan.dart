@@ -16,6 +16,7 @@ class SavingPlanModel {
     this.isMatured,
     this.amountSaved,
     this.accruedInterest,
+    this.interestRate,
     this.successRate,
     this.dateCreated,
     this.dateUpdated,
@@ -39,6 +40,7 @@ class SavingPlanModel {
   bool isMatured;
   double amountSaved;
   double accruedInterest;
+  double interestRate;
   String successRate;
   DateTime dateCreated;
   DateTime dateUpdated;
@@ -52,6 +54,7 @@ class SavingPlanModel {
         productName: json["productName"],
         planName: json["planName"],
         savingsType: json["savingsType"],
+        interestRate: json["interestRate"],
         savingsFrequency: json["savingsFrequency"],
         savingsFrequencyText: json["savingsFrequencyText"],
         savingsAmount: json["savingsAmount"] == null ? 0.0: double.parse(json["savingsAmount"].toString()),

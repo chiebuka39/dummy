@@ -9,7 +9,7 @@ class EnterPasswordWidget extends StatefulWidget {
     Key key, this.onNext,
   }) : super(key: key);
 
-  final VoidCallback onNext;
+  final Function onNext;
 
   @override
   _EnterPasswordWidgetState createState() => _EnterPasswordWidgetState();
@@ -22,66 +22,72 @@ class _EnterPasswordWidgetState extends State<EnterPasswordWidget> {
   Widget build(BuildContext context) {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 20),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          YMargin(50),
-          Text("Create Your Password"),
-          YMargin(30),
-          Container(
-            padding: EdgeInsets.symmetric(horizontal: 15),
-            height: 60,
-            width: double.infinity,
-            decoration: BoxDecoration(
-                color: AppColors.kLightText,
-                borderRadius: BorderRadius.circular(12)
-            ),
-            child: Row(
-              children: [
-                Expanded(
-                  child: Transform.translate(
-                    offset:  Offset(0,-2),
-                    child: TextField(
-                      onChanged: (value){
-                        setState(() {
-                          password = value;
-                        });
-                      },
-                      obscureText: obscureText,
-                      decoration: InputDecoration(
-                          border: InputBorder.none,
-                          hintText: "Email Password",
-                          hintStyle: TextStyle(
-                              fontSize: 14
-                          )
+      child: SingleChildScrollView(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            YMargin(50),
+            Text("Create Your Password"),
+            YMargin(30),
+            Container(
+              padding: EdgeInsets.symmetric(horizontal: 15),
+              height: 60,
+              width: double.infinity,
+              decoration: BoxDecoration(
+                  color: AppColors.kLightText,
+                  borderRadius: BorderRadius.circular(12)
+              ),
+              child: Row(
+                children: [
+                  Expanded(
+                    child: Transform.translate(
+                      offset:  Offset(0,-2),
+                      child: TextField(
+                        onChanged: (value){
+                          setState(() {
+                            password = value;
+                          });
+                        },
+                        obscureText: obscureText,
+                        decoration: InputDecoration(
+                            border: InputBorder.none,
+                            hintText: "Password",
+                            hintStyle: TextStyle(
+                                fontSize: 14
+                            )
+                        ),
                       ),
                     ),
                   ),
-                ),
-                IconButton(icon: Icon(Icons.visibility_off,size: 20,), onPressed: (){})
-              ],
+                  IconButton(icon: Icon(Icons.visibility_off,size: 20,), onPressed: (){})
+                ],
+              ),
             ),
-          ),
-          YMargin(10),
-          Row(children: [
-            password.length >= 8 ?PasswordCheck(title: '8+ characters',)
-                :PasswordError(title: '8+ characters',),
-            XMargin(5),
-            hasSpecial(password) ? PasswordCheck(title: '1 Special Character',flex: 3,)
-                :PasswordError(title: '1 Special Character',flex: 3,),
-            XMargin(5),
-            hasNum(password) ?PasswordCheck(title: '1+ Number',)
-                : PasswordError(title: '1+ Number',),
+            YMargin(10),
+            Row(children: [
+              password.length >= 8 ?PasswordCheck(title: '8+ characters',)
+                  :PasswordError(title: '8+ characters',),
+              XMargin(5),
+              hasSpecial(password) ? PasswordCheck(title: '1 Special Character',flex: 3,)
+                  :PasswordError(title: '1 Special Character',flex: 3,),
+              XMargin(5),
+              hasNum(password) ?PasswordCheck(title: '1+ Number',)
+                  : PasswordError(title: '1+ Number',),
 
+
+            ],),
+           YMargin(100),
+            RoundedNextButton(
+              onTap: (){
+                if(isValidPass(password)){
+                  widget.onNext(password);
+                }
+              },
+            ),
+            YMargin(120)
 
           ],),
-          Spacer(),
-          RoundedNextButton(
-            onTap: widget.onNext,
-          ),
-          YMargin(120)
-
-        ],),
+      ),
     );
   }
 

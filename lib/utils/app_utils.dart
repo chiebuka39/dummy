@@ -248,7 +248,8 @@ class AppUtils{
     }
   }
 
-  static showError(BuildContext context){
+  static showError(BuildContext context,{String message = 'Error! The email address or '
+      'password is incorrect', String title = 'Login Failed!'}){
     Flushbar(
       borderColor: Color(0xFFF53232),
       backgroundColor: Color(0xFFFBCBCB),
@@ -257,9 +258,9 @@ class AppUtils{
       borderRadius:14,
       icon: SvgPicture.asset("images/new/fail.svg"),
       flushbarPosition: FlushbarPosition.TOP,
-      titleText: Text("Login Failed!",
+      titleText: Text(title,
         style: TextStyle(fontSize: 11,fontFamily: AppStrings.fontMedium, color: Color(0xFFF53232)),),
-      messageText: Text("Error! The email address or password is incorrect",
+      messageText: Text(message,
         style: TextStyle(fontSize: 9,fontFamily: AppStrings.fontNormal,color: Color(0xFFF53232)),),
       duration:  Duration(seconds: 3),
     )..show(context);

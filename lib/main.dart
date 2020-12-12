@@ -88,6 +88,7 @@ class _MyAppState extends State<MyApp> {
 
           visualDensity: VisualDensity.adaptivePlatformDensity,
         ),
+        builder: EasyLoading.init(),
         home:_localStorage.getSecondaryState().isLoggedIn == false ?  LandingScreen(): TabsContainer(),
       ),
     );
