@@ -219,7 +219,7 @@ class _WealthBoxDetailsScreenState extends State<WealthBoxDetailsScreen> {
                         GestureDetector(
                           onTap: (){
                             showModalBottomSheet < Null > (context: context, builder: (BuildContext context) {
-                              return WealthBoxActivities(transactions:savingViewModel.savingsTransactions[1],);
+                              return WealthBoxActivities(transactions:savingViewModel.savingsTransactions[savingsPlanModel.productId],);
                             },isScrollControlled: true);
                           },
                           child: Text("See all", style: TextStyle(fontSize: 11,
@@ -227,8 +227,8 @@ class _WealthBoxDetailsScreenState extends State<WealthBoxDetailsScreen> {
                         )
                       ],),
                     ),
-                    ...List.generate(savingViewModel.savingsTransactions[1].length > 4? 4
-                        :savingViewModel.savingsTransactions[1].length, (index) {
+                    ...List.generate(savingViewModel.savingsTransactions[savingsPlanModel.productId].length > 4? 4
+                        :savingViewModel.savingsTransactions[savingsPlanModel.productId].length, (index) {
                       return WealthBoxActivity(productTransaction: savingViewModel.savingsTransactions[1][index],);
                     })
 
