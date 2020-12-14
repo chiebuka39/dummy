@@ -71,7 +71,7 @@ class _HighYieldDetailsState extends State<HighYieldDetails> {
                   Padding(
                     padding: const EdgeInsets.only(top: 39.0, left: 20),
                     child: Text(
-                      "Zimvest High Yield Naira ${widget.duration} Days",
+                      "Zimvest High Yield Naira ${widget.duration}",
                       style: TextStyle(
                           fontSize: 15, fontFamily: AppStrings.fontBold),
                     ),

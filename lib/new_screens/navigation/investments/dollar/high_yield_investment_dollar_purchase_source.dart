@@ -23,7 +23,7 @@ class HighYieldInvestmentDollarPurchaseSource extends StatefulWidget {
 
 class _HighYieldInvestmentDollarPurchaseSourceState
     extends State<HighYieldInvestmentDollarPurchaseSource> {
-  bool isNaira = false;
+  bool isNaira = true;
 
   @override
   Widget build(BuildContext context) {
@@ -171,7 +171,6 @@ class NairaPage extends StatelessWidget {
       child: Column(children: [
         YMargin(25),
         PaymentSourceButton(
-              // onTap: () => Navigator.push(context, InvestmentSummaryScreenNaira.route()),
               paymentsource: "Naira Wallet",
               image: "wallet",
               amount: "${AppStrings.nairaSymbol}30,000,000",
@@ -190,7 +189,6 @@ class DollarPage extends StatelessWidget {
             child: Column(children: [
         YMargin(25),
         PaymentSourceButton(
-              // onTap: () => Navigator.push(context, InvestmentSummaryScreenNaira.route()),
               paymentsource: "Dollar Wallet",
               image: "wallet",
               amount: "${AppStrings.dollarSymbol}30,000,000",
@@ -199,14 +197,12 @@ class DollarPage extends StatelessWidget {
             ),
             YMargin(25),
              PaymentSourceButtonSpecial(
-              // onTap: () => Navigator.push(context, InvestmentSummaryScreenNaira.route()),
               paymentsource: "Wired Transfer",
               image: "wallet",
               onTap: null,
             ),
             YMargin(25),
              PaymentSourceButtonSpecial(
-              // onTap: () => Navigator.push(context, InvestmentSummaryScreenNaira.route()),
               paymentsource: "R|rexelpay",
               color: AppColors.kHighYield,
               onTap: null,
