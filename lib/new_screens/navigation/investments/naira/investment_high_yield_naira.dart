@@ -1,12 +1,17 @@
 import 'package:flutter/material.dart';
+import 'package:provider_architecture/provider_architecture.dart';
+import 'package:zimvest/data/models/investment/term_instruments.dart';
+import 'package:zimvest/data/view_models/investment_view_model.dart';
 import 'package:zimvest/new_screens/navigation/investments/naira/high_yield_investment_details_naira.dart';
 import 'package:zimvest/new_screens/navigation/investments/see_all_investments.dart';
 import 'package:zimvest/new_screens/navigation/investments/widgets/card_widget.dart';
 import 'package:zimvest/styles/colors.dart';
-import 'package:zimvest/utils/margin.dart';
 import 'package:zimvest/utils/strings.dart';
 
 class HighYieldNairaScreen extends StatefulWidget {
+  final List<TermInstrument> instrument;
+
+  const HighYieldNairaScreen({Key key, this.instrument}) : super(key: key);
   @override
   _HighYieldNairaScreenState createState() => _HighYieldNairaScreenState();
 }
@@ -14,10 +19,16 @@ class HighYieldNairaScreen extends StatefulWidget {
 class _HighYieldNairaScreenState extends State<HighYieldNairaScreen> {
   @override
   Widget build(BuildContext context) {
+    List<String> instrumentNames =
+        widget.instrument.map((e) => e.instrumentName).toSet().toList();
+    instrumentNames.sort((a, b) =>
+        int.tryParse(a.split(" ")[0]) > int.tryParse(b.split(" ")[0]) ? 1 : -1);
     return Expanded(
-      child: ListView(
-        children: [
-          Padding(
+      child: ListView.builder(
+        itemCount: instrumentNames.length,
+        itemBuilder: (context, index) {
+          print(instrumentNames[index]);
+          return Padding(
             padding: const EdgeInsets.symmetric(horizontal: 20.0),
             child: Column(
               children: [
@@ -25,7 +36,7 @@ class _HighYieldNairaScreenState extends State<HighYieldNairaScreen> {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Text(
-                      "30 Days",
+                      "${instrumentNames[index]}",
                       style: TextStyle(
                           fontSize: 15,
                           fontFamily: AppStrings.fontMedium,
@@ -34,7 +45,9 @@ class _HighYieldNairaScreenState extends State<HighYieldNairaScreen> {
                     GestureDetector(
                       onTap: () {
                         Navigator.push(
-                            context, AllNairaInvestments.route("30"));
+                            context,
+                            AllNairaInvestments.route(
+                                "${instrumentNames[index]}"));
                       },
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -54,23 +67,36 @@ class _HighYieldNairaScreenState extends State<HighYieldNairaScreen> {
                   ],
                 ),
                 Container(
-                  height: MediaQuery.of(context).size.height / 4,
+                  height: MediaQuery.of(context).size.height / 3.5,
                   child: Row(
                     children: [
                       Expanded(
-                        child: ListView.builder(
-                          itemCount: 15,
+                        child: ListView(
+                          children: widget.instrument
+                              .where((element) =>
+                                  element.instrumentName ==
+                                  instrumentNames[index])
+                              .map(
+                                (e) => GestureDetector(
+                                  onTap: () => Navigator.push(
+                                    context,
+                                    HighYieldDetails.route(
+                                        "${instrumentNames[index]}"),
+                                  ),
+                                  child: Padding(
+                                    padding:
+                                        const EdgeInsets.only(bottom: 20.0),
+                                    child: InvestmentCardNaira(
+                                      investmentDuration: e.instrumentName,
+                                      maximumAmount: e.maximumAmount,
+                                      minimumAmount: e.minimumAmount,
+                                      percentage: e.depositRate,
+                                    ),
+                                  ),
+                                ),
+                              )
+                              .toList(),
                           scrollDirection: Axis.horizontal,
-                          itemBuilder: (context, index) => GestureDetector(
-                            onTap: () => Navigator.push(
-                                context, HighYieldDetails.route("30")),
-                            child: InvestmentCardNaira(
-                              investmentDuration: "30",
-                              percentage: "6.67",
-                              minimumAmount: "5,000,000",
-                              maximumAmount: "50,000,000",
-                            ),
-                          ),
                         ),
                       )
                     ],
@@ -78,303 +104,8 @@ class _HighYieldNairaScreenState extends State<HighYieldNairaScreen> {
                 ),
               ],
             ),
-          ),
-          YMargin(30),
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 20.0),
-            child: Column(
-              children: [
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Text(
-                      "60 Days",
-                      style: TextStyle(
-                          fontSize: 15,
-                          fontFamily: AppStrings.fontMedium,
-                          color: AppColors.kTextColor),
-                    ),
-                    GestureDetector(
-                      onTap: () {
-                        Navigator.push(
-                            context, AllNairaInvestments.route("60"));
-                      },
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Text(
-                            "See all",
-                            style: TextStyle(
-                                fontSize: 12,
-                                fontFamily: AppStrings.fontMedium,
-                                color: AppColors.kPrimaryColor),
-                          ),
-                          Icon(Icons.arrow_forward_ios,
-                              size: 15, color: AppColors.kPrimaryColor)
-                        ],
-                      ),
-                    )
-                  ],
-                ),
-                Container(
-                  height: MediaQuery.of(context).size.height / 4,
-                  child: Row(
-                    children: [
-                      Expanded(
-                        child: ListView.builder(
-                          itemCount: 15,
-                          scrollDirection: Axis.horizontal,
-                          itemBuilder: (context, index) => InvestmentCardNaira(
-                            investmentDuration: "60",
-                            percentage: "6.67",
-                            minimumAmount: "5,000,000",
-                            maximumAmount: "50,000,000",
-                          ),
-                        ),
-                      )
-                    ],
-                  ),
-                ),
-              ],
-            ),
-          ),
-          YMargin(30),
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 20.0),
-            child: Column(
-              children: [
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Text(
-                      "90 Days",
-                      style: TextStyle(
-                          fontSize: 15,
-                          fontFamily: AppStrings.fontMedium,
-                          color: AppColors.kTextColor),
-                    ),
-                    GestureDetector(
-                      onTap: () {
-                        Navigator.push(
-                            context, AllNairaInvestments.route("90"));
-                      },
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Text(
-                            "See all",
-                            style: TextStyle(
-                                fontSize: 12,
-                                fontFamily: AppStrings.fontMedium,
-                                color: AppColors.kPrimaryColor),
-                          ),
-                          Icon(Icons.arrow_forward_ios,
-                              size: 15, color: AppColors.kPrimaryColor)
-                        ],
-                      ),
-                    )
-                  ],
-                ),
-                Container(
-                  height: MediaQuery.of(context).size.height / 4,
-                  child: Row(
-                    children: [
-                      Expanded(
-                        child: ListView.builder(
-                          itemCount: 15,
-                          scrollDirection: Axis.horizontal,
-                          itemBuilder: (context, index) => InvestmentCardNaira(
-                            investmentDuration: "90",
-                            percentage: "6.67",
-                            minimumAmount: "5,000,000",
-                            maximumAmount: "50,000,000",
-                          ),
-                        ),
-                      )
-                    ],
-                  ),
-                ),
-              ],
-            ),
-          ),
-          YMargin(30),
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 20.0),
-            child: Column(
-              children: [
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Text(
-                      "180 Days",
-                      style: TextStyle(
-                          fontSize: 15,
-                          fontFamily: AppStrings.fontMedium,
-                          color: AppColors.kTextColor),
-                    ),
-                    GestureDetector(
-                      onTap: () {
-                        Navigator.push(
-                            context, AllNairaInvestments.route("180"));
-                      },
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Text(
-                            "See all",
-                            style: TextStyle(
-                                fontSize: 12,
-                                fontFamily: AppStrings.fontMedium,
-                                color: AppColors.kPrimaryColor),
-                          ),
-                          Icon(Icons.arrow_forward_ios,
-                              size: 15, color: AppColors.kPrimaryColor)
-                        ],
-                      ),
-                    )
-                  ],
-                ),
-                Container(
-                  height: MediaQuery.of(context).size.height / 4,
-                  child: Row(
-                    children: [
-                      Expanded(
-                        child: ListView.builder(
-                          itemCount: 15,
-                          scrollDirection: Axis.horizontal,
-                          itemBuilder: (context, index) => InvestmentCardNaira(
-                            investmentDuration: "180",
-                            percentage: "6.67",
-                            minimumAmount: "5,000,000",
-                            maximumAmount: "50,000,000",
-                          ),
-                        ),
-                      )
-                    ],
-                  ),
-                ),
-              ],
-            ),
-          ),
-          YMargin(30),
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 20.0),
-            child: Column(
-              children: [
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Text(
-                      "270 Days",
-                      style: TextStyle(
-                          fontSize: 15,
-                          fontFamily: AppStrings.fontMedium,
-                          color: AppColors.kTextColor),
-                    ),
-                    GestureDetector(
-                      onTap: () {
-                        Navigator.push(
-                            context, AllNairaInvestments.route("270"));
-                      },
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Text(
-                            "See all",
-                            style: TextStyle(
-                                fontSize: 12,
-                                fontFamily: AppStrings.fontMedium,
-                                color: AppColors.kPrimaryColor),
-                          ),
-                          Icon(Icons.arrow_forward_ios,
-                              size: 15, color: AppColors.kPrimaryColor)
-                        ],
-                      ),
-                    )
-                  ],
-                ),
-                Container(
-                  height: MediaQuery.of(context).size.height / 4,
-                  child: Row(
-                    children: [
-                      Expanded(
-                        child: ListView.builder(
-                          itemCount: 15,
-                          scrollDirection: Axis.horizontal,
-                          itemBuilder: (context, index) => InvestmentCardNaira(
-                            investmentDuration: "270",
-                            percentage: "6.67",
-                            minimumAmount: "5,000,000",
-                            maximumAmount: "50,000,000",
-                          ),
-                        ),
-                      )
-                    ],
-                  ),
-                ),
-              ],
-            ),
-          ),
-          YMargin(30),
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 20.0),
-            child: Column(
-              children: [
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Text(
-                      "365 Days",
-                      style: TextStyle(
-                          fontSize: 15,
-                          fontFamily: AppStrings.fontMedium,
-                          color: AppColors.kTextColor),
-                    ),
-                    GestureDetector(
-                      onTap: () {
-                        Navigator.push(
-                            context, AllNairaInvestments.route("365"));
-                      },
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Text(
-                            "See all",
-                            style: TextStyle(
-                                fontSize: 12,
-                                fontFamily: AppStrings.fontMedium,
-                                color: AppColors.kPrimaryColor),
-                          ),
-                          Icon(Icons.arrow_forward_ios,
-                              size: 15, color: AppColors.kPrimaryColor)
-                        ],
-                      ),
-                    )
-                  ],
-                ),
-                Container(
-                  height: MediaQuery.of(context).size.height / 4,
-                  child: Row(
-                    children: [
-                      Expanded(
-                        child: ListView.builder(
-                          itemCount: 15,
-                          scrollDirection: Axis.horizontal,
-                          itemBuilder: (context, index) => InvestmentCardNaira(
-                            investmentDuration: "365",
-                            percentage: "6.67",
-                            minimumAmount: "5,000,000",
-                            maximumAmount: "50,000,000",
-                          ),
-                        ),
-                      )
-                    ],
-                  ),
-                ),
-              ],
-            ),
-          ),
-        ],
+          );
+        },
       ),
     );
   }

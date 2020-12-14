@@ -7,9 +7,12 @@ import 'package:zimvest/utils/strings.dart';
 import 'package:zimvest/widgets/buttons.dart';
 
 class HighYieldInvestmentDollarUniqueName extends StatefulWidget {
-  static Route<dynamic> route() {
+  final String instrumentName;
+
+  const HighYieldInvestmentDollarUniqueName({Key key, this.instrumentName}) : super(key: key);
+  static Route<dynamic> route(String name) {
     return MaterialPageRoute(
-      builder: (_) => HighYieldInvestmentDollarUniqueName(),
+      builder: (_) => HighYieldInvestmentDollarUniqueName(instrumentName: name,),
       settings: RouteSettings(
         name: HighYieldInvestmentDollarUniqueName().toStringShort(),
       ),
@@ -53,7 +56,7 @@ class _HighYieldInvestmentDollarUniqueNameState
             Padding(
               padding: const EdgeInsets.only(left: 20.0, right: 76),
               child: Text(
-                "Name Your Zimvest High Yield Dollar 90 Days Investment",
+                "Name Your Zimvest High Yield Dollar ${widget.instrumentName} Days Investment",
                 style: TextStyle(
                   fontSize: 17,
                   fontFamily: AppStrings.fontBold,
