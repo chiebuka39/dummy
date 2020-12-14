@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:percent_indicator/percent_indicator.dart';
 import 'package:zimvest/data/models/saving_plan.dart';
+import 'package:zimvest/new_screens/navigation/wealth/aspire_box_details.dart';
 import 'package:zimvest/styles/colors.dart';
 import 'package:zimvest/utils/margin.dart';
 import 'package:zimvest/utils/strings.dart';
@@ -18,7 +19,7 @@ class AspireContainerWidget extends StatelessWidget {
     return Expanded(
       child: GestureDetector(
         onTap: (){
-          //Navigator.push(context, AspireDetailsScreen.route(goal));
+          Navigator.push(context, AspireDetailsScreen.route(goal));
         },
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,

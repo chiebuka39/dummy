@@ -221,10 +221,13 @@ class _SavingsSectionState extends State<SavingsSection> with AfterLayoutMixin<S
           productId: productId);
 
 
+
+
     }else{
       var result = await savingViewModel.getTransactionForProductType(
           token: identityViewModel.user.token,
           productId: productId);
+
     }
 
   }
