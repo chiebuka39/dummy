@@ -50,6 +50,7 @@ class _EnterPhoneWidgetState extends State<EnterPhoneWidget> {
                   });
                   print("ooo ${phoneNumber.length}");
                 },
+                keyboardType: TextInputType.phone,
                 decoration: InputDecoration(
                     border: InputBorder.none,
                     hintText: "Phone Number",

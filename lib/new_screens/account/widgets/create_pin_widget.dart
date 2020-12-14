@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:zimvest/styles/colors.dart';
 import 'package:zimvest/utils/margin.dart';
 import 'package:zimvest/utils/strings.dart';
 import 'package:zimvest/widgets/buttons.dart';
+
+import '../../../data/view_models/identity_view_model.dart';
 
 class CreatePinWidget extends StatefulWidget {
   const CreatePinWidget({
@@ -22,8 +25,10 @@ class _CreatePinWidgetState extends State<CreatePinWidget> {
   String pin3 = "";
   String pin4 = "";
 
+  ABSIdentityViewModel identityViewModel;
   @override
   Widget build(BuildContext context) {
+    identityViewModel = Provider.of(context);
     final node = FocusScope.of(context);
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 20),

@@ -234,7 +234,7 @@ class OutlinePrimaryButton extends StatelessWidget {
 class PrimaryButtonNew extends StatelessWidget {
   const PrimaryButtonNew({
     Key key, this.onTap, this.width = 200, this.height = 55, this.title,
-    this.bg = AppColors.kPrimaryColor, this.textColor = Colors.white,
+    this.bg = AppColors.kPrimaryColor, this.textColor = Colors.white, this.loading = false,
   }) : super(key: key);
 
   final VoidCallback onTap;
@@ -243,6 +243,7 @@ class PrimaryButtonNew extends StatelessWidget {
   final Color textColor;
   final double height;
   final String title;
+  final bool loading;
 
   @override
   Widget build(BuildContext context) {
@@ -255,7 +256,7 @@ class PrimaryButtonNew extends StatelessWidget {
             color: bg,
             borderRadius: BorderRadius.circular(15)
         ),
-        child: Center(child: Text(title,
+        child: Center(child: loading ? CircularProgressIndicator(valueColor: AlwaysStoppedAnimation<Color>(Colors.white),): Text(title,
           style: TextStyle(color: textColor,fontSize: 13,fontFamily: AppStrings.fontNormal),),),
       ),
     );

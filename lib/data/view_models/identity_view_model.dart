@@ -25,8 +25,9 @@ abstract class ABSIdentityViewModel extends ChangeNotifier{
   Future<Result<bool>> emailAvailability(String email);
   Future<Result<bool>> phoneAvailability(String phone);
   Future<Result<void>> sendEmailOTP(String email);
-  Future<Result<void>> resendEmailOTP({String trackingId, String verificationId});
+  Future<Result<void>> resendEmailOTP({String trackingId, int verificationId});
   Future<Result<void>> confirmEmailOTP({String code});
+  Future<Result<void>> setUpPin({String pin});
   Future<Result<CompletedSections>> checkCompletedSections({String token});
   Future<Result<void>> registerIndividual({
     String email, String password,
@@ -127,7 +128,7 @@ class IdentityViewModel extends ABSIdentityViewModel{
   }
 
   @override
-  Future<Result<Map<String,dynamic>>> resendEmailOTP({String trackingId, String verificationId})async {
+  Future<Result<Map<String,dynamic>>> resendEmailOTP({String trackingId, int verificationId})async {
     var result = await _identityService.resendEmailOTP(
         verificationId: verificationId,
         trackingId: trackingId
@@ -152,6 +153,13 @@ class IdentityViewModel extends ABSIdentityViewModel{
     }
 
     return result;
+  }
+
+  @override
+  Future<Result<void>> setUpPin({String pin}) {
+    return _identityService.setUpPin(
+        pin: pin,token: user.token
+    );
   }
 
 

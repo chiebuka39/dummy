@@ -46,7 +46,7 @@ dependencies:
   flutter_masked_text: ^0.7.0
   image_picker: ^0.6.7+4
   animations: ^1.1.1
-  modal_bottom_sheet: ^0.2.0+1
+  modal_bottom_sheet: ^1.0.0+1
   simple_animations: ^2.2.1
   password_criteria: ^0.1.4
   after_layout: ^1.0.7+2

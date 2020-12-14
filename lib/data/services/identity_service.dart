@@ -27,8 +27,9 @@ abstract class ABSIdentityService{
   Future<Result<Profile>> getProfileDetail({String token});
   Future<Result<bool>> emailAvailability(String email);
   Future<Result<bool>> phoneAvailability(String phone);
+  Future<Result<void>> setUpPin({String pin, String token});
   Future<Result<Map<String,dynamic>>> sendEmailOTP(String email);
-  Future<Result<Map<String,dynamic>>> resendEmailOTP({String trackingId, String verificationId});
+  Future<Result<Map<String,dynamic>>> resendEmailOTP({String trackingId, int verificationId});
   Future<Result<void>> confirmEmailOTP({String trackingId, int verificationId, String code});
   Future<Result<void>> confirmEmail({String token, int userId});
   Future<Result<void>> changePassword({String currentPassword, String newPassword, String confirmPassword});
@@ -312,7 +313,7 @@ class IdentityService extends ABSIdentityService {
   }
 
   @override
-  Future<Result<Map<String,dynamic>>> resendEmailOTP({String trackingId, String verificationId}) async{
+  Future<Result<Map<String,dynamic>>> resendEmailOTP({String trackingId, int verificationId}) async{
     Result<Map<String,dynamic>> result = Result(error: false);
 
 
@@ -361,6 +362,45 @@ class IdentityService extends ABSIdentityService {
     print("lll $url");
     try{
       var response = await dio.post(url,data: body);
+      final int statusCode = response.statusCode;
+      var response1 = response.data;
+      print("iii ${response1}");
+
+      if (statusCode != 200) {
+        result.errorMessage = response1['message'];
+        result.error = true;
+      }else {
+        result.error = false;
+        Map<String,dynamic> data = Map();
+        data['trackingId'] = response1['data']['trackingId'];
+        data['verificationId'] = response1['data']['verificationId'];
+        result.data = data;
+      }
+
+    }on DioError catch(e){
+      print("error ${e.response.data}");
+      result.error = true;
+    }
+
+    return result;
+  }
+
+  @override
+  Future<Result<void>> setUpPin({String pin, String token})async {
+    Result<Map<String,dynamic>> result = Result(error: false);
+
+
+    var url = "${AppStrings.baseUrl}zimvest.services.identity/api/Account/send-email-otp";
+    var body = {
+      'pin': pin
+    };
+    var headers = {
+      HttpHeaders.authorizationHeader: "Bearer $token"
+    };
+
+    print("lll $url");
+    try{
+      var response = await dio.post(url,data: body, options: Options(headers: headers));
       final int statusCode = response.statusCode;
       var response1 = response.data;
       print("iii ${response1}");

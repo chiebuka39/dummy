@@ -223,7 +223,7 @@ class _InvestInMutualScreenState extends State<InvestInMutualScreen>
                       duration: Duration(seconds: 2));
                   if(result.data is BankPaymentDetails){
                     print("ooonnnfff");
-                    showCupertinoModalBottomSheet(context: context, builder: (context,d){
+                    showCupertinoModalBottomSheet(context: context, builder: (context){
                       return BankTransferModalBottomSheet(details: result.data,);
                     });
                   }else{

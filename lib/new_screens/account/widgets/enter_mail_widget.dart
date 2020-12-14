@@ -106,7 +106,7 @@ class _EnterMailWidgetState extends State<EnterMailWidget> {
                 setState(() {
                   autoValidate = true;
                 });
-                if(_emailError){
+                if(_emailError || _email.isEmpty){
                   return;
                 }
                 setState(() {

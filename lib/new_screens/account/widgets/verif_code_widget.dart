@@ -1,8 +1,10 @@
 import 'package:after_layout/after_layout.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:provider/provider.dart';
 import 'package:zimvest/data/view_models/identity_view_model.dart';
+import 'package:zimvest/new_screens/account/widgets/change_mail_widget.dart';
 import 'package:zimvest/styles/colors.dart';
 import 'package:zimvest/utils/margin.dart';
 import 'package:zimvest/utils/strings.dart';
@@ -26,6 +28,9 @@ class _VerifCodeWidgetState extends State<VerifCodeWidget> with AfterLayoutMixin
   String pin3 = "";
   String pin4 = "";
   String pin5 = "";
+  String pin6 = "";
+
+  bool verificationCodeLoading = false;
 
   ABSIdentityViewModel identityViewModel;
 
@@ -150,12 +155,43 @@ class _VerifCodeWidgetState extends State<VerifCodeWidget> with AfterLayoutMixin
             ),
             XMargin(11),
             Expanded(
-              child: SizedBox(),
+              child: AnimatedContainer(
+                duration: Duration(milliseconds: 300),
+                height: 51,
+
+                decoration:(pin1.isNotEmpty && pin2.isNotEmpty && pin3.isNotEmpty && pin4.isNotEmpty && pin5.isNotEmpty && pin6.isEmpty) ? BoxDecoration(
+                    color: Color(0xFFF9F2DD),
+                    border: Border.all(color: AppColors.kPrimaryColor),
+                    borderRadius: BorderRadius.circular(7)
+                ):  BoxDecoration(
+                    color: Color(0xFFE7E7E7),
+                    borderRadius: BorderRadius.circular(7)
+                ),
+                child: Center(
+                  child: Text(pin6,style: TextStyle(fontSize: 20),),
+                ),
+              ),
             ),
           ],),
           YMargin(10),
-          Center(child: FlatButton(onPressed: (){}, child: Text("Resend Verification Code"))),
-          Center(child: FlatButton(onPressed: (){}, child: Text("Change Email Address"))),
+          Center(child: FlatButton(onPressed: verificationCodeLoading ? null: ()async{
+            var result = await identityViewModel.resendEmailOTP(
+              verificationId: identityViewModel.verificationId,
+              trackingId: identityViewModel.trackingId
+            );
+          }, child: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Text("Resend Verification Code"),
+              verificationCodeLoading? Padding(
+                padding: const EdgeInsets.only(left: 3),
+                child: CupertinoActivityIndicator(),
+              ):SizedBox()
+            ],
+          ))),
+          Center(child: FlatButton(onPressed: (){
+            Navigator.push(context, ChangeMailWidget.route());
+          }, child: Text("Change Email Address"))),
           YMargin(40),
 
 
@@ -183,6 +219,11 @@ class _VerifCodeWidgetState extends State<VerifCodeWidget> with AfterLayoutMixin
                     }else if(pin5.isEmpty){
                       setState(() {
                         pin5 = "1";
+                      });
+                    }
+                    else if(pin6.isEmpty){
+                      setState(() {
+                        pin6 = "1";
                       });
                       confirmCode();
                     }
@@ -219,6 +260,11 @@ class _VerifCodeWidgetState extends State<VerifCodeWidget> with AfterLayoutMixin
                         setState(() {
                           pin5 = "2";
                         });
+
+                      }else if(pin6.isEmpty){
+                        setState(() {
+                          pin6 = "2";
+                        });
                         confirmCode();
                       }
                   },
@@ -252,6 +298,12 @@ class _VerifCodeWidgetState extends State<VerifCodeWidget> with AfterLayoutMixin
                     }else if(pin5.isEmpty){
                       setState(() {
                         pin5 = "3";
+                      });
+
+                    }
+                    else if(pin6.isEmpty){
+                      setState(() {
+                        pin6 = "3";
                       });
                       confirmCode();
                     }
@@ -293,6 +345,11 @@ class _VerifCodeWidgetState extends State<VerifCodeWidget> with AfterLayoutMixin
                         setState(() {
                           pin5 = "4";
                         });
+
+                      }else if(pin6.isEmpty){
+                        setState(() {
+                          pin6 = "4";
+                        });
                         confirmCode();
                       }
                     },
@@ -328,6 +385,10 @@ class _VerifCodeWidgetState extends State<VerifCodeWidget> with AfterLayoutMixin
                         setState(() {
                           pin5 = "5";
                         });
+                      }else if(pin6.isEmpty){
+                        setState(() {
+                          pin6 = "5";
+                        });
                         confirmCode();
                       }
                     },
@@ -361,6 +422,10 @@ class _VerifCodeWidgetState extends State<VerifCodeWidget> with AfterLayoutMixin
                       }else if(pin5.isEmpty){
                         setState(() {
                           pin5 = "6";
+                        });
+                      }else if(pin6.isEmpty){
+                        setState(() {
+                          pin6 = "6";
                         });
                         confirmCode();
                       }
@@ -403,6 +468,11 @@ class _VerifCodeWidgetState extends State<VerifCodeWidget> with AfterLayoutMixin
                       setState(() {
                         pin5 = "7";
                       });
+
+                    }else if(pin6.isEmpty){
+                      setState(() {
+                        pin6 = "7";
+                      });
                       confirmCode();
                     }
                   },
@@ -438,6 +508,12 @@ class _VerifCodeWidgetState extends State<VerifCodeWidget> with AfterLayoutMixin
                       setState(() {
                         pin5 = "8";
                       });
+
+                    }
+                    else if(pin6.isEmpty){
+                      setState(() {
+                        pin6 = "8";
+                      });
                       confirmCode();
                     }
                   },
@@ -471,6 +547,10 @@ class _VerifCodeWidgetState extends State<VerifCodeWidget> with AfterLayoutMixin
                     }else if(pin5.isEmpty){
                       setState(() {
                         pin5 = "9";
+                      });
+                    }else if(pin6.isEmpty){
+                      setState(() {
+                        pin6 = "9";
                       });
                       confirmCode();
                     }
@@ -518,6 +598,10 @@ class _VerifCodeWidgetState extends State<VerifCodeWidget> with AfterLayoutMixin
                       setState(() {
                         pin5 = "0";
                       });
+                    }else if(pin6.isEmpty){
+                      setState(() {
+                        pin6 = "0";
+                      });
                       confirmCode();
                     }
                   },
@@ -532,7 +616,9 @@ class _VerifCodeWidgetState extends State<VerifCodeWidget> with AfterLayoutMixin
               Expanded(
                 child: GestureDetector(
                   onTap: (){
-                     if(pin5.isNotEmpty){
+                    if(pin6.isNotEmpty){
+                      pin6 = '';
+                    } else if(pin5.isNotEmpty){
                       pin5 = '';
                     }else if(pin4.isNotEmpty){
                       pin4 = '';
@@ -565,14 +651,21 @@ class _VerifCodeWidgetState extends State<VerifCodeWidget> with AfterLayoutMixin
   void confirmCode() async{
 
     EasyLoading.show(status: 'loading');
-    var result = await identityViewModel.confirmEmailOTP(code: "$pin1$pin2$pin3$pin4${pin5}");
+    var result = await identityViewModel.confirmEmailOTP(code: "$pin1$pin2$pin3$pin4$pin5${pin6}");
 
     if(result.error == true) {
       EasyLoading.showError('Error occurred');
     }else{
+      // var result = await identityViewModel.registerIndividual(
+      //   password: identityViewModel.password,
+      //   phoneNumber: identityViewModel.phoneNumber,
+      //   firstName: identityViewModel.firstName,
+      //   lastName: identityViewModel.lastName,
+      //   email: identityViewModel.email
+      // );
       EasyLoading.showSuccess("Mail Confirmed");
       Future.delayed(Duration(milliseconds: 700)).then((value) =>
-          widget.onNext("$pin1$pin2$pin3$pin4$pin5"));
+          widget.onNext("$pin1$pin2$pin3$pin4$pin5$pin6"));
     }
   }
 }

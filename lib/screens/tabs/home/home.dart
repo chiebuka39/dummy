@@ -196,7 +196,7 @@ class _DashboardScreenState extends State<DashboardScreen> with AfterLayoutMixin
                         YMargin(30),
                         GestureDetector(
                           onTap: (){
-                            showCupertinoModalBottomSheet(context: context, builder: (context, controller){
+                            showCupertinoModalBottomSheet(context: context, builder: (context){
                               return GraphsWidget(dashboardViewModel: dashboardViewModel);
                             });
                           },
