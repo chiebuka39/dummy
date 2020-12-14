@@ -10,6 +10,8 @@ import 'package:zimvest/utils/margin.dart';
 import 'package:zimvest/utils/strings.dart';
 import 'package:zimvest/widgets/buttons.dart';
 
+import '../../../screens/account/login_screen.dart';
+
 class VerifCodeWidget extends StatefulWidget {
   const VerifCodeWidget({
     Key key, this.onNext,
@@ -650,22 +652,47 @@ class _VerifCodeWidgetState extends State<VerifCodeWidget> with AfterLayoutMixin
 
   void confirmCode() async{
 
-    EasyLoading.show(status: 'loading');
+    EasyLoading.show(status: 'Creating account');
     var result = await identityViewModel.confirmEmailOTP(code: "$pin1$pin2$pin3$pin4$pin5${pin6}");
 
     if(result.error == true) {
       EasyLoading.showError('Error occurred');
     }else{
-      // var result = await identityViewModel.registerIndividual(
-      //   password: identityViewModel.password,
-      //   phoneNumber: identityViewModel.phoneNumber,
-      //   firstName: identityViewModel.firstName,
-      //   lastName: identityViewModel.lastName,
-      //   email: identityViewModel.email
-      // );
-      EasyLoading.showSuccess("Mail Confirmed");
-      Future.delayed(Duration(milliseconds: 700)).then((value) =>
-          widget.onNext("$pin1$pin2$pin3$pin4$pin5$pin6"));
+      var result = await identityViewModel.registerIndividual(
+        password: identityViewModel.password,
+        phoneNumber: identityViewModel.phoneNumber,
+        firstName: identityViewModel.firstName,
+        lastName: identityViewModel.lastName,
+        email: identityViewModel.email,
+        dob: identityViewModel.dob.toIso8601String()
+      );
+      if(result.error == false){
+        var result = await identityViewModel.login(
+          identityViewModel.email, identityViewModel.password,
+        );
+        if(result.error == false){
+          EasyLoading.showSuccess("Mail Confirmed");
+          Future.delayed(Duration(milliseconds: 700)).then((value) =>
+              widget.onNext());
+        }else{
+          EasyLoading.showError('You could not be logged in');
+          Navigator.pushAndRemoveUntil(
+              context,
+              MaterialPageRoute(builder: (context) => LoginScreen()),
+                  (Route<dynamic> route) => false);
+        }
+      }else{
+        EasyLoading.showError('Account could not be created');
+        setState(() {
+          pin1 = "";
+          pin2 = "";
+          pin3 = "";
+          pin4 = "";
+          pin5 = "";
+          pin6 = "";
+        });
+      }
+
     }
   }
 }

@@ -59,7 +59,11 @@ class _EnterPasswordWidgetState extends State<EnterPasswordWidget> {
                       ),
                     ),
                   ),
-                  IconButton(icon: Icon(Icons.visibility_off,size: 20,), onPressed: (){})
+                  IconButton(icon: Icon( obscureText ? Icons.visibility_off:Icons.visibility,size: 20,), onPressed: (){
+                    setState(() {
+                      obscureText = !obscureText;
+                    });
+                  })
                 ],
               ),
             ),

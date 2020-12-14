@@ -34,7 +34,7 @@ abstract class ABSIdentityViewModel extends ChangeNotifier{
     String firstName,
     String lastName,
     String phoneNumber,
-    String referralCode
+    String referralCode, String dob
   });
   Future<Result<Profile>> getProfileDetail();
 }
@@ -87,13 +87,14 @@ class IdentityViewModel extends ABSIdentityViewModel{
   }
 
   @override
-  Future<Result<void>> registerIndividual({String email, String password, String firstName, String lastName, String phoneNumber, String referralCode}) {
+  Future<Result<void>> registerIndividual({String email, String password, String firstName,  String dob,String lastName, String phoneNumber, String referralCode}) {
     return _identityService.registerIndividual(
       email: email,
       password: password,
       firstName: firstName,
       lastName: lastName,
-      phoneNumber: phoneNumber
+      phoneNumber: phoneNumber,
+      dob: dob
     );
   }
 

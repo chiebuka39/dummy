@@ -17,7 +17,8 @@ abstract class ABSIdentityService{
     String firstName,
     String lastName,
     String phoneNumber,
-    String referralCode
+    String referralCode,
+   String dob
   });
   Future<Result<void>> completePasswordReset({String userId,
     String token,
@@ -109,7 +110,7 @@ class IdentityService extends ABSIdentityService {
     String firstName,
     String lastName,
     String phoneNumber,
-    String referralCode}) async{
+    String referralCode, String dob}) async{
 
       Result<void> result = Result(error: false);
 
@@ -118,7 +119,8 @@ class IdentityService extends ABSIdentityService {
         'password':password,
         "firstName": firstName,
         "lastName": lastName,
-        "phoneNumber": phoneNumber,
+        "phoneNumber": "+2348161167880",
+        'dateOfBirth':dob
       };
 
 
@@ -136,7 +138,6 @@ class IdentityService extends ABSIdentityService {
           result.error = true;
         }else {
           result.error = false;
-
         }
 
       }on DioError catch(e){
