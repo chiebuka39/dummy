@@ -29,7 +29,7 @@ class _InvestmentHighYieldDollarAmountInputState
   TextEditingController amountController;
   @override
   void initState() {
-    amountController = TextEditingController(text: "1");
+    amountController = TextEditingController();
     super.initState();
   }
   // TODO: Fix the textController make it make sense
@@ -92,7 +92,7 @@ class _InvestmentHighYieldDollarAmountInputState
             Padding(
               padding: const EdgeInsets.only(left: 20.0, right: 20),
               child: Text(
-                "₦ ${int.tryParse(amountController.text) * 390} (1 USD = 390.0 NGN)",
+                amountController.text == "" ? "" : "₦ ${int.tryParse(amountController.text) * 390} (1 USD = 390.0 NGN)",
                 style: TextStyle(
                   fontSize: 12,
                   fontFamily: AppStrings.fontNormal,

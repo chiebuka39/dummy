@@ -60,6 +60,7 @@ dependencies:
   timelines: ^0.0.2+1
   percent_indicator: ^2.1.8
   numeric_keyboard: ^1.0.0
+  provider_architecture: ^1.1.1+1
 
 
 

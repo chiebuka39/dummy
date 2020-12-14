@@ -14,8 +14,7 @@ class LoginScreen extends StatefulWidget {
   static Route<dynamic> route() {
     return MaterialPageRoute(
         builder: (_) => LoginScreen(),
-        settings:
-        RouteSettings(name: LoginScreen().toStringShort()));
+        settings: RouteSettings(name: LoginScreen().toStringShort()));
   }
   @override
   _LoginScreenState createState() => _LoginScreenState();
@@ -27,8 +26,8 @@ class _LoginScreenState extends State<LoginScreen> {
   ABSIdentityViewModel _identityViewModel;
   bool obscureText2 = true;
   bool autoValidate = false;
-  String _email;
-  String _password;
+  String _email = "";
+  String _password = "";
   bool _emailError = false;
 
   @override

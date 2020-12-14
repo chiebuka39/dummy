@@ -27,12 +27,12 @@ class ProfileScreen extends StatefulWidget {
 }
 
 class _ProfileScreenState extends State<ProfileScreen> {
-  ABSInvestmentViewModel _investmentViewModel;
+  // ABSInvestmentViewModel _investmentViewModel;
   ABSIdentityViewModel _identityViewModel;
   @override
   Widget build(BuildContext context) {
     _identityViewModel = Provider.of(context);
-    _investmentViewModel = Provider.of(context);
+    // _investmentViewModel = Provider.of(context);
     return Scaffold(
       appBar: AppBar(
         elevation: 0,
@@ -132,7 +132,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
     final box = Hive.box(AppStrings.state);
     box.put("user", null);
     box.put("state", SecondaryState(false));
-    _investmentViewModel.reset();
+    // _investmentViewModel.reset();
     Navigator.of(context, rootNavigator: true).pop();
     Navigator.pushAndRemoveUntil(
         context,

@@ -72,7 +72,7 @@ class _HighYieldDetailsDollarState extends State<HighYieldDetailsDollar> {
                   Padding(
                     padding: const EdgeInsets.only(top: 39.0, left: 20),
                     child: Text(
-                      "Zimvest High Yield Dollar ${widget.duration} Days",
+                      "Zimvest High Yield Dollar ${widget.duration}",
                       style: TextStyle(
                           fontSize: 15, fontFamily: AppStrings.fontBold),
                     ),
@@ -145,7 +145,7 @@ class _HighYieldDetailsDollarState extends State<HighYieldDetailsDollar> {
                               title: "Get Started",
                               onTap: () => Navigator.push(
                                 context,
-                                HighYieldInvestmentDollarUniqueName.route(),
+                                HighYieldInvestmentDollarUniqueName.route(widget.duration),
                               ),
                             ),
                           ),
