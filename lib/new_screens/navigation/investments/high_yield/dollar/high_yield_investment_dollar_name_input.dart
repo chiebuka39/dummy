@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:zimvest/new_screens/navigation/investments/dollar/high_yield_investment_dollar_amout_input.dart';
+import 'package:zimvest/new_screens/navigation/investments/high_yield/dollar/high_yield_investment_dollar_amout_input.dart';
 import 'package:zimvest/new_screens/navigation/investments/widgets/text_field.dart';
 import 'package:zimvest/styles/colors.dart';
 import 'package:zimvest/utils/margin.dart';

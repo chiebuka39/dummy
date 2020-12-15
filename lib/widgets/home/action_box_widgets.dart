@@ -6,7 +6,7 @@ import 'package:zimvest/utils/strings.dart';
 
 class ActionBoxWidget extends StatelessWidget {
   const ActionBoxWidget({
-    Key key,@required this.title,@required this.desc, this.img = 'wealth1',
+    Key key,@required this.title,@required this.desc, this.img,
     this.color = AppColors.kGrey, this.textColor = AppColors.kWhite, this.onTap,
   }) : super(key: key);
 
@@ -19,6 +19,7 @@ class ActionBoxWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    String pic = img == null ? 'wealth1' : img;
     return GestureDetector(
       onTap: onTap,
       child: Container(
@@ -50,7 +51,7 @@ class ActionBoxWidget extends StatelessWidget {
                 )
               ],),
             Spacer(),
-            SvgPicture.asset("images/new/$img.svg", width: 120,)
+            SvgPicture.asset("images/new/$pic.svg", width: 120,)
           ],
         ),
       ),

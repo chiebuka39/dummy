@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:zimvest/new_screens/navigation/investments/naira/high_yield_investment_naira_name_input.dart';
+import 'package:zimvest/new_screens/navigation/investments/high_yield/naira/high_yield_investment_naira_name_input.dart';
 import 'package:zimvest/styles/colors.dart';
 import 'package:zimvest/utils/margins.dart';
 import 'package:zimvest/utils/strings.dart';

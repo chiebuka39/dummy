@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:zimvest/new_screens/navigation/investments/naira/investment_summary.dart';
+import 'package:zimvest/new_screens/navigation/investments/high_yield/dollar/investment_summary_high_yield_dollar.dart';
+import 'package:zimvest/new_screens/navigation/investments/high_yield/dollar/payment_source_wired_transfer.dart';
 import 'package:zimvest/styles/colors.dart';
 import 'package:zimvest/utils/margin.dart';
 import 'package:zimvest/utils/margins.dart';
@@ -109,8 +110,9 @@ class _HighYieldInvestmentDollarPurchaseSourceState
                                     decoration: BoxDecoration(
                                       borderRadius: BorderRadius.circular(10),
                                       color: isNaira == true
-                                        ? AppColors.kPrimaryColor
-                                        : AppColors.kWhite,),
+                                          ? AppColors.kPrimaryColor
+                                          : AppColors.kWhite,
+                                    ),
                                   ),
                                 ],
                               ),
@@ -140,8 +142,9 @@ class _HighYieldInvestmentDollarPurchaseSourceState
                                     decoration: BoxDecoration(
                                       borderRadius: BorderRadius.circular(10),
                                       color: isNaira == false
-                                        ? AppColors.kPrimaryColor
-                                        : AppColors.kWhite,),
+                                          ? AppColors.kPrimaryColor
+                                          : AppColors.kWhite,
+                                    ),
                                   ),
                                 ],
                               ),
@@ -156,7 +159,9 @@ class _HighYieldInvestmentDollarPurchaseSourceState
               Spacer(),
             ],
           ),
-          isNaira == true ? Expanded(child: NairaPage()): Expanded(child: DollarPage())
+          isNaira == true
+              ? Expanded(child: NairaPage())
+              : Expanded(child: DollarPage())
         ],
       ),
     );
@@ -168,16 +173,18 @@ class NairaPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       // color: AppColors.kWealth,
-      child: Column(children: [
-        YMargin(25),
-        PaymentSourceButton(
-              paymentsource: "Naira Wallet",
-              image: "wallet",
-              amount: "${AppStrings.nairaSymbol}30,000,000",
-              color: AppColors.kTextColor,
-              onTap: null,
-            ),
-      ],)
+      child: Column(
+        children: [
+          YMargin(25),
+          PaymentSourceButton(
+            paymentsource: "Naira Wallet",
+            image: "wallet",
+            amount: "${AppStrings.nairaSymbol}30,000,000",
+            color: AppColors.kTextColor,
+            onTap: () => Navigator.push(context, InvestmentSummaryScreenDollar.route()),
+          ), 
+        ],
+      ),
     );
   }
 }
@@ -186,28 +193,29 @@ class DollarPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-            child: Column(children: [
+        child: Column(
+      children: [
         YMargin(25),
         PaymentSourceButton(
-              paymentsource: "Dollar Wallet",
-              image: "wallet",
-              amount: "${AppStrings.dollarSymbol}30,000,000",
-              color: AppColors.kTextColor,
-              onTap: null,
-            ),
-            YMargin(25),
-             PaymentSourceButtonSpecial(
-              paymentsource: "Wired Transfer",
-              image: "wallet",
-              onTap: null,
-            ),
-            YMargin(25),
-             PaymentSourceButtonSpecial(
-              paymentsource: "R|rexelpay",
-              color: AppColors.kHighYield,
-              onTap: null,
-            ),
-      ],)
-    );
+          paymentsource: "Dollar Wallet",
+          image: "wallet",
+          amount: "${AppStrings.dollarSymbol}30,000,000",
+          color: AppColors.kTextColor,
+          onTap: () => Navigator.push(context, InvestmentSummaryScreenDollar.route()),
+        ),
+        YMargin(25),
+        PaymentSourceButtonSpecial(
+          paymentsource: "Wired Transfer",
+          image: "wallet",
+          onTap:() => Navigator.push(context, WiredTransferScreen.route()),
+        ),
+        YMargin(25),
+        PaymentSourceButtonSpecial(
+          paymentsource: "R|rexelpay",
+          color: AppColors.kHighYield,
+          onTap: null,
+        ),
+      ],
+    ));
   }
 }

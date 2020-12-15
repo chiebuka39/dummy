@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:zimvest/new_screens/navigation/investments/naira/investment_summary.dart';
+import 'package:zimvest/new_screens/navigation/investments/high_yield/naira/investment_summary.dart';
 import 'package:zimvest/styles/colors.dart';
 import 'package:zimvest/utils/margin.dart';
 import 'package:zimvest/utils/margins.dart';
