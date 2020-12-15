@@ -27,6 +27,7 @@ abstract class ABSIdentityService{
   Future<Result<CompletedSections>> checkCompletedSections({String token});
   Future<Result<Profile>> getProfileDetail({String token});
   Future<Result<bool>> emailAvailability(String email);
+  Future<Result<void>> resetPassword(String email);
   Future<Result<bool>> phoneAvailability(String phone);
   Future<Result<void>> setUpPin({String pin, String token});
   Future<Result<Map<String,dynamic>>> sendEmailOTP(String email);
@@ -415,6 +416,40 @@ class IdentityService extends ABSIdentityService {
       }else {
         result.error = false;
         Map<String,dynamic> data = Map();
+
+      }
+
+    }on DioError catch(e){
+      print("error ${e.response.data}");
+      result.error = true;
+    }
+
+    return result;
+  }
+
+  @override
+  Future<Result<void>> resetPassword(String email) async{
+    Result<void> result = Result(error: false);
+
+
+    var url = "${AppStrings.baseUrl}zimvest.services.identity/api/Account/reset-password";
+    var body = {
+      'email': email
+    };
+
+    print("lll $url");
+    print("lll $body");
+    try{
+      var response = await dio.post(url,data: body);
+      final int statusCode = response.statusCode;
+      var response1 = response.data;
+      print("iii ${response1}");
+
+      if (statusCode != 200) {
+        result.errorMessage = response1['message'];
+        result.error = true;
+      }else {
+        result.error = false;
 
       }
 

@@ -1,8 +1,10 @@
 import 'package:dots_indicator/dots_indicator.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:provider/provider.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 import 'package:timelines/timelines.dart';
+import 'package:zimvest/data/view_models/identity_view_model.dart';
 import 'package:zimvest/new_screens/navigation/wealth/aspire/aspire_box_screen.dart';
 import 'package:zimvest/new_screens/navigation/wealth/create/wealth_box_screen.dart';
 import 'package:zimvest/new_screens/navigation/wealth_screen.dart';
@@ -24,6 +26,8 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen> {
   PageController controller = PageController();
 
+  ABSIdentityViewModel identityViewModel;
+
 
   @override
   void initState() {
@@ -32,6 +36,7 @@ class _HomeScreenState extends State<HomeScreen> {
   }
   @override
   Widget build(BuildContext context) {
+    identityViewModel = Provider.of(context);
     return Scaffold(
       body: SafeArea(
         child: SingleChildScrollView(
@@ -54,7 +59,7 @@ class _HomeScreenState extends State<HomeScreen> {
                               Center(child: SvgPicture.asset("images/profile.svg"))),
                     ),
                     XMargin(20),
-                    Text("Hi, Emmanuel"),
+                    Text("Hi, ${identityViewModel.user.fullname.split(" ").first}"),
                     Spacer(),
                     EarnFreeCashWidget()
                   ],
