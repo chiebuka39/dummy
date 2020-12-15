@@ -79,12 +79,7 @@ class _HighYieldNairaScreenState extends State<HighYieldNairaScreen> {
                                   onTap: () => Navigator.push(
                                     context,
                                     HighYieldDetails.route(
-                                        dur: "${instrumentNames[index]}",
-                                        id: e.id,
-                                        maturityDate: e.maturityDate,
-                                        rate: e.depositRate,
-                                        minimumAmount: e.minimumAmount,
-                                        maximumAmount: e.maximumAmount),
+                                        "${instrumentNames[index]}"),
                                   ),
                                   child: Padding(
                                     padding:

@@ -8,37 +8,13 @@ import 'package:zimvest/widgets/buttons.dart';
 
 class HighYieldDetails extends StatefulWidget {
   final String duration;
-  final int id;
-  final String maturityDate;
-  final String rate;
-  final String minimumAmount;
-  final String maximumAmount;
 
-  const HighYieldDetails(
-      {Key key,
-      this.duration,
-      this.id,
-      this.maturityDate,
-      this.rate,
-      this.minimumAmount,
-      this.maximumAmount})
-      : super(key: key);
-  static Route<dynamic> route({
-    String dur,
-    int id,
-    String maturityDate,
-    String rate,
-    String minimumAmount,
-    String maximumAmount,
-  }) {
+  const HighYieldDetails({Key key, this.duration}) : super(key: key);
+  static Route<dynamic> route(String dur) {
     return MaterialPageRoute(
       builder: (_) => HighYieldDetails(
-          duration: dur,
-          id: id,
-          maturityDate: maturityDate,
-          rate: rate,
-          minimumAmount: minimumAmount,
-          maximumAmount: maximumAmount),
+        duration: dur,
+      ),
       settings: RouteSettings(
         name: HighYieldDetails().toStringShort(),
       ),
@@ -70,11 +46,12 @@ class _HighYieldDetailsState extends State<HighYieldDetails> {
             ),
           ),
           Positioned(
-              top: screenHeight(context) / 10,
-              left: screenWidth(context) / 15,
-              right: screenWidth(context) / 15,
-              bottom: screenHeight(context) / 1.6,
-              child: SvgPicture.asset("images/money_glass.svg")),
+            top: screenHeight(context) / 10,
+            left: screenWidth(context) / 15,
+            right: screenWidth(context) / 15,
+            bottom: screenHeight(context) / 1.6,
+            child: SvgPicture.asset("images/money_glass.svg")
+          ),
           Positioned(
             top: screenHeight(context) / 2.5,
             left: 0,
@@ -167,13 +144,7 @@ class _HighYieldDetailsState extends State<HighYieldDetails> {
                               title: "Get Started",
                               onTap: () => Navigator.push(
                                 context,
-                                HighYieldInvestmentNairaUniqueName.route(
-                                    id: widget.id,
-                                    duration: widget.duration,
-                                    maturityDate: widget.maturityDate,
-                                    rate: widget.rate,
-                                    minimumAmount: widget.minimumAmount,
-                                    maximumAmount: widget.maximumAmount),
+                                HighYieldInvestmentNairaUniqueName.route(),
                               ),
                             ),
                           ),
