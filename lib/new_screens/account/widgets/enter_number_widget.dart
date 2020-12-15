@@ -69,6 +69,9 @@ class _EnterPhoneWidgetState extends State<EnterPhoneWidget> {
             RoundedNextButton(
               loading: loading,
               onTap: () async{
+                if(loading){
+                  return;
+                }
                 setState(() {
                   autoValidate = true;
                 });

@@ -129,7 +129,7 @@ class _EnterMailWidgetState extends State<ChangeMailWidget> {
                 child: PrimaryButtonNew(
                   title: "Change Email Address",
                   loading: loading,
-                  onTap: () async{
+                  onTap: loading? null: () async{
                     setState(() {
                       autoValidate = true;
                     });
