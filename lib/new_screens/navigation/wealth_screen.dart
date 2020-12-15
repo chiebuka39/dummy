@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:zimvest/new_screens/navigation/investments/naira/investment_high_yield_screen.dart';
+import 'package:zimvest/new_screens/navigation/investments/fixed/fixed_income_screen.dart';
+import 'package:zimvest/new_screens/navigation/investments/investment_high_yield_screen.dart';
 import 'package:zimvest/styles/colors.dart';
 import 'package:zimvest/utils/margin.dart';
 import 'package:zimvest/utils/strings.dart';
@@ -141,6 +142,7 @@ class _WealthScreenState extends State<WealthScreen> {
                     child: Column(
                       children: [
                         ActionBoxWidget(
+                          img: "high_yield",
                           onTap: (){
                             Navigator.push(context, InvestmentHighYieldScreen.route());
                           },
@@ -150,7 +152,8 @@ class _WealthScreenState extends State<WealthScreen> {
                           color: AppColors.kHighYield,
                         ),
                         ActionBoxWidget(
-                          onTap: (){},
+                          img: "fixed_income",
+                          onTap: () => Navigator.push(context, FixedIncomeHome.route()),
                             title: "Zimvest Fixed Income",
                             desc: "This savings plan assists you save in a ",
                             color: AppColors.kFixed),

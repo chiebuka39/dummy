@@ -1,22 +1,20 @@
 import 'package:flutter/material.dart';
-import 'package:provider_architecture/provider_architecture.dart';
 import 'package:zimvest/data/models/investment/term_instruments.dart';
-import 'package:zimvest/data/view_models/investment_view_model.dart';
-import 'package:zimvest/new_screens/navigation/investments/naira/high_yield_investment_details_naira.dart';
+import 'package:zimvest/new_screens/navigation/investments/high_yield/dollar/high_yield_investment_details_dollars.dart';
 import 'package:zimvest/new_screens/navigation/investments/see_all_investments.dart';
 import 'package:zimvest/new_screens/navigation/investments/widgets/card_widget.dart';
 import 'package:zimvest/styles/colors.dart';
 import 'package:zimvest/utils/strings.dart';
 
-class HighYieldNairaScreen extends StatefulWidget {
+class HighYieldDollarScreen extends StatefulWidget {
   final List<TermInstrument> instrument;
 
-  const HighYieldNairaScreen({Key key, this.instrument}) : super(key: key);
+  const HighYieldDollarScreen({Key key, this.instrument}) : super(key: key);
   @override
-  _HighYieldNairaScreenState createState() => _HighYieldNairaScreenState();
+  _HighYieldDollarScreenState createState() => _HighYieldDollarScreenState();
 }
 
-class _HighYieldNairaScreenState extends State<HighYieldNairaScreen> {
+class _HighYieldDollarScreenState extends State<HighYieldDollarScreen> {
   @override
   Widget build(BuildContext context) {
     List<String> instrumentNames =
@@ -27,7 +25,6 @@ class _HighYieldNairaScreenState extends State<HighYieldNairaScreen> {
       child: ListView.builder(
         itemCount: instrumentNames.length,
         itemBuilder: (context, index) {
-          print(instrumentNames[index]);
           return Padding(
             padding: const EdgeInsets.symmetric(horizontal: 20.0),
             child: Column(
@@ -46,7 +43,7 @@ class _HighYieldNairaScreenState extends State<HighYieldNairaScreen> {
                       onTap: () {
                         Navigator.push(
                             context,
-                            AllNairaInvestments.route(
+                            AllDollarInvestments.route(
                                 "${instrumentNames[index]}"));
                       },
                       child: Row(
@@ -80,13 +77,13 @@ class _HighYieldNairaScreenState extends State<HighYieldNairaScreen> {
                                 (e) => GestureDetector(
                                   onTap: () => Navigator.push(
                                     context,
-                                    HighYieldDetails.route(
+                                    HighYieldDetailsDollar.route(
                                         "${instrumentNames[index]}"),
                                   ),
                                   child: Padding(
                                     padding:
                                         const EdgeInsets.only(bottom: 20.0),
-                                    child: InvestmentCardNaira(
+                                    child: InvestmentCardDollar(
                                       investmentDuration: e.instrumentName,
                                       maximumAmount: e.maximumAmount,
                                       minimumAmount: e.minimumAmount,

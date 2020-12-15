@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:provider_architecture/provider_architecture.dart';
 import 'package:zimvest/data/view_models/investment_view_model.dart';
-import 'package:zimvest/new_screens/navigation/investments/naira/investment_high_yield_naira.dart';
-import 'package:zimvest/new_screens/navigation/investments/dollar/invetment_high_yield_dollar_screen.dart';
+import 'package:zimvest/new_screens/navigation/investments/high_yield/dollar/invetment_high_yield_dollar_screen.dart';
+import 'package:zimvest/new_screens/navigation/investments/high_yield/naira/investment_high_yield_naira.dart';
 import 'package:zimvest/styles/colors.dart';
 import 'package:zimvest/utils/margin.dart';
 import 'package:zimvest/utils/strings.dart';
@@ -29,7 +29,7 @@ class _InvestmentHighYieldScreenState extends State<InvestmentHighYieldScreen> {
     double tabWidth = MediaQuery.of(context).size.width - 40;
     return ViewModelProvider<InvestmentHighYieldViewModel>.withConsumer(
       viewModelBuilder: () => InvestmentHighYieldViewModel(),
-      // onModelReady: (model) => model.getNairaTermInstruments(),
+      onModelReady: (model) => model.getNairaTermInstruments(),
       builder: (context, model, _) => Scaffold(
         body: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
