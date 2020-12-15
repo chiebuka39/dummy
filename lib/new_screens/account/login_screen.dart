@@ -187,7 +187,7 @@ class _LoginScreenState extends State<LoginScreen> {
               YMargin(50),
               Center(
                 child: FlatButton(onPressed: (){
-                  Navigator.of(context).pushReplacement(CreateAccountScreen.route());
+                  Navigator.of(context).push(CreateAccountScreen.route());
                 }, child: Text("Don't have an account? Create account",
                   style: TextStyle(fontSize: 12),)),
               ),
