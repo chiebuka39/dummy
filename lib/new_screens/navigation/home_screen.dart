@@ -4,6 +4,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:provider/provider.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 import 'package:timelines/timelines.dart';
+import 'package:zimvest/data/view_models/dashboard_view_model.dart';
 import 'package:zimvest/data/view_models/identity_view_model.dart';
 import 'package:zimvest/new_screens/navigation/wealth/aspire/aspire_box_screen.dart';
 import 'package:zimvest/new_screens/navigation/wealth/create/wealth_box_screen.dart';
@@ -27,6 +28,7 @@ class _HomeScreenState extends State<HomeScreen> {
   PageController controller = PageController();
 
   ABSIdentityViewModel identityViewModel;
+  ABSDashboardViewModel dashboardViewModel;
 
 
   @override
@@ -37,6 +39,7 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     identityViewModel = Provider.of(context);
+    dashboardViewModel = Provider.of(context);
     return Scaffold(
       body: SafeArea(
         child: SingleChildScrollView(
@@ -88,13 +91,13 @@ class _HomeScreenState extends State<HomeScreen> {
                                 offset:Offset(0,-4),
                                 child: Text(AppStrings.nairaSymbol, style: TextStyle(fontSize: 14,color: AppColors.kSecondaryBoldText),)),
                             XMargin(2),
-                            Text("000,000",
+                            Text(dashboardViewModel.dashboardModel.nairaPortfolio.split(".").first,
                               style: TextStyle(fontSize: 25, fontFamily: AppStrings.fontMedium,
                                   color: AppColors.kSecondaryBoldText),),
                             XMargin(3),
                             Transform.translate(
                               offset:Offset(0,-4),
-                              child: Text(".00",
+                              child: Text(".${dashboardViewModel.dashboardModel.nairaPortfolio.split(".").last}",
                                 style: TextStyle(fontSize: 14, fontFamily: AppStrings.fontMedium,color: AppColors.kSecondaryBoldText),),
                             ),
                           ],),
@@ -142,13 +145,14 @@ class _HomeScreenState extends State<HomeScreen> {
                                 offset:Offset(0,-4),
                                 child: Text(AppStrings.nairaSymbol, style: TextStyle(fontSize: 14),)),
                             XMargin(2),
-                            Text("000,000",
-                              style: TextStyle(fontSize: 25, fontFamily: AppStrings.fontMedium),),
+                            Text(dashboardViewModel.dashboardModel.dollarPortfolio.split(".").first,
+                              style: TextStyle(fontSize: 25, fontFamily: AppStrings.fontMedium,
+                                  color: AppColors.kSecondaryBoldText),),
                             XMargin(3),
                             Transform.translate(
                               offset:Offset(0,-4),
-                              child: Text(".00",
-                                style: TextStyle(fontSize: 14, fontFamily: AppStrings.fontMedium),),
+                              child: Text(".${dashboardViewModel.dashboardModel.dollarPortfolio.split(".").last}",
+                                style: TextStyle(fontSize: 14, fontFamily: AppStrings.fontMedium,color: AppColors.kSecondaryBoldText),),
                             ),
                           ],),
                           YMargin(16),

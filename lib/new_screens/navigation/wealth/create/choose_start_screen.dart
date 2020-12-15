@@ -95,6 +95,7 @@ class _ChooseStartScreenState extends State<ChooseStartScreen> {
                     if(time != null){
                       setState(() {
                         _time = time;
+                        today = false;
                       });
                     }
                   },

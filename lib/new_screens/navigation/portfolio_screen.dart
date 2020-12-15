@@ -185,7 +185,9 @@ class _SavingsSectionState extends State<SavingsSection> with AfterLayoutMixin<S
     var r1 = await savingViewModel.getSavingPlans(token: identityViewModel.user.token);
     var r2 = await savingViewModel.getProductTypes(token: identityViewModel.user.token);
     if(r1.error == false && r2.error == false ){
-      wealthBox = r1.data.where((element) => element.productId == 1).first;
+
+      wealthBox =  r1.data.where((element) => element.productId == 1).isNotEmpty ?
+      r1.data.where((element) => element.productId == 1).first : null;
       aspirePlans = r1.data.where((element) => element.productId == 2).toList();
        r1.data.forEach((element) {
         totalBalance = totalBalance + element.amountSaved;

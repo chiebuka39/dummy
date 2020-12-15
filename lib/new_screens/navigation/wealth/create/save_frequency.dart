@@ -28,7 +28,9 @@ class _SaveFrequencyScreenState extends State<SaveFrequencyScreen> {
         iconTheme: IconThemeData(color: Colors.black87),
         leading: IconButton(
           icon: Icon(Icons.keyboard_arrow_left_rounded,size: 25,),
-          onPressed: (){},
+          onPressed: (){
+            Navigator.pop(context);
+          },
         ),
         backgroundColor: Colors.transparent,
         title: Text("Create Zimvest WealthBox",
