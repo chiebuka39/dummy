@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:zimvest/data/view_models/identity_view_model.dart';
+import 'package:zimvest/new_screens/account/create_account.dart';
+import 'package:zimvest/new_screens/account/create_pin_screen.dart';
 import 'package:zimvest/new_screens/account/forgot_password_screen.dart';
 import 'package:zimvest/new_screens/tabs.dart';
 import 'package:zimvest/styles/colors.dart';
@@ -172,14 +174,21 @@ class _LoginScreenState extends State<LoginScreen> {
                       AppUtils.showError(context);
                       print("login failed");
                     }else{
-                      Navigator.of(context).pushReplacement(TabsContainer.route());
+                      if(_identityViewModel.user.isPinSetUp == false){
+                        Navigator.of(context).pushReplacement(CreatePinScreen.route());
+                      }else{
+                        Navigator.of(context).pushReplacement(TabsContainer.route());
+                      }
+
                     }
                     //
                   }
               ),
               YMargin(50),
               Center(
-                child: FlatButton(onPressed: (){}, child: Text("Don't have an account? Create account",
+                child: FlatButton(onPressed: (){
+                  Navigator.of(context).pushReplacement(CreateAccountScreen.route());
+                }, child: Text("Don't have an account? Create account",
                   style: TextStyle(fontSize: 12),)),
               ),
               YMargin(60),

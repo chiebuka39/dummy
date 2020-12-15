@@ -58,12 +58,12 @@ class AspireContainerWidget extends StatelessWidget {
 
                               Spacer(),
                               CircularPercentIndicator(
-                                radius: 30.0,
+                                radius: 35.0,
                                 lineWidth: 3.0,
                                 animation: true,
-                                percent: 0.7,
+                                percent: double.parse(goal.successRate.replaceAll("%", ""))/100,
                                 center: new Text(
-                                  "7%",
+                                  "${goal.successRate}",
                                   style:
                                   new TextStyle(fontWeight: FontWeight.bold, fontSize: 8,
                                       color: AppColors.kWhite),

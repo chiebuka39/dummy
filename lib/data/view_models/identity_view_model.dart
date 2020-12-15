@@ -94,7 +94,8 @@ class IdentityViewModel extends ABSIdentityViewModel{
       firstName: firstName,
       lastName: lastName,
       phoneNumber: phoneNumber,
-      dob: dob
+      dob: dob,
+
     );
   }
 

@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:provider/provider.dart';
+import 'package:zimvest/new_screens/tabs.dart';
 import 'package:zimvest/styles/colors.dart';
 import 'package:zimvest/utils/margin.dart';
 import 'package:zimvest/utils/strings.dart';
@@ -116,7 +118,7 @@ class _CreatePinWidgetState extends State<CreatePinWidget> {
           ],),
           YMargin(60),
           RoundedNextButton(
-            onTap: widget.onNext,
+            onTap:(){},
           ),
           YMargin(40),
 
@@ -141,6 +143,7 @@ class _CreatePinWidgetState extends State<CreatePinWidget> {
                       setState(() {
                         pin4 = "1";
                       });
+                      confirmCode();
                     }
                   },
                   child: Container(
@@ -154,23 +157,24 @@ class _CreatePinWidgetState extends State<CreatePinWidget> {
               Expanded(
                 child: GestureDetector(
                   onTap: (){
-                      if(pin1.isEmpty){
-                        setState(() {
-                          pin1 = "2";
-                        });
-                      }else if(pin2.isEmpty){
-                        setState(() {
-                          pin2 = "2";
-                        });
-                      }else if(pin3.isEmpty){
-                        setState(() {
-                          pin3 = "2";
-                        });
-                      }else if(pin4.isEmpty){
-                        setState(() {
-                          pin4 = "2";
-                        });
-                      }
+                    if(pin1.isEmpty){
+                      setState(() {
+                        pin1 = "2";
+                      });
+                    }else if(pin2.isEmpty){
+                      setState(() {
+                        pin2 = "2";
+                      });
+                    }else if(pin3.isEmpty){
+                      setState(() {
+                        pin3 = "2";
+                      });
+                    }else if(pin4.isEmpty){
+                      setState(() {
+                        pin4 = "2";
+                      });
+                      confirmCode();
+                    }
                   },
                   child: Container(
                     height: 50,
@@ -199,6 +203,7 @@ class _CreatePinWidgetState extends State<CreatePinWidget> {
                       setState(() {
                         pin4 = "3";
                       });
+                      confirmCode();
                     }
                   },
                   child: Container(
@@ -233,6 +238,7 @@ class _CreatePinWidgetState extends State<CreatePinWidget> {
                         setState(() {
                           pin4 = "4";
                         });
+                        confirmCode();
                       }
                     },
                     child: Container(
@@ -262,6 +268,7 @@ class _CreatePinWidgetState extends State<CreatePinWidget> {
                         setState(() {
                           pin4 = "5";
                         });
+                        confirmCode();
                       }
                     },
                     child: Container(
@@ -291,6 +298,7 @@ class _CreatePinWidgetState extends State<CreatePinWidget> {
                         setState(() {
                           pin4 = "6";
                         });
+                        confirmCode();
                       }
                     },
                     child: Container(
@@ -326,6 +334,7 @@ class _CreatePinWidgetState extends State<CreatePinWidget> {
                       setState(() {
                         pin4 = "7";
                       });
+                      confirmCode();
                     }
                   },
                   child: Container(
@@ -355,6 +364,7 @@ class _CreatePinWidgetState extends State<CreatePinWidget> {
                       setState(() {
                         pin4 = "8";
                       });
+                      confirmCode();
                     }
                   },
                   child: Container(
@@ -384,6 +394,7 @@ class _CreatePinWidgetState extends State<CreatePinWidget> {
                       setState(() {
                         pin4 = "9";
                       });
+                      confirmCode();
                     }
                   },
                   child: Container(
@@ -425,6 +436,7 @@ class _CreatePinWidgetState extends State<CreatePinWidget> {
                       setState(() {
                         pin4 = "0";
                       });
+                      confirmCode();
                     }
                   },
                   child: Container(
@@ -437,7 +449,20 @@ class _CreatePinWidgetState extends State<CreatePinWidget> {
               ),
               Expanded(
                 child: GestureDetector(
-                  onTap: (){},
+                  onTap: (){
+                    if(pin4.isNotEmpty){
+                      pin4 = '';
+                    }else if(pin3.isNotEmpty){
+                      pin3 = '';
+                    }else if(pin2.isNotEmpty){
+                      pin2 = '';
+                    }else if(pin1.isNotEmpty){
+                      pin1 = '';
+                    }
+                    setState(() {
+
+                    });
+                  },
                   child: Container(
                     height: 50,
                     child: Center(
@@ -451,5 +476,22 @@ class _CreatePinWidgetState extends State<CreatePinWidget> {
 
         ],),
     );
+  }
+
+  void confirmCode() async{
+
+    EasyLoading.show(status: 'Creating account');
+    var result = await identityViewModel.setUpPin(pin: "$pin1$pin2$pin3$pin4");
+
+    if(result.error == true) {
+      EasyLoading.showError('Error occurred');
+    }else{
+      EasyLoading.showSuccess('Pin Created');
+      Navigator.pushAndRemoveUntil(
+          context,
+          MaterialPageRoute(builder: (context) => TabsContainer()),
+              (Route<dynamic> route) => false);
+
+    }
   }
 }

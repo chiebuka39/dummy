@@ -180,7 +180,7 @@ class _AspireDetailsScreenState extends State<AspireDetailsScreen> with
                                 radius: 70.0,
                                 lineWidth: 7.0,
                                 animation: true,
-                                percent: double.parse(widget.goal.successRate.replaceAll("%", "")),
+                                percent: double.parse(widget.goal.successRate.replaceAll("%", ""))/100,
                                 center: new Text(
                                   "${widget.goal.successRate}",
                                   style:

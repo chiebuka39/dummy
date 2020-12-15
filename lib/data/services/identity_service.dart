@@ -119,8 +119,9 @@ class IdentityService extends ABSIdentityService {
         'password':password,
         "firstName": firstName,
         "lastName": lastName,
-        "phoneNumber": "+2348161167880",
-        'dateOfBirth':dob
+        "phoneNumber": "+234$phoneNumber",
+        'dateOfBirth':dob,
+        'requestSource':'MOBILE'
       };
 
 
@@ -388,10 +389,10 @@ class IdentityService extends ABSIdentityService {
 
   @override
   Future<Result<void>> setUpPin({String pin, String token})async {
-    Result<Map<String,dynamic>> result = Result(error: false);
+    Result<void> result = Result(error: false);
 
 
-    var url = "${AppStrings.baseUrl}zimvest.services.identity/api/Account/send-email-otp";
+    var url = "${AppStrings.baseUrl}zimvest.services.identity/api/Account/setup-pin";
     var body = {
       'pin': pin
     };
@@ -400,6 +401,8 @@ class IdentityService extends ABSIdentityService {
     };
 
     print("lll $url");
+    print("lll $body");
+    print("lll $headers");
     try{
       var response = await dio.post(url,data: body, options: Options(headers: headers));
       final int statusCode = response.statusCode;
@@ -412,9 +415,7 @@ class IdentityService extends ABSIdentityService {
       }else {
         result.error = false;
         Map<String,dynamic> data = Map();
-        data['trackingId'] = response1['data']['trackingId'];
-        data['verificationId'] = response1['data']['verificationId'];
-        result.data = data;
+
       }
 
     }on DioError catch(e){

@@ -4,13 +4,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:provider/provider.dart';
 import 'package:zimvest/data/view_models/identity_view_model.dart';
+import 'package:zimvest/new_screens/account/login_screen.dart';
 import 'package:zimvest/new_screens/account/widgets/change_mail_widget.dart';
 import 'package:zimvest/styles/colors.dart';
+import 'package:zimvest/utils/app_utils.dart';
 import 'package:zimvest/utils/margin.dart';
 import 'package:zimvest/utils/strings.dart';
 import 'package:zimvest/widgets/buttons.dart';
 
-import '../../../screens/account/login_screen.dart';
 
 class VerifCodeWidget extends StatefulWidget {
   const VerifCodeWidget({
@@ -658,15 +659,17 @@ class _VerifCodeWidgetState extends State<VerifCodeWidget> with AfterLayoutMixin
     if(result.error == true) {
       EasyLoading.showError('Error occurred');
     }else{
+
       var result = await identityViewModel.registerIndividual(
         password: identityViewModel.password,
         phoneNumber: identityViewModel.phoneNumber,
         firstName: identityViewModel.firstName,
         lastName: identityViewModel.lastName,
         email: identityViewModel.email,
-        dob: identityViewModel.dob.toIso8601String()
+        dob: "${identityViewModel.dob.year}-${AppUtils.addPreceedingZero(identityViewModel.dob.month.toString())}-${AppUtils.addPreceedingZero(identityViewModel.dob.day.toString())}"
       );
       if(result.error == false){
+        await  Future.delayed(Duration(seconds: 5));
         var result = await identityViewModel.login(
           identityViewModel.email, identityViewModel.password,
         );
