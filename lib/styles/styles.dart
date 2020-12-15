@@ -6,6 +6,14 @@ class AppStyles{
       fontSize: 12,
       color: AppColors.kLightTitleText
   );
+  static TextStyle sectionHeader = TextStyle(
+      fontSize: 16,
+      fontFamily: "Caros-Bold",
+      color: AppColors.kAccountTextColor
+  );
+  static TextStyle sectionContent =  TextStyle(fontSize: 10,
+      height: 1.7,
+      color: AppColors.kAccountTextColor);
   static TextStyle tinyTitle = TextStyle(
       color: AppColors.kLightText, fontSize: 10, letterSpacing: -0.08);
 

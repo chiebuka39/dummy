@@ -14,6 +14,7 @@ import 'package:zimvest/screens/account/login_screen.dart';
 import 'package:zimvest/screens/analysis/investment_persona_screen.dart';
 import 'package:zimvest/screens/banks_cards/manage_banks_cards.dart';
 import 'package:zimvest/screens/my_planner/target_planner.dart';
+import 'package:zimvest/screens/personal_worths/personal_worth.dart';
 import 'package:zimvest/screens/tabs.dart';
 import 'package:zimvest/screens/wallet/wallet_screen.dart';
 import 'package:zimvest/styles/colors.dart';
@@ -50,7 +51,7 @@ class _MenuContainerState extends State<MenuContainer> {
           Container(
             color: AppColors.kPrimaryColor,
             child: SafeArea(
-              child: Column(
+              child: ListView(
                 children: [
                   YMargin(5),
                   Row(
@@ -129,7 +130,7 @@ class _MenuContainerState extends State<MenuContainer> {
                       Navigator.of(context).push(ManageCardsAndBank.route());
                     },
                   ),
-                  Spacer(),
+                  YMargin(60),
                   SideMenuItem(
                     icon: "account",
                     title: "Account Settings",
@@ -328,7 +329,7 @@ class _SideMenuItemState extends State<SideMenuItem> {
                           children: [
                             InkWell(
                               onTap: () {
-                                print("index 1");
+                                Navigator.of(context).push(StatementOfPersonalWorth.route());
                               },
                               child: Padding(
                                 padding: const EdgeInsets.only(top: 15),

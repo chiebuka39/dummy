@@ -13,18 +13,29 @@ abstract class ABSIdentityViewModel extends ChangeNotifier{
   User _user;
   bool _isValidPassword = false;
 
+  String email, password,firstName,lastName,phoneNumber,gender, verificationCode,pin;
+  DateTime dob;
+  String trackingId; int verificationId;
+
   User get user => _user;
   bool get isValidPassword => _isValidPassword;
   set user(User value);
   set isValidPassword(bool value);
   Future<Result<void>> login(String email, String password);
+  Future<Result<bool>> emailAvailability(String email);
+  Future<Result<void>> resetPassword(String email);
+  Future<Result<bool>> phoneAvailability(String phone);
+  Future<Result<void>> sendEmailOTP(String email);
+  Future<Result<void>> resendEmailOTP({String trackingId, int verificationId});
+  Future<Result<void>> confirmEmailOTP({String code});
+  Future<Result<void>> setUpPin({String pin});
   Future<Result<CompletedSections>> checkCompletedSections({String token});
   Future<Result<void>> registerIndividual({
     String email, String password,
     String firstName,
     String lastName,
     String phoneNumber,
-    String referralCode
+    String referralCode, String dob
   });
   Future<Result<Profile>> getProfileDetail();
 }
@@ -77,13 +88,15 @@ class IdentityViewModel extends ABSIdentityViewModel{
   }
 
   @override
-  Future<Result<void>> registerIndividual({String email, String password, String firstName, String lastName, String phoneNumber, String referralCode}) {
+  Future<Result<void>> registerIndividual({String email, String password, String firstName,  String dob,String lastName, String phoneNumber, String referralCode}) {
     return _identityService.registerIndividual(
       email: email,
       password: password,
       firstName: firstName,
       lastName: lastName,
-      phoneNumber: phoneNumber
+      phoneNumber: phoneNumber,
+      dob: dob,
+
     );
   }
 
@@ -91,6 +104,71 @@ class IdentityViewModel extends ABSIdentityViewModel{
   Future<Result<Profile>> getProfileDetail() {
     return _identityService.getProfileDetail(
         token: user.token
+    );
+  }
+
+  @override
+  Future<Result<bool>> emailAvailability(String email) {
+    return _identityService.emailAvailability(
+         email
+    );
+  }
+
+  @override
+  Future<Result<bool>> phoneAvailability(String phone) {
+    return _identityService.phoneAvailability(
+    phone
+    );
+  }
+
+  @override
+  Future<Result<void>> confirmEmailOTP({ String code}) {
+    return _identityService.confirmEmailOTP(
+        code: code,
+        verificationId: verificationId,
+      trackingId: trackingId
+    );
+  }
+
+  @override
+  Future<Result<Map<String,dynamic>>> resendEmailOTP({String trackingId, int verificationId})async {
+    var result = await _identityService.resendEmailOTP(
+        verificationId: verificationId,
+        trackingId: trackingId
+    );
+
+    if(result.error == false){
+      verificationId = result.data['verificationId'];
+      trackingId = result.data['trackingId'];
+    }
+    return result;
+  }
+
+  @override
+  Future<Result<void>> sendEmailOTP(String email)async {
+    var result = await _identityService.sendEmailOTP(
+       email
+    );
+
+    if(result.error == false){
+      verificationId = result.data['verificationId'];
+      trackingId = result.data['trackingId'];
+    }
+
+    return result;
+  }
+
+  @override
+  Future<Result<void>> setUpPin({String pin}) {
+    return _identityService.setUpPin(
+        pin: pin,token: user.token
+    );
+  }
+
+  @override
+  Future<Result<void>> resetPassword(String email) {
+    return _identityService.resetPassword(
+       email
     );
   }
 

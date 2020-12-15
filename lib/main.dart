@@ -7,10 +7,14 @@ import 'package:zimvest/data/services/account_settings_service.dart';
 import 'package:zimvest/data/view_models/dashboard_view_model.dart';
 import 'package:zimvest/data/view_models/identity_view_model.dart';
 import 'package:zimvest/data/view_models/investment_view_model.dart';
+import 'package:zimvest/data/view_models/others_view_model.dart';
 import 'package:zimvest/data/view_models/payment_view_model.dart';
 import 'package:zimvest/data/view_models/savings_view_model.dart';
 import 'package:zimvest/data/view_models/settings_view_model.dart';
 import 'package:zimvest/locator.dart';
+import 'package:zimvest/new_screens/account/temp_login_screen.dart';
+import 'package:zimvest/new_screens/navigation/home_screen.dart';
+import 'package:zimvest/new_screens/tabs.dart';
 import 'package:zimvest/onboarding/onboarding_screen.dart';
 import 'package:zimvest/screens/account/login_screen.dart';
 import 'package:path_provider/path_provider.dart' as path_provider;
@@ -19,6 +23,7 @@ import 'package:zimvest/utils/strings.dart';
 
 import 'data/models/secondary_state.dart';
 import 'data/models/user.dart';
+import 'new_screens/landing_screen.dart';
 
 
 void main()async {
@@ -39,9 +44,28 @@ void main()async {
   configLoading();
 }
 
-class MyApp extends StatelessWidget {
+class MyApp extends StatefulWidget {
   // This widget is the root of your application.
+  @override
+  _MyAppState createState() => _MyAppState();
+}
+
+class _MyAppState extends State<MyApp> {
   final ABSStateLocalStorage _localStorage = locator<ABSStateLocalStorage>();
+
+  @override
+  void initState() {
+    User user = _localStorage.getUser();
+    if(user != null){
+      if(user.expires.difference(DateTime.now()).inSeconds < 0){
+        _localStorage.saveSecondaryState(SecondaryState(false));
+      }
+    }
+
+
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     return MultiProvider(
@@ -51,20 +75,21 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProvider<ABSPaymentViewModel>(create: (_) => PaymentViewModel(),),
         ChangeNotifierProvider<ABSSavingViewModel>(create: (_) => SavingViewModel(),),
         ChangeNotifierProvider<ABSInvestmentViewModel>(create: (_) => InvestmentViewModel(),),
-        ChangeNotifierProvider<ABSSettingsViewModel>(create: (_) => SettingsViewModel(),)
+        ChangeNotifierProvider<ABSSettingsViewModel>(create: (_) => SettingsViewModel(),),
+        ChangeNotifierProvider<ABSOthersViewModel>(create: (_) => OthersViewModel(),)
       ],
-      child: FlutterEasyLoading(
-        child: MaterialApp(
-          title: 'Zimvest',
-          debugShowCheckedModeBanner: false,
-          theme: ThemeData(
-            fontFamily: "Caros",
-            primarySwatch: Colors.blue,
+      child: MaterialApp(
+        title: 'Zimvest',
+        debugShowCheckedModeBanner: false,
+        theme: ThemeData(
+          fontFamily: "Caros",
+          primarySwatch: Colors.blue,
+          bottomSheetTheme: BottomSheetThemeData(backgroundColor: Colors.transparent),
 
-            visualDensity: VisualDensity.adaptivePlatformDensity,
-          ),
-          home:_localStorage.getSecondaryState().isLoggedIn == false ?  OnboardingScreen(): MenuContainer(),
+          visualDensity: VisualDensity.adaptivePlatformDensity,
         ),
+        builder: EasyLoading.init(),
+        home:_localStorage.getSecondaryState().isLoggedIn == false ?  LandingScreen(): TabsContainer(),
       ),
     );
   }

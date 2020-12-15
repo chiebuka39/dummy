@@ -38,6 +38,8 @@ abstract class ABSSavingViewModel extends ChangeNotifier{
   Future<Result<List<SavingPlanModel>>> getSavingPlans({String token});
   Future<Result<List<ProductTransaction>>> getTransactionForProductType({String token,
     int productId});
+  Future<Result<List<ProductTransaction>>> getTransactionForProduct({String token,
+    int id});
   Future<Result<List<FundingChannel>>> getFundingChannel({String token});
   Future<Result<List<SavingsFrequency>>> getSavingFrequency({String token});
   Future<Result<SavingPlanModel>> createWealthBox({String token,
@@ -123,6 +125,11 @@ class SavingViewModel extends ABSSavingViewModel{
     print(",,, ${result.data}");
     return result;
   }
+  Future<Result<List<ProductTransaction>>> getTransactionForProduct({String token,
+    int id}){
+    return _savingService.getTransactionForProduct(token: token,id: id);
+  }
+
 
   @override
   set productTypes(List<ProductType> types) {

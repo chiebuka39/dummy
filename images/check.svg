@@ -1,0 +1,8 @@
+<svg id="Group" xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 22 22">
+  <g id="Oval_Copy" data-name="Oval Copy" fill="none" stroke="rgba(215,168,30,0.2)" stroke-miterlimit="10" stroke-width="0.4">
+    <circle cx="11" cy="11" r="11" stroke="none"/>
+    <circle cx="11" cy="11" r="10.8" fill="none"/>
+  </g>
+  <circle id="Oval" cx="8" cy="8" r="8" transform="translate(3 3)" fill="#d7a81e" opacity="0.399"/>
+  <path id="Shape" d="M1.82,4.172a.341.341,0,1,0,.449.513L3.631,3.493a.341.341,0,0,0,.01-.5L.575.093a.341.341,0,0,0-.468.5L2.9,3.227Z" transform="translate(13.566 8.973) rotate(90)" fill="#d7a81e"/>
+</svg>

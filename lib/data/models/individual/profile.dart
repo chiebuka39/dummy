@@ -84,11 +84,11 @@ class Kin {
 
 class Notification {
   Notification({
-    this.id,
-    this.receiveEmailUpdateOnInvestment,
-    this.receiveEmailUpdateOnSavings,
-    this.subscribeToNewsLetter,
-    this.dateCreated,
+    this.id =0,
+    this.receiveEmailUpdateOnInvestment = false,
+    this.receiveEmailUpdateOnSavings = false,
+    this.subscribeToNewsLetter = false,
+    this.dateCreated ,
   });
 
   int id;

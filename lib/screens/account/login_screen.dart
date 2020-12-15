@@ -60,6 +60,7 @@ class _LoginScreenState extends State<LoginScreen> {
                   ),
                   YMargin(120),
                   EmailWidget(
+
                     title: "Email or Phone number",
                     onChange: (value) {
                       print("oooo $value");
@@ -74,6 +75,7 @@ class _LoginScreenState extends State<LoginScreen> {
                     error: autoValidate == false ? false : _emailError,
                   ),
                   LoginPasswordWidget(
+
                     title: "Password",
                     error:  autoValidate == false ? false : _password == null,
                     onChange: (value) {

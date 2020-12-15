@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" viewBox="0 0 25 25">
+  <g id="About" transform="translate(0 0)">
+    <path id="Fill_1" data-name="Fill 1" d="M25,12.5A12.5,12.5,0,1,1,12.5,0,12.5,12.5,0,0,1,25,12.5" transform="translate(0 0)" fill="#d7a81e" opacity="0.2"/>
+    <path id="Combined_Shape" data-name="Combined Shape" d="M.006,10.585a1.1,1.1,0,1,1,1.1,1.094A1.092,1.092,0,0,1,.006,10.585ZM0,6.619V1.094a1.094,1.094,0,0,1,2.188,0V6.619A1.094,1.094,0,0,1,0,6.619Z" transform="translate(13.6 18.348) rotate(-180)" fill="#d7a81e"/>
+  </g>
+</svg>

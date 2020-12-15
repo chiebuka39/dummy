@@ -1,7 +1,10 @@
-<svg xmlns="http://www.w3.org/2000/svg" id="prefix__Sidepane_Icons_Savings_Inactive" width="24" height="24" data-name="Sidepane/Icons/Savings/Inactive" viewBox="0 0 24 24">
-    <g id="prefix__Group_4_Copy" data-name="Group 4 Copy">
-        <g id="prefix__bxs-widget" transform="translate(5 5.305)">
-            <path id="prefix__Shape" fill="#deeaed" d="M7.737 13.7A.736.736 0 0 1 7 12.958V8.537a.736.736 0 0 1 .737-.737h4.421a.736.736 0 0 1 .737.737v4.421a.736.736 0 0 1-.737.737zm-7 0A.736.736 0 0 1 0 12.958V8.537A.736.736 0 0 1 .737 7.8h4.421a.736.736 0 0 1 .737.737v4.421a.736.736 0 0 1-.737.737zm7-7.368A.736.736 0 0 1 7 5.59V1.169a.736.736 0 0 1 .738-.737h4.421a.736.736 0 0 1 .737.737V5.59a.736.736 0 0 1-.737.737zm-7 0A.736.736 0 0 1 0 5.59V1.169A.736.736 0 0 1 .737.432h4.421a.736.736 0 0 1 .737.737V5.59a.736.736 0 0 1-.737.737z"/>
-        </g>
+<svg xmlns="http://www.w3.org/2000/svg" width="17.759" height="17.759" viewBox="0 0 17.759 17.759">
+  <g id="Iconly_Light_Category" data-name="Iconly/Light/Category" transform="translate(-1.5 -1.5)">
+    <g id="Category" transform="translate(2 2)">
+      <path id="Stroke_1" data-name="Stroke 1" d="M2.052,0H4.789A2.061,2.061,0,0,1,6.84,2.07V4.83A2.061,2.061,0,0,1,4.789,6.9H2.052A2.062,2.062,0,0,1,0,4.83V2.07A2.061,2.061,0,0,1,2.052,0Z" transform="translate(9.918 0)" fill="none" stroke="#7e9195" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="10" stroke-width="1"/>
+      <path id="Stroke_3" data-name="Stroke 3" d="M2.052,0H4.788A2.061,2.061,0,0,1,6.84,2.07V4.83A2.062,2.062,0,0,1,4.788,6.9H2.052A2.062,2.062,0,0,1,0,4.83V2.07A2.061,2.061,0,0,1,2.052,0Z" transform="translate(0 0)" fill="none" stroke="#7e9195" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="10" stroke-width="1"/>
+      <path id="Stroke_5" data-name="Stroke 5" d="M2.052,0H4.788A2.061,2.061,0,0,1,6.84,2.071V4.83A2.061,2.061,0,0,1,4.788,6.9H2.052A2.061,2.061,0,0,1,0,4.83V2.071A2.061,2.061,0,0,1,2.052,0Z" transform="translate(0 9.859)" fill="none" stroke="#7e9195" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="10" stroke-width="1"/>
+      <path id="Stroke_7" data-name="Stroke 7" d="M2.052,0H4.789A2.061,2.061,0,0,1,6.84,2.071V4.83A2.061,2.061,0,0,1,4.789,6.9H2.052A2.061,2.061,0,0,1,0,4.83V2.071A2.061,2.061,0,0,1,2.052,0Z" transform="translate(9.918 9.859)" fill="none" stroke="#7e9195" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="10" stroke-width="1"/>
     </g>
+  </g>
 </svg>

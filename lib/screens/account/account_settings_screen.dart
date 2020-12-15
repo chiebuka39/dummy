@@ -251,7 +251,7 @@ class _ProfileFormWidgetState extends State<ProfileFormWidget> with AfterLayoutM
         ),
         DropdownBorderInputWidget(title: "Gender",
           textColor: Colors.black,items: genderList,
-          source: genderList[gender-1],
+          source: genderList[gender],
             onSelect: (value){
               setState(() {
                 gender = genderList.indexOf(value)+1;
@@ -265,7 +265,7 @@ class _ProfileFormWidgetState extends State<ProfileFormWidget> with AfterLayoutM
               maritalStatus = maritalList.indexOf(value)+1;
             });
           },
-          source: maritalList[maritalStatus-1],
+          source: maritalList[maritalStatus],
         ),
         YMargin(10),
         PrimaryButton(
@@ -323,7 +323,12 @@ class _BvnFormWidgetState extends State<BvnFormWidget> with AfterLayoutMixin<Bvn
     EasyLoading.show(status: 'loading...');
     var i1 = await settingsViewModel.getBvn(token: identityViewModel.user.token);
     if (i1.error == false ) {
-      _bvnName.text = i1.data;
+      if(i1.data == null){
+        _bvnName.text = "";
+      }else{
+        _bvnName.text = i1.data;
+      }
+
 
 
       EasyLoading.showSuccess("Success");

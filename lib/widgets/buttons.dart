@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:zimvest/styles/colors.dart';
 import 'package:zimvest/utils/enums.dart';
+import 'package:zimvest/utils/strings.dart';
 
 class ZimSelectedButton extends StatelessWidget {
   final VoidCallback onTap;
@@ -226,6 +227,89 @@ class OutlinePrimaryButton extends StatelessWidget {
                   color: textColor, fontFamily: "Caros-Bold"),
             ),
           )),
+    );
+  }
+}
+
+class PrimaryButtonNew extends StatelessWidget {
+  const PrimaryButtonNew({
+    Key key, this.onTap, this.width = 200, this.height = 55, this.title,
+    this.bg = AppColors.kPrimaryColor, this.textColor = Colors.white, this.loading = false,
+  }) : super(key: key);
+
+  final VoidCallback onTap;
+  final double width;
+  final Color bg;
+  final Color textColor;
+  final double height;
+  final String title;
+  final bool loading;
+
+  @override
+  Widget build(BuildContext context) {
+    return GestureDetector(
+      onTap: onTap,
+      child: Container(
+        height: height,
+        width: width,
+        decoration: BoxDecoration(
+            color: bg,
+            borderRadius: BorderRadius.circular(15)
+        ),
+        child: Center(child: loading ? CircularProgressIndicator(valueColor: AlwaysStoppedAnimation<Color>(Colors.white),): Text(title,
+          style: TextStyle(color: textColor,fontSize: 13,fontFamily: AppStrings.fontNormal),),),
+      ),
+    );
+  }
+}
+
+class RoundedNextButton extends StatelessWidget {
+  const RoundedNextButton({
+    Key key, this.onTap, this.loading = false,
+  }) : super(key: key);
+
+  final VoidCallback onTap;
+  final bool loading;
+
+  @override
+  Widget build(BuildContext context) {
+    return Center(
+      child: GestureDetector(
+        onTap: onTap,
+        child: Container(
+          width: 74,
+          height: 74,
+          child: Stack(
+            children: [
+              Container(
+                width: 74,
+                height: 74,
+                decoration: BoxDecoration(
+                    shape: BoxShape.circle,
+                    color: AppColors.kPrimaryColorLight
+                ),
+
+              ),
+              Positioned(
+                left: 0,
+                right: 0,
+                top: 7,
+
+                child: Container(
+                  width: 60,
+                  height: 60,
+                  decoration: BoxDecoration(
+                      shape: BoxShape.circle,
+                      color: AppColors.kPrimaryColor
+                  ),
+                  child: Center(child: loading ?
+                  CircularProgressIndicator(valueColor: AlwaysStoppedAnimation<Color>(Colors.white),): Icon(Icons.navigate_next,color: Colors.white,),),
+                ),
+              )
+            ],
+          ),
+        ),
+      ),
     );
   }
 }

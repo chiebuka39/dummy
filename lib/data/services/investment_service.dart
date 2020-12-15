@@ -235,7 +235,7 @@ class InvestmentService extends ABSInvestmentService{
 
     }on DioError catch(e){
       print("error $e}");
-      if(e.response != null ){
+      if(e.response.data is Map ){
         print(e.response.data);
         result.errorMessage = e.response.data['message'];
       }else{
@@ -281,7 +281,7 @@ class InvestmentService extends ABSInvestmentService{
 
     }on DioError catch(e){
       print("error $e}");
-      if(e.response != null ){
+      if(e.response.data is Map ){
         print(e.response.data);
         result.errorMessage = e.response.data['message'];
       }else{
@@ -327,7 +327,7 @@ class InvestmentService extends ABSInvestmentService{
 
     }on DioError catch(e){
       print("error $e}");
-      if(e.response != null ){
+      if(e.response.data is Map ){
         print(e.response.data);
         result.errorMessage = e.response.data['message'];
       }else{

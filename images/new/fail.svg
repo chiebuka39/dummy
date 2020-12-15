@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="45.2" height="45.2" viewBox="0 0 45.2 45.2">
+  <g id="_Success" data-name="!Success" transform="translate(0.1 0.1)">
+    <g id="Success">
+      <circle id="Oval" cx="18.991" cy="18.991" r="18.991" transform="translate(3.716 3.716)" fill="none" stroke="red" stroke-miterlimit="10" stroke-width="0.4" opacity="0.272"/>
+      <circle id="Oval-2" data-name="Oval" cx="22.5" cy="22.5" r="22.5" fill="none" stroke="red" stroke-miterlimit="10" stroke-width="0.2" opacity="0.201"/>
+      <circle id="Oval-3" data-name="Oval" cx="12.592" cy="12.592" r="12.592" transform="translate(9.908 9.908)" fill="#f53232" opacity="0.348"/>
+      <path id="Shape" d="M5.235,6.016,3.008,3.788.78,6.016a.468.468,0,0,1-.655-.052.468.468,0,0,1-.052-.655L2.3,3.081.073.853A.468.468,0,0,1,.125.2.468.468,0,0,1,.78.147L3.008,2.374,5.235.147A.468.468,0,0,1,5.891.2a.468.468,0,0,1,.052.655L3.715,3.081,5.943,5.308a.468.468,0,0,1-.052.655.538.538,0,0,1-.375.163A.39.39,0,0,1,5.235,6.016Z" transform="translate(19.404 19.404)" fill="#f53232"/>
+    </g>
+  </g>
+</svg>

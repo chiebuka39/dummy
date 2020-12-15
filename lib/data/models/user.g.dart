@@ -19,13 +19,14 @@ class UserAdapter extends TypeAdapter<User> {
       isRegistrationVerified: fields[2] as String,
       profileCode: fields[3] as String,
       token: fields[1] as String,
+      isPinSetUp: fields[5] as bool,
     );
   }
 
   @override
   void write(BinaryWriter writer, User obj) {
     writer
-      ..writeByte(5)
+      ..writeByte(6)
       ..writeByte(0)
       ..write(obj.fullname)
       ..writeByte(1)
@@ -35,7 +36,9 @@ class UserAdapter extends TypeAdapter<User> {
       ..writeByte(3)
       ..write(obj.profileCode)
       ..writeByte(4)
-      ..write(obj.expires);
+      ..write(obj.expires)
+      ..writeByte(5)
+      ..write(obj.isPinSetUp);
   }
 
   @override
