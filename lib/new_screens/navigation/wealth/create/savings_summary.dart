@@ -1,5 +1,10 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:provider/provider.dart';
+import 'package:zimvest/data/view_models/identity_view_model.dart';
+import 'package:zimvest/data/view_models/payment_view_model.dart';
+import 'package:zimvest/data/view_models/savings_view_model.dart';
 import 'package:zimvest/new_screens/funding/top_up_successful.dart';
 import 'package:zimvest/new_screens/tabs.dart';
 import 'package:zimvest/styles/colors.dart';
@@ -26,6 +31,11 @@ class _SavingsSummaryScreenState extends State<SavingsSummaryScreen> {
 
   List<GlobalKey<ItemFaderState>> keys;
 
+  ABSSavingViewModel savingViewModel;
+  ABSIdentityViewModel identityViewModel;
+  ABSPaymentViewModel paymentViewModel;
+  bool loading = false;
+
   final _tween = MultiTween<AniProps>()
     ..add(AniProps.offset1, Tween(begin: Offset(0, 10), end: Offset(0, 0)),
         800.milliseconds, Interval(0.0, 1.0, curve: Curves.easeIn,))
@@ -45,16 +55,37 @@ class _SavingsSummaryScreenState extends State<SavingsSummaryScreen> {
     super.initState();
   }
 
-  void startAnim(){
+  void startAnim()async{
+
     setState(() {
       slideUp = true;
+      loading = true;
     });
-    Future.delayed(Duration(seconds: 1)).then((value) {
+    var result = await savingViewModel.createWealthBox(
+      cardId:paymentViewModel.selectedCard?.id ?? null,
+      token: identityViewModel.user.token,
+      frequency: savingViewModel.selectedFrequency.id,
+      startDate: savingViewModel.startDate,
+      fundingChannel: paymentViewModel.selectedCard == null ?
+          savingViewModel.fundingChannels.firstWhere((element) => element.name == "Wallet").id:
+      savingViewModel.fundingChannels.firstWhere((element) => element.name == "Card").id,
+      savingsAmount: savingViewModel.amountToSave
+    );
+    print("ooooo ${result.error}");
+    print("4444 ${result.errorMessage}");
+    if(result.data != null){
       setState(() {
+        loading = false;
         confirmed = true;
       });
       Future.delayed(1000.milliseconds).then((value) => onInit());
-    });
+    }
+    // Future.delayed(Duration(seconds: 1)).then((value) {
+    //   setState(() {
+    //     confirmed = true;
+    //   });
+    //   Future.delayed(1000.milliseconds).then((value) => onInit());
+    // });
 
 
   }
@@ -70,6 +101,10 @@ class _SavingsSummaryScreenState extends State<SavingsSummaryScreen> {
 
   @override
   Widget build(BuildContext context) {
+    identityViewModel = Provider.of(context);
+    savingViewModel = Provider.of(context);
+    paymentViewModel = Provider.of(context);
+    var size = MediaQuery.of(context).size;
     return Scaffold(
       backgroundColor: AppColors.kSecondaryColor,
       body: Container(
@@ -124,6 +159,7 @@ class _SavingsSummaryScreenState extends State<SavingsSummaryScreen> {
               },
             ):SizedBox(),
           ),
+
           AnimatedPositioned(
             duration: Duration(milliseconds: 500),
             //top: -(MediaQuery.of(context).size.height - 200),
@@ -244,6 +280,7 @@ class _SavingsSummaryScreenState extends State<SavingsSummaryScreen> {
               ),
             ),
           ),
+
           AnimatedPositioned(
             duration: Duration(milliseconds: 500),
             //top: MediaQuery.of(context).size.height - 100,
@@ -273,7 +310,13 @@ class _SavingsSummaryScreenState extends State<SavingsSummaryScreen> {
                 ],),
               ),
             ),
-          )
+          ),
+          Container(
+            height: size.height,
+            width: size.width,
+            child: Center(child: loading ? CircularProgressIndicator():SizedBox()
+              ,),
+          ),
         ],),
       ),
     );

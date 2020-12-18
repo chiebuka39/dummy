@@ -12,6 +12,15 @@ import 'package:zimvest/utils/result.dart';
 
 abstract class ABSSavingViewModel extends ChangeNotifier{
 
+  SavingsFrequency _selectedFrequency;
+  FundingChannel _selectedChannel;
+  double _amountToSave;
+  double get amountToSave => _amountToSave;
+  DateTime _startDate;
+  DateTime get startDate => _startDate;
+  SavingsFrequency get selectedFrequency => _selectedFrequency;
+  FundingChannel get selectedChannel => _selectedChannel;
+
   List<SavingPlanModel> _savingPlanModel = [];
   List<ProductType> _productTypes = [];
   List<FundingChannel> _fundingChannels = [];
@@ -26,6 +35,10 @@ abstract class ABSSavingViewModel extends ChangeNotifier{
   Map<int,List<ProductTransaction>> get savingsTransactions =>  _savingsTransactions;
 
   set savingPlanModel(List<SavingPlanModel> plans);
+  set startDate(DateTime time);
+  set amountToSave(double value);
+  set selectedFrequency(SavingsFrequency value);
+  set selectedChannel(FundingChannel value);
   set productTypes(List<ProductType> types);
   set fundingChannels(List<FundingChannel> channels);
   set savingFrequency(List<SavingsFrequency> value);
@@ -74,6 +87,14 @@ class SavingViewModel extends ABSSavingViewModel{
     _savingPlanModel = plans;
     notifyListeners();
   }
+  set startDate(DateTime time){
+    _startDate = time;
+    notifyListeners();
+  }
+  set amountToSave(double value){
+    _amountToSave = value;
+    notifyListeners();
+  }
 
   set fundingChannels(List<FundingChannel> value){
     _fundingChannels = value;
@@ -82,6 +103,15 @@ class SavingViewModel extends ABSSavingViewModel{
 
   set savingFrequency(List<SavingsFrequency> value){
     _savingFrequency = value;
+    notifyListeners();
+  }
+
+  set selectedFrequency(SavingsFrequency value){
+    _selectedFrequency = value;
+    notifyListeners();
+  }
+  set selectedChannel(FundingChannel value){
+    _selectedChannel = value;
     notifyListeners();
   }
 

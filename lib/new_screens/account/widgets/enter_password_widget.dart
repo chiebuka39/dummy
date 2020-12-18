@@ -34,7 +34,7 @@ class _EnterPasswordWidgetState extends State<EnterPasswordWidget> {
               height: 60,
               width: double.infinity,
               decoration: BoxDecoration(
-                  color: AppColors.kLightText,
+                  color: AppColors.kGreyBg,
                   borderRadius: BorderRadius.circular(12)
               ),
               child: Row(

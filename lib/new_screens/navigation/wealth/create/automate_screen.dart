@@ -32,6 +32,7 @@ class _AutomateSavingsScreenState extends State<AutomateSavingsScreen> with
   @override
   void afterFirstLayout(BuildContext context) async{
     await savingViewModel.getSavingFrequency(token:identityViewModel.user.token);
+    await savingViewModel.getFundingChannel(token:identityViewModel.user.token);
   }
 
   @override

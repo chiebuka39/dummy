@@ -40,23 +40,26 @@ class _EnterPhoneWidgetState extends State<EnterPhoneWidget> {
               height: 60,
               width: double.infinity,
               decoration: BoxDecoration(
-                  color: AppColors.kLightText,
+                  color: AppColors.kGreyBg,
                   borderRadius: BorderRadius.circular(12)
               ),
-              child: TextField(
-                onChanged: (value){
-                  setState(() {
-                    phoneNumber = value;
-                  });
-                  print("ooo ${phoneNumber.length}");
-                },
-                keyboardType: TextInputType.phone,
-                decoration: InputDecoration(
-                    border: InputBorder.none,
-                    hintText: "Phone Number",
-                    hintStyle: TextStyle(
-                        fontSize: 14
-                    )
+              child: Transform.translate(
+                offset: Offset(0,5),
+                child: TextField(
+                  onChanged: (value){
+                    setState(() {
+                      phoneNumber = value;
+                    });
+                    print("ooo ${phoneNumber.length}");
+                  },
+                  keyboardType: TextInputType.phone,
+                  decoration: InputDecoration(
+                      border: InputBorder.none,
+                      hintText: "Phone Number",
+                      hintStyle: TextStyle(
+                          fontSize: 14
+                      )
+                  ),
                 ),
               ),
             ),

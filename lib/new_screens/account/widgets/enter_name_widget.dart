@@ -36,21 +36,24 @@ class _EnterNameWidgetState extends State<EnterNameWidget> {
               height: 60,
               width: double.infinity,
               decoration: BoxDecoration(
-                  color: AppColors.kLightText,
+                  color: AppColors.kGreyBg,
                   borderRadius: BorderRadius.circular(12)
               ),
-              child: TextField(
-                  onChanged: (value){
-                    setState(() {
-                      firstName = value;
-                    });
-                  },
-                decoration: InputDecoration(
-                    border: InputBorder.none,
-                    hintText: "First Name",
-                    hintStyle: TextStyle(
-                        fontSize: 14
-                    )
+              child: Transform.translate(
+                offset: Offset(0,5),
+                child: TextField(
+                    onChanged: (value){
+                      setState(() {
+                        firstName = value;
+                      });
+                    },
+                  decoration: InputDecoration(
+                      border: InputBorder.none,
+                      hintText: "First Name",
+                      hintStyle: TextStyle(
+                          fontSize: 14
+                      )
+                  ),
                 ),
               ),
             ),
@@ -64,21 +67,24 @@ class _EnterNameWidgetState extends State<EnterNameWidget> {
               height: 60,
               width: double.infinity,
               decoration: BoxDecoration(
-                  color: AppColors.kLightText,
+                  color: AppColors.kGreyBg,
                   borderRadius: BorderRadius.circular(12)
               ),
-              child: TextField(
-                onChanged: (value){
-                  setState(() {
-                    lastName = value;
-                  });
-                },
-                decoration: InputDecoration(
-                    border: InputBorder.none,
-                    hintText: "Last Name",
-                    hintStyle: TextStyle(
-                        fontSize: 14
-                    )
+              child: Transform.translate(
+                offset: Offset(0,5),
+                child: TextField(
+                  onChanged: (value){
+                    setState(() {
+                      lastName = value;
+                    });
+                  },
+                  decoration: InputDecoration(
+                      border: InputBorder.none,
+                      hintText: "Last Name",
+                      hintStyle: TextStyle(
+                          fontSize: 14
+                      )
+                  ),
                 ),
               ),
             ),

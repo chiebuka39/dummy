@@ -24,7 +24,7 @@ class _EnterDOBWidgetState extends State<EnterDOBWidget> {
 
   String dob;
   DateTime dobb;
-  bool loading = true;
+  bool loading = false;
 
   ABSIdentityViewModel identityViewModel;
   @override
@@ -48,7 +48,6 @@ class _EnterDOBWidgetState extends State<EnterDOBWidget> {
                   dob = "${AppUtils.addLeadingZeroIfNeeded(time.month)}"
                       "/${AppUtils.addLeadingZeroIfNeeded(time.day)}/${time.year}";
                 });
-
               }
             },
             child: Container(
@@ -57,7 +56,7 @@ class _EnterDOBWidgetState extends State<EnterDOBWidget> {
               alignment: Alignment.centerLeft,
               width: double.infinity,
               decoration: BoxDecoration(
-                  color: AppColors.kLightText,
+                  color: AppColors.kGreyBg,
                   borderRadius: BorderRadius.circular(12)
               ),
               child: Text(dob == null ?"MM/DD/YYYY": dob),
@@ -65,6 +64,7 @@ class _EnterDOBWidgetState extends State<EnterDOBWidget> {
           ),
           Spacer(),
           RoundedNextButton(
+            loading: loading,
             onTap: ()async{
               if(dob.length != 10){
 

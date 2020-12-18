@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:provider/provider.dart';
+import 'package:zimvest/data/view_models/savings_view_model.dart';
 import 'package:zimvest/new_screens/funding/choose_funding_source.dart';
 import 'package:zimvest/new_screens/navigation/wealth/create/choose_start_screen.dart';
 import 'package:zimvest/payment/input_formaters.dart';
@@ -26,10 +28,12 @@ class SavingDailyScreen extends StatefulWidget {
 class _SavingDailyScreenState extends State<SavingDailyScreen> {
 
   String amount = "";
+  ABSSavingViewModel savingViewModel;
 
 
   @override
   Widget build(BuildContext context) {
+    savingViewModel = Provider.of(context);
     
     return GestureDetector(
       onTap: (){
@@ -82,11 +86,18 @@ class _SavingDailyScreenState extends State<SavingDailyScreen> {
                       "once you create this savings plan", style: TextStyle(
                       fontSize: 10,height: 1.6),),
                 ),
+                YMargin(3),
+                SizedBox(
+                  width: 300,
+                  child: Text("N/B Savings must be at least 1000 naira", style: TextStyle(
+                      fontSize: 10,height: 1.6,color: AppColors.kRed),),
+                ),
                 YMargin(70),
 
 
                 RoundedNextButton(
-                  onTap: (){
+                  onTap: amount.isEmpty? null : double.parse(amount) < 1000 ? null: (){
+                    savingViewModel.amountToSave = double.parse(amount);
                     Navigator.push(context, ChooseStartScreen.route());
                   },
                 ),
@@ -308,7 +319,7 @@ class _SavingDailyScreenState extends State<SavingDailyScreen> {
                     Expanded(
                       child: InkWell(
                         onTap: (){
-                          if(amount.length > 1){
+                          if(amount.length < 1){
                             return;
                           }
                           setState(() {

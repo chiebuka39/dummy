@@ -37,6 +37,7 @@ class _CreateAccountScreenState extends State<CreateAccountScreen>
 
 
   ABSIdentityViewModel identityViewModel;
+  int index = 0;
 
   @override
   void initState() {
@@ -47,137 +48,176 @@ class _CreateAccountScreenState extends State<CreateAccountScreen>
   @override
   Widget build(BuildContext context) {
     identityViewModel = Provider.of(context);
-    return Scaffold(
-      appBar: AppBar(
-        elevation: 0,
-        iconTheme: IconThemeData(color: Colors.black87),
-        leading: IconButton(
-          icon: Icon(Icons.navigate_before_rounded,size: 26,color: AppColors.kPrimaryColor,),
-          onPressed: (){
-            Navigator.pop(context);
-          },
+    return WillPopScope(
+
+      onWillPop: () async{
+        if(index != 0){
+          return goBack();
+        }else{
+          return true;
+        }
+      },
+      child: Scaffold(
+        appBar: AppBar(
+          elevation: 0,
+          iconTheme: IconThemeData(color: Colors.black87),
+          leading: IconButton(
+            icon: Icon(Icons.navigate_before_rounded,size: 26,color: AppColors.kPrimaryColor,),
+            onPressed: (){
+              if(index != 0){
+                goBack();
+              }else{
+                Navigator.pop(context);
+              }
+
+            },
+          ),
+          backgroundColor: Colors.transparent,
+          title: Text("Create Account",
+            style: TextStyle(color: Colors.black87,fontSize: 14, fontFamily: AppStrings.fontMedium),),
         ),
-        backgroundColor: Colors.transparent,
-        title: Text("Create Account",
-          style: TextStyle(color: Colors.black87,fontSize: 14, fontFamily: AppStrings.fontMedium),),
-      ),
-      body: Column(
-        children: [
-          YMargin(10),
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 20),
-            child: ClipRRect(
-              borderRadius: BorderRadius.circular(7),
-              child: LinearProgressIndicator(
-                valueColor: AlwaysStoppedAnimation<Color>(AppColors.kPrimaryColor),
-                backgroundColor: AppColors.kGreyBg,
-                value: size.value,
+        body: Column(
+          children: [
+            YMargin(10),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 20),
+              child: ClipRRect(
+                borderRadius: BorderRadius.circular(7),
+                child: LinearProgressIndicator(
+                  valueColor: AlwaysStoppedAnimation<Color>(AppColors.kPrimaryColor),
+                  backgroundColor: AppColors.kGreyBg,
+                  value: size.value,
+                ),
               ),
             ),
-          ),
 
-          Expanded(
-            child: Container(
-              child: PageView(
-                controller: pageController,
-                children: [
+            Expanded(
+              child: Container(
+                child: PageView(
+                  controller: pageController,
+                  children: [
 
-                  EnterMailWidget(
-                    onNext: (value){
-                      setState(() {
-                        identityViewModel.email = value;
-                      });
-                      controller.play();
-
-
-                      pageController.animateToPage(1,
-                          duration: Duration(milliseconds: 300), curve: Curves.easeIn);
-                    },
-                  ),
-                  EnterPasswordWidget(
-                    onNext: (value){
-                      setState(() {
-                        identityViewModel.password = value;
-                        size = 0.25.tweenTo(0.375).animatedBy(controller);
-                        controller.reset();
-                      });
-                      controller.play();
-                      pageController.animateToPage(2,
-                          duration: Duration(milliseconds: 300), curve: Curves.easeIn);
-                    },
-                  ),
-                  EnterNameWidget(
-                    onNext: (first,last){
-                      setState(() {
-                        identityViewModel.firstName = first;
-                        identityViewModel.lastName = last;
-                        size = 0.375.tweenTo(0.5).animatedBy(controller);
-                        controller.reset();
-                      });
-                      controller.play();
-                      pageController.animateToPage(3,
-                          duration: Duration(milliseconds: 300), curve: Curves.easeIn);
-                    },
-                  ),
-                  EnterPhoneWidget(
-                    onNext: (value){
-                    setState(() {
-                      identityViewModel.phoneNumber = value;
-                      size = 0.5.tweenTo(0.625).animatedBy(controller);
-                      controller.reset();
-                    });
-                    controller.play();
-                    pageController.animateToPage(4,
-                        duration: Duration(milliseconds: 300), curve: Curves.easeIn);
-                  },),
-                  ChooseGenderWidget(
+                    EnterMailWidget(
                       onNext: (value){
-
                         setState(() {
-                          identityViewModel.gender = value;
-                          size = 0.625.tweenTo(0.75).animatedBy(controller);
+                          index = index +1;
+                          identityViewModel.email = value;
+                          size = 0.125.tweenTo(0.25).animatedBy(controller);
                           controller.reset();
                         });
                         controller.play();
-                        pageController.animateToPage(5,
+
+
+                        pageController.animateToPage(1,
                             duration: Duration(milliseconds: 300), curve: Curves.easeIn);
-                      }
-                  ),
-                  EnterDOBWidget(
-                    onNext: (value){
+                      },
+                    ),
+                    EnterPasswordWidget(
+                      onNext: (value){
+                        setState(() {
+                          index = index +1;
+                          identityViewModel.password = value;
+                          size = 0.25.tweenTo(0.375).animatedBy(controller);
+                          controller.reset();
+                        });
+                        controller.play();
+                        pageController.animateToPage(2,
+                            duration: Duration(milliseconds: 300), curve: Curves.easeIn);
+                      },
+                    ),
+                    EnterNameWidget(
+                      onNext: (first,last){
+                        setState(() {
+                          index = index +1;
+                          identityViewModel.firstName = first;
+                          identityViewModel.lastName = last;
+                          size = 0.375.tweenTo(0.5).animatedBy(controller);
+                          controller.reset();
+                        });
+                        controller.play();
+                        pageController.animateToPage(3,
+                            duration: Duration(milliseconds: 300), curve: Curves.easeIn);
+                      },
+                    ),
+                    EnterPhoneWidget(
+                      onNext: (value){
                       setState(() {
-                        identityViewModel.dob = value;
-                        size = 0.75.tweenTo(0.875).animatedBy(controller);
+                        index = index +1;
+                        identityViewModel.phoneNumber = value;
+                        size = 0.5.tweenTo(0.625).animatedBy(controller);
                         controller.reset();
                       });
                       controller.play();
-                      pageController.animateToPage(6,
+                      pageController.animateToPage(4,
                           duration: Duration(milliseconds: 300), curve: Curves.easeIn);
-                    },
-                  ),
-                  VerifCodeWidget(
-                      onNext: (){
+                    },),
+                    ChooseGenderWidget(
+                        onNext: (value){
+
+                          setState(() {
+                            index = index +1;
+                            identityViewModel.gender = value;
+                            size = 0.625.tweenTo(0.75).animatedBy(controller);
+                            controller.reset();
+                          });
+                          controller.play();
+                          pageController.animateToPage(5,
+                              duration: Duration(milliseconds: 300), curve: Curves.easeIn);
+                        }
+                    ),
+                    EnterDOBWidget(
+                      onNext: (value){
                         setState(() {
-                          size = 0.875.tweenTo(1.0).animatedBy(controller);
+                          index = index +1;
+                          identityViewModel.dob = value;
+                          size = 0.75.tweenTo(0.875).animatedBy(controller);
                           controller.reset();
                         });
                         controller.play();
-                        pageController.animateToPage(7,
+                        pageController.animateToPage(6,
                             duration: Duration(milliseconds: 300), curve: Curves.easeIn);
-                      }
-                  ),
-                  CreatePinWidget(
-                      onNext: (){
+                      },
+                    ),
+                    VerifCodeWidget(
+                        onNext: (){
+                          setState(() {
+                            index = index +1;
+                            size = 0.875.tweenTo(1.0).animatedBy(controller);
+                            controller.reset();
+                          });
+                          controller.play();
+                          pageController.animateToPage(7,
+                              duration: Duration(milliseconds: 300), curve: Curves.easeIn);
+                        }
+                    ),
+                    CreatePinWidget(
+                        onNext: (){
 
-                      }
-                  ),
-                ],
+                        }
+                    ),
+                  ],
+                ),
               ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
+  }
+
+  bool goBack() {
+    setState(() {
+      var previousIndex = index;
+      index = index -1;
+      // print("lllll ${0.125 * (previousIndex+1)}");
+      // print("44444 ${0.125 * (index+1)}");
+      size = (0.125 * (previousIndex+1)).tweenTo(0.125 * (index+1)).animatedBy(controller);
+      controller.reset();
+    });
+    controller.play();
+    pageController.animateToPage( index.toInt(),
+        duration: Duration(milliseconds: 500),curve: Curves.easeIn);
+        return false;
   }
 }
 

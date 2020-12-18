@@ -300,7 +300,7 @@ class RoundedNextButton extends StatelessWidget {
                   height: 60,
                   decoration: BoxDecoration(
                       shape: BoxShape.circle,
-                      color: AppColors.kPrimaryColor
+                      color: onTap == null ? AppColors.kPrimaryColor.withOpacity(0.5) : AppColors.kPrimaryColor
                   ),
                   child: Center(child: loading ?
                   CircularProgressIndicator(valueColor: AlwaysStoppedAnimation<Color>(Colors.white),): Icon(Icons.navigate_next,color: Colors.white,),),
