@@ -1,7 +1,6 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
-import 'package:hive/hive.dart';
 import 'package:zimvest/data/local/user_local.dart';
 import 'package:zimvest/data/models/investment/fixed_models.dart';
 import 'package:zimvest/data/models/investment/investment_fixed_fund.dart';
@@ -11,15 +10,8 @@ import 'package:zimvest/data/models/investment/money_market_fund.dart';
 import 'package:zimvest/data/models/investment/mutual_item_detail.dart';
 import 'package:zimvest/data/models/investment/term_instruments.dart';
 import 'package:zimvest/data/models/product_transaction.dart';
-import 'package:zimvest/data/models/product_type.dart';
-import 'package:zimvest/data/models/saving_plan.dart';
-import 'package:zimvest/data/models/savings/funding_channels.dart';
-import 'package:zimvest/data/models/savings/savings_frequency.dart';
-import 'package:zimvest/data/models/user.dart';
 import 'package:zimvest/data/services/investment_service.dart';
 
-import 'package:zimvest/data/services/savings_service.dart';
-import 'package:zimvest/data/view_models/identity_view_model.dart';
 import 'package:zimvest/locator.dart';
 import 'package:zimvest/utils/result.dart';
 
@@ -66,7 +58,7 @@ abstract class ABSInvestmentViewModel extends ChangeNotifier {
   Future<Result<List<TreasuryBill>>> getTreasuryBill({String token});
   Future<Result<List<CommercialPaper>>> getCommercialPaper({String token});
   Future<Result<List<FGNBond>>> getFGNBond({String token});
-  Future<Result<List<PromissoryNote>>> getPromissoryNotes({String token});
+  Future<Result<List<PromissoryNotes>>> getPromissoryNotes({String token});
   Future<Result<List<EuroBond>>> getEuroBond({String token});
   Future<Result<List<CorporateBond>>> getCorporateBond({String token});
   Future<Result<List<TermInstrument>>> getDollarTermInstruments({String token});
@@ -262,7 +254,7 @@ class InvestmentViewModel extends ABSInvestmentViewModel {
   }
 
   @override
-  Future<Result<List<PromissoryNote>>> getPromissoryNotes({String token}) {
+  Future<Result<List<PromissoryNotes>>> getPromissoryNotes({String token}) {
     return _investmentService.getPromissoryNotes(token: token);
   }
 
@@ -333,6 +325,14 @@ class InvestmentHighYieldViewModel extends ChangeNotifier {
   Result<List<TermInstrument>> nairaInstrument = Result<List<TermInstrument>>();
   Result<List<TermInstrument>> dollarInstrument =
       Result<List<TermInstrument>>();
+  Result<List<CommercialPaper>> commercialPaper =
+      Result<List<CommercialPaper>>();
+  Result<List<TreasuryBill>> treasuryBills = Result<List<TreasuryBill>>();
+  Result<List<CorporateBond>> corporateBond = Result<List<CorporateBond>>();
+  Result<List<EuroBond>> euroBond = Result<List<EuroBond>>();
+
+  Result<List<FGNBond>> fgnBond = Result<List<FGNBond>>();
+  Result<List<PromissoryNotes>> promissoryNote = Result<List<PromissoryNotes>>();
   bool _busy = false;
   bool get busy => _busy;
 
@@ -355,12 +355,85 @@ class InvestmentHighYieldViewModel extends ChangeNotifier {
   Future<void> getDollarTermInstruments() async {
     setBusy(true);
     String token = _localStorage.getUser().token;
-    print(busy);
     final dollar =
         await _investmentService.getDollarTermInstruments(token: token);
     this.dollarInstrument = dollar;
     setBusy(false);
-    print(busy);
+    notifyListeners();
+  }
+
+  Future<void> getCommercialPaper() async {
+    setBusy(true);
+    String token = _localStorage.getUser().token;
+    final commercialPaper =
+        await _investmentService.getCommercialPaper(token: token);
+    this.commercialPaper = commercialPaper;
+    setBusy(false);
+    notifyListeners();
+  }
+
+  Future<void> getTreasuryBill() async {
+    setBusy(true);
+    String token = _localStorage.getUser().token;
+    final treasuryBill = await _investmentService.getTreasuryBill(token: token);
+    this.treasuryBills = treasuryBill;
+    setBusy(false);
+    notifyListeners();
+  }
+
+  Future<void> getCorporateBond() async {
+    setBusy(true);
+    String token = _localStorage.getUser().token;
+    final corporateBond =
+        await _investmentService.getCorporateBond(token: token);
+    this.corporateBond = corporateBond;
+    setBusy(false);
+    notifyListeners();
+  }
+
+  Future<void> getFGNBond() async {
+    setBusy(true);
+    String token = _localStorage.getUser().token;
+    final fgnBond = await _investmentService.getFGNBond(token: token);
+    this.fgnBond = fgnBond;
+    setBusy(false);
+    notifyListeners();
+  }
+
+  Future<void> getEuroBond() async {
+    setBusy(true);
+    String token = _localStorage.getUser().token;
+    final euroBond = await _investmentService.getEuroBond(token: token);
+    this.euroBond = euroBond;
+    setBusy(false);
+    notifyListeners();
+  }
+
+  Future<void> getPromissoryNote() async {
+    setBusy(true);
+    String token = _localStorage.getUser().token;
+    final promissoryNote =
+        await _investmentService.getPromissoryNotes(token: token);
+    this.promissoryNote = promissoryNote;
+    setBusy(false);
+    notifyListeners();
+  }
+
+  Future<void> buyNairaInstrument(
+      {int productId,
+      int cardId,
+      int fundingChannel,
+      String proofOfPayment,
+      double amount,
+      String uniqueName}) async {
+    String token = _localStorage.getUser().token;
+    await _investmentService.buyNairaInstrument(
+        productId: productId,
+        fundingChannel: fundingChannel,
+        amount: amount,
+        uniqueName: uniqueName,
+        token: token);
+
     notifyListeners();
   }
 }
