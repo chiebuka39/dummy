@@ -25,15 +25,14 @@ class FixedIncomeHome extends StatefulWidget {
 }
 
 class _FixedIncomeHomeState extends State<FixedIncomeHome> {
-  PageController controller = PageController(
-    initialPage: 0,
-    keepPage: true,
-  );
-  // ScrollController listController;
+  PageController controller;
+  ScrollController listController;
   int currentIndex = 0;
 
   @override
   void initState() {
+    controller = PageController();
+    listController = ScrollController();
     super.initState();
   }
 
@@ -75,10 +74,14 @@ class _FixedIncomeHomeState extends State<FixedIncomeHome> {
               height: screenHeight(context) / 18,
               width: screenWidth(context),
               child: ListView(
+                controller: listController,
                 scrollDirection: Axis.horizontal,
                 children: [
-                  GestureDetector(
-                    onTap: () => controller.jumpTo(0),
+                  InkWell(
+                    onTap: (){
+                      
+                      controller.jumpToPage(0);
+                    },
                     child: Container(
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.center,
@@ -106,8 +109,11 @@ class _FixedIncomeHomeState extends State<FixedIncomeHome> {
                     ),
                   ),
                   XMargin(20),
-                  GestureDetector(
-                    onTap: () => controller.jumpTo(1),
+                  InkWell(
+                    onTap: (){
+                      controller.jumpToPage(1);
+                      // print(listController.position.pixels);
+                    },
                     child: Container(
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.center,
@@ -135,8 +141,10 @@ class _FixedIncomeHomeState extends State<FixedIncomeHome> {
                     ),
                   ),
                   XMargin(20),
-                  GestureDetector(
-                    onTap: () => controller.jumpTo(2),
+                  InkWell(
+                    onTap: (){
+                      controller.jumpToPage(2);
+                    },
                     child: Container(
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.center,
@@ -164,8 +172,10 @@ class _FixedIncomeHomeState extends State<FixedIncomeHome> {
                     ),
                   ),
                   XMargin(20),
-                  GestureDetector(
-                    onTap: () => controller.jumpTo(3),
+                  InkWell(
+                    onTap: (){
+                      controller.jumpToPage(3);
+                    },
                     child: Container(
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.center,
@@ -193,8 +203,10 @@ class _FixedIncomeHomeState extends State<FixedIncomeHome> {
                     ),
                   ),
                   XMargin(20),
-                  GestureDetector(
-                    onTap: () => controller.jumpTo(4),
+                  InkWell(
+                    onTap: (){
+                      controller.jumpToPage(4);
+                    },
                     child: Container(
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.center,
@@ -222,8 +234,10 @@ class _FixedIncomeHomeState extends State<FixedIncomeHome> {
                     ),
                   ),
                   XMargin(20),
-                  GestureDetector(
-                    onTap: () => controller.jumpTo(5),
+                  InkWell(
+                    onTap: (){
+                      controller.jumpToPage(5);
+                    },
                     child: Container(
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.center,
@@ -261,9 +275,7 @@ class _FixedIncomeHomeState extends State<FixedIncomeHome> {
               width: screenWidth(context),
               child: PageView(
                 controller: controller,
-                onPageChanged: (index) {
-                  onchanged(index);
-                },
+                onPageChanged: onchanged,
                 children: [
                   TreasuryBillPage(),
                   FBNBondPagePage(),
@@ -276,7 +288,7 @@ class _FixedIncomeHomeState extends State<FixedIncomeHome> {
             ),
             top: 199,
             left: 20,
-          )
+          ),
         ],
       ),
     );
@@ -284,7 +296,7 @@ class _FixedIncomeHomeState extends State<FixedIncomeHome> {
 
   onchanged(int index) {
     setState(() {
-      currentIndex = index;
+      currentIndex = controller.page.toInt();
     });
   }
 }

@@ -113,7 +113,7 @@ class _InvestmentScreenState extends State<InvestmentScreen>
               FabItem(
                   item: "New Direct Fixed income sales",
                   onTap: () {
-                    Navigator.of(context).push(InvestInDirectScreen.route());
+                    // Navigator.of(context).push(InvestInDirectScreen.route());
                   }),
               FabItem(
                   item: "New Zimvest yield",

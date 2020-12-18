@@ -94,6 +94,8 @@ class _MyAppState extends State<MyApp> {
         child: MaterialApp(
           title: 'Zimvest',
           debugShowCheckedModeBanner: false,
+          // navigatorKey: locator<NavigationService>().navigationKey,
+          // onGenerateRoute: generateRoute,
           theme: ThemeData(
             fontFamily: "Caros",
             primarySwatch: Colors.blue,
@@ -105,7 +107,6 @@ class _MyAppState extends State<MyApp> {
               ? LandingScreen()
               : TabsContainer(),
         ),
-        // home:_localStorage.getSecondaryState().isLoggedIn == false ?  LandingScreen(): TabsContainer(),
       ),
     );
   }
