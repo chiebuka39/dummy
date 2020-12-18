@@ -21,62 +21,79 @@ import 'package:zimvest/data/models/user.dart';
 import 'package:zimvest/locator.dart';
 import 'package:zimvest/utils/result.dart';
 import 'package:zimvest/utils/strings.dart';
+import 'package:http_parser/http_parser.dart';
 
-abstract class ABSInvestmentService{
-  Future<Result<List<InvestmentMutualFund>>> getMutualFundValuation({String token});
-  Future<Result<List<InvestmentFixedFund>>> getFixedFundValuation({String token});
+abstract class ABSInvestmentService {
+  Future<Result<List<InvestmentMutualFund>>> getMutualFundValuation(
+      {String token});
+  Future<Result<List<InvestmentFixedFund>>> getFixedFundValuation(
+      {String token});
   Future<Result<List<InvestmentTermFund>>> getTermFundValuation({String token});
-  Future<Result<List<InvestmentActivity>>> getMutualFundActivities({String token});
-  Future<Result<List<InvestmentActivity>>> getFixedFundActivities({String token});
-  Future<Result<List<InvestmentActivity>>> getTermFundActivities({String token});
+  Future<Result<List<InvestmentActivity>>> getMutualFundActivities(
+      {String token});
+  Future<Result<List<InvestmentActivity>>> getFixedFundActivities(
+      {String token});
+  Future<Result<List<InvestmentActivity>>> getTermFundActivities(
+      {String token});
   Future<Result<List<TermInstrument>>> getDollarTermInstruments({String token});
   Future<Result<List<TermInstrument>>> getNairaTermInstruments({String token});
   Future<Result<List<MutualFund>>> getMoneyMarketFund({String token});
-  Future<Result<dynamic>> buyMoneyMarketFund({
-    String token,
-    int productId,
-    double amount,
-    int fundingChannel,
-    int cardId,
-    int directDebitFrequency,
-    File documentFile
-  });
+  Future<Result<dynamic>> buyMoneyMarketFund(
+      {String token,
+      int productId,
+      double amount,
+      int fundingChannel,
+      int cardId,
+      int directDebitFrequency,
+      File documentFile});
   Future<Result<List<MutualFund>>> getDollarFund({String token});
   Future<Result<List<TreasuryBill>>> getTreasuryBill({String token});
   Future<Result<List<CommercialPaper>>> getCommercialPaper({String token});
   Future<Result<List<FGNBond>>> getFGNBond({String token});
-  Future<Result<List<PromissoryNote>>> getPromissoryNotes({String token});
+  Future<Result<List<PromissoryNotes>>> getPromissoryNotes({String token});
   Future<Result<List<EuroBond>>> getEuroBond({String token});
   Future<Result<List<CorporateBond>>> getCorporateBond({String token});
-  Future<Result<Fund>> getFundDetails({String token,
-    String fundName, String fundId});
-  Future<Result<Fund>> getFixedFundDetails({String token,
-    String fixedIncomeId, String fixedIncomeName});
-  Future<Result<Fund>> getTermFundDetails({String token,
-    String termInstrumentId, String termInstrumentName});
-
-
-
+  Future<Result<Fund>> getFundDetails(
+      {String token, String fundName, String fundId});
+  Future<Result<Fund>> getFixedFundDetails(
+      {String token, String fixedIncomeId, String fixedIncomeName});
+  Future<Result<Fund>> getTermFundDetails(
+      {String token, String termInstrumentId, String termInstrumentName});
+  Future<Result<dynamic>> buyNairaInstrument(
+      {int productId,
+      int cardId,
+      int fundingChannel,
+      String proofOfPayment,
+      double amount,
+      String uniqueName,
+      String token});
+  Future<Result<dynamic>> buyDollarnstrument(
+      {int productId,
+      int beneficiaryBankType,
+      int fundingChannel,
+      String proofOfPayment,
+      double amount,
+      double nairaAmount,
+      String uniqueName,
+      String token});
 }
 
-class InvestmentService extends ABSInvestmentService{
+class InvestmentService extends ABSInvestmentService {
   final dio = locator<Dio>();
 
   final microService = "zimvest.services.investment";
   @override
-  Future<Result<List<InvestmentMutualFund>>> getMutualFundValuation({String token}) async{
+  Future<Result<List<InvestmentMutualFund>>> getMutualFundValuation(
+      {String token}) async {
     Result<List<InvestmentMutualFund>> result = Result(error: false);
 
+    var headers = {HttpHeaders.authorizationHeader: "Bearer $token"};
 
-    var headers = {
-      HttpHeaders.authorizationHeader: "Bearer $token"
-    };
-
-
-    var url = "${AppStrings.baseUrl}$microService/api/Dashboards/mutualfundvaluation";
+    var url =
+        "${AppStrings.baseUrl}$microService/api/Dashboards/mutualfundvaluation";
     print("url $url");
-    try{
-      var response = await dio.get(url,options: Options(headers: headers));
+    try {
+      var response = await dio.get(url, options: Options(headers: headers));
       final int statusCode = response.statusCode;
       var response1 = response.data;
       print("iii ${response1}");
@@ -84,23 +101,22 @@ class InvestmentService extends ABSInvestmentService{
       if (statusCode != 200) {
         result.errorMessage = response1['message'];
         result.error = true;
-      }else {
+      } else {
         result.error = false;
         List<InvestmentMutualFund> types = [];
         (response1['data'] as List).forEach((chaList) {
           //initialize Chat Object
-         types.add(InvestmentMutualFund.fromJson(chaList));
+          types.add(InvestmentMutualFund.fromJson(chaList));
         });
         result.data = types;
       }
-
-    }on DioError catch(e){
+    } on DioError catch (e) {
       print("error $e}");
       print("erroreeee ${e.response.data}");
-      if(e.response.data is Map ){
+      if (e.response.data is Map) {
         print(e.response.data);
         result.errorMessage = e.response.data['message'];
-      }else{
+      } else {
         print(e.toString());
         result.errorMessage = "Sorry, We could not complete your request";
       }
@@ -111,19 +127,17 @@ class InvestmentService extends ABSInvestmentService{
   }
 
   @override
-  Future<Result<List<InvestmentFixedFund>>> getFixedFundValuation({String token}) async{
+  Future<Result<List<InvestmentFixedFund>>> getFixedFundValuation(
+      {String token}) async {
     Result<List<InvestmentFixedFund>> result = Result(error: false);
 
+    var headers = {HttpHeaders.authorizationHeader: "Bearer $token"};
 
-    var headers = {
-      HttpHeaders.authorizationHeader: "Bearer $token"
-    };
-
-
-    var url = "${AppStrings.baseUrl}$microService/api/Dashboards/directfixedincomevaluation";
+    var url =
+        "${AppStrings.baseUrl}$microService/api/Dashboards/directfixedincomevaluation";
     print("url $url");
-    try{
-      var response = await dio.get(url,options: Options(headers: headers));
+    try {
+      var response = await dio.get(url, options: Options(headers: headers));
       final int statusCode = response.statusCode;
       var response1 = response.data;
       print("iii ${response1}");
@@ -131,23 +145,22 @@ class InvestmentService extends ABSInvestmentService{
       if (statusCode != 200) {
         result.errorMessage = response1['message'];
         result.error = true;
-      }else {
+      } else {
         result.error = false;
         List<InvestmentFixedFund> types = [];
         (response1['data'] as List).forEach((chaList) {
           //initialize Chat Object
-         types.add(InvestmentFixedFund.fromJson(chaList));
+          types.add(InvestmentFixedFund.fromJson(chaList));
         });
         result.data = types;
       }
-
-    }on DioError catch(e){
+    } on DioError catch (e) {
       print("error $e}");
-      if(e.response?.data  is Map ){
+      if (e.response?.data is Map) {
         print(e.response.data);
 
         result.errorMessage = e.response.data['message'];
-      }else{
+      } else {
         print(e.toString());
         result.errorMessage = "Sorry, We could not complete your request";
       }
@@ -156,20 +169,19 @@ class InvestmentService extends ABSInvestmentService{
 
     return result;
   }
+
   @override
-  Future<Result<List<InvestmentTermFund>>> getTermFundValuation({String token}) async{
+  Future<Result<List<InvestmentTermFund>>> getTermFundValuation(
+      {String token}) async {
     Result<List<InvestmentTermFund>> result = Result(error: false);
 
+    var headers = {HttpHeaders.authorizationHeader: "Bearer $token"};
 
-    var headers = {
-      HttpHeaders.authorizationHeader: "Bearer $token"
-    };
-
-
-    var url = "${AppStrings.baseUrl}$microService/api/Dashboards/terminstrumentvaluation";
+    var url =
+        "${AppStrings.baseUrl}$microService/api/Dashboards/terminstrumentvaluation";
     print("url $url");
-    try{
-      var response = await dio.get(url,options: Options(headers: headers));
+    try {
+      var response = await dio.get(url, options: Options(headers: headers));
       final int statusCode = response.statusCode;
       var response1 = response.data;
       print("iii ${response1}");
@@ -177,22 +189,21 @@ class InvestmentService extends ABSInvestmentService{
       if (statusCode != 200) {
         result.errorMessage = response1['message'];
         result.error = true;
-      }else {
+      } else {
         result.error = false;
         List<InvestmentTermFund> types = [];
         (response1['data'] as List).forEach((chaList) {
           //initialize Chat Object
-         types.add(InvestmentTermFund.fromJson(chaList));
+          types.add(InvestmentTermFund.fromJson(chaList));
         });
         result.data = types;
       }
-
-    }on DioError catch(e){
+    } on DioError catch (e) {
       print("error $e}");
-      if(e.response.data is Map ){
+      if (e.response.data is Map) {
         print(e.response.data);
         result.errorMessage = e.response?.data['message'];
-      }else{
+      } else {
         print(e.toString());
         result.errorMessage = "Sorry, We could not complete your request";
       }
@@ -203,19 +214,17 @@ class InvestmentService extends ABSInvestmentService{
   }
 
   @override
-  Future<Result<List<InvestmentActivity>>> getMutualFundActivities({String token}) async{
+  Future<Result<List<InvestmentActivity>>> getMutualFundActivities(
+      {String token}) async {
     Result<List<InvestmentActivity>> result = Result(error: false);
 
-
-    var headers = {
-      HttpHeaders.authorizationHeader: "Bearer $token"
-    };
+    var headers = {HttpHeaders.authorizationHeader: "Bearer $token"};
 
     var url = "${AppStrings.baseUrl}zimvest.services.investment/api/Dashboards"
         "/mutualfundinvestmentactivities?StartDate=&EndDate=";
     print("url $url");
-    try{
-      var response = await dio.get(url,options: Options(headers: headers));
+    try {
+      var response = await dio.get(url, options: Options(headers: headers));
       final int statusCode = response.statusCode;
       var response1 = response.data;
       print("iii ${response1}");
@@ -223,7 +232,7 @@ class InvestmentService extends ABSInvestmentService{
       if (statusCode != 200) {
         result.errorMessage = response1['message'];
         result.error = true;
-      }else {
+      } else {
         result.error = false;
         List<InvestmentActivity> types = [];
         (response1['data'] as List).forEach((chaList) {
@@ -232,13 +241,12 @@ class InvestmentService extends ABSInvestmentService{
         });
         result.data = types;
       }
-
-    }on DioError catch(e){
+    } on DioError catch (e) {
       print("error $e}");
-      if(e.response.data is Map ){
+      if (e.response.data is Map) {
         print(e.response.data);
         result.errorMessage = e.response.data['message'];
-      }else{
+      } else {
         print(e.toString());
         result.errorMessage = "Sorry, We could not complete your request";
       }
@@ -249,19 +257,17 @@ class InvestmentService extends ABSInvestmentService{
   }
 
   @override
-  Future<Result<List<InvestmentActivity>>> getFixedFundActivities({String token}) async{
+  Future<Result<List<InvestmentActivity>>> getFixedFundActivities(
+      {String token}) async {
     Result<List<InvestmentActivity>> result = Result(error: false);
 
-
-    var headers = {
-      HttpHeaders.authorizationHeader: "Bearer $token"
-    };
+    var headers = {HttpHeaders.authorizationHeader: "Bearer $token"};
 
     var url = "${AppStrings.baseUrl}zimvest.services.investment/api/Dashboards"
         "/fixedincomeinvestmentactivities?StartDate=&EndDate=";
     print("url $url");
-    try{
-      var response = await dio.get(url,options: Options(headers: headers));
+    try {
+      var response = await dio.get(url, options: Options(headers: headers));
       final int statusCode = response.statusCode;
       var response1 = response.data;
       print("iii ${response1}");
@@ -269,7 +275,7 @@ class InvestmentService extends ABSInvestmentService{
       if (statusCode != 200) {
         result.errorMessage = response1['message'];
         result.error = true;
-      }else {
+      } else {
         result.error = false;
         List<InvestmentActivity> types = [];
         (response1['data'] as List).forEach((chaList) {
@@ -278,13 +284,12 @@ class InvestmentService extends ABSInvestmentService{
         });
         result.data = types;
       }
-
-    }on DioError catch(e){
+    } on DioError catch (e) {
       print("error $e}");
-      if(e.response.data is Map ){
+      if (e.response.data is Map) {
         print(e.response.data);
         result.errorMessage = e.response.data['message'];
-      }else{
+      } else {
         print(e.toString());
         result.errorMessage = "Sorry, We could not complete your request";
       }
@@ -295,19 +300,17 @@ class InvestmentService extends ABSInvestmentService{
   }
 
   @override
-  Future<Result<List<InvestmentActivity>>> getTermFundActivities({String token}) async{
+  Future<Result<List<InvestmentActivity>>> getTermFundActivities(
+      {String token}) async {
     Result<List<InvestmentActivity>> result = Result(error: false);
 
-
-    var headers = {
-      HttpHeaders.authorizationHeader: "Bearer $token"
-    };
+    var headers = {HttpHeaders.authorizationHeader: "Bearer $token"};
 
     var url = "${AppStrings.baseUrl}zimvest.services.investment/api/Dashboards/"
         "terminstrumentInvestmentactivities?StartDate=&EndDate=";
     print("url $url");
-    try{
-      var response = await dio.get(url,options: Options(headers: headers));
+    try {
+      var response = await dio.get(url, options: Options(headers: headers));
       final int statusCode = response.statusCode;
       var response1 = response.data;
       print("iii ${response1}");
@@ -315,7 +318,7 @@ class InvestmentService extends ABSInvestmentService{
       if (statusCode != 200) {
         result.errorMessage = response1['message'];
         result.error = true;
-      }else {
+      } else {
         result.error = false;
         List<InvestmentActivity> types = [];
         (response1['data'] as List).forEach((chaList) {
@@ -324,13 +327,12 @@ class InvestmentService extends ABSInvestmentService{
         });
         result.data = types;
       }
-
-    }on DioError catch(e){
+    } on DioError catch (e) {
       print("error $e}");
-      if(e.response.data is Map ){
+      if (e.response.data is Map) {
         print(e.response.data);
         result.errorMessage = e.response.data['message'];
-      }else{
+      } else {
         print(e.toString());
         result.errorMessage = "Sorry, We could not complete your request";
       }
@@ -341,19 +343,16 @@ class InvestmentService extends ABSInvestmentService{
   }
 
   @override
-  Future<Result<List<MutualFund>>> getMoneyMarketFund({String token}) async{
+  Future<Result<List<MutualFund>>> getMoneyMarketFund({String token}) async {
     Result<List<MutualFund>> result = Result(error: false);
 
-
-    var headers = {
-      HttpHeaders.authorizationHeader: "Bearer $token"
-    };
+    var headers = {HttpHeaders.authorizationHeader: "Bearer $token"};
 
     var url = "${AppStrings.baseUrl}zimvest.services.investment/"
         "api/MutualFunds/getmoneymarketfunds";
     print("url $url");
-    try{
-      var response = await dio.get(url,options: Options(headers: headers));
+    try {
+      var response = await dio.get(url, options: Options(headers: headers));
       final int statusCode = response.statusCode;
       var response1 = response.data;
       print("iii ${response1}");
@@ -361,7 +360,7 @@ class InvestmentService extends ABSInvestmentService{
       if (statusCode != 200) {
         result.errorMessage = response1['message'];
         result.error = true;
-      }else {
+      } else {
         result.error = false;
         List<MutualFund> types = [];
         (response1['data'] as List).forEach((chaList) {
@@ -370,13 +369,12 @@ class InvestmentService extends ABSInvestmentService{
         });
         result.data = types;
       }
-
-    }on DioError catch(e){
+    } on DioError catch (e) {
       print("error $e}");
-      if(e.response is Map ){
+      if (e.response is Map) {
         print(e.response.data);
         result.errorMessage = e.response.data['message'];
-      }else{
+      } else {
         print(e.toString());
         result.errorMessage = "Sorry, We could not complete your request";
       }
@@ -387,18 +385,16 @@ class InvestmentService extends ABSInvestmentService{
   }
 
   @override
-  Future<Result<List<MutualFund>>> getDollarFund({String token}) async{
+  Future<Result<List<MutualFund>>> getDollarFund({String token}) async {
     Result<List<MutualFund>> result = Result(error: false);
 
+    var headers = {HttpHeaders.authorizationHeader: "Bearer $token"};
 
-    var headers = {
-      HttpHeaders.authorizationHeader: "Bearer $token"
-    };
-
-    var url = "${AppStrings.baseUrl}zimvest.services.investment/api/MutualFunds/getdollarfunds";
+    var url =
+        "${AppStrings.baseUrl}zimvest.services.investment/api/MutualFunds/getdollarfunds";
     print("url $url");
-    try{
-      var response = await dio.get(url,options: Options(headers: headers));
+    try {
+      var response = await dio.get(url, options: Options(headers: headers));
       final int statusCode = response.statusCode;
       var response1 = response.data;
       print("iii ${response1}");
@@ -406,7 +402,7 @@ class InvestmentService extends ABSInvestmentService{
       if (statusCode != 200) {
         result.errorMessage = response1['message'];
         result.error = true;
-      }else {
+      } else {
         result.error = false;
         List<MutualFund> types = [];
         (response1['data'] as List).forEach((chaList) {
@@ -415,13 +411,12 @@ class InvestmentService extends ABSInvestmentService{
         });
         result.data = types;
       }
-
-    }on DioError catch(e){
+    } on DioError catch (e) {
       print("error $e}");
-      if(e.response != null ){
+      if (e.response != null) {
         print(e.response.data);
         result.errorMessage = e.response.data['message'];
-      }else{
+      } else {
         print(e.toString());
         result.errorMessage = "Sorry, We could not complete your request";
       }
@@ -431,21 +426,17 @@ class InvestmentService extends ABSInvestmentService{
     return result;
   }
 
-
   @override
-  Future<Result<List<CommercialPaper>>> getCommercialPaper({String token})async {
+  Future<Result<List<CommercialPaper>>> getCommercialPaper(
+      {String token}) async {
     Result<List<CommercialPaper>> result = Result(error: false);
 
+    var headers = {HttpHeaders.authorizationHeader: "Bearer $token"};
 
-    var headers = {
-      HttpHeaders.authorizationHeader: "Bearer $token"
-    };
-
-
-    var url = "${AppStrings.baseUrl}$microService/api/CommercialPapers";
+    var url = "${AppStrings.baseUrl}$microService/api/CommercialPapers/grouped";
     print("url $url");
-    try{
-      var response = await dio.get(url,options: Options(headers: headers));
+    try {
+      var response = await dio.get(url, options: Options(headers: headers));
       final int statusCode = response.statusCode;
       var response1 = response.data;
       print("iii ${response1}");
@@ -453,7 +444,7 @@ class InvestmentService extends ABSInvestmentService{
       if (statusCode != 200) {
         result.errorMessage = response1['message'];
         result.error = true;
-      }else {
+      } else {
         result.error = false;
         List<CommercialPaper> channels = [];
         (response1['data'] as List).forEach((chaList) {
@@ -462,13 +453,12 @@ class InvestmentService extends ABSInvestmentService{
         });
         result.data = channels;
       }
-
-    }on DioError catch(e){
+    } on DioError catch (e) {
       print("error $e}");
-      if(e.response != null ){
+      if (e.response != null) {
         print(e.response.data);
         //result.errorMessage = e.response.data['message'];
-      }else{
+      } else {
         print(e.toString());
         result.errorMessage = "Sorry, We could not complete your request";
       }
@@ -479,19 +469,15 @@ class InvestmentService extends ABSInvestmentService{
   }
 
   @override
-  Future<Result<List<CorporateBond>>> getCorporateBond({String token})async {
+  Future<Result<List<CorporateBond>>> getCorporateBond({String token}) async {
     Result<List<CorporateBond>> result = Result(error: false);
 
+    var headers = {HttpHeaders.authorizationHeader: "Bearer $token"};
 
-    var headers = {
-      HttpHeaders.authorizationHeader: "Bearer $token"
-    };
-
-
-    var url = "${AppStrings.baseUrl}$microService/api/CorporateBonds";
+    var url = "${AppStrings.baseUrl}$microService/api/CorporateBonds/grouped";
     print("url $url");
-    try{
-      var response = await dio.get(url,options: Options(headers: headers));
+    try {
+      var response = await dio.get(url, options: Options(headers: headers));
       final int statusCode = response.statusCode;
       var response1 = response.data;
       print("iii ${response1}");
@@ -499,7 +485,7 @@ class InvestmentService extends ABSInvestmentService{
       if (statusCode != 200) {
         result.errorMessage = response1['message'];
         result.error = true;
-      }else {
+      } else {
         result.error = false;
         List<CorporateBond> channels = [];
         (response1['data'] as List).forEach((chaList) {
@@ -508,13 +494,12 @@ class InvestmentService extends ABSInvestmentService{
         });
         result.data = channels;
       }
-
-    }on DioError catch(e){
+    } on DioError catch (e) {
       print("error $e}");
-      if(e.response != null ){
+      if (e.response != null) {
         print(e.response.data);
         //result.errorMessage = e.response.data['message'];
-      }else{
+      } else {
         print(e.toString());
         result.errorMessage = "Sorry, We could not complete your request";
       }
@@ -525,19 +510,15 @@ class InvestmentService extends ABSInvestmentService{
   }
 
   @override
-  Future<Result<List<EuroBond>>> getEuroBond({String token})async {
+  Future<Result<List<EuroBond>>> getEuroBond({String token}) async {
     Result<List<EuroBond>> result = Result(error: false);
 
+    var headers = {HttpHeaders.authorizationHeader: "Bearer $token"};
 
-    var headers = {
-      HttpHeaders.authorizationHeader: "Bearer $token"
-    };
-
-
-    var url = "${AppStrings.baseUrl}$microService/api/EuroBonds";
+    var url = "${AppStrings.baseUrl}$microService/api/EuroBonds/grouped";
     print("url $url");
-    try{
-      var response = await dio.get(url,options: Options(headers: headers));
+    try {
+      var response = await dio.get(url, options: Options(headers: headers));
       final int statusCode = response.statusCode;
       var response1 = response.data;
       print("iii ${response1}");
@@ -545,7 +526,7 @@ class InvestmentService extends ABSInvestmentService{
       if (statusCode != 200) {
         result.errorMessage = response1['message'];
         result.error = true;
-      }else {
+      } else {
         result.error = false;
         List<EuroBond> channels = [];
         (response1['data'] as List).forEach((chaList) {
@@ -554,13 +535,12 @@ class InvestmentService extends ABSInvestmentService{
         });
         result.data = channels;
       }
-
-    }on DioError catch(e){
+    } on DioError catch (e) {
       print("error $e}");
-      if(e.response != null ){
+      if (e.response != null) {
         print(e.response.data);
         //result.errorMessage = e.response.data['message'];
-      }else{
+      } else {
         print(e.toString());
         result.errorMessage = "Sorry, We could not complete your request";
       }
@@ -571,19 +551,15 @@ class InvestmentService extends ABSInvestmentService{
   }
 
   @override
-  Future<Result<List<FGNBond>>> getFGNBond({String token})async {
+  Future<Result<List<FGNBond>>> getFGNBond({String token}) async {
     Result<List<FGNBond>> result = Result(error: false);
 
+    var headers = {HttpHeaders.authorizationHeader: "Bearer $token"};
 
-    var headers = {
-      HttpHeaders.authorizationHeader: "Bearer $token"
-    };
-
-
-    var url = "${AppStrings.baseUrl}$microService/api/FGNBonds";
+    var url = "${AppStrings.baseUrl}$microService/api/FGNBonds/grouped";
     print("url $url");
-    try{
-      var response = await dio.get(url,options: Options(headers: headers));
+    try {
+      var response = await dio.get(url, options: Options(headers: headers));
       final int statusCode = response.statusCode;
       var response1 = response.data;
       print("iii ${response1}");
@@ -591,7 +567,7 @@ class InvestmentService extends ABSInvestmentService{
       if (statusCode != 200) {
         result.errorMessage = response1['message'];
         result.error = true;
-      }else {
+      } else {
         result.error = false;
         List<FGNBond> channels = [];
         (response1['data'] as List).forEach((chaList) {
@@ -600,13 +576,12 @@ class InvestmentService extends ABSInvestmentService{
         });
         result.data = channels;
       }
-
-    }on DioError catch(e){
+    } on DioError catch (e) {
       print("error $e}");
-      if(e.response != null ){
+      if (e.response != null) {
         print(e.response.data);
         //result.errorMessage = e.response.data['message'];
-      }else{
+      } else {
         print(e.toString());
         result.errorMessage = "Sorry, We could not complete your request";
       }
@@ -617,19 +592,16 @@ class InvestmentService extends ABSInvestmentService{
   }
 
   @override
-  Future<Result<List<PromissoryNote>>> getPromissoryNotes({String token}) async{
-    Result<List<PromissoryNote>> result = Result(error: false);
+  Future<Result<List<PromissoryNotes>>> getPromissoryNotes(
+      {String token}) async {
+    Result<List<PromissoryNotes>> result = Result(error: false);
 
-
-    var headers = {
-      HttpHeaders.authorizationHeader: "Bearer $token"
-    };
-
+    var headers = {HttpHeaders.authorizationHeader: "Bearer $token"};
 
     var url = "${AppStrings.baseUrl}$microService/api/PromissoryNotes";
     print("url $url");
-    try{
-      var response = await dio.get(url,options: Options(headers: headers));
+    try {
+      var response = await dio.get(url, options: Options(headers: headers));
       final int statusCode = response.statusCode;
       var response1 = response.data;
       print("iii ${response1}");
@@ -637,22 +609,21 @@ class InvestmentService extends ABSInvestmentService{
       if (statusCode != 200) {
         result.errorMessage = response1['message'];
         result.error = true;
-      }else {
+      } else {
         result.error = false;
-        List<PromissoryNote> channels = [];
+        List<PromissoryNotes> channels = [];
         (response1['data'] as List).forEach((chaList) {
           //initialize Chat Object
-          channels.add(PromissoryNote.fromJson(chaList));
+          channels.add(PromissoryNotes.fromJson(chaList));
         });
         result.data = channels;
       }
-
-    }on DioError catch(e){
+    } on DioError catch (e) {
       print("error $e}");
-      if(e.response != null ){
+      if (e.response != null) {
         print(e.response.data);
         //result.errorMessage = e.response.data['message'];
-      }else{
+      } else {
         print(e.toString());
         result.errorMessage = "Sorry, We could not complete your request";
       }
@@ -663,19 +634,15 @@ class InvestmentService extends ABSInvestmentService{
   }
 
   @override
-  Future<Result<List<TreasuryBill>>> getTreasuryBill({String token}) async{
+  Future<Result<List<TreasuryBill>>> getTreasuryBill({String token}) async {
     Result<List<TreasuryBill>> result = Result(error: false);
 
+    var headers = {HttpHeaders.authorizationHeader: "Bearer $token"};
 
-    var headers = {
-      HttpHeaders.authorizationHeader: "Bearer $token"
-    };
-
-
-    var url = "${AppStrings.baseUrl}$microService/api/TreasuryBills";
+    var url = "${AppStrings.baseUrl}$microService/api/TreasuryBills/grouped";
     print("url $url");
-    try{
-      var response = await dio.get(url,options: Options(headers: headers));
+    try {
+      var response = await dio.get(url, options: Options(headers: headers));
       final int statusCode = response.statusCode;
       var response1 = response.data;
       print("iii ${response1}");
@@ -683,7 +650,7 @@ class InvestmentService extends ABSInvestmentService{
       if (statusCode != 200) {
         result.errorMessage = response1['message'];
         result.error = true;
-      }else {
+      } else {
         result.error = false;
         List<TreasuryBill> channels = [];
         (response1['data'] as List).forEach((chaList) {
@@ -692,13 +659,12 @@ class InvestmentService extends ABSInvestmentService{
         });
         result.data = channels;
       }
-
-    }on DioError catch(e){
+    } on DioError catch (e) {
       print("error $e}");
-      if(e.response != null ){
+      if (e.response != null) {
         print(e.response.data);
         //result.errorMessage = e.response.data['message'];
-      }else{
+      } else {
         print(e.toString());
         result.errorMessage = "Sorry, We could not complete your request";
       }
@@ -709,19 +675,17 @@ class InvestmentService extends ABSInvestmentService{
   }
 
   @override
-  Future<Result<List<TermInstrument>>> getDollarTermInstruments({String token}) async{
+  Future<Result<List<TermInstrument>>> getDollarTermInstruments(
+      {String token}) async {
     Result<List<TermInstrument>> result = Result(error: false);
 
+    var headers = {HttpHeaders.authorizationHeader: "Bearer $token"};
 
-    var headers = {
-      HttpHeaders.authorizationHeader: "Bearer $token"
-    };
-
-
-    var url = "${AppStrings.baseUrl}$microService/api/ZimvestTermInstruments/getdollarterminstruments";
+    var url =
+        "${AppStrings.baseUrl}$microService/api/ZimvestTermInstruments/getdollarterminstruments";
     print("url $url");
-    try{
-      var response = await dio.get(url,options: Options(headers: headers));
+    try {
+      var response = await dio.get(url, options: Options(headers: headers));
       final int statusCode = response.statusCode;
       var response1 = response.data;
       print("iii ${response1}");
@@ -729,7 +693,7 @@ class InvestmentService extends ABSInvestmentService{
       if (statusCode != 200) {
         result.errorMessage = response1['message'];
         result.error = true;
-      }else {
+      } else {
         result.error = false;
         List<TermInstrument> channels = [];
         (response1['data'] as List).forEach((chaList) {
@@ -738,13 +702,12 @@ class InvestmentService extends ABSInvestmentService{
         });
         result.data = channels;
       }
-
-    }on DioError catch(e){
+    } on DioError catch (e) {
       print("error $e}");
-      if(e.response != null ){
+      if (e.response != null) {
         print(e.response.data);
         //result.errorMessage = e.response.data['message'];
-      }else{
+      } else {
         print(e.toString());
         result.errorMessage = "Sorry, We could not complete your request";
       }
@@ -755,19 +718,17 @@ class InvestmentService extends ABSInvestmentService{
   }
 
   @override
-  Future<Result<List<TermInstrument>>> getNairaTermInstruments({String token}) async{
+  Future<Result<List<TermInstrument>>> getNairaTermInstruments(
+      {String token}) async {
     Result<List<TermInstrument>> result = Result(error: false);
 
+    var headers = {HttpHeaders.authorizationHeader: "Bearer $token"};
 
-    var headers = {
-      HttpHeaders.authorizationHeader: "Bearer $token"
-    };
-
-
-    var url = "${AppStrings.baseUrl}$microService/api/ZimvestTermInstruments/getnairaterminstruments";
+    var url =
+        "${AppStrings.baseUrl}$microService/api/ZimvestTermInstruments/getnairaterminstruments";
     print("url $url");
-    try{
-      var response = await dio.get(url,options: Options(headers: headers));
+    try {
+      var response = await dio.get(url, options: Options(headers: headers));
       final int statusCode = response.statusCode;
       var response1 = response.data;
       print("iii ${response1}");
@@ -775,7 +736,7 @@ class InvestmentService extends ABSInvestmentService{
       if (statusCode != 200) {
         result.errorMessage = response1['message'];
         result.error = true;
-      }else {
+      } else {
         result.error = false;
         List<TermInstrument> channels = [];
         (response1['data'] as List).forEach((chaList) {
@@ -784,13 +745,12 @@ class InvestmentService extends ABSInvestmentService{
         });
         result.data = channels;
       }
-
-    }on DioError catch(e){
+    } on DioError catch (e) {
       print("error $e}");
-      if(e.response != null ){
+      if (e.response != null) {
         print(e.response.data);
         //result.errorMessage = e.response.data['message'];
-      }else{
+      } else {
         print(e.toString());
         result.errorMessage = "Sorry, We could not complete your request";
       }
@@ -801,19 +761,17 @@ class InvestmentService extends ABSInvestmentService{
   }
 
   @override
-  Future<Result<Fund>> getFundDetails({String token, String fundName, String fundId}) async{
+  Future<Result<Fund>> getFundDetails(
+      {String token, String fundName, String fundId}) async {
     Result<Fund> result = Result(error: false);
 
+    var headers = {HttpHeaders.authorizationHeader: "Bearer $token"};
 
-    var headers = {
-      HttpHeaders.authorizationHeader: "Bearer $token"
-    };
-
-
-    var url = "${AppStrings.baseUrl}$microService/api/Dashboards/managefund?FundId=$fundId&FundName=$fundName";
+    var url =
+        "${AppStrings.baseUrl}$microService/api/Dashboards/managefund?FundId=$fundId&FundName=$fundName";
     print("url $url");
-    try{
-      var response = await dio.get(url,options: Options(headers: headers));
+    try {
+      var response = await dio.get(url, options: Options(headers: headers));
       final int statusCode = response.statusCode;
       var response1 = response.data;
       print("iii ${response1}");
@@ -821,19 +779,17 @@ class InvestmentService extends ABSInvestmentService{
       if (statusCode != 200) {
         result.errorMessage = response1['message'];
         result.error = true;
-      }else {
+      } else {
         result.error = false;
 
-
-        result.data = Fund.fromJson(response1['data'] );
+        result.data = Fund.fromJson(response1['data']);
       }
-
-    }on DioError catch(e){
+    } on DioError catch (e) {
       print("error $e}");
-      if(e.response != null ){
+      if (e.response != null) {
         print(e.response.data);
         //result.errorMessage = e.response.data['message'];
-      }else{
+      } else {
         print(e.toString());
         result.errorMessage = "Sorry, We could not complete your request";
       }
@@ -844,52 +800,50 @@ class InvestmentService extends ABSInvestmentService{
   }
 
   @override
-  Future<Result<dynamic>>
-  buyMoneyMarketFund({String token,
-    int productId, double amount,
-    int fundingChannel, int cardId,
-    int directDebitFrequency,
-    File documentFile})async {
+  Future<Result<dynamic>> buyMoneyMarketFund(
+      {String token,
+      int productId,
+      double amount,
+      int fundingChannel,
+      int cardId,
+      int directDebitFrequency,
+      File documentFile}) async {
     Result<dynamic> result = Result(error: false);
 
-
-    var headers = {
-      HttpHeaders.authorizationHeader: "Bearer $token"
-    };
+    var headers = {HttpHeaders.authorizationHeader: "Bearer $token"};
 
     FormData body;
-    if(fundingChannel == 1){
-
-    body = FormData.fromMap({
-      'ProductId':productId,
-      'Amount':amount,
-      'FundingChannel':fundingChannel,
-      'CardId':cardId,
-      'DirectDebitFrequency':directDebitFrequency,
-    });
-    }
-    else if(fundingChannel == 2){
+    if (fundingChannel == 1) {
+      body = FormData.fromMap({
+        'ProductId': productId,
+        'Amount': amount,
+        'FundingChannel': fundingChannel,
+        'CardId': cardId,
+        'DirectDebitFrequency': directDebitFrequency,
+      });
+    } else if (fundingChannel == 2) {
       Uint8List bytes;
-      if(documentFile != null){
+      if (documentFile != null) {
         bytes = await File(documentFile.path).readAsBytes();
         String base64Encode(List<int> bytes) => base64.encode(bytes);
       }
 
       body = FormData.fromMap({
-        'ProductId':productId,
-        'Amount':amount,
-        'FundingChannel':fundingChannel,
-        'DirectDebitFrequency':-1,
-        "ProofOfPayment.DocumentFile": bytes == null ?'' :  base64Encode(bytes),
+        'ProductId': productId,
+        'Amount': amount,
+        'FundingChannel': fundingChannel,
+        'DirectDebitFrequency': -1,
+        "ProofOfPayment.DocumentFile": bytes == null ? '' : base64Encode(bytes),
       });
     }
 
-
-    var url = "${AppStrings.baseUrl}$microService/api/MutualFunds/buymoneymarketfund";
+    var url =
+        "${AppStrings.baseUrl}$microService/api/MutualFunds/buymoneymarketfund";
     print("url $url");
     print("body ${body.fields}");
-    try{
-      var response = await dio.post(url,options: Options(headers: headers),data: body);
+    try {
+      var response =
+          await dio.post(url, options: Options(headers: headers), data: body);
       final int statusCode = response.statusCode;
       var response1 = response.data;
       print("iii ${response1}");
@@ -897,20 +851,18 @@ class InvestmentService extends ABSInvestmentService{
       if (statusCode != 200) {
         result.errorMessage = response1['message'];
         result.error = true;
-      }else {
+      } else {
         result.error = false;
-        if(documentFile == null && fundingChannel == 2){
+        if (documentFile == null && fundingChannel == 2) {
           result.data = BankPaymentDetails.fromJson(response1['data']);
         }
-
       }
-
-    }on DioError catch(e){
+    } on DioError catch (e) {
       print("error $e}");
-      if(e.response != null ){
+      if (e.response != null) {
         print(e.response.data);
         //result.errorMessage = e.response.data['message'];
-      }else{
+      } else {
         print(e.toString());
         result.errorMessage = "Sorry, We could not complete your request";
       }
@@ -921,20 +873,17 @@ class InvestmentService extends ABSInvestmentService{
   }
 
   @override
-  Future<Result<Fund>> getFixedFundDetails({String token, String fixedIncomeId,
-    String fixedIncomeName}) async{
+  Future<Result<Fund>> getFixedFundDetails(
+      {String token, String fixedIncomeId, String fixedIncomeName}) async {
     Result<Fund> result = Result(error: false);
 
+    var headers = {HttpHeaders.authorizationHeader: "Bearer $token"};
 
-    var headers = {
-      HttpHeaders.authorizationHeader: "Bearer $token"
-    };
-
-
-    var url = "${AppStrings.baseUrl}$microService/api/Dashboards/managefixedincome?FixedIncomeId=$fixedIncomeId&FixedIncomeName=$fixedIncomeName";
+    var url =
+        "${AppStrings.baseUrl}$microService/api/Dashboards/managefixedincome?FixedIncomeId=$fixedIncomeId&FixedIncomeName=$fixedIncomeName";
     print("url $url");
-    try{
-      var response = await dio.get(url,options: Options(headers: headers));
+    try {
+      var response = await dio.get(url, options: Options(headers: headers));
       final int statusCode = response.statusCode;
       var response1 = response.data;
       print("iii ${response1}");
@@ -942,19 +891,17 @@ class InvestmentService extends ABSInvestmentService{
       if (statusCode != 200) {
         result.errorMessage = response1['message'];
         result.error = true;
-      }else {
+      } else {
         result.error = false;
 
-
-        result.data = Fund.fromJson(response1['data'] );
+        result.data = Fund.fromJson(response1['data']);
       }
-
-    }on DioError catch(e){
+    } on DioError catch (e) {
       print("error $e}");
-      if(e.response != null ){
+      if (e.response != null) {
         print(e.response.data);
         //result.errorMessage = e.response.data['message'];
-      }else{
+      } else {
         print(e.toString());
         result.errorMessage = "Sorry, We could not complete your request";
       }
@@ -965,20 +912,19 @@ class InvestmentService extends ABSInvestmentService{
   }
 
   @override
-  Future<Result<Fund>> getTermFundDetails({String token, String termInstrumentId,
-    String termInstrumentName}) async{
+  Future<Result<Fund>> getTermFundDetails(
+      {String token,
+      String termInstrumentId,
+      String termInstrumentName}) async {
     Result<Fund> result = Result(error: false);
 
+    var headers = {HttpHeaders.authorizationHeader: "Bearer $token"};
 
-    var headers = {
-      HttpHeaders.authorizationHeader: "Bearer $token"
-    };
-
-
-    var url = "${AppStrings.baseUrl}$microService/api/Dashboards/manageterminstrument?TermInstrumentId=$termInstrumentId&TermInstrumentName=$termInstrumentName";
+    var url =
+        "${AppStrings.baseUrl}$microService/api/Dashboards/manageterminstrument?TermInstrumentId=$termInstrumentId&TermInstrumentName=$termInstrumentName";
     print("url $url");
-    try{
-      var response = await dio.get(url,options: Options(headers: headers));
+    try {
+      var response = await dio.get(url, options: Options(headers: headers));
       final int statusCode = response.statusCode;
       var response1 = response.data;
       print("iii ${response1}");
@@ -986,19 +932,17 @@ class InvestmentService extends ABSInvestmentService{
       if (statusCode != 200) {
         result.errorMessage = response1['message'];
         result.error = true;
-      }else {
+      } else {
         result.error = false;
 
-
-        result.data = Fund.fromJson(response1['data'] );
+        result.data = Fund.fromJson(response1['data']);
       }
-
-    }on DioError catch(e){
+    } on DioError catch (e) {
       print("error $e}");
-      if(e.response != null ){
+      if (e.response != null) {
         print(e.response.data);
         //result.errorMessage = e.response.data['message'];
-      }else{
+      } else {
         print(e.toString());
         result.errorMessage = "Sorry, We could not complete your request";
       }
@@ -1006,5 +950,74 @@ class InvestmentService extends ABSInvestmentService{
     }
 
     return result;
+  }
+
+  @override
+  Future<Result<dynamic>> buyDollarnstrument(
+      {int productId,
+      int beneficiaryBankType,
+      int fundingChannel,
+      String proofOfPayment,
+      double amount,
+      double nairaAmount,
+      String uniqueName,
+      String token}) {
+    // TODO: implement buyDollarnstrument
+    throw UnimplementedError();
+  }
+
+  @override
+  Future<Result<dynamic>> buyNairaInstrument(
+      {int productId,
+      int cardId,
+      int fundingChannel,
+      String proofOfPayment,
+      double amount,
+      String uniqueName,
+      String token}) async {
+    var url =
+        "${AppStrings.baseUrl}$microService/api/ZimvestTermInstruments/buynairaterminstrument";
+
+    var headers = {HttpHeaders.authorizationHeader: "Bearer $token"};
+
+    print(url);
+
+    // var imgname = DateTime.now().millisecondsSinceEpoch.toString();
+
+    FormData data = FormData.fromMap({
+      "ProductId": productId,
+      // "CardId": cardId,
+      "FundingChannel": fundingChannel,
+      "Amount": amount,
+      "UniqueName": uniqueName
+    });
+    Result<dynamic> result = Result(error: false);
+    print({
+      "ProductId": productId,
+      "FundingChannel": fundingChannel,
+      "Amount": amount,
+      "UniqueName": uniqueName
+    });
+    var buyNairaInstrument = await dio.post(url,
+        data: data,
+        options: Options(
+          headers: headers,
+          validateStatus: (status) {
+            return status < 500;
+          },
+        ));
+    // print(buyNairaInst);
+    if (buyNairaInstrument.statusCode == 200) {
+      print("Success: ${buyNairaInstrument.data}");
+      result.data = buyNairaInstrument.data;
+      return result.data;
+    }
+    if (buyNairaInstrument.statusCode == 400) {
+      print("Failure: ${buyNairaInstrument.data}");
+      result.data = buyNairaInstrument.data;
+      return result.data;
+    }
+
+    throw UnimplementedError();
   }
 }

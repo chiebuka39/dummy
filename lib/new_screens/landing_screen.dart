@@ -116,6 +116,7 @@ class _LandingScreenState extends State<LandingScreen> {
         YMargin(15),
         FlatButton(onPressed: (){
           Navigator.of(context).push(LoginScreen.route());
+          // MaterialPageRoute(builder: )
         }, child: Text("Log In",style: TextStyle(fontFamily: "Caros-Medium"),)),
         Spacer(),
       ],),

@@ -33,7 +33,8 @@ class AppColors {
 
   static var kRed = Color(0xFFd14747);
   static var kRed2 = Color(0xFFe02020);
-
+  static const kRed3 = Color(0xffFBCBCB);
+  static const kRed4 = Color(0xffF53232);
   static var kGreen = Color(0xFF2ab750);
 
   static List<Color> donutColor =  [
@@ -48,4 +49,11 @@ class AppColors {
     AppColors.kLightText2,
 
   ];
+
+
+
+
+  static const kLightText5 =Color.fromRGBO(5,8,38,0.4);
+
+
 }

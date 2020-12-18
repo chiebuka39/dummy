@@ -4,6 +4,7 @@ class AppStrings{
 
   static String state = "state";
   static String nairaSymbol = "\u20A6";
+  static String dollarSymbol = "\u0024";
   static String fontBold = "Airbnb-Bold";
   static String fontMedium = "Airbnb-Medium";
   static String fontLight = "Airbnb-Light";

@@ -17,6 +17,8 @@ PODS:
     - Flutter
   - rave_flutter (0.0.1):
     - Flutter
+  - shared_preferences (0.0.1):
+    - Flutter
   - sqflite (0.0.1):
     - Flutter
     - FMDB (~> 2.7.2)
@@ -32,6 +34,7 @@ DEPENDENCIES:
   - password_criteria (from `.symlinks/plugins/password_criteria/ios`)
   - path_provider (from `.symlinks/plugins/path_provider/ios`)
   - rave_flutter (from `.symlinks/plugins/rave_flutter/ios`)
+  - shared_preferences (from `.symlinks/plugins/shared_preferences/ios`)
   - sqflite (from `.symlinks/plugins/sqflite/ios`)
   - webview_flutter (from `.symlinks/plugins/webview_flutter/ios`)
 
@@ -56,6 +59,8 @@ EXTERNAL SOURCES:
     :path: ".symlinks/plugins/path_provider/ios"
   rave_flutter:
     :path: ".symlinks/plugins/rave_flutter/ios"
+  shared_preferences:
+    :path: ".symlinks/plugins/shared_preferences/ios"
   sqflite:
     :path: ".symlinks/plugins/sqflite/ios"
   webview_flutter:
@@ -71,6 +76,7 @@ SPEC CHECKSUMS:
   password_criteria: d9c7308cf151f48a0dedb1265a800eadf5b66e02
   path_provider: abfe2b5c733d04e238b0d8691db0cfd63a27a93c
   rave_flutter: 5bdc226f3eef53fa1ebdc54f11b08ad6d4d81213
+  shared_preferences: af6bfa751691cdc24be3045c43ec037377ada40d
   sqflite: 4001a31ff81d210346b500c55b17f4d6c7589dd0
   webview_flutter: d2b4d6c66968ad042ad94cbb791f5b72b4678a96
 
