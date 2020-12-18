@@ -14,6 +14,8 @@ abstract class ABSSavingViewModel extends ChangeNotifier{
 
   SavingsFrequency _selectedFrequency;
   FundingChannel _selectedChannel;
+  SavingPlanModel _selectedPlan;
+  SavingPlanModel get selectedPlan => _selectedPlan;
   double _amountToSave;
   double get amountToSave => _amountToSave;
   DateTime _startDate;
@@ -38,6 +40,7 @@ abstract class ABSSavingViewModel extends ChangeNotifier{
   set startDate(DateTime time);
   set amountToSave(double value);
   set selectedFrequency(SavingsFrequency value);
+  set selectedPlan(SavingPlanModel value);
   set selectedChannel(FundingChannel value);
   set productTypes(List<ProductType> types);
   set fundingChannels(List<FundingChannel> channels);
@@ -93,6 +96,11 @@ class SavingViewModel extends ABSSavingViewModel{
   }
   set amountToSave(double value){
     _amountToSave = value;
+    notifyListeners();
+  }
+
+  set selectedPlan(SavingPlanModel value){
+    _selectedPlan = value;
     notifyListeners();
   }
 

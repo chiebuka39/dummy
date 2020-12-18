@@ -169,6 +169,7 @@ class _WealthBoxDetailsScreenState extends State<WealthBoxDetailsScreen> with Af
                           child: Center(
                             child: GestureDetector(
                               onTap:(){
+                                savingViewModel.selectedPlan = savingsPlanModel;
                                 Navigator.of(context).push(TopUpScreen.route());
                               },
                               child: Container(child: Column(children: [

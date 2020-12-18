@@ -438,7 +438,7 @@ class SavingService extends ABSSavingService{
       }else {
         result.error = false;
 
-        result.data = SavingPlanModel.fromJson(response1['data']);
+        //result.data = SavingPlanModel.fromJson(response1['data']);
         if(response1['message'] != null){
           result.errorMessage = response1['message'];
         }
