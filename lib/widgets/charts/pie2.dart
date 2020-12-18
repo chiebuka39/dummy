@@ -31,7 +31,7 @@ class PieChart2State extends State<PieChartSample2> {
             Row(children: [
               Transform.translate(
                   offset:Offset(0,-4),
-                  child: Text(widget.dollar ?'\$' :'AppStrings.nairaSymbol', style: TextStyle(fontSize: 14,color: AppColors.kGreyText),)),
+                  child: Text(widget.dollar ?'\$' :'${AppStrings.nairaSymbol}', style: TextStyle(fontSize: 14,color: AppColors.kGreyText),)),
               XMargin(2),
               Text("000,000",
                 style: TextStyle(fontSize: 25,

@@ -21,7 +21,7 @@ abstract class ABSSavingViewModel extends ChangeNotifier{
   SavingsFrequency get selectedFrequency => _selectedFrequency;
   FundingChannel get selectedChannel => _selectedChannel;
 
-  List<SavingPlanModel> _savingPlanModel = [];
+  List<SavingPlanModel> _savingPlanModel;
   List<ProductType> _productTypes = [];
   List<FundingChannel> _fundingChannels = [];
   List<FundingChannel> get fundingChannels => _fundingChannels;

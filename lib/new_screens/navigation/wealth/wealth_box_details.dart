@@ -1,8 +1,11 @@
+import 'package:after_layout/after_layout.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:percent_indicator/circular_percent_indicator.dart';
 import 'package:provider/provider.dart';
+import 'package:zimvest/data/models/product_transaction.dart';
 import 'package:zimvest/data/models/saving_plan.dart';
+import 'package:zimvest/data/view_models/identity_view_model.dart';
 import 'package:zimvest/data/view_models/savings_view_model.dart';
 import 'package:zimvest/new_screens/funding/top_up_screen.dart';
 import 'package:zimvest/new_screens/funding/withdraw_screen.dart';
@@ -31,20 +34,43 @@ class WealthBoxDetailsScreen extends StatefulWidget {
   _WealthBoxDetailsScreenState createState() => _WealthBoxDetailsScreenState();
 }
 
-class _WealthBoxDetailsScreenState extends State<WealthBoxDetailsScreen> {
+class _WealthBoxDetailsScreenState extends State<WealthBoxDetailsScreen> with AfterLayoutMixin<WealthBoxDetailsScreen> {
   SavingPlanModel savingsPlanModel;
 
   ABSSavingViewModel savingViewModel;
+  ABSIdentityViewModel identityViewModel;
+  List<ProductTransaction> transactions;
 
   @override
   void initState() {
    savingsPlanModel = widget.savingsPlanModel;
     super.initState();
   }
+
+  @override
+  void afterFirstLayout(BuildContext context) {
+    fetchTransactions(savingsPlanModel.id);
+  }
+
+  Future<void> fetchTransactions(int productId) async {
+
+
+      var result = await savingViewModel.getTransactionForProduct(
+          token: identityViewModel.user.token,
+          id: productId);
+      if(result.error == false){
+        setState(() {
+          transactions = result.data;
+        });
+      }
+
+  }
+
   @override
   Widget build(BuildContext context) {
     savingViewModel = Provider.of(context);
-    print("ooo ${savingViewModel.savingsTransactions[1]}");
+    identityViewModel = Provider.of(context);
+    // print("ooo ${savingViewModel.savingsTransactions[1]}");
     return Scaffold(
       backgroundColor: AppColors.kWealth,
       appBar: AppBar(
@@ -56,7 +82,6 @@ class _WealthBoxDetailsScreenState extends State<WealthBoxDetailsScreen> {
           Spacer(),
           Container(
             height: MediaQuery.of(context).size.height - 130,
-              
               decoration: BoxDecoration(
                 color: AppColors.kWhite,
                 borderRadius: BorderRadius.only(topLeft: Radius.circular(25),topRight: Radius.circular(25))
@@ -64,7 +89,6 @@ class _WealthBoxDetailsScreenState extends State<WealthBoxDetailsScreen> {
               child: SingleChildScrollView(
                 child: Column(
                   children: [
-                 
                     YMargin(27),
                     Row(
                       children: [
@@ -227,9 +251,9 @@ class _WealthBoxDetailsScreenState extends State<WealthBoxDetailsScreen> {
                         )
                       ],),
                     ),
-                    ...List.generate(savingViewModel.savingsTransactions[savingsPlanModel.productId].length > 4? 4
-                        :savingViewModel.savingsTransactions[savingsPlanModel.productId].length, (index) {
-                      return WealthBoxActivity(productTransaction: savingViewModel.savingsTransactions[1][index],);
+                    ...List.generate( transactions == null ? 0 : transactions.length > 4? 4
+                        :transactions.length, (index) {
+                      return WealthBoxActivity(productTransaction: transactions[index],);
                     })
 
                   ],

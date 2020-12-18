@@ -69,24 +69,27 @@ class _LoginScreenState extends State<LoginScreen> {
                     color: AppColors.kGreyBg,
                     borderRadius: BorderRadius.circular(12)
                 ),
-                child: TextField(
-                  keyboardType: TextInputType.emailAddress,
-                    onChanged: (value) {
-                      print("oooo $value");
-                      if (EmailValidator.validate(value)) {
-                        _emailError = false;
-                      } else {
-                        _emailError = true;
-                      }
-                      _email = value;
-                      setState(() {});
-                    },
-                  decoration: InputDecoration(
-                      border: InputBorder.none,
-                      hintText: "Email Address",
-                      hintStyle: TextStyle(
-                          fontSize: 14
-                      )
+                child: Transform.translate(
+                  offset: Offset(0,5),
+                  child: TextField(
+                    keyboardType: TextInputType.emailAddress,
+                      onChanged: (value) {
+                        print("oooo $value");
+                        if (EmailValidator.validate(value)) {
+                          _emailError = false;
+                        } else {
+                          _emailError = true;
+                        }
+                        _email = value;
+                        setState(() {});
+                      },
+                    decoration: InputDecoration(
+                        border: InputBorder.none,
+                        hintText: "Email Address",
+                        hintStyle: TextStyle(
+                            fontSize: 14
+                        )
+                    ),
                   ),
                 ),
               ),
@@ -110,7 +113,7 @@ class _LoginScreenState extends State<LoginScreen> {
                   children: [
                     Expanded(
                       child: Transform.translate(
-                        offset: Offset(0,-3),
+                        offset: Offset(0,-2),
                         child: TextField(
                           obscureText: obscureText2,
                           onChanged: (value) {

@@ -1,5 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:provider/provider.dart';
+import 'package:zimvest/data/view_models/savings_view_model.dart';
+import 'package:zimvest/new_screens/navigation/wealth/create/wealth_box_screen.dart';
+import 'package:zimvest/new_screens/navigation/wealth/wealth_box_details.dart';
 import 'package:zimvest/new_screens/navigation/widgets/earn_free_cash.dart';
 import 'package:zimvest/styles/colors.dart';
 import 'package:zimvest/utils/margin.dart';
@@ -14,8 +18,11 @@ class WealthScreen extends StatefulWidget {
 class _WealthScreenState extends State<WealthScreen> {
   bool showInvest = false;
 
+  ABSSavingViewModel savingViewModel;
+
   @override
   Widget build(BuildContext context) {
+    savingViewModel  = Provider.of(context);
     double tabWidth = MediaQuery.of(context).size.width - 40;
     return Scaffold(
       body: SafeArea(
@@ -102,11 +109,22 @@ class _WealthScreenState extends State<WealthScreen> {
           showInvest ?Expanded(child: Column(children: [
             ActionBoxWidget(title: "Zimvest High Yield", desc: "This savings plan assists you save in a "
                 "disciplined manner.", color: AppColors.kHighYield,img: 'high',),
-            ActionBoxWidget(title: "Zimvest Fixed Income", desc: "This savings plan assists you save in a "
-                "disciplined manner.", color: AppColors.kFixed,img: 'fixed',),
+            ActionBoxWidget(desc: "Invest in fixed income vehicles"
+              "such as Treasury Bills, FGN Bonds"
+              "Corporate Bonds, and Eurobonds",title: "Zimvest Fixed Income",
+              color: AppColors.kFixed,img: 'fixed',),
           ],)):Expanded(child: Column(children: [
             ActionBoxWidget(title: "Zimvest wealth box", desc: "This savings plan assists you save in a "
-                "disciplined manner.", color: AppColors.kWealth),
+                "disciplined manner.", color: AppColors.kWealth,
+              onTap: (){
+                if( savingViewModel.savingPlanModel.where((element) => element.productId == 1).isEmpty){
+                  Navigator.push(context, WealthBoxScreen.route());
+                }else{
+                  Navigator.push(context, WealthBoxDetailsScreen.route(savingViewModel.savingPlanModel
+                      .where((element) => element.productId == 1).first));
+                }
+              },
+            ),
             ActionBoxWidget(title: "Zimvest Aspire", desc: "This savings plan assists you save in a "
                 "disciplined manner.", color: AppColors.kAspire, img: 'aspire',),
           ],)),
