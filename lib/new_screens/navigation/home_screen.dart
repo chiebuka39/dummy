@@ -163,12 +163,12 @@ class _HomeScreenState extends State<HomeScreen> {
                           ],),
                           YMargin(16),
                           Row(children: [
-                            Icon(Icons.arrow_drop_up_outlined),
+                            Icon(Icons.arrow_drop_up_outlined,color: AppColors.kFixed),
                             Text("${AppStrings.nairaSymbol}0",
-                              style: TextStyle(fontFamily: AppStrings.fontMedium),),
+                              style: TextStyle(fontFamily: AppStrings.fontMedium,color: AppColors.kFixed)),
                             XMargin(5),
                             Text("(0.00%)",
-                              style: TextStyle(fontFamily: AppStrings.fontMedium),),
+                              style: TextStyle(fontFamily: AppStrings.fontMedium,color: AppColors.kFixed),),
                             XMargin(5),
                             Text("Past 24h",
                               style: TextStyle(),),
@@ -182,7 +182,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                 child: Row(children: [
                                   Text("Portfolio Breakdown", style: TextStyle(color: AppColors.kGreyText,
                                       fontSize: 11,fontFamily: AppStrings.fontNormal),),
-                                  Icon(Icons.navigate_next_rounded, color: AppColors.kGreyText,size: 19,)
+                                  Icon(Icons.navigate_next_rounded, color: AppColors.kPrimaryColor,size: 19,)
                                 ],),
                               ),
                             )

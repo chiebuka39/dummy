@@ -1,5 +1,6 @@
 import 'package:after_layout/after_layout.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:percent_indicator/circular_percent_indicator.dart';
 import 'package:provider/provider.dart';
@@ -53,7 +54,6 @@ class _WealthBoxDetailsScreenState extends State<WealthBoxDetailsScreen> with Af
   }
 
   Future<void> fetchTransactions(int productId) async {
-
 
       var result = await savingViewModel.getTransactionForProduct(
           token: identityViewModel.user.token,
@@ -216,21 +216,33 @@ class _WealthBoxDetailsScreenState extends State<WealthBoxDetailsScreen> with Af
                         ),
                         Expanded(
                           child: Center(
-                            child: Container(child: Column(children: [
-                              Container(
-                                  height:35,
-                                  width: 35,
-                                  decoration: BoxDecoration(
-                                      color: AppColors.kPrimaryColorLight,
-                                      shape: BoxShape.circle
-                                  ),
-                                  child: Center(child: SvgPicture.asset("images/new/top_up.svg",color: AppColors.kPrimaryColor,))),
-                              YMargin(12),
-                              Text("Pause", style: TextStyle(
-                                  fontSize: 12,
-                                  fontFamily: AppStrings.fontNormal
-                              ),)
-                            ],),),
+                            child: GestureDetector(
+                              onTap: ()async{
+                                EasyLoading.show(status:"Pausing savings");
+                                var result = await savingViewModel.pauseSaving(
+                                    token: identityViewModel.user.token,savingModelId: savingsPlanModel.id);
+                                if(result.error == false){
+                                  EasyLoading.showSuccess("Savings paused");
+                                }else{
+                                  EasyLoading.showError(result.errorMessage);
+                                }
+                              },
+                              child: Container(child: Column(children: [
+                                Container(
+                                    height:35,
+                                    width: 35,
+                                    decoration: BoxDecoration(
+                                        color: AppColors.kPrimaryColorLight,
+                                        shape: BoxShape.circle
+                                    ),
+                                    child: Center(child: SvgPicture.asset("images/new/pause.svg",color: AppColors.kPrimaryColor,))),
+                                YMargin(12),
+                                Text("Pause", style: TextStyle(
+                                    fontSize: 12,
+                                    fontFamily: AppStrings.fontNormal
+                                ),)
+                              ],),),
+                            ),
                           ),
                         ),
                       ],),
