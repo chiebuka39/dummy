@@ -4,9 +4,9 @@ class CommercialPaper {
   CommercialPaper({this.comercialPaperItems});
 
   CommercialPaper.fromJson(Map<String, dynamic> json) {
-    if (json['comercialPaperItems'] != null) {
+    if (json['data'] != null) {
       comercialPaperItems = new List<ComercialPaperItems>();
-      json['comercialPaperItems'].forEach((v) {
+      json['data'].forEach((v) {
         comercialPaperItems.add(new ComercialPaperItems.fromJson(v));
       });
     }
@@ -15,7 +15,7 @@ class CommercialPaper {
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
     if (this.comercialPaperItems != null) {
-      data['comercialPaperItems'] =
+      data['data'] =
           this.comercialPaperItems.map((v) => v.toJson()).toList();
     }
     return data;
