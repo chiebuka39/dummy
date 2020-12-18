@@ -19,10 +19,10 @@ class _FBNBondPagePageState extends State<FBNBondPagePage> {
               ? CircularProgressIndicator(
                   valueColor: AlwaysStoppedAnimation(AppColors.kGreen),
                 )
-              : model.fgnBond.data.length == 0
+              : model.fgnBond.data.fgnBondItems[0].bonds.length == 0
                   ? Text("Not Available")
                   : Text(
-                      model.fgnBond.data.length.toString(),
+                      model.fgnBond.data.fgnBondItems[0].bonds.length.toString(),
                     ),
         ),
       ),

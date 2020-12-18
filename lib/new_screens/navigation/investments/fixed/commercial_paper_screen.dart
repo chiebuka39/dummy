@@ -19,10 +19,10 @@ class _CommercialPaperPageState extends State<CommercialPaperPage> {
               ? CircularProgressIndicator(
                   valueColor: AlwaysStoppedAnimation(AppColors.kGreen),
                 )
-              : model.commercialPaper.data.length == 0 ? Text(
+              : model.commercialPaper.data.comercialPaperItems[0].commercialPapers.length == 0 ? Text(
                   "Not Available"
                 ): Text(
-                  model.commercialPaper.data.length.toString(),
+                  model.commercialPaper.data.comercialPaperItems[0].commercialPapers.length.toString(),
                 ),
         ),
       ),

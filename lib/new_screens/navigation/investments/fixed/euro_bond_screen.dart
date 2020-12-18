@@ -19,10 +19,10 @@ class _EuroBondPageState extends State<EuroBondPage> {
               ? CircularProgressIndicator(
                   valueColor: AlwaysStoppedAnimation(AppColors.kGreen),
                 )
-              : model.euroBond.data.length == 0 ? Text(
+              : model.euroBond.data.euroBondItems[0].bonds.length == 0 ? Text(
                   "Not Available"
                 ): Text(
-                  model.euroBond.data.length.toString(),
+                  model.euroBond.data.euroBondItems[0].bonds.length.toString(),
                 ),
         ),
       ),

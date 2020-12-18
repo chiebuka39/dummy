@@ -19,10 +19,10 @@ class _TreasuryBillPageState extends State<TreasuryBillPage> {
               ? CircularProgressIndicator(
                   valueColor: AlwaysStoppedAnimation(AppColors.kGreen),
                 )
-              : model.treasuryBills.data.length == 0 ? Text(
+              : model.treasuryBills.data.tBillsItems == null ? Text(
                   "Not Available"
                 ): Text(
-                  model.treasuryBills.data.length.toString(),
+                  model.treasuryBills.data.tBillsItems[0].treasureBills.length.toString(),
                 ),
         ),
       ),

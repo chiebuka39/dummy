@@ -235,32 +235,32 @@ class InvestmentViewModel extends ABSInvestmentViewModel {
 
   @override
   Future<Result<List<CommercialPaper>>> getCommercialPaper({String token}) {
-    return _investmentService.getCommercialPaper(token: token);
+    // return _investmentService.getCommercialPaper(token: token);
   }
 
   @override
   Future<Result<List<TreasuryBill>>> getTreasuryBill({String token}) {
-    return _investmentService.getTreasuryBill(token: token);
+    // return _investmentService.getTreasuryBill(token: token);
   }
 
   @override
   Future<Result<List<EuroBond>>> getEuroBond({String token}) {
-    return _investmentService.getEuroBond(token: token);
+    // return _investmentService.getEuroBond(token: token);
   }
 
   @override
   Future<Result<List<FGNBond>>> getFGNBond({String token}) {
-    return _investmentService.getFGNBond(token: token);
+    // return _investmentService.getFGNBond(token: token);
   }
 
   @override
   Future<Result<List<PromissoryNotes>>> getPromissoryNotes({String token}) {
-    return _investmentService.getPromissoryNotes(token: token);
+    // return _investmentService.getPromissoryNotes(token: token);
   }
 
   @override
   Future<Result<List<CorporateBond>>> getCorporateBond({String token}) {
-    return _investmentService.getCorporateBond(token: token);
+    // return _investmentService.getCorporateBond(token: token);
   }
 
   @override
@@ -325,14 +325,14 @@ class InvestmentHighYieldViewModel extends ChangeNotifier {
   Result<List<TermInstrument>> nairaInstrument = Result<List<TermInstrument>>();
   Result<List<TermInstrument>> dollarInstrument =
       Result<List<TermInstrument>>();
-  Result<List<CommercialPaper>> commercialPaper =
-      Result<List<CommercialPaper>>();
-  Result<List<TreasuryBill>> treasuryBills = Result<List<TreasuryBill>>();
-  Result<List<CorporateBond>> corporateBond = Result<List<CorporateBond>>();
-  Result<List<EuroBond>> euroBond = Result<List<EuroBond>>();
+  Result<CommercialPaper> commercialPaper =
+      Result<CommercialPaper>();
+  Result<TreasuryBill> treasuryBills = Result<TreasuryBill>();
+  Result<CorporateBond> corporateBond = Result<CorporateBond>();
+  Result<EuroBond> euroBond = Result<EuroBond>();
 
-  Result<List<FGNBond>> fgnBond = Result<List<FGNBond>>();
-  Result<List<PromissoryNotes>> promissoryNote = Result<List<PromissoryNotes>>();
+  Result<FGNBond> fgnBond = Result<FGNBond>();
+  Result<PromissoryNote> promissoryNote = Result<PromissoryNote>();
   bool _busy = false;
   bool get busy => _busy;
 
