@@ -19,10 +19,10 @@ class _CorporateBondPageState extends State<CorporateBondPage> {
               ? CircularProgressIndicator(
                   valueColor: AlwaysStoppedAnimation(AppColors.kGreen),
                 )
-              : model.corporateBond.data.length == 0 ? Text(
+              : model.corporateBond.data.corporateBondItems[0].corporateBondBonds.length == 0 ? Text(
                   "Not Available"
                 ): Text(
-                  model.corporateBond.data.length.toString(),
+                  model.corporateBond.data.corporateBondItems[0].corporateBondBonds.length.toString(),
                 ),
         ),
       ),

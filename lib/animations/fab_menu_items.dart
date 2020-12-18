@@ -71,7 +71,7 @@ class _FabmenuitemsState extends State<Fabmenuitems> with SingleTickerProviderSt
 
 
 
-    controller = new AnimationController(vsync: this);
+    controller = new AnimationController(vsync: this,);
 
     _animateIcon =
         Tween<double>(begin: 0.0, end: 1.0).animate(controller);

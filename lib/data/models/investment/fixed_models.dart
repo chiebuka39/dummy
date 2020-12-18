@@ -108,9 +108,9 @@ class TreasuryBill {
   TreasuryBill({this.tBillsItems});
 
   TreasuryBill.fromJson(Map<String, dynamic> json) {
-    if (json['tBillsItems'] != null) {
+    if (json['data'] != null) {
       tBillsItems = new List<TBillsItems>();
-      json['tBillsItems'].forEach((v) {
+      json['data'].forEach((v) {
         tBillsItems.add(new TBillsItems.fromJson(v));
       });
     }
@@ -119,7 +119,7 @@ class TreasuryBill {
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
     if (this.tBillsItems != null) {
-      data['tBillsItems'] = this.tBillsItems.map((v) => v.toJson()).toList();
+      data['data'] = this.tBillsItems.map((v) => v.toJson()).toList();
     }
     return data;
   }
@@ -213,9 +213,9 @@ class FGNBond {
   FGNBond({this.fgnBondItems});
 
   FGNBond.fromJson(Map<String, dynamic> json) {
-    if (json['fgnBondItems'] != null) {
+    if (json['data'] != null) {
       fgnBondItems = new List<FgnBondItems>();
-      json['fgnBondItems'].forEach((v) {
+      json['data'].forEach((v) {
         fgnBondItems.add(new FgnBondItems.fromJson(v));
       });
     }
@@ -224,7 +224,7 @@ class FGNBond {
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
     if (this.fgnBondItems != null) {
-      data['fgnBondItems'] = this.fgnBondItems.map((v) => v.toJson()).toList();
+      data['data'] = this.fgnBondItems.map((v) => v.toJson()).toList();
     }
     return data;
   }
@@ -315,9 +315,9 @@ class CorporateBond {
   CorporateBond({this.corporateBondItems});
 
   CorporateBond.fromJson(Map<String, dynamic> json) {
-    if (json['corporateBondItems'] != null) {
+    if (json['data'] != null) {
       corporateBondItems = new List<CorporateBondItems>();
-      json['corporateBondItems'].forEach((v) {
+      json['data'].forEach((v) {
         corporateBondItems.add(new CorporateBondItems.fromJson(v));
       });
     }
@@ -326,7 +326,7 @@ class CorporateBond {
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
     if (this.corporateBondItems != null) {
-      data['corporateBondItems'] =
+      data['data'] =
           this.corporateBondItems.map((v) => v.toJson()).toList();
     }
     return data;
@@ -418,9 +418,9 @@ class EuroBond {
   EuroBond({this.euroBondItems});
 
   EuroBond.fromJson(Map<String, dynamic> json) {
-    if (json['euroBondItems'] != null) {
+    if (json['data'] != null) {
       euroBondItems = new List<EuroBondItems>();
-      json['euroBondItems'].forEach((v) {
+      json['data'].forEach((v) {
         euroBondItems.add(new EuroBondItems.fromJson(v));
       });
     }
@@ -429,7 +429,7 @@ class EuroBond {
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
     if (this.euroBondItems != null) {
-      data['euroBondItems'] =
+      data['data'] =
           this.euroBondItems.map((v) => v.toJson()).toList();
     }
     return data;
@@ -525,9 +525,9 @@ class PromissoryNote {
   PromissoryNote({this.promissoryNoteItems});
 
   PromissoryNote.fromJson(Map<String, dynamic> json) {
-    if (json['promissoryNoteItems'] != null) {
+    if (json['data'] != null) {
       promissoryNoteItems = new List<PromissoryNoteItems>();
-      json['promissoryNoteItems'].forEach((v) {
+      json['data'].forEach((v) {
         promissoryNoteItems.add(new PromissoryNoteItems.fromJson(v));
       });
     }
@@ -536,7 +536,7 @@ class PromissoryNote {
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
     if (this.promissoryNoteItems != null) {
-      data['promissoryNoteItems'] =
+      data['data'] =
           this.promissoryNoteItems.map((v) => v.toJson()).toList();
     }
     return data;

@@ -19,10 +19,10 @@ class _PromissoryNotePageState extends State<PromissoryNotePage> {
               ? CircularProgressIndicator(
                   valueColor: AlwaysStoppedAnimation(AppColors.kGreen),
                 )
-              : model.promissoryNote.data.length == 0 ? Text(
+              : model.promissoryNote.data.promissoryNoteItems[0].promissoryNotes.length == 0 ? Text(
                   "Not Available"
                 ): Text(
-                  model.promissoryNote.data.length.toString(),
+                  model.promissoryNote.data.promissoryNoteItems[0].promissoryNotes.length.toString(),
                 ),
         ),
       ),

@@ -47,12 +47,12 @@ abstract class ABSInvestmentService {
       int directDebitFrequency,
       File documentFile});
   Future<Result<List<MutualFund>>> getDollarFund({String token});
-  Future<Result<List<TreasuryBill>>> getTreasuryBill({String token});
-  Future<Result<List<CommercialPaper>>> getCommercialPaper({String token});
-  Future<Result<List<FGNBond>>> getFGNBond({String token});
-  Future<Result<List<PromissoryNotes>>> getPromissoryNotes({String token});
-  Future<Result<List<EuroBond>>> getEuroBond({String token});
-  Future<Result<List<CorporateBond>>> getCorporateBond({String token});
+  Future<Result<TreasuryBill>> getTreasuryBill({String token});
+  Future<Result<CommercialPaper>> getCommercialPaper({String token});
+  Future<Result<FGNBond>> getFGNBond({String token});
+  Future<Result<PromissoryNote>> getPromissoryNotes({String token});
+  Future<Result<EuroBond>> getEuroBond({String token});
+  Future<Result<CorporateBond>> getCorporateBond({String token});
   Future<Result<Fund>> getFundDetails(
       {String token, String fundName, String fundId});
   Future<Result<Fund>> getFixedFundDetails(
@@ -427,9 +427,9 @@ class InvestmentService extends ABSInvestmentService {
   }
 
   @override
-  Future<Result<List<CommercialPaper>>> getCommercialPaper(
+  Future<Result<CommercialPaper>> getCommercialPaper(
       {String token}) async {
-    Result<List<CommercialPaper>> result = Result(error: false);
+    Result<CommercialPaper> result = Result(error: false);
 
     var headers = {HttpHeaders.authorizationHeader: "Bearer $token"};
 
@@ -439,19 +439,12 @@ class InvestmentService extends ABSInvestmentService {
       var response = await dio.get(url, options: Options(headers: headers));
       final int statusCode = response.statusCode;
       var response1 = response.data;
-      print("iii ${response1}");
-
       if (statusCode != 200) {
         result.errorMessage = response1['message'];
         result.error = true;
       } else {
         result.error = false;
-        List<CommercialPaper> channels = [];
-        (response1['data'] as List).forEach((chaList) {
-          //initialize Chat Object
-          channels.add(CommercialPaper.fromJson(chaList));
-        });
-        result.data = channels;
+        result.data = CommercialPaper.fromJson(jsonDecode(response1));
       }
     } on DioError catch (e) {
       print("error $e}");
@@ -464,13 +457,13 @@ class InvestmentService extends ABSInvestmentService {
       }
       result.error = true;
     }
-
+    print("Commercial Paper ${result.data}");
     return result;
   }
 
   @override
-  Future<Result<List<CorporateBond>>> getCorporateBond({String token}) async {
-    Result<List<CorporateBond>> result = Result(error: false);
+  Future<Result<CorporateBond>> getCorporateBond({String token}) async {
+    Result<CorporateBond> result = Result(error: false);
 
     var headers = {HttpHeaders.authorizationHeader: "Bearer $token"};
 
@@ -480,19 +473,19 @@ class InvestmentService extends ABSInvestmentService {
       var response = await dio.get(url, options: Options(headers: headers));
       final int statusCode = response.statusCode;
       var response1 = response.data;
-      print("iii ${response1}");
+      // print("iii ${response1}");
 
       if (statusCode != 200) {
         result.errorMessage = response1['message'];
         result.error = true;
       } else {
         result.error = false;
-        List<CorporateBond> channels = [];
-        (response1['data'] as List).forEach((chaList) {
-          //initialize Chat Object
-          channels.add(CorporateBond.fromJson(chaList));
-        });
-        result.data = channels;
+        // List<CorporateBond> channels = [];
+        // (response1['data'] as List).forEach((chaList) {
+        //   //initialize Chat Object
+        //   channels.add(CorporateBond.fromJson(chaList));
+        // });
+        result.data = CorporateBond.fromJson(jsonDecode(response1));
       }
     } on DioError catch (e) {
       print("error $e}");
@@ -505,13 +498,13 @@ class InvestmentService extends ABSInvestmentService {
       }
       result.error = true;
     }
-
+    print("corporatebond ${result.data}");
     return result;
   }
 
   @override
-  Future<Result<List<EuroBond>>> getEuroBond({String token}) async {
-    Result<List<EuroBond>> result = Result(error: false);
+  Future<Result<EuroBond>> getEuroBond({String token}) async {
+    Result<EuroBond> result = Result(error: false);
 
     var headers = {HttpHeaders.authorizationHeader: "Bearer $token"};
 
@@ -521,19 +514,19 @@ class InvestmentService extends ABSInvestmentService {
       var response = await dio.get(url, options: Options(headers: headers));
       final int statusCode = response.statusCode;
       var response1 = response.data;
-      print("iii ${response1}");
+      // print("iii ${response1}");
 
       if (statusCode != 200) {
         result.errorMessage = response1['message'];
         result.error = true;
       } else {
         result.error = false;
-        List<EuroBond> channels = [];
-        (response1['data'] as List).forEach((chaList) {
-          //initialize Chat Object
-          channels.add(EuroBond.fromJson(chaList));
-        });
-        result.data = channels;
+        // List<EuroBond> channels = [];
+        // (response1['data'] as List).forEach((chaList) {
+        //   //initialize Chat Object
+        //   channels.add(EuroBond.fromJson(chaList));
+        // });
+        result.data = EuroBond.fromJson(jsonDecode(response1));
       }
     } on DioError catch (e) {
       print("error $e}");
@@ -546,13 +539,13 @@ class InvestmentService extends ABSInvestmentService {
       }
       result.error = true;
     }
-
+    print("EuroBond ${result.data}");
     return result;
   }
 
   @override
-  Future<Result<List<FGNBond>>> getFGNBond({String token}) async {
-    Result<List<FGNBond>> result = Result(error: false);
+  Future<Result<FGNBond>> getFGNBond({String token}) async {
+    Result<FGNBond> result = Result(error: false);
 
     var headers = {HttpHeaders.authorizationHeader: "Bearer $token"};
 
@@ -562,19 +555,19 @@ class InvestmentService extends ABSInvestmentService {
       var response = await dio.get(url, options: Options(headers: headers));
       final int statusCode = response.statusCode;
       var response1 = response.data;
-      print("iii ${response1}");
+      print("iii $response1");
 
       if (statusCode != 200) {
         result.errorMessage = response1['message'];
         result.error = true;
       } else {
         result.error = false;
-        List<FGNBond> channels = [];
-        (response1['data'] as List).forEach((chaList) {
-          //initialize Chat Object
-          channels.add(FGNBond.fromJson(chaList));
-        });
-        result.data = channels;
+        // List<FGNBond> channels = [];
+        // (response1['data'] as List).forEach((chaList) {
+        //   //initialize Chat Object
+        //   channels.add(FGNBond.fromJson(chaList));
+        // });
+        result.data = FGNBond.fromJson(jsonDecode(response1));
       }
     } on DioError catch (e) {
       print("error $e}");
@@ -588,35 +581,36 @@ class InvestmentService extends ABSInvestmentService {
       result.error = true;
     }
 
+    print("FGNBond ${result.data}");
     return result;
   }
 
   @override
-  Future<Result<List<PromissoryNotes>>> getPromissoryNotes(
+  Future<Result<PromissoryNote>> getPromissoryNotes(
       {String token}) async {
-    Result<List<PromissoryNotes>> result = Result(error: false);
+    Result<PromissoryNote> result = Result(error: false);
 
     var headers = {HttpHeaders.authorizationHeader: "Bearer $token"};
 
-    var url = "${AppStrings.baseUrl}$microService/api/PromissoryNotes";
+    var url = "${AppStrings.baseUrl}$microService/api/PromissoryNotes/grouped";
     print("url $url");
     try {
       var response = await dio.get(url, options: Options(headers: headers));
       final int statusCode = response.statusCode;
       var response1 = response.data;
-      print("iii ${response1}");
+      print("iii $response1");
 
       if (statusCode != 200) {
         result.errorMessage = response1['message'];
         result.error = true;
       } else {
         result.error = false;
-        List<PromissoryNotes> channels = [];
-        (response1['data'] as List).forEach((chaList) {
-          //initialize Chat Object
-          channels.add(PromissoryNotes.fromJson(chaList));
-        });
-        result.data = channels;
+        // List<PromissoryNotes> channels = [];
+        // (response1['data'] as List).forEach((chaList) {
+        //   //initialize Chat Object
+        //   channels.add(PromissoryNotes.fromJson(chaList));
+        // });
+        result.data = PromissoryNote.fromJson(response1);
       }
     } on DioError catch (e) {
       print("error $e}");
@@ -629,13 +623,13 @@ class InvestmentService extends ABSInvestmentService {
       }
       result.error = true;
     }
-
+    print("Promissory Note ${result.data}");
     return result;
   }
 
   @override
-  Future<Result<List<TreasuryBill>>> getTreasuryBill({String token}) async {
-    Result<List<TreasuryBill>> result = Result(error: false);
+  Future<Result<TreasuryBill>> getTreasuryBill({String token}) async {
+    Result<TreasuryBill> result = Result(error: false);
 
     var headers = {HttpHeaders.authorizationHeader: "Bearer $token"};
 
@@ -645,19 +639,19 @@ class InvestmentService extends ABSInvestmentService {
       var response = await dio.get(url, options: Options(headers: headers));
       final int statusCode = response.statusCode;
       var response1 = response.data;
-      print("iii ${response1}");
+      // print("iii ${response1}");
 
       if (statusCode != 200) {
         result.errorMessage = response1['message'];
         result.error = true;
       } else {
         result.error = false;
-        List<TreasuryBill> channels = [];
-        (response1['data'] as List).forEach((chaList) {
-          //initialize Chat Object
-          channels.add(TreasuryBill.fromJson(chaList));
-        });
-        result.data = channels;
+        // List<TreasuryBill> channels = [];
+        // (response1['data'] as List).forEach((chaList) {
+        //   //initialize Chat Object
+        //   channels.add(TreasuryBill.fromJson(chaList));
+        // });
+        result.data = TreasuryBill.fromJson(response1);
       }
     } on DioError catch (e) {
       print("error $e}");
@@ -670,7 +664,7 @@ class InvestmentService extends ABSInvestmentService {
       }
       result.error = true;
     }
-
+    print("Treasury Bill ${result.data.tBillsItems}");
     return result;
   }
 
