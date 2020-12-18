@@ -49,4 +49,11 @@ class AppColors {
     AppColors.kLightText2,
 
   ];
+
+
+
+
+  static const kLightText5 =Color.fromRGBO(5,8,38,0.4);
+
+
 }

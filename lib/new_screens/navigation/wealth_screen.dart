@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:provider/provider.dart';
 import 'package:zimvest/data/view_models/savings_view_model.dart';
+import 'package:zimvest/new_screens/navigation/investments/fixed/fixed_income_screen.dart';
+import 'package:zimvest/new_screens/navigation/investments/investment_high_yield_screen.dart';
 import 'package:zimvest/new_screens/navigation/wealth/create/wealth_box_screen.dart';
 import 'package:zimvest/new_screens/navigation/wealth/wealth_box_details.dart';
 import 'package:zimvest/new_screens/navigation/widgets/earn_free_cash.dart';
@@ -108,11 +110,19 @@ class _WealthScreenState extends State<WealthScreen> {
           YMargin(30),
           showInvest ?Expanded(child: Column(children: [
             ActionBoxWidget(title: "Zimvest High Yield", desc: "This savings plan assists you save in a "
-                "disciplined manner.", color: AppColors.kHighYield,img: 'high',),
+                "disciplined manner.",
+              onTap: (){
+                Navigator.push(context, InvestmentHighYieldScreen.route());
+              },
+              color: AppColors.kHighYield,img: 'high',),
             ActionBoxWidget(desc: "Invest in fixed income vehicles"
               "such as Treasury Bills, FGN Bonds"
               "Corporate Bonds, and Eurobonds",title: "Zimvest Fixed Income",
-              color: AppColors.kFixed,img: 'fixed',),
+              color: AppColors.kFixed,img: 'fixed',
+              onTap: (){
+                Navigator.push(context, FixedIncomeHome.route());
+              },
+            ),
           ],)):Expanded(child: Column(children: [
             ActionBoxWidget(title: "Zimvest wealth box", desc: "This savings plan assists you save in a "
                 "disciplined manner.", color: AppColors.kWealth,

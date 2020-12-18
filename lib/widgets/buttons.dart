@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:zimvest/styles/colors.dart';
 import 'package:zimvest/utils/enums.dart';
+import 'package:zimvest/utils/margin.dart';
+import 'package:zimvest/utils/margins.dart';
 import 'package:zimvest/utils/strings.dart';
 
 class ZimSelectedButton extends StatelessWidget {
@@ -305,6 +307,165 @@ class RoundedNextButton extends StatelessWidget {
                   child: Center(child: loading ?
                   CircularProgressIndicator(valueColor: AlwaysStoppedAnimation<Color>(Colors.white),): Icon(Icons.navigate_next,color: Colors.white,),),
                 ),
+              )
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+class PaymentSourceButton extends StatefulWidget {
+  final Function onTap;
+  final String image;
+  final String paymentsource;
+  final String amount;
+  final Color color;
+
+  const PaymentSourceButton(
+      {Key key,
+        @required this.onTap,
+        @required this.image,
+        @required this.paymentsource,
+        this.amount = "", this.color = AppColors.kPrimaryColor})
+      : super(key: key);
+
+  @override
+  _PaymentSourceButtonState createState() => _PaymentSourceButtonState();
+}
+
+class _PaymentSourceButtonState extends State<PaymentSourceButton> {
+  @override
+  Widget build(BuildContext context) {
+    return GestureDetector(
+      onTap: widget.onTap,
+      child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 20.0),
+        child: Container(
+          padding: EdgeInsets.only(left: 19.0, right: 15),
+          height: screenHeight(context) / 13,
+          width: screenWidth(context),
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(15),
+            color: widget.color,
+          ),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Row(
+                children: [
+                  CircleAvatar(
+                    backgroundColor: AppColors.kWhite,
+                    child: Image.asset("images/${widget.image}.png"),
+                  ),
+                  XMargin(10),
+                  Text(
+                    widget.paymentsource,
+                    style: TextStyle(
+                      fontSize: 14,
+                      fontFamily: AppStrings.fontLight,
+                      color: AppColors.kWhite,
+                    ),
+                  ),
+                ],
+              ),
+              Row(
+                children: [
+                  Text(
+                    widget.amount,
+                    style: TextStyle(
+                      fontSize: 14,
+                      fontFamily: AppStrings.fontLight,
+                      color: AppColors.kWhite,
+                    ),
+                  ),
+                  XMargin(10),
+                  Icon(
+                    Icons.arrow_forward_ios,
+                    color: AppColors.kWhite,
+                    size: 15,
+                  ),
+                ],
+              )
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}
+class PaymentSourceButtonSpecial extends StatefulWidget {
+  final Function onTap;
+  final String image;
+  final String paymentsource;
+  final String amount;
+  final Color color;
+
+  const PaymentSourceButtonSpecial(
+      {Key key,
+        @required this.onTap,
+        this.image,
+        @required this.paymentsource,
+        this.amount = "", this.color = AppColors.kPrimaryColor})
+      : super(key: key);
+
+  @override
+  _PaymentSourceButtonSpecialState createState() => _PaymentSourceButtonSpecialState();
+}
+
+class _PaymentSourceButtonSpecialState extends State<PaymentSourceButtonSpecial> {
+  @override
+  Widget build(BuildContext context) {
+    return GestureDetector(
+      onTap: widget.onTap,
+      child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 20.0),
+        child: Container(
+          padding: EdgeInsets.only(left: 19.0, right: 15),
+          height: screenHeight(context) / 13,
+          width: screenWidth(context),
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(15),
+            color: widget.color,
+          ),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Row(
+                children: [
+                  // CircleAvatar(
+                  // backgroundColor: AppColors.kWhite,
+                  // child: Image.asset("images/${widget.image}.png"),
+                  // ),
+                  // XMargin(10),
+                  Text(
+                    widget.paymentsource,
+                    style: TextStyle(
+                      fontSize: 14,
+                      fontFamily: AppStrings.fontLight,
+                      color: AppColors.kWhite,
+                    ),
+                  ),
+                ],
+              ),
+              Row(
+                children: [
+                  Text(
+                    widget.amount,
+                    style: TextStyle(
+                      fontSize: 14,
+                      fontFamily: AppStrings.fontLight,
+                      color: AppColors.kWhite,
+                    ),
+                  ),
+                  XMargin(10),
+                  Icon(
+                    Icons.arrow_forward_ios,
+                    color: AppColors.kWhite,
+                    size: 15,
+                  ),
+                ],
               )
             ],
           ),
