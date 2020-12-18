@@ -1,5 +1,10 @@
+import 'package:after_layout/after_layout.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:zimvest/data/models/payment/wallet.dart';
+import 'package:zimvest/data/view_models/dashboard_view_model.dart';
+import 'package:zimvest/data/view_models/identity_view_model.dart';
+import 'package:zimvest/data/view_models/savings_view_model.dart';
 import 'package:zimvest/new_screens/navigation/WalletScreen.dart';
 import 'package:zimvest/new_screens/navigation/home_screen.dart';
 import 'package:zimvest/new_screens/navigation/portfolio_screen.dart';
@@ -29,7 +34,10 @@ class TabsContainer extends StatefulWidget {
   _TabsContainerState createState() => _TabsContainerState();
 }
 
-class _TabsContainerState extends State<TabsContainer> {
+class _TabsContainerState extends State<TabsContainer> with AfterLayoutMixin<TabsContainer> {
+  ABSDashboardViewModel dashboardViewModel;
+  ABSIdentityViewModel identityViewModel;
+  ABSSavingViewModel savingViewModel;
 
   List<Widget> _screenWidgetList = [
     HomeScreen(),
@@ -43,12 +51,24 @@ class _TabsContainerState extends State<TabsContainer> {
   int _currentIndex = 0;
 
   @override
+  void afterFirstLayout(BuildContext context) async{
+    savingViewModel.getSavingPlans(token: identityViewModel.user.token);
+    await dashboardViewModel.getPortfolioValue(identityViewModel.user.token);
+    await dashboardViewModel.getAssetDistribution(identityViewModel.user.token);
+    await dashboardViewModel.getPortfolioDistribution(identityViewModel.user.token);
+
+  }
+
+  @override
   void initState() {
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
+    identityViewModel = Provider.of(context);
+    dashboardViewModel = Provider.of(context);
+    savingViewModel = Provider.of(context);
     return Container(
         decoration: BoxDecoration(borderRadius: BorderRadius.circular(20)),
         child: Stack(

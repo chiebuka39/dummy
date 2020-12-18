@@ -72,26 +72,29 @@ class _EnterMailWidgetState extends State<EnterMailWidget> {
               height: 60,
               width: double.infinity,
               decoration: BoxDecoration(
-                  color: AppColors.kLightText,
+                  color: AppColors.kGreyBg,
                   borderRadius: BorderRadius.circular(12)
               ),
-              child: TextField(
-                focusNode: _nodeText1,
-                onChanged: (value){
-                  if (EmailValidator.validate(value)) {
-                    _emailError = false;
-                  } else {
-                    _emailError = true;
-                  }
-                  _email = value;
-                  setState(() {});
-                },
-                decoration: InputDecoration(
-                    border: InputBorder.none,
-                    hintText: "Email Address",
-                    hintStyle: TextStyle(
-                        fontSize: 14
-                    )
+              child: Transform.translate(
+                offset: Offset(0,5),
+                child: TextField(
+                  focusNode: _nodeText1,
+                  onChanged: (value){
+                    if (EmailValidator.validate(value)) {
+                      _emailError = false;
+                    } else {
+                      _emailError = true;
+                    }
+                    _email = value;
+                    setState(() {});
+                  },
+                  decoration: InputDecoration(
+                      border: InputBorder.none,
+                      hintText: "Email Address",
+                      hintStyle: TextStyle(
+                          fontSize: 14
+                      )
+                  ),
                 ),
               ),
             ),

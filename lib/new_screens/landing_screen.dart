@@ -45,13 +45,14 @@ class _LandingScreenState extends State<LandingScreen> {
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
                 Expanded(child: Container(
+                    width: double.infinity,
                   color: AppColors.kFixed,
                     child: SvgPicture.asset("images/new/fin-goals.svg",))),
                 YMargin(46),
                 Text("Reach Your financial Goals", style: TextStyle(fontSize: 17, fontFamily: AppStrings.fontBold),),
                 YMargin(20),
                 SizedBox(
-                    width: 230,
+                    width: 200,
                     child: Text("Save, Invest, and build for tomorrow today.",
                       textAlign: TextAlign.center,style: TextStyle(fontSize: 12,fontFamily: AppStrings.fontNormal),)),
 
@@ -60,13 +61,14 @@ class _LandingScreenState extends State<LandingScreen> {
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
                 Expanded(child: Container(
+                    width: double.infinity,
                   color: AppColors.kHighYield,
                     child: SvgPicture.asset("images/new/money-smart.svg",))),
                 YMargin(46),
                 Text("Be Money Smart", style: TextStyle(fontSize: 17, fontFamily: AppStrings.fontBold),),
                 YMargin(20),
                 SizedBox(
-                    width: 230,
+                    width: 250,
                     child: Text("Use simple financial intelligence tools to make informed money decisions",
                       textAlign: TextAlign.center,style: TextStyle(fontSize: 12,fontFamily: AppStrings.fontNormal),)),
 
@@ -75,13 +77,14 @@ class _LandingScreenState extends State<LandingScreen> {
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
                 Expanded(child: Container(
+                  width: double.infinity,
                   color: AppColors.kAspire,
                     child: SvgPicture.asset("images/new/get-ahead.svg",))),
                 YMargin(46),
                 Text("Get Ahead", style: TextStyle(fontSize: 17, fontFamily: AppStrings.fontBold),),
                 YMargin(20),
                 SizedBox(
-                    width: 230,
+                    width: 300,
                     child: Text("Enjoy low-risk high-yield investment and savings portfolios by a regulated asset manager",
                       textAlign: TextAlign.center,style: TextStyle(fontSize: 12,fontFamily: AppStrings.fontNormal),)),
 

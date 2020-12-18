@@ -1,4 +1,7 @@
+
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:zimvest/data/view_models/savings_view_model.dart';
 import 'package:zimvest/new_screens/navigation/wealth/create/choose_funding_source.dart';
 
 import 'package:zimvest/payment/input_formaters.dart';
@@ -26,14 +29,16 @@ class ChooseStartScreen extends StatefulWidget {
 
 class _ChooseStartScreenState extends State<ChooseStartScreen> {
 
-  DateTime _time;
 
-  bool today = true;
+
+  bool today = false;
+
+  ABSSavingViewModel savingViewModel;
 
 
   @override
   Widget build(BuildContext context) {
-    
+    savingViewModel = Provider.of(context);
     return GestureDetector(
       onTap: (){
         FocusScope.of(context).requestFocus(new FocusNode());
@@ -68,8 +73,9 @@ class _ChooseStartScreenState extends State<ChooseStartScreen> {
                 YMargin(12),
                 InkWell(
                   onTap: (){
+                    savingViewModel.startDate = DateTime.now();
                     setState(() {
-
+                      today = true;
                     });
                   },
                   child: Container(
@@ -94,7 +100,8 @@ class _ChooseStartScreenState extends State<ChooseStartScreen> {
                         lastDate: DateTime(2025));
                     if(time != null){
                       setState(() {
-                        _time = time;
+                        savingViewModel.startDate = time;
+                        today = false;
                       });
                     }
                   },
@@ -108,8 +115,8 @@ class _ChooseStartScreenState extends State<ChooseStartScreen> {
                     ),
                     child: Row(
                       children: [
-                        Text(_time == null ? "Set preferred Date":
-                        "${_time.year}/${AppUtils.addLeadingZeroIfNeeded(_time.month)}/${AppUtils.addLeadingZeroIfNeeded(_time.day)}", style: TextStyle(fontSize: 12,
+                        Text(savingViewModel.startDate == null ? "Set preferred Date":
+                        "${savingViewModel.startDate.year}/${AppUtils.addLeadingZeroIfNeeded(savingViewModel.startDate.month)}/${AppUtils.addLeadingZeroIfNeeded(savingViewModel.startDate.day)}", style: TextStyle(fontSize: 12,
                             color: AppColors.kTextColor.withOpacity(0.53)),),
                         Spacer(),
                         Icon(Icons.keyboard_arrow_down_rounded)
@@ -128,7 +135,7 @@ class _ChooseStartScreenState extends State<ChooseStartScreen> {
 
 
                 RoundedNextButton(
-                  onTap: (){
+                  onTap: savingViewModel.startDate == null ? null: (){
                     Navigator.push(context, ChooseFundingScreen.route());
                   },
                 ),

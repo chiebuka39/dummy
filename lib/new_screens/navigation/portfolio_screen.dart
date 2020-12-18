@@ -171,40 +171,42 @@ class _SavingsSectionState extends State<SavingsSection> with AfterLayoutMixin<S
   ABSIdentityViewModel identityViewModel;
 
   SavingPlanModel wealthBox;
-  List<SavingPlanModel> aspirePlans;
+  List<SavingPlanModel> aspirePlans = <SavingPlanModel>[];
   double totalBalance = 0;
 
-  bool loading = true;
+  bool loading = false;
 
   @override
   void afterFirstLayout(BuildContext context)async {
-    setState(() {
-      loading = true;
-    });
-
-    var r1 = await savingViewModel.getSavingPlans(token: identityViewModel.user.token);
-    var r2 = await savingViewModel.getProductTypes(token: identityViewModel.user.token);
-    if(r1.error == false && r2.error == false ){
-      wealthBox = r1.data.where((element) => element.productId == 1).first;
-      aspirePlans = r1.data.where((element) => element.productId == 2).toList();
-       r1.data.forEach((element) {
-        totalBalance = totalBalance + element.amountSaved;
-      });
 
       setState(() {
-        loading = false;
+        loading = true;
       });
 
-      if(savingViewModel.productTypes.isNotEmpty){
-        await fetchTransactions(savingViewModel.productTypes.first.id);
+
+      var r1 = await savingViewModel.getSavingPlans(token: identityViewModel.user.token);
+      var r2 = await savingViewModel.getProductTypes(token: identityViewModel.user.token);
+      if(r1.error == false && r2.error == false ){
+
+        wealthBox =  savingViewModel.savingPlanModel.where((element) => element.productId == 1).isNotEmpty ?
+        savingViewModel.savingPlanModel.where((element) => element.productId == 1).first : null;
+        aspirePlans = savingViewModel.savingPlanModel.where((element) => element.productId == 2).toList();
+        savingViewModel.savingPlanModel.forEach((element) {
+          totalBalance = totalBalance + element.amountSaved;
+        });
+
+        setState(() {
+          loading = false;
+        });
+
+        if(savingViewModel.productTypes.isNotEmpty){
+          await fetchTransactions(savingViewModel.productTypes.first.id);
+        }
+
+        //getRequiredDetailsForForm();
       }
 
-      //getRequiredDetailsForForm();
-    }else{
-      //EasyLoading.showError("Error occured");
 
-      //getRequiredDetailsForForm();
-    }
 
 
 
@@ -642,7 +644,7 @@ class EmptyInvstmentWidget extends StatelessWidget {
           SizedBox(
               width: 200,
               child: Text(
-                "You currently don’t have a Investing plan",
+                "You currently don’t have an Investment plan",
                 textAlign: TextAlign.center,
                 style: TextStyle(
                     fontFamily: AppStrings.fontNormal,
@@ -656,7 +658,7 @@ class EmptyInvstmentWidget extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           PrimaryButtonNew(
-            title: "Start Saving",
+            title: "Start Investing",
           ),
         ],
       ),

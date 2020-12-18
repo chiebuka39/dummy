@@ -60,6 +60,7 @@ dependencies:
   percent_indicator: ^2.1.8
   flutter_easyloading: ^2.2.1
   keyboard_actions: ^3.3.1+1
+  flutterwave: ^0.0.2
 
 
 
@@ -68,6 +69,7 @@ dependency_overrides:
   get_it: ^4.0.2
   flutter_svg: ^0.18.0
   intl: ^0.16.1
+  webview_flutter: ^1.0.1
 
 dev_dependencies:
   build_runner: ^1.10.0
