@@ -33,6 +33,8 @@ abstract class ABSSavingService{
 
   Future<Result<List<SavingsFrequency>>> getSavingFrequency({String token});
   Future<Result<List<FundingChannel>>> getFundingChannel({String token});
+  Future<Result<List<ProductTransaction>>> getTransactionForProduct({String token,
+    int id});
   Future<Result<AspireTarget>> calculateTargetSavings({
     String token,
     double bulkSum,
@@ -150,6 +152,57 @@ class SavingService extends ABSSavingService{
   }
 
   @override
+  Future<Result<List<ProductTransaction>>> getTransactionForProduct({String token,
+    int id}) async{
+    Result<List<ProductTransaction>> result = Result(error: false);
+
+
+    var headers = {
+      HttpHeaders.authorizationHeader: "Bearer $token"
+    };
+
+
+    var url = "${AppStrings.baseUrl}zimvest.services.savings/api/Savings"
+        "/Customers/$id/Transactions";
+    print("url $url");
+    try{
+      var response = await dio.get(url,options: Options(headers: headers));
+      final int statusCode = response.statusCode;
+      var response1 = response.data;
+      print("<<<<<<<<<<<<<<<<>>>>>>>>>>>>>>>>");
+      print("iii ${response1}");
+      print("<<<<<<<<<<<<<<<<>>>>>>>>>>>>>>>>");
+
+      if (statusCode != 200) {
+        result.errorMessage = response1['message'];
+        result.error = true;
+      }else {
+        result.error = false;
+        List<ProductTransaction> types = [];
+        (response1['data'] as List).forEach((chaList) {
+          //initialize Chat Object
+          types.add(ProductTransaction.fromJson(chaList));
+        });
+        result.data = types;
+      }
+
+    }on DioError catch(e){
+      print("error $e}");
+      if(e.response != null ){
+        print(e.response.data);
+        //result.errorMessage = e.response.data;
+        print("j<<<<<<<<<<<<<<<< ${e.response.data}");
+      }else{
+        print(e.toString());
+        result.errorMessage = "Sorry, We could not complete your request";
+      }
+      result.error = true;
+    }
+
+    return result;
+  }
+
+  @override
   Future<Result<List<SavingPlanModel>>> getSavingPlans({String token}) async{
     Result<List<SavingPlanModel>> result = Result(error: false);
 
@@ -161,11 +214,12 @@ class SavingService extends ABSSavingService{
 
     var url = "${AppStrings.baseUrl}zimvest.services.savings/api/Savings/Customers";
     print("url $url");
+    print("url $headers");
     try{
       var response = await dio.get(url,options: Options(headers: headers));
       final int statusCode = response.statusCode;
       var response1 = response.data;
-      print("iii ${response1}");
+
 
       if (statusCode != 200) {
         result.errorMessage = response1['message'];
@@ -174,14 +228,14 @@ class SavingService extends ABSSavingService{
         result.error = false;
         List<SavingPlanModel> types = [];
         (response1['data'] as List).forEach((chaList) {
-          //initialize Chat Object
+          print("kk $chaList");
           types.add(SavingPlanModel.fromJson(chaList));
         });
         result.data = types;
       }
 
     }on DioError catch(e){
-      print("error $e}");
+      print("error000 ${e.response}");
       if(e.response != null ){
         print(e.response.data);
         //result.errorMessage = e.response.data['message'];
@@ -384,7 +438,7 @@ class SavingService extends ABSSavingService{
       }else {
         result.error = false;
 
-        result.data = SavingPlanModel.fromJson(response1['data']);
+        //result.data = SavingPlanModel.fromJson(response1['data']);
         if(response1['message'] != null){
           result.errorMessage = response1['message'];
         }

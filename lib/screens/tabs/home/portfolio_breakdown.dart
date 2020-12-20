@@ -84,22 +84,20 @@ class WealthBoxBreakDownWidget extends StatefulWidget {
       _WealthBoxBreakDownWidgetState();
 }
 
-class _WealthBoxBreakDownWidgetState extends State<WealthBoxBreakDownWidget> 
+class _WealthBoxBreakDownWidgetState extends State<WealthBoxBreakDownWidget>
     with AfterLayoutMixin<WealthBoxBreakDownWidget> {
-  
-  
   ABSSavingViewModel savingViewModel;
   ABSIdentityViewModel identityViewModel;
   bool _loading = true;
-  
+
   @override
-  void afterFirstLayout(BuildContext context) async{
+  void afterFirstLayout(BuildContext context) async {
     await Future.delayed(2.seconds());
     setState(() {
       _loading = false;
     });
-
   }
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -120,7 +118,7 @@ class _WealthBoxBreakDownWidgetState extends State<WealthBoxBreakDownWidget>
               ],
             ),
           ),
-          _loading ? WealthBoxContainer():_buildLoading(context)
+          _loading ? WealthBoxContainer() : _buildLoading(context)
         ],
       ),
     );
@@ -128,24 +126,21 @@ class _WealthBoxBreakDownWidgetState extends State<WealthBoxBreakDownWidget>
 
   Padding _buildLoading(BuildContext context) {
     return Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 20),
-          child: SkeletonLoader(
-              builder: Container(
-            height: 140,
-            margin: EdgeInsets.only(top: 20),
-            width: MediaQuery.of(context).size.width - 40,
-
-            decoration: BoxDecoration(
-                color:Colors.red,
-                borderRadius: BorderRadius.circular(20)
-            ),
-          ),
-            items: 1,
-            period: Duration(seconds: 2),
-            hightlightColor: AppColors.kPrimaryColor2.withOpacity(0.1),
-            direction: SkeletonDirection.ltr,
-          ),
-        );
+      padding: const EdgeInsets.symmetric(horizontal: 20),
+      child: SkeletonLoader(
+        builder: Container(
+          height: 140,
+          margin: EdgeInsets.only(top: 20),
+          width: MediaQuery.of(context).size.width - 40,
+          decoration: BoxDecoration(
+              color: Colors.red, borderRadius: BorderRadius.circular(20)),
+        ),
+        items: 1,
+        period: Duration(seconds: 2),
+        highlightColor: AppColors.kPrimaryColor2.withOpacity(0.1),
+        direction: SkeletonDirection.ltr,
+      ),
+    );
   }
 }
 
@@ -155,26 +150,23 @@ class AspireBreakDownWidget extends StatefulWidget {
   }) : super(key: key);
 
   @override
-  _AspireBreakDownWidgetState createState() =>
-      _AspireBreakDownWidgetState();
+  _AspireBreakDownWidgetState createState() => _AspireBreakDownWidgetState();
 }
 
 class _AspireBreakDownWidgetState extends State<AspireBreakDownWidget>
     with AfterLayoutMixin<AspireBreakDownWidget> {
-
-
   ABSSavingViewModel savingViewModel;
   ABSIdentityViewModel identityViewModel;
   bool _loading = true;
 
   @override
-  void afterFirstLayout(BuildContext context) async{
+  void afterFirstLayout(BuildContext context) async {
     await Future.delayed(2.seconds());
     setState(() {
       _loading = false;
     });
-
   }
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -195,33 +187,33 @@ class _AspireBreakDownWidgetState extends State<AspireBreakDownWidget>
               ],
             ),
           ),
-          _loading == false ? Container(
-            height: 160,
-            width: double.infinity,
-            child: ListView(
-              scrollDirection: Axis.horizontal,
-              children: [
-                SavingsAspireContainer2(
-                  savingPlanModel: SavingPlanModel(
-                    productId: 1,
-                    planName: "House rent",
-                    targetAmount: 2000000,
-                    startDate: DateTime.now(),
-                    accruedInterest: 20
+          _loading == false
+              ? Container(
+                  height: 160,
+                  width: double.infinity,
+                  child: ListView(
+                    scrollDirection: Axis.horizontal,
+                    children: [
+                      SavingsAspireContainer2(
+                        savingPlanModel: SavingPlanModel(
+                            productId: 1,
+                            planName: "House rent",
+                            targetAmount: 2000000,
+                            startDate: DateTime.now(),
+                            accruedInterest: 20),
+                      ),
+                      SavingsAspireContainer2(
+                        savingPlanModel: SavingPlanModel(
+                            productId: 1,
+                            planName: "House rent",
+                            targetAmount: 2000000,
+                            startDate: DateTime.now(),
+                            accruedInterest: 20),
+                      ),
+                    ],
                   ),
-                ),
-                SavingsAspireContainer2(
-                  savingPlanModel: SavingPlanModel(
-                    productId: 1,
-                    planName: "House rent",
-                    targetAmount: 2000000,
-                    startDate: DateTime.now(),
-                    accruedInterest: 20
-                  ),
-                ),
-              ],
-            ),
-          ):_buildLoading(context)
+                )
+              : _buildLoading(context)
         ],
       ),
     );
@@ -235,15 +227,12 @@ class _AspireBreakDownWidgetState extends State<AspireBreakDownWidget>
           height: 140,
           margin: EdgeInsets.only(top: 20),
           width: MediaQuery.of(context).size.width - 40,
-
           decoration: BoxDecoration(
-              color:Colors.red,
-              borderRadius: BorderRadius.circular(20)
-          ),
+              color: Colors.red, borderRadius: BorderRadius.circular(20)),
         ),
         items: 1,
         period: Duration(seconds: 2),
-        hightlightColor: AppColors.kPrimaryColor2.withOpacity(0.1),
+        highlightColor: AppColors.kPrimaryColor2.withOpacity(0.1),
         direction: SkeletonDirection.ltr,
       ),
     );

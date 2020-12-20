@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 
 class AppColors {
-
   static const kWhite = Colors.white;
   static const kPrimaryColor = Color(0xffD7A81E);
   static const kPrimaryColorLight = Color(0xffF7EDD1);
@@ -23,7 +22,7 @@ class AppColors {
   static const kLightText2 = Color(0xFFa2bdc3);
   static const kAccountTextColor = Color(0xFF324d53);
   static const kLightText3 = Color(0xFF708a8f);
-  static const kLightText5 = Color.fromRGBO(5,8,38,0.4);
+  static const kLightText5 = Color.fromRGBO(5, 8, 38, 0.4);
   static const kLightTitleText = Color(0xff7e9195);
   static const kSecondaryText = Color(0xFF7B8CB6);
   static const kSecondaryBoldText = Color(0xFF000D60);
@@ -38,7 +37,7 @@ class AppColors {
   static const kRed4 = Color(0xffF53232);
   static var kGreen = Color(0xFF2ab750);
 
-  static List<Color> donutColor =  [
+  static List<Color> donutColor = [
     AppColors.kPrimaryColor,
     Color(0xFF324d53),
     AppColors.kLightText,
@@ -48,6 +47,5 @@ class AppColors {
     AppColors.kInstruments,
     AppColors.kLightText3,
     AppColors.kLightText2,
-
   ];
 }

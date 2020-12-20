@@ -26,14 +26,14 @@ class _NairaPortfolioBreakdownScreenState extends State<NairaPortfolioBreakdownS
         elevation: 0,
         iconTheme: IconThemeData(color: Colors.black87),
         leading: IconButton(
-          icon: Icon(Icons.arrow_back_ios_rounded,size: 20,),
+          icon: Icon(Icons.arrow_back_ios_rounded,size: 17,color: AppColors.kPrimaryColor,),
           onPressed: (){
             Navigator.pop(context);
           },
         ),
         backgroundColor: Colors.transparent,
         title: Text("Portfolio Breakdown",
-          style: TextStyle(color: Colors.black87,fontSize: 14),),
+          style: TextStyle(color: Colors.black87,fontSize: 14, fontFamily: AppStrings.fontMedium),),
       ),
       body: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 20),
@@ -44,48 +44,48 @@ class _NairaPortfolioBreakdownScreenState extends State<NairaPortfolioBreakdownS
           Container(
             height: 70,
             child: Row(children: [
-              Text("Portfolio Value", style: TextStyle(color: AppColors.kGreyText),),
+              Text("Portfolio Value", style: TextStyle(color: AppColors.kSecondaryText),),
               Spacer(),
               Text("${AppStrings.nairaSymbol}${FlutterMoneyFormatter(
                 amount: 31700
               ).output.nonSymbol}", style: TextStyle(
-                  color: AppColors.kGreyText, fontFamily: AppStrings.fontMedium),),
+                  color: AppColors.kSecondaryBoldText, fontFamily: AppStrings.fontMedium),),
             ],),
           ),
           Divider(),
           Container(
             height: 70,
             child: Row(children: [
-              Text("Wallet balance", style: TextStyle(color: AppColors.kGreyText),),
+              Text("Wallet balance", style: TextStyle(color: AppColors.kSecondaryText),),
               Spacer(),
               Text("${AppStrings.nairaSymbol}${FlutterMoneyFormatter(
                   amount: 31700
               ).output.nonSymbol}", style: TextStyle(
-                  color: AppColors.kGreyText, fontFamily: AppStrings.fontMedium),),
+                  color: AppColors.kSecondaryBoldText, fontFamily: AppStrings.fontMedium),),
             ],),
           ),
           Divider(),
           Container(
             height: 70,
             child: Row(children: [
-              Text("Investment Balance", style: TextStyle(color: AppColors.kGreyText),),
+              Text("Investment Balance", style: TextStyle(color: AppColors.kSecondaryText),),
               Spacer(),
               Text("${AppStrings.nairaSymbol}${FlutterMoneyFormatter(
                   amount: 31700
               ).output.nonSymbol}", style: TextStyle(
-                  color: AppColors.kGreyText, fontFamily: AppStrings.fontMedium),),
+                  color: AppColors.kSecondaryBoldText, fontFamily: AppStrings.fontMedium),),
             ],),
           ),
           Divider(),
           Container(
             height: 70,
             child: Row(children: [
-              Text("Savings Balance", style: TextStyle(color: AppColors.kGreyText),),
+              Text("Savings Balance", style: TextStyle(color: AppColors.kSecondaryText),),
               Spacer(),
               Text("${AppStrings.nairaSymbol}${FlutterMoneyFormatter(
                   amount: 31700
               ).output.nonSymbol}", style: TextStyle(
-                  color: AppColors.kGreyText, fontFamily: AppStrings.fontMedium),),
+                  color: AppColors.kSecondaryBoldText, fontFamily: AppStrings.fontMedium),),
             ],),
           ),
           Divider(),

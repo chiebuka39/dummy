@@ -80,7 +80,7 @@ class ShowBankDetailsWidget extends StatelessWidget {
     return Container(child: Column(children: [
       InkWell(
         onTap: (){
-          showCupertinoModalBottomSheet(context: context, builder: (context,d){
+          showCupertinoModalBottomSheet(context: context, builder: (context){
             return BankTransferModalBottomSheet();
           });
         },

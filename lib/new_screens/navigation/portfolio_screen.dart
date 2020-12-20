@@ -1,9 +1,15 @@
+import 'package:after_layout/after_layout.dart';
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_money_formatter/flutter_money_formatter.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 import 'package:percent_indicator/percent_indicator.dart';
+import 'package:provider/provider.dart';
+import 'package:zimvest/data/models/saving_plan.dart';
+import 'package:zimvest/data/view_models/identity_view_model.dart';
+import 'package:zimvest/data/view_models/savings_view_model.dart';
 import 'package:zimvest/new_screens/navigation/portfolio/aspire_widgets.dart';
 import 'package:zimvest/new_screens/navigation/wealth/aspire_box_details.dart';
 import 'package:zimvest/new_screens/navigation/wealth/investment_details.dart';
@@ -24,6 +30,7 @@ class PortfolioScreen extends StatefulWidget {
 
 class _PortfolioScreenState extends State<PortfolioScreen> {
   bool showInvest = false;
+  
 
   @override
   Widget build(BuildContext context) {
@@ -142,11 +149,97 @@ class _PortfolioScreenState extends State<PortfolioScreen> {
             ])),
             showInvest
                 ? PortfolioInvestmentWidget()
-                : SavingsInvestmentCashWidget(),
+                : SavingsSection(),
           ],
         ),
       ),
     );
+  }
+}
+
+class SavingsSection extends StatefulWidget {
+  const SavingsSection({
+    Key key,
+  }) : super(key: key);
+
+  @override
+  _SavingsSectionState createState() => _SavingsSectionState();
+}
+
+class _SavingsSectionState extends State<SavingsSection> with AfterLayoutMixin<SavingsSection> {
+  ABSSavingViewModel savingViewModel;
+  ABSIdentityViewModel identityViewModel;
+
+  SavingPlanModel wealthBox;
+  List<SavingPlanModel> aspirePlans = <SavingPlanModel>[];
+  double totalBalance = 0;
+
+  bool loading = false;
+
+  @override
+  void afterFirstLayout(BuildContext context)async {
+
+      setState(() {
+        loading = true;
+      });
+
+
+      var r1 = await savingViewModel.getSavingPlans(token: identityViewModel.user.token);
+      var r2 = await savingViewModel.getProductTypes(token: identityViewModel.user.token);
+      if(r1.error == false && r2.error == false ){
+
+        wealthBox =  savingViewModel.savingPlanModel.where((element) => element.productId == 1).isNotEmpty ?
+        savingViewModel.savingPlanModel.where((element) => element.productId == 1).first : null;
+        aspirePlans = savingViewModel.savingPlanModel.where((element) => element.productId == 2).toList();
+        savingViewModel.savingPlanModel.forEach((element) {
+          totalBalance = totalBalance + element.amountSaved;
+        });
+
+        setState(() {
+          loading = false;
+        });
+
+        if(savingViewModel.productTypes.isNotEmpty){
+          await fetchTransactions(savingViewModel.productTypes.first.id);
+        }
+
+        //getRequiredDetailsForForm();
+      }
+
+
+
+
+
+
+
+
+  }
+
+  Future<void> fetchTransactions(int productId,{bool showLoader = false}) async {
+    if(showLoader == true){
+
+      await savingViewModel.getTransactionForProductType(
+          token: identityViewModel.user.token,
+          productId: productId);
+
+
+
+
+    }else{
+      var result = await savingViewModel.getTransactionForProductType(
+          token: identityViewModel.user.token,
+          productId: productId);
+
+    }
+
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    savingViewModel = Provider.of(context);
+    identityViewModel = Provider.of(context);
+    return loading == true ?SavingsInvestmentLoadingWidget(): wealthBox == null && aspirePlans.isEmpty ? SavingsInvestmentWidget():
+    SavingsInvestmentCashWidget(wealthBox: wealthBox,aspirePlans: aspirePlans,totalBalance: totalBalance,);
   }
 }
 
@@ -190,30 +283,39 @@ class SavingsInvestmentWidget extends StatelessWidget {
     );
   }
 }
-
-class SavingsInvestmentCashWidget extends StatelessWidget {
-  const SavingsInvestmentCashWidget({
+class SavingsInvestmentLoadingWidget extends StatelessWidget {
+  const SavingsInvestmentLoadingWidget({
     Key key,
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    List<String> goals = [
-      "Rent",
-      "Gift",
-      "Good Vibes",
-      "Football",
-      "Basketball",
-      ""
-    ];
-    List<String> goals1 = [
-      "Rent",
-      "Gift",
-      "Good Vibes",
-      "Football",
-      "Basketball",
-      ""
-    ];
+    return SliverPadding(
+      sliver: SliverList(
+          delegate: SliverChildListDelegate([
+        YMargin(MediaQuery.of(context).size.height > 700 ? 250 : 150),
+        CupertinoActivityIndicator(),
+      ])),
+      padding: EdgeInsets.symmetric(horizontal: 20),
+    );
+  }
+}
+
+class SavingsInvestmentCashWidget extends StatelessWidget {
+  const SavingsInvestmentCashWidget({
+    Key key, this.wealthBox, this.aspirePlans, this.totalBalance,
+  }) : super(key: key);
+
+  final SavingPlanModel wealthBox;
+  final double totalBalance;
+  final List<SavingPlanModel> aspirePlans;
+
+
+
+  @override
+  Widget build(BuildContext context) {
+    List<SavingPlanModel> goals = [...aspirePlans,SavingPlanModel()];
+    List<SavingPlanModel> goals1 = [...aspirePlans,SavingPlanModel()];
     return SliverPadding(
       sliver: SliverList(
           delegate: SliverChildListDelegate([
@@ -224,15 +326,16 @@ class SavingsInvestmentCashWidget extends StatelessWidget {
         ),
         YMargin(12),
         MoneyTitleWidget(
-          amount: 100000,
+          amount: totalBalance,
         ),
         YMargin(25),
-        GestureDetector(
-          onTap: () {
-            Navigator.push(context, WealthBoxDetailsScreen.route());
+        wealthBox == null ? SizedBox(): GestureDetector(
+          onTap: (){
+            Navigator.push(context, WealthBoxDetailsScreen.route(wealthBox));
           },
           child: Container(
             height: 154,
+            margin: EdgeInsets.only(bottom: 30),
             width: double.infinity,
             padding: EdgeInsets.symmetric(horizontal: 15, vertical: 15),
             decoration: BoxDecoration(
@@ -244,7 +347,7 @@ class SavingsInvestmentCashWidget extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 YMargin(3),
-                Text("Zimvest WealthBox"),
+                Text(wealthBox.planName),
                 Spacer(),
                 Row(
                   children: [
@@ -260,7 +363,7 @@ class SavingsInvestmentCashWidget extends StatelessWidget {
                         ),
                         YMargin(10),
                         Text(
-                          "${AppStrings.nairaSymbol}500,000",
+                          "${AppStrings.nairaSymbol}${wealthBox.amountSaved}",
                           style: TextStyle(
                               color: AppColors.kGreyText,
                               fontFamily: AppStrings.fontMedium),
@@ -280,7 +383,7 @@ class SavingsInvestmentCashWidget extends StatelessWidget {
                         ),
                         YMargin(10),
                         Text(
-                          "5.5%",
+                          "${wealthBox.interestRate}%",
                           textAlign: TextAlign.end,
                           style: TextStyle(
                               color: AppColors.kGreyText,
@@ -294,7 +397,6 @@ class SavingsInvestmentCashWidget extends StatelessWidget {
             ),
           ),
         ),
-        YMargin(30),
         Row(
           children: [
             Text(
@@ -339,9 +441,8 @@ class SavingsInvestmentCashWidget extends StatelessWidget {
               ),
             );
           }
-          if (goals.length.isEven &&
-              ((goals.length / 2).round() - 1) == index) {
-            String goal = goals1.removeAt(0);
+          if (goals.length.isEven && ((goals.length / 2).round() - 1) == index) {
+            SavingPlanModel goal = goals1.removeAt(0);
             return Padding(
               padding: const EdgeInsets.only(top: 20),
               child: Row(
@@ -355,8 +456,8 @@ class SavingsInvestmentCashWidget extends StatelessWidget {
               ),
             );
           }
-          String goal1 = goals1.removeAt(0);
-          String goal2 = goals1.removeAt(0);
+          SavingPlanModel goal1 = goals1.removeAt(0);
+          SavingPlanModel goal2 = goals1.removeAt(0);
           return Padding(
             padding: const EdgeInsets.only(top: 20),
             child: Row(
@@ -597,7 +698,7 @@ class EmptyInvstmentWidget extends StatelessWidget {
           SizedBox(
               width: 200,
               child: Text(
-                "You currently don’t have a Investing plan",
+                "You currently don’t have an Investment plan",
                 textAlign: TextAlign.center,
                 style: TextStyle(
                     fontFamily: AppStrings.fontNormal,
@@ -611,7 +712,7 @@ class EmptyInvstmentWidget extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           PrimaryButtonNew(
-            title: "Start Saving",
+            title: "Start Investing",
           ),
         ],
       ),

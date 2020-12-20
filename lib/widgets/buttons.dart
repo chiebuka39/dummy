@@ -250,6 +250,7 @@ class PrimaryButtonNew extends StatelessWidget {
     this.title,
     this.bg = AppColors.kPrimaryColor,
     this.textColor = Colors.white,
+    this.loading = false,
   }) : super(key: key);
 
   final VoidCallback onTap;
@@ -258,6 +259,7 @@ class PrimaryButtonNew extends StatelessWidget {
   final Color textColor;
   final double height;
   final String title;
+  final bool loading;
 
   @override
   Widget build(BuildContext context) {
@@ -269,12 +271,26 @@ class PrimaryButtonNew extends StatelessWidget {
         decoration:
             BoxDecoration(color: bg, borderRadius: BorderRadius.circular(15)),
         child: Center(
-          child: Text(
-            title,
-            style: TextStyle(
-                color: textColor,
-                fontSize: 13,
-                fontFamily: AppStrings.fontNormal),
+          //   child: Text(
+          //     title,
+          //     style: TextStyle(
+          //         color: textColor,
+          //         fontSize: 13,
+          //         fontFamily: AppStrings.fontNormal),
+          //   ),
+          // ),
+          child: Center(
+            child: loading
+                ? CircularProgressIndicator(
+                    valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
+                  )
+                : Text(
+                    title,
+                    style: TextStyle(
+                        color: textColor,
+                        fontSize: 13,
+                        fontFamily: AppStrings.fontNormal),
+                  ),
           ),
         ),
       ),
@@ -317,18 +333,10 @@ class RoundedNextButton extends StatelessWidget {
                   width: 60,
                   height: 60,
                   decoration: BoxDecoration(
-                      shape: BoxShape.circle, color: AppColors.kPrimaryColor),
-                  child: Center(
-                    child: loading
-                        ? CircularProgressIndicator(
-                            valueColor:
-                                AlwaysStoppedAnimation<Color>(Colors.white),
-                          )
-                        : Icon(
-                            Icons.navigate_next,
-                            color: Colors.white,
-                          ),
-                  ),
+                      shape: BoxShape.circle,
+                      color: onTap == null
+                          ? AppColors.kPrimaryColor.withOpacity(0.5)
+                          : AppColors.kPrimaryColor),
                 ),
               )
             ],
@@ -351,7 +359,8 @@ class PaymentSourceButton extends StatefulWidget {
       @required this.onTap,
       @required this.image,
       @required this.paymentsource,
-      this.amount = "",  this.color = AppColors.kPrimaryColor})
+      this.amount = "",
+      this.color = AppColors.kPrimaryColor})
       : super(key: key);
 
   @override
@@ -418,6 +427,7 @@ class _PaymentSourceButtonState extends State<PaymentSourceButton> {
     );
   }
 }
+
 class PaymentSourceButtonSpecial extends StatefulWidget {
   final Function onTap;
   final String image;
@@ -428,16 +438,19 @@ class PaymentSourceButtonSpecial extends StatefulWidget {
   const PaymentSourceButtonSpecial(
       {Key key,
       @required this.onTap,
-       this.image,
+      this.image,
       @required this.paymentsource,
-      this.amount = "",  this.color = AppColors.kPrimaryColor})
+      this.amount = "",
+      this.color = AppColors.kPrimaryColor})
       : super(key: key);
 
   @override
-  _PaymentSourceButtonSpecialState createState() => _PaymentSourceButtonSpecialState();
+  _PaymentSourceButtonSpecialState createState() =>
+      _PaymentSourceButtonSpecialState();
 }
 
-class _PaymentSourceButtonSpecialState extends State<PaymentSourceButtonSpecial> {
+class _PaymentSourceButtonSpecialState
+    extends State<PaymentSourceButtonSpecial> {
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
@@ -458,8 +471,8 @@ class _PaymentSourceButtonSpecialState extends State<PaymentSourceButtonSpecial>
               Row(
                 children: [
                   // CircleAvatar(
-                  //   backgroundColor: AppColors.kWhite,
-                  //   child: Image.asset("images/${widget.image}.png"),
+                  // backgroundColor: AppColors.kWhite,
+                  // child: Image.asset("images/${widget.image}.png"),
                   // ),
                   // XMargin(10),
                   Text(

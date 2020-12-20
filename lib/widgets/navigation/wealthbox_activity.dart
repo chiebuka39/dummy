@@ -1,12 +1,16 @@
 import 'package:flutter/material.dart';
+import 'package:zimvest/data/models/product_transaction.dart';
 import 'package:zimvest/styles/colors.dart';
+import 'package:zimvest/utils/app_utils.dart';
 import 'package:zimvest/utils/margin.dart';
 import 'package:zimvest/utils/strings.dart';
 
 class WealthBoxActivity extends StatelessWidget {
   const WealthBoxActivity({
-    Key key,
+    Key key, this.productTransaction,
   }) : super(key: key);
+
+  final ProductTransaction productTransaction;
 
   @override
   Widget build(BuildContext context) {
@@ -17,20 +21,20 @@ class WealthBoxActivity extends StatelessWidget {
         Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text("Interest paid", style: TextStyle(
+            Text(productTransaction.transactionDescription, style: TextStyle(
                 fontSize: 12,
                 fontFamily: AppStrings.fontNormal,
                 color: AppColors.kGreyText
             ),),
             YMargin(10),
-            Text("3rd May 2020", style: TextStyle(
+            Text(AppUtils.getReadableDateShort(productTransaction.dateUpdated), style: TextStyle(
                 fontSize: 10,
                 fontFamily: AppStrings.fontNormal,
                 color: AppColors.kGreyText
             ),)
           ],),
         Spacer(),
-        Text("${AppStrings.nairaSymbol}15.06", style: TextStyle(fontSize: 12, fontFamily: AppStrings.fontNormal),)
+        Text("${AppStrings.nairaSymbol}${productTransaction.amount}", style: TextStyle(fontSize: 12, fontFamily: AppStrings.fontNormal),)
       ],),
     );
   }

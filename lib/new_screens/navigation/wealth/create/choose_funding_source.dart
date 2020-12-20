@@ -1,5 +1,10 @@
+import 'package:after_layout/after_layout.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:provider/provider.dart';
+import 'package:zimvest/data/view_models/identity_view_model.dart';
+import 'package:zimvest/data/view_models/payment_view_model.dart';
+import 'package:zimvest/data/view_models/savings_view_model.dart';
 import 'package:zimvest/new_screens/navigation/wealth/create/savings_summary.dart';
 import 'package:zimvest/new_screens/profile/widgets/verification_failed_widget.dart';
 import 'package:zimvest/styles/colors.dart';
@@ -21,13 +26,23 @@ class ChooseFundingScreen extends StatefulWidget {
   _ChooseFundingScreenState createState() => _ChooseFundingScreenState();
 }
 
-class _ChooseFundingScreenState extends State<ChooseFundingScreen> {
+class _ChooseFundingScreenState extends State<ChooseFundingScreen> with AfterLayoutMixin<ChooseFundingScreen> {
 
+  ABSPaymentViewModel paymentViewModel;
+  ABSSavingViewModel savingViewModel;
+  ABSIdentityViewModel identityViewModel;
 
+  @override
+  void afterFirstLayout(BuildContext context) {
+    paymentViewModel.getUserCards(identityViewModel.user.token);
+
+  }
 
   @override
   Widget build(BuildContext context) {
-    
+    identityViewModel = Provider.of(context);
+    paymentViewModel = Provider.of(context);
+    savingViewModel = Provider.of(context);
     return GestureDetector(
       onTap: (){
         FocusScope.of(context).requestFocus(new FocusNode());
@@ -87,6 +102,8 @@ class _ChooseFundingScreenState extends State<ChooseFundingScreen> {
                 YMargin(25),
                 GestureDetector(
                   onTap: (){
+                    // savingViewModel.selectedChannel = savingViewModel
+                    //     .fundingChannels.firstWhere((element) => element.name == "Wallet");
                     Navigator.of(context).push(SavingsSummaryScreen.route());
                   },
                   child: Container(

@@ -17,7 +17,8 @@ abstract class ABSIdentityService{
     String firstName,
     String lastName,
     String phoneNumber,
-    String referralCode
+    String referralCode,
+   String dob
   });
   Future<Result<void>> completePasswordReset({String userId,
     String token,
@@ -25,6 +26,13 @@ abstract class ABSIdentityService{
   Future<Result<void>> initiatePasswordReset({String email});
   Future<Result<CompletedSections>> checkCompletedSections({String token});
   Future<Result<Profile>> getProfileDetail({String token});
+  Future<Result<bool>> emailAvailability(String email);
+  Future<Result<void>> resetPassword(String email);
+  Future<Result<bool>> phoneAvailability(String phone);
+  Future<Result<void>> setUpPin({String pin, String token});
+  Future<Result<Map<String,dynamic>>> sendEmailOTP(String email);
+  Future<Result<Map<String,dynamic>>> resendEmailOTP({String trackingId, int verificationId});
+  Future<Result<void>> confirmEmailOTP({String trackingId, int verificationId, String code});
   Future<Result<void>> confirmEmail({String token, int userId});
   Future<Result<void>> changePassword({String currentPassword, String newPassword, String confirmPassword});
 
@@ -103,7 +111,7 @@ class IdentityService extends ABSIdentityService {
     String firstName,
     String lastName,
     String phoneNumber,
-    String referralCode}) async{
+    String referralCode, String dob}) async{
 
       Result<void> result = Result(error: false);
 
@@ -112,7 +120,9 @@ class IdentityService extends ABSIdentityService {
         'password':password,
         "firstName": firstName,
         "lastName": lastName,
-        "phoneNumber": phoneNumber,
+        "phoneNumber": "+234$phoneNumber",
+        'dateOfBirth':dob,
+        'requestSource':'MOBILE'
       };
 
 
@@ -130,7 +140,6 @@ class IdentityService extends ABSIdentityService {
           result.error = true;
         }else {
           result.error = false;
-
         }
 
       }on DioError catch(e){
@@ -203,6 +212,249 @@ class IdentityService extends ABSIdentityService {
 
     }on DioError catch(e){
       print("error $e");
+      result.error = true;
+    }
+
+    return result;
+  }
+
+  @override
+  Future<Result<bool>> emailAvailability(String email) async{
+    Result<bool> result = Result(error: false);
+
+
+    var url = "${AppStrings.baseUrl}zimvest.services.identity/api/Account/email-availability?Email=$email";
+
+    print("lll $url");
+    try{
+      var response = await dio.get(url);
+      final int statusCode = response.statusCode;
+      var response1 = response.data;
+      print("iii ${response1}");
+
+      if (statusCode != 200) {
+        result.errorMessage = response1['message'];
+        result.error = true;
+      }else {
+        result.error = false;
+        result.data = response1['data']['isAvailable'];
+      }
+
+    }on DioError catch(e){
+      print("error ${e.response.data}");
+      result.error = true;
+    }
+
+    return result;
+  }
+
+  @override
+  Future<Result<bool>> phoneAvailability(String phone)async {
+    Result<bool> result = Result(error: false);
+
+
+    var url = "${AppStrings.baseUrl}zimvest.services.identity/api/Account/"
+        "phone-availability?PhoneNumber=${phone.length == 10 ? '0$phone':'$phone'}";
+
+    print("lll $url");
+    try{
+      var response = await dio.get(url);
+      final int statusCode = response.statusCode;
+      var response1 = response.data;
+      print("iii ${response1}");
+
+      if (statusCode != 200) {
+        result.errorMessage = response1['message'];
+        result.error = true;
+      }else {
+        result.error = false;
+        result.data = response1['data']['isAvailable'];
+      }
+
+    }on DioError catch(e){
+      print("error ${e.response.data}");
+      result.error = true;
+    }
+
+    return result;
+  }
+
+  @override
+  Future<Result<void>> confirmEmailOTP({String trackingId, int verificationId, String code}) async{
+    Result<bool> result = Result(error: false);
+
+
+    var url = "${AppStrings.baseUrl}zimvest.services.identity/api/Account/confirm-email-otp";
+    var body = {
+      'trackingId': trackingId,
+      'verificationId':verificationId,
+      'code':code,
+
+    };
+
+    print("lll $url");
+    print("lll $body");
+    try{
+      var response = await dio.post(url,data: body);
+      final int statusCode = response.statusCode;
+      var response1 = response.data;
+      print("iii ${response1}");
+
+      if (statusCode != 200) {
+        result.errorMessage = response1['message'];
+        result.error = true;
+      }else {
+        result.error = false;
+      }
+
+    }on DioError catch(e){
+      print("error ${e.response.data}");
+      result.error = true;
+    }
+
+    return result;
+  }
+
+  @override
+  Future<Result<Map<String,dynamic>>> resendEmailOTP({String trackingId, int verificationId}) async{
+    Result<Map<String,dynamic>> result = Result(error: false);
+
+
+    var url = "${AppStrings.baseUrl}zimvest.services.identity/api/Account/resend-email-otp";
+    var body = {
+      'trackingId': trackingId,
+      'verificationId':verificationId
+    };
+
+    print("lll $url");
+    try{
+      var response = await dio.post(url,data: body);
+      final int statusCode = response.statusCode;
+      var response1 = response.data;
+      print("iii ${response1}");
+
+      if (statusCode != 200) {
+        result.errorMessage = response1['message'];
+        result.error = true;
+      }else {
+        result.error = false;
+        Map<String,dynamic> data = Map();
+        data['trackingId'] = response1['data']['trackingId'];
+        data['verificationId'] = response1['data']['verificationId'];
+        result.data = data;
+      }
+
+    }on DioError catch(e){
+      print("error ${e.response.data}");
+      result.error = true;
+    }
+
+    return result;
+  }
+
+  @override
+  Future<Result<Map<String,dynamic>>> sendEmailOTP(String email)async {
+    Result<Map<String,dynamic>> result = Result(error: false);
+
+
+    var url = "${AppStrings.baseUrl}zimvest.services.identity/api/Account/send-email-otp";
+    var body = {
+      'email': email
+    };
+
+    print("lll $url");
+    try{
+      var response = await dio.post(url,data: body);
+      final int statusCode = response.statusCode;
+      var response1 = response.data;
+      print("iii ${response1}");
+
+      if (statusCode != 200) {
+        result.errorMessage = response1['message'];
+        result.error = true;
+      }else {
+        result.error = false;
+        Map<String,dynamic> data = Map();
+        data['trackingId'] = response1['data']['trackingId'];
+        data['verificationId'] = response1['data']['verificationId'];
+        result.data = data;
+      }
+
+    }on DioError catch(e){
+      print("error ${e.response.data}");
+      result.error = true;
+    }
+
+    return result;
+  }
+
+  @override
+  Future<Result<void>> setUpPin({String pin, String token})async {
+    Result<void> result = Result(error: false);
+
+
+    var url = "${AppStrings.baseUrl}zimvest.services.identity/api/Account/setup-pin";
+    var body = {
+      'pin': pin
+    };
+    var headers = {
+      HttpHeaders.authorizationHeader: "Bearer $token"
+    };
+
+    print("lll $url");
+    print("lll $body");
+    print("lll $headers");
+    try{
+      var response = await dio.post(url,data: body, options: Options(headers: headers));
+      final int statusCode = response.statusCode;
+      var response1 = response.data;
+      print("iii ${response1}");
+
+      if (statusCode != 200) {
+        result.errorMessage = response1['message'];
+        result.error = true;
+      }else {
+        result.error = false;
+        Map<String,dynamic> data = Map();
+
+      }
+
+    }on DioError catch(e){
+      print("error ${e.response.data}");
+      result.error = true;
+    }
+
+    return result;
+  }
+
+  @override
+  Future<Result<void>> resetPassword(String email) async{
+    Result<void> result = Result(error: false);
+
+
+    var url = "${AppStrings.baseUrl}zimvest.services.identity/api/Account/reset-password";
+    var body = {
+      'email': email
+    };
+
+    print("lll $url");
+    print("lll $body");
+    try{
+      var response = await dio.post(url,data: body);
+      final int statusCode = response.statusCode;
+      var response1 = response.data;
+      print("iii ${response1}");
+
+      if (statusCode != 200) {
+        result.errorMessage = response1['message'];
+        result.error = true;
+      }else {
+        result.error = false;
+
+      }
+
+    }on DioError catch(e){
+      print("error ${e.response.data}");
       result.error = true;
     }
 

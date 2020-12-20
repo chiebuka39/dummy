@@ -154,7 +154,7 @@ class _WalletScreenState extends State<WalletScreen> with AfterLayoutMixin<Walle
             onTap: () {
               showCupertinoModalBottomSheet(
                 context: context,
-                builder: (context, scrollController) => Container(
+                builder: (context) => Container(
                   child: Scaffold(body: CustomScrollView(
                     slivers: [
                       SliverList(delegate: SliverChildListDelegate([

@@ -1,17 +1,10 @@
-import 'dart:math';
-
 import 'package:after_layout/after_layout.dart';
-import 'package:circular_profile_avatar/circular_profile_avatar.dart';
 import 'package:dots_indicator/dots_indicator.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
-
-
-
 import 'package:provider/provider.dart';
-import 'package:sa_multi_tween/sa_multi_tween.dart';
 import 'package:simple_animations/simple_animations.dart';
 import 'package:zimvest/data/view_models/dashboard_view_model.dart';
 import 'package:zimvest/data/view_models/identity_view_model.dart';
@@ -196,9 +189,8 @@ class _DashboardScreenState extends State<DashboardScreen> with AfterLayoutMixin
                         YMargin(30),
                         GestureDetector(
                           onTap: (){
-                            showCupertinoModalBottomSheet(context: context, builder: (context, controller){
-                              return GraphsWidget(dashboardViewModel: dashboardViewModel);
-                            });
+                            showModalBottomSheet(context: context, builder: (context) =>  GraphsWidget(dashboardViewModel: dashboardViewModel)
+                            );
                           },
                           child: Container(
 

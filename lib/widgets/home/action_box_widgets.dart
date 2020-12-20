@@ -43,7 +43,7 @@ class ActionBoxWidget extends StatelessWidget {
                 ),),
                 YMargin(10),
                 SizedBox(
-                  width: 160,
+                  width: 170,
                   child: Text(desc, style: TextStyle(
                       fontSize: 10,
                       color: textColor,height: 1.6

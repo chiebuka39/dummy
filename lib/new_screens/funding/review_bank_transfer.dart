@@ -122,7 +122,7 @@ class _ReviewBankTransferState extends State<ReviewBankTransfer> {
               child: Column(children: [
                 GestureDetector(
                   onTap: (){
-                    showCupertinoModalBottomSheet(context: context, builder: (context, scroll){
+                    showCupertinoModalBottomSheet(context: context, builder: (context){
                       return Container(
                         height: MediaQuery.of(context).size.height -150,
                         child: Scaffold(

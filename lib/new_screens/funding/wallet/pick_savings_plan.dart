@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:zimvest/data/models/saving_plan.dart';
 import 'package:zimvest/new_screens/funding/top_up_screen.dart';
 import 'package:zimvest/new_screens/funding/wallet/top_up_plan_screen.dart';
 import 'package:zimvest/new_screens/navigation/portfolio/aspire_widgets.dart';
@@ -9,10 +10,13 @@ import 'package:zimvest/utils/margin.dart';
 import 'package:zimvest/utils/strings.dart';
 
 class PickSavingsPlanSceen extends StatefulWidget {
+  final List<SavingPlanModel> aspirePlans;
 
-  static Route<dynamic> route() {
+  const PickSavingsPlanSceen({Key key, this.aspirePlans}) : super(key: key);
+
+  static Route<dynamic> route({List<SavingPlanModel> aspirePlans }) {
     return MaterialPageRoute(
-        builder: (_) => PickSavingsPlanSceen(),
+        builder: (_) => PickSavingsPlanSceen(aspirePlans: aspirePlans,),
         settings: RouteSettings(name: PickSavingsPlanSceen().toStringShort()));
   }
 
@@ -21,10 +25,17 @@ class PickSavingsPlanSceen extends StatefulWidget {
 }
 
 class _PickSavingsPlanSceenState extends State<PickSavingsPlanSceen> {
+  List<SavingPlanModel> aspirePlans;
+
+  @override
+  void initState() {
+    aspirePlans = widget.aspirePlans;
+    super.initState();
+  }
   @override
   Widget build(BuildContext context) {
-    List<String> goals = ["Rent","Gift","Good Vibes","Football","Basketball"];
-    List<String> goals1 = ["Rent","Gift","Good Vibes","Football","Basketball"];
+    List<SavingPlanModel> goals = [...aspirePlans,SavingPlanModel()];
+    List<SavingPlanModel> goals1 = [...aspirePlans,SavingPlanModel()];
     return Scaffold(
 
       body: CustomScrollView(
@@ -142,7 +153,7 @@ class _PickSavingsPlanSceenState extends State<PickSavingsPlanSceen> {
                   print("ppmm ${index} >>>> ${(goals.length / 2).round() - 1}");
 
                   if (goals.length.isOdd && ((goals.length / 2).round() - 1) == index) {
-                    String goal = goals1.removeAt(0);
+                    SavingPlanModel goal = goals1.removeAt(0);
                     return Padding(
                       padding: const EdgeInsets.only(top: 20),
                       child: Row(
@@ -155,8 +166,8 @@ class _PickSavingsPlanSceenState extends State<PickSavingsPlanSceen> {
                       ),
                     );
                   }
-                  String goal = goals1.removeAt(0);
-                  String goal1 = goals1.removeAt(0);
+                  SavingPlanModel goal = goals1.removeAt(0);
+                  SavingPlanModel goal1 = goals1.removeAt(0);
 
                   return Padding(
                     padding: const EdgeInsets.only(top: 20),

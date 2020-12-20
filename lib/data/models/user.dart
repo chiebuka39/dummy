@@ -20,15 +20,19 @@ class User{
   @HiveField(4)
   DateTime expires;
 
+  @HiveField(5)
+  bool isPinSetUp;
+
   User({this.fullname,
     this.expires,
     this.isRegistrationVerified,
     this.profileCode,
-    this.token});
+    this.token, this.isPinSetUp});
 
   static User fromJson(Map<String, dynamic> map) {
     return User(
       fullname: map['fullName'],
+      isPinSetUp: map['isPinSetup'] ?? false,
       profileCode: map['profileCode'] ?? '',
       isRegistrationVerified: map['isRegistrationVerified'] ?? '',
       expires:map['expires'] == null ? DateTime.now().add(Duration(minutes: 30)):DateTime.fromMillisecondsSinceEpoch(map['expires'] * 1000),

@@ -1,12 +1,20 @@
 import 'package:flutter/material.dart';
 import 'package:zimvest/styles/colors.dart';
 import 'package:zimvest/utils/margin.dart';
+import 'package:zimvest/widgets/buttons.dart';
 
-class ChooseGenderWidget extends StatelessWidget {
+class ChooseGenderWidget extends StatefulWidget {
   const ChooseGenderWidget({
-    Key key,
+    Key key, this.onNext,
   }) : super(key: key);
+  final Function onNext;
 
+  @override
+  _ChooseGenderWidgetState createState() => _ChooseGenderWidgetState();
+}
+
+class _ChooseGenderWidgetState extends State<ChooseGenderWidget> {
+  String gender = "";
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -18,56 +26,67 @@ class ChooseGenderWidget extends StatelessWidget {
           Text("Choose Your Gender"),
           YMargin(30),
           Row(children: [
-            Container(
-              width: 135,
-              height: 130,
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(22),
-                color: AppColors.kLightText
-              ),
-              child: Center(child: Column(
-
-                children: [
-                  Spacer(flex: 2,),
-                Text("🤵🏽",style: TextStyle(fontSize: 40),),
-                YMargin(5),
-                Text("Male"),
-                  Spacer(flex: 3,),
-              ],),),
+            GestureDetector(
+              onTap: (){
+                setState(() {
+                  gender = 'male';
+                });
+              },
+              child: SelectGenderWidget(emoji: "🤵🏽",title: "Male",gender: gender,),
             ),
             Spacer(),
-            Container(
-              width: 135,
-              height: 130,
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(22),
-                color: AppColors.kLightText
-              ),
-              child: Center(child: Column(
-
-                children: [
-                  Spacer(flex: 2,),
-                Text("👩🏽‍💼",style: TextStyle(fontSize: 40),),
-                YMargin(5),
-                Text("Male"),
-                  Spacer(flex: 3,),
-              ],),),
+            GestureDetector(
+              onTap: (){
+                setState(() {
+                  gender = 'female';
+                });
+              },
+              child:SelectGenderWidget(emoji:"👩🏽‍💼",title: "Female",gender: gender,),
             ),
           ],),
           Spacer(),
-          Center(
-            child: Container(
-              width: 64,
-              height: 64,
-              decoration: BoxDecoration(
-                  shape: BoxShape.circle,
-                  color: AppColors.kPrimaryColor
-              ),
-              child: Center(child: Icon(Icons.navigate_next,color: Colors.white,),),
-            ),
+          RoundedNextButton(
+            onTap: (){
+              if(gender != null){
+                widget.onNext(gender);
+              }
+            },
           ),
           YMargin(120)
         ],),
+    );
+  }
+}
+
+class SelectGenderWidget extends StatelessWidget {
+  const SelectGenderWidget({
+    Key key, this.title, this.emoji, this.gender,
+  }) : super(key: key);
+  final String title;
+  final String emoji;
+  final String gender;
+
+  @override
+  Widget build(BuildContext context) {
+    return AnimatedContainer(
+      duration: Duration(milliseconds: 300),
+      width: 135,
+      height: 130,
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(22),
+        border: Border.all(color: gender == title.toLowerCase() ?
+        AppColors.kPrimaryColor:Colors.transparent, width: gender == title.toLowerCase() ? 1.6:0),
+        color: gender == title.toLowerCase() ? AppColors.kPrimaryColor.withOpacity(0.38): AppColors.kGreyBg
+      ),
+      child: Center(child: Column(
+
+        children: [
+          Spacer(flex: 2,),
+        Text(emoji,style: TextStyle(fontSize: 40),),
+        YMargin(5),
+        Text(title),
+          Spacer(flex: 3,),
+      ],),),
     );
   }
 }

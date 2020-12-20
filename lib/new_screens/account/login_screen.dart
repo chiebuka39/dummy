@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:zimvest/data/view_models/identity_view_model.dart';
+import 'package:zimvest/new_screens/account/create_account.dart';
+import 'package:zimvest/new_screens/account/create_pin_screen.dart';
 import 'package:zimvest/new_screens/account/forgot_password_screen.dart';
 import 'package:zimvest/new_screens/tabs.dart';
 import 'package:zimvest/styles/colors.dart';
@@ -66,24 +68,27 @@ class _LoginScreenState extends State<LoginScreen> {
                     color: AppColors.kGreyBg,
                     borderRadius: BorderRadius.circular(12)
                 ),
-                child: TextField(
-                  keyboardType: TextInputType.emailAddress,
-                    onChanged: (value) {
-                      print("oooo $value");
-                      if (EmailValidator.validate(value)) {
-                        _emailError = false;
-                      } else {
-                        _emailError = true;
-                      }
-                      _email = value;
-                      setState(() {});
-                    },
-                  decoration: InputDecoration(
-                      border: InputBorder.none,
-                      hintText: "Email Address",
-                      hintStyle: TextStyle(
-                          fontSize: 14
-                      )
+                child: Transform.translate(
+                  offset: Offset(0,5),
+                  child: TextField(
+                    keyboardType: TextInputType.emailAddress,
+                      onChanged: (value) {
+                        print("oooo $value");
+                        if (EmailValidator.validate(value)) {
+                          _emailError = false;
+                        } else {
+                          _emailError = true;
+                        }
+                        _email = value;
+                        setState(() {});
+                      },
+                    decoration: InputDecoration(
+                        border: InputBorder.none,
+                        hintText: "Email Address",
+                        hintStyle: TextStyle(
+                            fontSize: 14
+                        )
+                    ),
                   ),
                 ),
               ),
@@ -107,7 +112,7 @@ class _LoginScreenState extends State<LoginScreen> {
                   children: [
                     Expanded(
                       child: Transform.translate(
-                        offset: Offset(0,-3),
+                        offset: Offset(0,-2),
                         child: TextField(
                           obscureText: obscureText2,
                           onChanged: (value) {
@@ -171,14 +176,21 @@ class _LoginScreenState extends State<LoginScreen> {
                       AppUtils.showError(context);
                       print("login failed");
                     }else{
-                      Navigator.of(context).pushReplacement(TabsContainer.route());
+                      if(_identityViewModel.user.isPinSetUp == false){
+                        Navigator.of(context).pushReplacement(CreatePinScreen.route());
+                      }else{
+                        Navigator.of(context).pushReplacement(TabsContainer.route());
+                      }
+
                     }
                     //
                   }
               ),
               YMargin(50),
               Center(
-                child: FlatButton(onPressed: (){}, child: Text("Don't have an account? Create account",
+                child: FlatButton(onPressed: (){
+                  Navigator.of(context).push(CreateAccountScreen.route());
+                }, child: Text("Don't have an account? Create account",
                   style: TextStyle(fontSize: 12),)),
               ),
               YMargin(60),

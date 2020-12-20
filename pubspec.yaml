@@ -46,11 +46,10 @@ dependencies:
   flutter_masked_text: ^0.7.0
   image_picker: ^0.6.7+4
   animations: ^1.1.1
-  modal_bottom_sheet: ^0.2.0+1
+  modal_bottom_sheet: ^1.0.0+1
   simple_animations: ^2.2.1
   password_criteria: ^0.1.4
   after_layout: ^1.0.7+2
-  flutter_easyloading: ^1.1.4
   cached_network_image: ^2.3.3
   rave_flutter: ^0.0.9-alpha+1
   skeleton_loader: ^1.0.2+1
@@ -62,6 +61,9 @@ dependencies:
   numeric_keyboard: ^1.0.0
   provider_architecture: ^1.1.1+1
   device_preview: ^0.5.5
+  flutter_easyloading: ^2.2.0
+  keyboard_actions: ^3.3.1+1
+  flutterwave: ^0.0.2
 
 
 
@@ -70,6 +72,7 @@ dependency_overrides:
   get_it: ^4.0.2
   flutter_svg: ^0.18.0
   intl: ^0.16.1
+  webview_flutter: ^1.0.1
 
 dev_dependencies:
   build_runner: ^1.10.0

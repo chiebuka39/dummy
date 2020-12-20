@@ -86,7 +86,7 @@ class _StatementOfPersonalWorthState extends State<StatementOfPersonalWorth>
           backgroundColor: AppColors.kBg,
           appBar: ZimAppBarWitButton(
             onTap: assetSumTotal() > 0 || liabilitiesSumTotal() > 0 ? (){
-              showCupertinoModalBottomSheet(context: context, builder: (context,d){
+              showCupertinoModalBottomSheet(context: context, builder: (context){
                 return _buidModal();
               });
             }:null,
