@@ -1,58 +1,50 @@
 import 'package:flutter/material.dart';
-import 'package:zimvest/new_screens/navigation/investments/high_yield/dollar/high_yield_investment_dollar_amout_input.dart';
+import 'package:zimvest/new_screens/navigation/investments/fixed/fixed_income_amount_input.dart';
+import 'package:zimvest/new_screens/navigation/investments/high_yield/naira/high_yield_investment_naira_amount_input.dart';
 import 'package:zimvest/new_screens/navigation/investments/widgets/text_field.dart';
 import 'package:zimvest/styles/colors.dart';
 import 'package:zimvest/utils/margin.dart';
 import 'package:zimvest/utils/strings.dart';
 import 'package:zimvest/widgets/buttons.dart';
 
-class HighYieldInvestmentDollarUniqueName extends StatefulWidget {
-  final String instrumentName;
-  final int productId;
+class FixedIncomeUniqueName extends StatefulWidget {
+  final int investmentId;
+  final String bondName;
   final String maturityDate;
   final String rate;
-  final String minimumAmount;
-  final String maximumAmount;
 
-  const HighYieldInvestmentDollarUniqueName(
-      {Key key,
-      this.instrumentName,
-      this.productId,
-      this.maturityDate,
-      this.rate,
-      this.minimumAmount,
-      this.maximumAmount})
-      : super(key: key);
+  const FixedIncomeUniqueName({
+    Key key,
+    this.investmentId,
+    this.bondName,
+    this.maturityDate,
+    this.rate,
+  }) : super(key: key);
+
   static Route<dynamic> route({
-    String duration,
-    int productId,
+    int investmentId,
+    String bondName,
     String maturityDate,
     String rate,
-    String minimumAmount,
-    String maximumAmount,
   }) {
     return MaterialPageRoute(
-      builder: (_) => HighYieldInvestmentDollarUniqueName(
-        instrumentName: duration,
-        productId: productId,
+      builder: (_) => FixedIncomeUniqueName(
+        investmentId: investmentId,
+        bondName: bondName,
         maturityDate: maturityDate,
         rate: rate,
-        minimumAmount: minimumAmount,
-        maximumAmount: maximumAmount,
       ),
       settings: RouteSettings(
-        name: HighYieldInvestmentDollarUniqueName().toStringShort(),
+        name: FixedIncomeUniqueName().toStringShort(),
       ),
     );
   }
 
   @override
-  _HighYieldInvestmentDollarUniqueNameState createState() =>
-      _HighYieldInvestmentDollarUniqueNameState();
+  _FixedIncomeUniqueNameState createState() => _FixedIncomeUniqueNameState();
 }
 
-class _HighYieldInvestmentDollarUniqueNameState
-    extends State<HighYieldInvestmentDollarUniqueName> {
+class _FixedIncomeUniqueNameState extends State<FixedIncomeUniqueName> {
   TextEditingController investmentName = TextEditingController();
   @override
   Widget build(BuildContext context) {
@@ -70,12 +62,11 @@ class _HighYieldInvestmentDollarUniqueNameState
         elevation: 0,
         centerTitle: true,
         leading: IconButton(
-          icon: Icon(
-            Icons.arrow_back_ios,
-            color: AppColors.kPrimaryColor,
-          ),
-          onPressed: () => Navigator.pop(context),
-        ),
+            icon: Icon(
+              Icons.arrow_back_ios,
+              color: AppColors.kPrimaryColor,
+            ),
+            onPressed: () => Navigator.pop(context)),
       ),
       body: SingleChildScrollView(
         child: Column(
@@ -84,7 +75,7 @@ class _HighYieldInvestmentDollarUniqueNameState
             Padding(
               padding: const EdgeInsets.only(left: 20.0, right: 76),
               child: Text(
-                "Name Your Zimvest High Yield Dollar ${widget.instrumentName} Days Investment",
+                "Name Your ${widget.bondName} Investment",
                 style: TextStyle(
                   fontSize: 17,
                   fontFamily: AppStrings.fontBold,
@@ -94,20 +85,19 @@ class _HighYieldInvestmentDollarUniqueNameState
             ),
             YMargin(36),
             InvestmentTextField(
-              readOnly: false,
-                controller: investmentName, hintText: "Enter a unique name"),
+                readOnly: false,
+                controller: investmentName,
+                hintText: "Enter a unique name"),
             YMargin(252),
             RoundedNextButton(
               onTap: () => Navigator.push(
                 context,
-                InvestmentHighYieldDollarAmountInput.route(
+                FixedIncomeAmountInput.route(
                   uniqueName: investmentName.text,
-                  id: widget.productId,
-                  duration: widget.instrumentName,
+                  investmentId: widget.investmentId,
+                  bondName: widget.bondName,
+                  maturityDate: widget.maturityDate,
                   rate: widget.rate,
-                  minimumAmount: widget.minimumAmount,
-                  maximumAmount: widget.maximumAmount,
-                  maturityDate: widget.maturityDate
                 ),
               ),
             ),

@@ -42,9 +42,12 @@ class _HighYieldDollarScreenState extends State<HighYieldDollarScreen> {
                     GestureDetector(
                       onTap: () {
                         Navigator.push(
-                            context,
-                            AllDollarInvestments.route(
-                                "${instrumentNames[index]}"));
+                          context,
+                          AllDollarInvestments.route(
+                            title: instrumentNames[index],
+                            instrument: widget.instrument,
+                          ),
+                        );
                       },
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -78,7 +81,12 @@ class _HighYieldDollarScreenState extends State<HighYieldDollarScreen> {
                                   onTap: () => Navigator.push(
                                     context,
                                     HighYieldDetailsDollar.route(
-                                        "${instrumentNames[index]}"),
+                                        duration: "${instrumentNames[index]}",
+                                        productId: e.id,
+                                        maturityDate: e.maturityDate,
+                                        rate: e.depositRate,
+                                        minimumAmount: e.minimumAmount,
+                                        maximumAmount: e.maximumAmount),
                                   ),
                                   child: Padding(
                                     padding:

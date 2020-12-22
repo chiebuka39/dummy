@@ -1,60 +1,53 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/svg.dart';
-import 'package:zimvest/new_screens/navigation/investments/high_yield/dollar/high_yield_investment_dollar_name_input.dart';
+import 'package:flutter_svg/flutter_svg.dart';
+import 'package:zimvest/new_screens/navigation/investments/fixed/fixed_income_unique_name_input.dart';
+import 'package:zimvest/new_screens/navigation/investments/high_yield/naira/high_yield_investment_naira_name_input.dart';
 import 'package:zimvest/styles/colors.dart';
 import 'package:zimvest/utils/margins.dart';
 import 'package:zimvest/utils/strings.dart';
 import 'package:zimvest/widgets/buttons.dart';
 
-class HighYieldDetailsDollar extends StatefulWidget {
-  final String duration;
-  final int productId;
+class FixedIncomeDetails extends StatefulWidget {
+  final String bondName;
+  final int investmentId;
   final String maturityDate;
   final String rate;
-  final String minimumAmount;
-  final String maximumAmount;
 
-  const HighYieldDetailsDollar(
-      {Key key,
-      this.duration,
-      this.productId,
-      this.maturityDate,
-      this.rate,
-      this.minimumAmount,
-      this.maximumAmount})
-      : super(key: key);
-  static Route<dynamic> route(
-      {String duration,
-      int productId,
-      String maturityDate,
-      String rate,
-      String minimumAmount,
-      String maximumAmount}) {
-        print(productId);
+  const FixedIncomeDetails({
+    Key key,
+    this.bondName,
+    this.investmentId,
+    this.maturityDate,
+    this.rate,
+  }) : super(key: key);
+  static Route<dynamic> route({
+    String bondName,
+    int id,
+    String maturityDate,
+    String rate,
+  }) {
     return MaterialPageRoute(
-      builder: (_) => HighYieldDetailsDollar(
-        duration: duration,
-        rate: rate,
-        productId: productId,
+      builder: (_) => FixedIncomeDetails(
+        bondName: bondName,
+        investmentId: id,
         maturityDate: maturityDate,
-        minimumAmount: minimumAmount,
-        maximumAmount: maximumAmount,
+        rate: rate,
       ),
       settings: RouteSettings(
-        name: HighYieldDetailsDollar().toStringShort(),
+        name: FixedIncomeDetails().toStringShort(),
       ),
     );
   }
 
   @override
-  _HighYieldDetailsDollarState createState() => _HighYieldDetailsDollarState();
+  _FixedIncomeDetailsState createState() => _FixedIncomeDetailsState();
 }
 
-class _HighYieldDetailsDollarState extends State<HighYieldDetailsDollar> {
+class _FixedIncomeDetailsState extends State<FixedIncomeDetails> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: AppColors.kHighYield,
+      backgroundColor: AppColors.kFixed,
       body: Stack(
         children: [
           Positioned(
@@ -75,7 +68,7 @@ class _HighYieldDetailsDollarState extends State<HighYieldDetailsDollar> {
               left: screenWidth(context) / 15,
               right: screenWidth(context) / 15,
               bottom: screenHeight(context) / 1.6,
-              child: SvgPicture.asset("images/money_glass.svg")),
+              child: SvgPicture.asset("images/fixed_income.svg")),
           Positioned(
             top: screenHeight(context) / 2.5,
             left: 0,
@@ -95,7 +88,7 @@ class _HighYieldDetailsDollarState extends State<HighYieldDetailsDollar> {
                   Padding(
                     padding: const EdgeInsets.only(top: 39.0, left: 20),
                     child: Text(
-                      "Zimvest High Yield Dollar ${widget.duration}",
+                      "Zimvest Fixed Income",
                       style: TextStyle(
                           fontSize: 15, fontFamily: AppStrings.fontBold),
                     ),
@@ -168,13 +161,12 @@ class _HighYieldDetailsDollarState extends State<HighYieldDetailsDollar> {
                               title: "Get Started",
                               onTap: () => Navigator.push(
                                 context,
-                                HighYieldInvestmentDollarUniqueName.route(
-                                    duration: widget.duration,
-                                    productId: widget.productId,
-                                    maturityDate: widget.maturityDate,
-                                    rate: widget.rate,
-                                    minimumAmount: widget.minimumAmount,
-                                    maximumAmount: widget.maximumAmount),
+                                FixedIncomeUniqueName.route(
+                                  investmentId: widget.investmentId,
+                                  bondName: widget.bondName,
+                                  maturityDate: widget.maturityDate,
+                                  rate: widget.rate,
+                                ),
                               ),
                             ),
                           ),

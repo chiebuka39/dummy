@@ -27,7 +27,7 @@ class FixedIncomeHome extends StatefulWidget {
 class _FixedIncomeHomeState extends State<FixedIncomeHome> {
   PageController controller;
   ScrollController listController;
-  int currentIndex = 0;
+  double currentIndex = 0.0;
 
   @override
   void initState() {
@@ -274,6 +274,7 @@ class _FixedIncomeHomeState extends State<FixedIncomeHome> {
               height: screenHeight(context) / 1.3,
               width: screenWidth(context),
               child: PageView(
+                physics: NeverScrollableScrollPhysics(),
                 controller: controller,
                 onPageChanged: onchanged,
                 children: [
@@ -287,7 +288,7 @@ class _FixedIncomeHomeState extends State<FixedIncomeHome> {
               ),
             ),
             top: 199,
-            left: 20,
+            // left: 20,
           ),
         ],
       ),
@@ -296,7 +297,7 @@ class _FixedIncomeHomeState extends State<FixedIncomeHome> {
 
   onchanged(int index) {
     setState(() {
-      currentIndex = controller.page.toInt();
+      currentIndex = controller.page;
     });
   }
 }

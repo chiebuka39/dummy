@@ -377,6 +377,7 @@ class InvestmentHighYieldViewModel extends ChangeNotifier {
     String token = _localStorage.getUser().token;
     final treasuryBill = await _investmentService.getTreasuryBill(token: token);
     this.treasuryBills = treasuryBill;
+    print(treasuryBill.data.tBillsItems[1].treasureBills.length);
     setBusy(false);
     notifyListeners();
   }
