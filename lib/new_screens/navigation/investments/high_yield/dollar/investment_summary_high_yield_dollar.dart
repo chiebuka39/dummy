@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:zimvest/new_screens/navigation/investments/widgets/terms_and_conditions_box.dart';
 import 'package:zimvest/styles/colors.dart';
+import 'package:zimvest/utils/app_utils.dart';
 import 'package:zimvest/utils/margin.dart';
 import 'package:zimvest/utils/margins.dart';
 import 'package:zimvest/utils/strings.dart';
@@ -94,14 +95,7 @@ Widget summarySreen(context) {
                   decoration: BoxDecoration(
                     color: AppColors.kWhite,
                     borderRadius: BorderRadius.circular(10),
-                    boxShadow: [
-                      BoxShadow(
-                        blurRadius: 2.5,
-                        color: Color(0x20000000),
-                        spreadRadius: -0.5,
-                        offset: Offset(0, 5.0),
-                      ),
-                    ],
+                    boxShadow: AppUtils.getBoxShaddow
                   ),
                   height: screenHeight(context) / 2.2,
                   width: screenWidth(context),
@@ -303,7 +297,7 @@ Widget summarySreen(context) {
                 fontFamily: AppStrings.fontLight,
                 color: AppColors.kWhite,
               ),
-            )
+            ),
           ],
         ),
       )

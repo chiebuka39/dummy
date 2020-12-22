@@ -51,7 +51,7 @@ class ActionBoxWidget extends StatelessWidget {
                 )
               ],),
             Spacer(),
-            SvgPicture.asset("images/new/$pic.svg", width: 120,)
+            SvgPicture.asset("images/new/$pic.svg", width: 110,)
           ],
         ),
       ),

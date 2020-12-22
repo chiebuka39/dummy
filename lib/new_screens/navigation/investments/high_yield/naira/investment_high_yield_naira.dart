@@ -44,8 +44,7 @@ class _HighYieldNairaScreenState extends State<HighYieldNairaScreen> {
                       onTap: () {
                         Navigator.push(
                             context,
-                            AllNairaInvestments.route(
-                                "${instrumentNames[index]}"));
+                            AllNairaInvestments.route(title: instrumentNames[index], instrument: widget.instrument));
                       },
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,

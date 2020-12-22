@@ -8,9 +8,45 @@ import 'package:zimvest/utils/strings.dart';
 import 'package:zimvest/widgets/buttons.dart';
 
 class HighYieldInvestmentDollarPurchaseSource extends StatefulWidget {
-  static Route<dynamic> route() {
+  final String uniqueName;
+  final int id;
+  final String duration;
+  final String maturityDate;
+  final String rate;
+  final String minimumAmount;
+  final String maximumAmount;
+  final String amount;
+
+  const HighYieldInvestmentDollarPurchaseSource(
+      {Key key,
+      this.uniqueName,
+      this.id,
+      this.duration,
+      this.maturityDate,
+      this.rate,
+      this.minimumAmount,
+      this.maximumAmount,
+      this.amount})
+      : super(key: key);
+  static Route<dynamic> route(
+      {String uniqueName,
+      int id,
+      String duration,
+      String maturityDate,
+      String rate,
+      String minimumAmount,
+      String maximumAmount,
+      String amount}) {
     return MaterialPageRoute(
-      builder: (_) => HighYieldInvestmentDollarPurchaseSource(),
+      builder: (_) => HighYieldInvestmentDollarPurchaseSource(
+        uniqueName: uniqueName,
+        id: id,
+        maturityDate: maturityDate,
+        rate: rate,
+        minimumAmount: minimumAmount,
+        maximumAmount: maximumAmount,
+        amount: amount,
+      ),
       settings: RouteSettings(
         name: HighYieldInvestmentDollarPurchaseSource().toStringShort(),
       ),
@@ -181,8 +217,9 @@ class NairaPage extends StatelessWidget {
             image: "wallet",
             amount: "${AppStrings.nairaSymbol}30,000,000",
             color: AppColors.kTextColor,
-            onTap: () => Navigator.push(context, InvestmentSummaryScreenDollar.route()),
-          ), 
+            onTap: () =>
+                Navigator.push(context, InvestmentSummaryScreenDollar.route()),
+          ),
         ],
       ),
     );
@@ -201,13 +238,14 @@ class DollarPage extends StatelessWidget {
           image: "wallet",
           amount: "${AppStrings.dollarSymbol}30,000,000",
           color: AppColors.kTextColor,
-          onTap: () => Navigator.push(context, InvestmentSummaryScreenDollar.route()),
+          onTap: () =>
+              Navigator.push(context, InvestmentSummaryScreenDollar.route()),
         ),
         YMargin(25),
         PaymentSourceButtonSpecial(
           paymentsource: "Wired Transfer",
           image: "wallet",
-          onTap:() => Navigator.push(context, WiredTransferScreen.route()),
+          onTap: () => Navigator.push(context, WiredTransferScreen.route()),
         ),
         YMargin(25),
         PaymentSourceButtonSpecial(

@@ -1,21 +1,29 @@
 import 'package:flutter/material.dart';
+import 'package:zimvest/data/models/investment/term_instruments.dart';
+import 'package:zimvest/new_screens/navigation/investments/high_yield/dollar/high_yield_investment_details_dollars.dart';
+import 'package:zimvest/new_screens/navigation/investments/high_yield/naira/high_yield_investment_details_naira.dart';
 import 'package:zimvest/new_screens/navigation/investments/widgets/card_widget.dart';
 import 'package:zimvest/styles/colors.dart';
 import 'package:zimvest/utils/strings.dart';
 
 class AllNairaInvestments extends StatefulWidget {
   final String title;
+  final List<TermInstrument> instrument;
 
-  static Route<dynamic> route(String be) {
+  static Route<dynamic> route({String title, List<TermInstrument> instrument}) {
     return MaterialPageRoute(
-      builder: (_) => AllNairaInvestments(title: be),
+      builder: (_) => AllNairaInvestments(
+        title: title,
+        instrument: instrument,
+      ),
       settings: RouteSettings(
         name: AllNairaInvestments().toStringShort(),
       ),
     );
   }
 
-  const AllNairaInvestments({Key key, this.title}) : super(key: key);
+  const AllNairaInvestments({Key key, this.title, this.instrument})
+      : super(key: key);
   @override
   _AllNairaInvestmentsState createState() => _AllNairaInvestmentsState();
 }
@@ -42,37 +50,57 @@ class _AllNairaInvestmentsState extends State<AllNairaInvestments> {
         elevation: 0,
         centerTitle: true,
       ),
-      body: ListView.builder(
-        itemBuilder: (context, index) => Padding(
-          padding: const EdgeInsets.symmetric(horizontal:20.0),
-          child: InvestmentCardNaira(
-            height: 5,
-            investmentDuration: widget.title,
-            percentage: "6.67",
-            minimumAmount: "5,000,000",
-            maximumAmount: "50,000,000",
-          ),
-        ),
-        itemCount: 13,
+      body: ListView(
+        children: widget.instrument
+            .where((element) => element.instrumentName == widget.title)
+            .map(
+              (e) => GestureDetector(
+                onTap: () => Navigator.push(
+                  context,
+                  HighYieldDetails.route(
+                      dur: "${widget.title}",
+                      id: e.id,
+                      maturityDate: e.maturityDate,
+                      rate: e.depositRate,
+                      minimumAmount: e.minimumAmount,
+                      maximumAmount: e.maximumAmount),
+                ),
+                child: Padding(
+                  padding: const EdgeInsets.only(bottom: 20.0),
+                  child: InvestmentCardNaira(
+                    height: 4.5,
+                    investmentDuration: e.instrumentName,
+                    maximumAmount: e.maximumAmount,
+                    minimumAmount: e.minimumAmount,
+                    percentage: e.depositRate,
+                  ),
+                ),
+              ),
+            )
+            .toList(),
       ),
     );
   }
 }
 
-
 class AllDollarInvestments extends StatefulWidget {
   final String title;
+  final List<TermInstrument> instrument;
 
-  static Route<dynamic> route(String be) {
+  static Route<dynamic> route({String title, List<TermInstrument> instrument}) {
     return MaterialPageRoute(
-      builder: (_) => AllDollarInvestments(title: be),
+      builder: (_) => AllDollarInvestments(
+        title: title,
+        instrument: instrument,
+      ),
       settings: RouteSettings(
         name: AllDollarInvestments().toStringShort(),
       ),
     );
   }
 
-  const AllDollarInvestments({Key key, this.title}) : super(key: key);
+  const AllDollarInvestments({Key key, this.title, this.instrument})
+      : super(key: key);
   @override
   _AllDollarInvestmentsState createState() => _AllDollarInvestmentsState();
 }
@@ -99,18 +127,34 @@ class _AllDollarInvestmentsState extends State<AllDollarInvestments> {
         elevation: 0,
         centerTitle: true,
       ),
-      body: ListView.builder(
-        itemBuilder: (context, index) => Padding(
-          padding: const EdgeInsets.symmetric(horizontal:20.0),
-          child: InvestmentCardDollar(
-            height: 5,
-            investmentDuration: widget.title,
-            percentage: "6.67",
-            minimumAmount: "5,000,000",
-            maximumAmount: "50,000,000",
-          ),
-        ),
-        itemCount: 13,
+      body: ListView(
+        children: widget.instrument
+            .where((element) => element.instrumentName == widget.title)
+            .map(
+              (e) => GestureDetector(
+                onTap: () => Navigator.push(
+                  context,
+                  HighYieldDetailsDollar.route(
+                      duration: "${widget.title}",
+                      productId: e.id,
+                      maturityDate: e.maturityDate,
+                      rate: e.depositRate,
+                      minimumAmount: e.minimumAmount,
+                      maximumAmount: e.maximumAmount),
+                ),
+                child: Padding(
+                  padding: const EdgeInsets.only(bottom: 20.0),
+                  child: InvestmentCardDollar(
+                    height: 4.5,
+                    investmentDuration: e.instrumentName,
+                    maximumAmount: e.maximumAmount,
+                    minimumAmount: e.minimumAmount,
+                    percentage: e.depositRate,
+                  ),
+                ),
+              ),
+            )
+            .toList(),
       ),
     );
   }

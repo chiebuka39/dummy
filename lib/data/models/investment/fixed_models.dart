@@ -15,8 +15,7 @@ class CommercialPaper {
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
     if (this.comercialPaperItems != null) {
-      data['data'] =
-          this.comercialPaperItems.map((v) => v.toJson()).toList();
+      data['data'] = this.comercialPaperItems.map((v) => v.toJson()).toList();
     }
     return data;
   }
@@ -60,18 +59,21 @@ class CommercialPapers {
   String yieldRate;
   String investmentMaturityDate;
   double rate;
+  num minimumAmount;
 
-  CommercialPapers(
-      {this.id,
-      this.bondName,
-      this.investmentType,
-      this.investmentCategory,
-      this.maturityDate,
-      this.maturityPeriod,
-      this.instrumentId,
-      this.yieldRate,
-      this.investmentMaturityDate,
-      this.rate});
+  CommercialPapers({
+    this.id,
+    this.bondName,
+    this.investmentType,
+    this.investmentCategory,
+    this.maturityDate,
+    this.maturityPeriod,
+    this.instrumentId,
+    this.yieldRate,
+    this.investmentMaturityDate,
+    this.rate,
+    this.minimumAmount
+  });
 
   CommercialPapers.fromJson(Map<String, dynamic> json) {
     id = json['id'];
@@ -84,6 +86,7 @@ class CommercialPapers {
     yieldRate = json['yieldRate'];
     investmentMaturityDate = json['investmentMaturityDate'];
     rate = json['rate'];
+    minimumAmount = json['minimumAmount'];
   }
 
   Map<String, dynamic> toJson() {
@@ -98,6 +101,7 @@ class CommercialPapers {
     data['yieldRate'] = this.yieldRate;
     data['investmentMaturityDate'] = this.investmentMaturityDate;
     data['rate'] = this.rate;
+    data['minimumAmount'] = this.minimumAmount;
     return data;
   }
 }
@@ -163,6 +167,7 @@ class TreasureBills {
   int instrumentId;
   String investmentMaturityDate;
   double rate;
+  num minimumAmount;
 
   TreasureBills(
       {this.id,
@@ -174,7 +179,8 @@ class TreasureBills {
       this.interestRate,
       this.instrumentId,
       this.investmentMaturityDate,
-      this.rate});
+      this.rate,
+      this.minimumAmount});
 
   TreasureBills.fromJson(Map<String, dynamic> json) {
     id = json['id'];
@@ -187,6 +193,7 @@ class TreasureBills {
     instrumentId = json['instrumentId'];
     investmentMaturityDate = json['investmentMaturityDate'];
     rate = json['rate'];
+    minimumAmount = json['minimumAmount'];
   }
 
   Map<String, dynamic> toJson() {
@@ -201,11 +208,10 @@ class TreasureBills {
     data['instrumentId'] = this.instrumentId;
     data['investmentMaturityDate'] = this.investmentMaturityDate;
     data['rate'] = this.rate;
+    data['minimumAmount'] = this.minimumAmount;
     return data;
   }
 }
-
-
 
 class FGNBond {
   List<FgnBondItems> fgnBondItems;
@@ -267,6 +273,7 @@ class FGNBonds {
   String yieldRate;
   String investmentMaturityDate;
   double rate;
+  num minimumAmount;
 
   FGNBonds(
       {this.id,
@@ -278,7 +285,8 @@ class FGNBonds {
       this.instrumentId,
       this.yieldRate,
       this.investmentMaturityDate,
-      this.rate});
+      this.rate,
+      this.minimumAmount});
 
   FGNBonds.fromJson(Map<String, dynamic> json) {
     id = json['id'];
@@ -291,6 +299,7 @@ class FGNBonds {
     yieldRate = json['yieldRate'];
     investmentMaturityDate = json['investmentMaturityDate'];
     rate = json['rate'];
+    minimumAmount = json['minimumAmount'];
   }
 
   Map<String, dynamic> toJson() {
@@ -305,6 +314,7 @@ class FGNBonds {
     data['yieldRate'] = this.yieldRate;
     data['investmentMaturityDate'] = this.investmentMaturityDate;
     data['rate'] = this.rate;
+    data['minimumAmount'] = this.minimumAmount;
     return data;
   }
 }
@@ -326,8 +336,7 @@ class CorporateBond {
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
     if (this.corporateBondItems != null) {
-      data['data'] =
-          this.corporateBondItems.map((v) => v.toJson()).toList();
+      data['data'] = this.corporateBondItems.map((v) => v.toJson()).toList();
     }
     return data;
   }
@@ -371,6 +380,7 @@ class CorporateBondBonds {
   String yieldRate;
   String investmentMaturityDate;
   double rate;
+  num minimumAmount;
 
   CorporateBondBonds(
       {this.id,
@@ -382,7 +392,8 @@ class CorporateBondBonds {
       this.instrumentId,
       this.yieldRate,
       this.investmentMaturityDate,
-      this.rate});
+      this.rate,
+      this.minimumAmount});
 
   CorporateBondBonds.fromJson(Map<String, dynamic> json) {
     id = json['id'];
@@ -395,6 +406,7 @@ class CorporateBondBonds {
     yieldRate = json['yieldRate'];
     investmentMaturityDate = json['investmentMaturityDate'];
     rate = json['rate'];
+    minimumAmount = json['minimumAmount'];
   }
 
   Map<String, dynamic> toJson() {
@@ -409,9 +421,11 @@ class CorporateBondBonds {
     data['yieldRate'] = this.yieldRate;
     data['investmentMaturityDate'] = this.investmentMaturityDate;
     data['rate'] = this.rate;
+    data['minimumAmount'] = this.minimumAmount;
     return data;
   }
 }
+
 class EuroBond {
   List<EuroBondItems> euroBondItems;
 
@@ -429,8 +443,7 @@ class EuroBond {
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
     if (this.euroBondItems != null) {
-      data['data'] =
-          this.euroBondItems.map((v) => v.toJson()).toList();
+      data['data'] = this.euroBondItems.map((v) => v.toJson()).toList();
     }
     return data;
   }
@@ -474,6 +487,7 @@ class Bonds {
   String yieldRate;
   String investmentMaturityDate;
   double rate;
+  num minimumAmount;
 
   Bonds(
       {this.id,
@@ -486,7 +500,8 @@ class Bonds {
       this.instrumentId,
       this.yieldRate,
       this.investmentMaturityDate,
-      this.rate});
+      this.rate,
+      this.minimumAmount});
 
   Bonds.fromJson(Map<String, dynamic> json) {
     id = json['id'];
@@ -500,6 +515,7 @@ class Bonds {
     yieldRate = json['yieldRate'];
     investmentMaturityDate = json['investmentMaturityDate'];
     rate = json['rate'];
+    minimumAmount = json['minimumAmount'];
   }
 
   Map<String, dynamic> toJson() {
@@ -515,6 +531,7 @@ class Bonds {
     data['yieldRate'] = this.yieldRate;
     data['investmentMaturityDate'] = this.investmentMaturityDate;
     data['rate'] = this.rate;
+    data['minimumAmount'] = this.minimumAmount;
     return data;
   }
 }
@@ -536,8 +553,7 @@ class PromissoryNote {
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
     if (this.promissoryNoteItems != null) {
-      data['data'] =
-          this.promissoryNoteItems.map((v) => v.toJson()).toList();
+      data['data'] = this.promissoryNoteItems.map((v) => v.toJson()).toList();
     }
     return data;
   }
@@ -581,6 +597,7 @@ class PromissoryNotes {
   int instrumentId;
   String investmentMaturityDate;
   double rate;
+  num minimumAmount;
 
   PromissoryNotes(
       {this.id,
@@ -592,7 +609,8 @@ class PromissoryNotes {
       this.maturityPeriod,
       this.instrumentId,
       this.investmentMaturityDate,
-      this.rate});
+      this.rate,
+      this.minimumAmount});
 
   PromissoryNotes.fromJson(Map<String, dynamic> json) {
     id = json['id'];
@@ -605,6 +623,7 @@ class PromissoryNotes {
     instrumentId = json['instrumentId'];
     investmentMaturityDate = json['investmentMaturityDate'];
     rate = json['rate'];
+    minimumAmount = json['minimumAmount'];
   }
 
   Map<String, dynamic> toJson() {
@@ -619,6 +638,7 @@ class PromissoryNotes {
     data['instrumentId'] = this.instrumentId;
     data['investmentMaturityDate'] = this.investmentMaturityDate;
     data['rate'] = this.rate;
+    data['minimumAmount'] = this.minimumAmount;
     return data;
   }
 }
