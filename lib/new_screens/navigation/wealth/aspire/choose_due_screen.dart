@@ -1,4 +1,7 @@
+import 'package:after_layout/after_layout.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:zimvest/data/view_models/savings_view_model.dart';
 import 'package:zimvest/new_screens/navigation/wealth/aspire/bulk_saved.dart';
 import 'package:zimvest/new_screens/navigation/wealth/create/choose_funding_source.dart';
 
@@ -25,21 +28,42 @@ class ChooseDuedateScreen extends StatefulWidget {
   _ChooseDuedateScreenState createState() => _ChooseDuedateScreenState();
 }
 
-class _ChooseDuedateScreenState extends State<ChooseDuedateScreen> {
+class _ChooseDuedateScreenState extends State<ChooseDuedateScreen> with AfterLayoutMixin<ChooseDuedateScreen> {
 
   DateTime _time;
+  DateTime _selectedtime;
 
-  int _index = 0;
+  ABSSavingViewModel savingViewModel;
 
+  int _index = 99;
+
+  @override
+  void initState() {
+    super.initState();
+  }
+
+  @override
+  void afterFirstLayout(BuildContext context) {
+
+  }
 
   @override
   Widget build(BuildContext context) {
+    savingViewModel = Provider.of(context);
     List<String> dates = [
       '3 Months',
       '6 Months',
       '1 Year',
       '2 years',
       '5 years',
+    ];
+
+    List<int> dates1 = [
+      90,
+      180,
+      365,
+      730,
+      1825,
     ];
     return GestureDetector(
       onTap: (){
@@ -77,7 +101,9 @@ class _ChooseDuedateScreenState extends State<ChooseDuedateScreen> {
                   ...List.generate(dates.length, (index) => InkWell(
                     onTap: (){
                       setState(() {
+                        _selectedtime = null;
                           _index = index;
+                          _time = savingViewModel.startDate.add(Duration(days: dates1[index]));
                       });
                     },
                     child: Container(
@@ -99,11 +125,12 @@ class _ChooseDuedateScreenState extends State<ChooseDuedateScreen> {
                   GestureDetector(
                     onTap: ()async{
                       DateTime time = await showDatePicker(context: context,
-                          initialDate: DateTime.now(),
-                          firstDate: DateTime(2020),
+                          initialDate: savingViewModel.startDate.add(Duration(days: 90)),
+                          firstDate: savingViewModel.startDate.add(Duration(days: 90)),
                           lastDate: DateTime(2025));
                       if(time != null){
                         setState(() {
+                          _selectedtime = time;
                           _time = time;
                         });
                       }
@@ -118,8 +145,9 @@ class _ChooseDuedateScreenState extends State<ChooseDuedateScreen> {
                       ),
                       child: Row(
                         children: [
-                          Text(_time == null ? "Set preferred Date":
-                          "${_time.year}/${AppUtils.addLeadingZeroIfNeeded(_time.month)}/${AppUtils.addLeadingZeroIfNeeded(_time.day)}", style: TextStyle(fontSize: 12,
+                          Text(_selectedtime == null ? "Set preferred Date":
+                          "${_selectedtime.year}/${AppUtils.addLeadingZeroIfNeeded(_selectedtime.month)}/"
+                              "${AppUtils.addLeadingZeroIfNeeded(_selectedtime.day)}", style: TextStyle(fontSize: 12,
                               color: AppColors.kTextColor.withOpacity(0.53)),),
                           Spacer(),
                           Icon(Icons.keyboard_arrow_down_rounded)
@@ -132,7 +160,8 @@ class _ChooseDuedateScreenState extends State<ChooseDuedateScreen> {
 
 
                   RoundedNextButton(
-                    onTap: (){
+                    onTap: _time == null ? null:  (){
+                      savingViewModel.endDate = _time;
                       Navigator.push(context, BulkSaveScreen.route());
                     },
                   ),

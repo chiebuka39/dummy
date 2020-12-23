@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:zimvest/data/view_models/savings_view_model.dart';
 import 'package:zimvest/new_screens/navigation/wealth/aspire/choose_start_screen.dart';
 import 'package:zimvest/styles/colors.dart';
 import 'package:zimvest/utils/margin.dart';
@@ -23,11 +25,12 @@ class SavingsTargetScreen extends StatefulWidget {
 class _SavingsTargetScreenState extends State<SavingsTargetScreen> {
 
   String amount = "";
+  ABSSavingViewModel savingViewModel;
 
 
   @override
   Widget build(BuildContext context) {
-    
+    savingViewModel = Provider.of(context);
     return GestureDetector(
       onTap: (){
         FocusScope.of(context).requestFocus(new FocusNode());
@@ -83,9 +86,10 @@ class _SavingsTargetScreenState extends State<SavingsTargetScreen> {
 
 
                 RoundedNextButton(
-                  onTap: (){
+                  onTap:amount.isEmpty ? null : double.parse(amount) > 1000 ? (){
+                    savingViewModel.amountToSave = double.parse(amount);
                     Navigator.push(context, ChooseStartScreen.route());
-                  },
+                  }:null,
                 ),
                 YMargin(65),
                 Expanded(

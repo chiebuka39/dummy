@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:provider/provider.dart';
+import 'package:zimvest/data/view_models/savings_view_model.dart';
 import 'package:zimvest/new_screens/navigation/wealth/aspire/save_frequency.dart';
 import 'package:zimvest/new_screens/navigation/wealth/create/save_daily_screen.dart';
 import 'package:zimvest/utils/margin.dart';
@@ -23,6 +25,8 @@ class _BulkSaveScreenState extends State<BulkSaveScreen> {
   bool yes;
   @override
   Widget build(BuildContext context) {
+    ABSSavingViewModel savingViewModel = Provider.of(context);
+    print("pppmmmgg h ${savingViewModel.endDate.toIso8601String()}");
     return Scaffold(
       appBar: AppBar(
         elevation: 0,
@@ -88,7 +92,7 @@ class _BulkSaveScreenState extends State<BulkSaveScreen> {
 
             YMargin(110),
             RoundedNextButton(
-              onTap: (){
+              onTap: yes == null ? null: (){
                 Navigator.push(context, SaveFrequencyScreen.route());
               },
             )

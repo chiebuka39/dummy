@@ -81,10 +81,11 @@ class NextOfKinStatus extends StatelessWidget {
 
 class SelectCardWidget extends StatefulWidget {
   const SelectCardWidget({
-    Key key, this.success = true,
+    Key key, this.success = true, this.navigate,
   }) : super(key: key);
 
   final bool success;
+  final VoidCallback navigate;
 
   @override
   _SelectCardWidgetState createState() => _SelectCardWidgetState();
@@ -136,7 +137,7 @@ class _SelectCardWidgetState extends State<SelectCardWidget> {
                 Text("Select Card", style: TextStyle(fontSize: 15, fontFamily: AppStrings.fontBold),),
                 YMargin(27),
                 ...List.generate(paymentViewModel.userCards.length, (index) => CardItemWidget(
-                  card: paymentViewModel.userCards[index],)),
+                  card: paymentViewModel.userCards[index],navigate: widget.navigate,)),
 
                 Spacer(),
                 Center(
@@ -290,10 +291,11 @@ class _SelectCardWidgetState extends State<SelectCardWidget> {
 
 class CardItemWidget extends StatelessWidget {
   const CardItemWidget({
-    Key key, this.card,
+    Key key, this.card, this.navigate,
   }) : super(key: key);
 
   final PaymentCard card;
+  final VoidCallback navigate;
 
   @override
   Widget build(BuildContext context) {
@@ -304,7 +306,12 @@ class CardItemWidget extends StatelessWidget {
         // savingViewModel.selectedChannel = savingViewModel
         //     .fundingChannels.firstWhere((element) => element.name == "Wallet");
         paymentViewModel.selectedCard = card;
-        Navigator.of(context).pushReplacement(SavingsSummaryScreen.route());
+        if(navigate == null){
+          Navigator.of(context).pushReplacement(SavingsSummaryScreen.route());
+        }else{
+          navigate();
+        }
+
       },
       child: Container(
         margin: EdgeInsets.only(top: 10),

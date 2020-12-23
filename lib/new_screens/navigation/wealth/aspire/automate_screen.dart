@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:provider/provider.dart';
+import 'package:zimvest/data/view_models/savings_view_model.dart';
 import 'package:zimvest/new_screens/navigation/wealth/create/choose_funding_source.dart';
 import 'package:zimvest/new_screens/navigation/wealth/create/save_frequency.dart';
 import 'package:zimvest/utils/margin.dart';
@@ -20,16 +22,20 @@ class AutomateSavingsScreen extends StatefulWidget {
 class _AutomateSavingsScreenState extends State<AutomateSavingsScreen> {
   Widget check = SvgPicture.asset("images/check.svg");
   Widget checkEmpty = SvgPicture.asset("images/check_empty.svg");
-  bool automatic = true;
+  bool automatic;
+  ABSSavingViewModel savingViewModel;
   @override
   Widget build(BuildContext context) {
+    savingViewModel = Provider.of(context);
     return Scaffold(
       appBar: AppBar(
         elevation: 0,
         iconTheme: IconThemeData(color: Colors.black87),
         leading: IconButton(
           icon: Icon(Icons.keyboard_arrow_left_rounded,size: 25,),
-          onPressed: (){},
+          onPressed: (){
+            Navigator.pop(context);
+          },
         ),
         backgroundColor: Colors.transparent,
         title: Text("Create Zimvest WealthBox",
@@ -85,7 +91,8 @@ class _AutomateSavingsScreenState extends State<AutomateSavingsScreen> {
           ),
             YMargin(110),
             RoundedNextButton(
-              onTap: (){
+              onTap: automatic == null ? null: (){
+                savingViewModel.autoSave = automatic;
                 Navigator.push(context,
                     ChooseFundingScreen.route());
               },

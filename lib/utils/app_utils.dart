@@ -230,6 +230,10 @@ class AppUtils{
   static getReadableDate(DateTime time){
     return "${getDayString(time.weekday)}, ${addLeadingZeroIfNeeded(time.day)} ${getMonthStringFull(time.month)}";
   }
+  static getReadableDate2(DateTime time){
+    print("ppppopooppo ${time}");
+    return "${addLeadingZeroIfNeeded(time.day)} ${getMonthStringSemi(time.month)} ${time.year}";
+  }
 
   static getReadableDateShort(DateTime time){
     return "${getDayWithSuffix(time.day)} ${getMonthStringFull(time.month)}";

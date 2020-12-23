@@ -4,6 +4,8 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:provider/provider.dart';
+import 'package:zimvest/data/view_models/savings_view_model.dart';
 import 'package:zimvest/new_screens/navigation/wealth/aspire/save_target_screen.dart';
 import 'package:zimvest/styles/colors.dart';
 import 'package:zimvest/utils/margin.dart';
@@ -30,6 +32,8 @@ class _NameYourGoalScreenState extends State<NameYourGoalScreen> {
   String goalName;
   final picker = ImagePicker();
 
+  ABSSavingViewModel savingViewModel;
+
   Future getImage() async {
     final pickedFile = await picker.getImage(source: ImageSource.gallery);
 
@@ -50,6 +54,7 @@ class _NameYourGoalScreenState extends State<NameYourGoalScreen> {
 
   @override
   Widget build(BuildContext context) {
+    savingViewModel = Provider.of(context);
     final width = MediaQuery.of(context).size.width;
     return Scaffold(
       appBar: AppBar(
@@ -138,6 +143,7 @@ class _NameYourGoalScreenState extends State<NameYourGoalScreen> {
             YMargin(35),
             RoundedNextButton(
               onTap: goalName.length >1 ?  (){
+                savingViewModel.goalName = goalName;
                 Navigator.push(context, SavingsTargetScreen.route());
               }:null,
             )

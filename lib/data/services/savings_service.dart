@@ -46,7 +46,8 @@ abstract class ABSSavingService{
 
   Future<Result<SavingPlanModel>> createTargetSavings({int cardId,
     int fundingChannel, int frequency, String planName, DateTime maturityDate,
-    DateTime startDate, int productId, double targetAmount, int savingsAmount, String token});
+    DateTime startDate, int productId, double targetAmount, bool autoSave,
+    int savingsAmount, String token});
 
 
   Future<Result<List<ProductTransaction>>> getTransactionForProductType({String token, int productId});
@@ -521,7 +522,7 @@ class SavingService extends ABSSavingService{
   @override
   Future<Result<SavingPlanModel>> createTargetSavings({int cardId,
     int fundingChannel, int frequency, String planName, DateTime maturityDate,
-    DateTime startDate, int productId, double targetAmount,
+    DateTime startDate, int productId, double targetAmount,bool autoSave,
     int savingsAmount, String token}) async{
     Result<SavingPlanModel> result = Result(error: false);
 
@@ -531,6 +532,7 @@ class SavingService extends ABSSavingService{
     };
     var body = {
       "cardId": cardId,
+      'isAutoSave':autoSave,
       "frequency": frequency,
       "fundingChannel": fundingChannel,
       "maturityDate": maturityDate.toIso8601String(),
@@ -560,7 +562,7 @@ class SavingService extends ABSSavingService{
       else {
         print("33333333333333oooooooo");
         result.error = false;
-        result.data = SavingPlanModel.fromJson(response1['data']);
+        //result.data = SavingPlanModel.fromJson(response1['data']);
         if(response1['message'] != null){
           result.errorMessage = response1['message'];
         }
