@@ -57,7 +57,7 @@ class _ChooseDuedateScreenState extends State<ChooseDuedateScreen> {
           ),
           backgroundColor: Colors.transparent,
           title: Text("Create Zimvest Aspire",
-            style: TextStyle(color: Colors.black87,fontSize: 14),),
+            style: TextStyle(color: Colors.black87,fontSize: 14, fontFamily: AppStrings.fontMedium),),
         ),
         body: GestureDetector(
           onTap: (){
@@ -65,82 +65,84 @@ class _ChooseDuedateScreenState extends State<ChooseDuedateScreen> {
           },
           child: Container(
             padding: const EdgeInsets.symmetric(horizontal: 20),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                YMargin(40),
-                Text("How long would you like to save for ?", style: TextStyle(fontSize: 15,
-                    color: AppColors.kGreyText,
-                    fontFamily: AppStrings.fontBold),),
+            child: SingleChildScrollView(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  YMargin(40),
+                  Text("How long would you like to save for ?", style: TextStyle(fontSize: 15,
+                      color: AppColors.kGreyText,
+                      fontFamily: AppStrings.fontBold),),
 
-                ...List.generate(dates.length, (index) => InkWell(
-                  onTap: (){
-                    setState(() {
-                        _index = index;
-                    });
-                  },
-                  child: Container(
-                    height: 50,
-                    margin: EdgeInsets.only(top: 12),
-                    child: Row(
-                      children: [
-                        Text(dates[index], style: TextStyle(fontSize: 13),),
-                        Spacer(),
-                        AnimatedSwitcher(
-                            duration: Duration(milliseconds: 600),
-                            child: _index == index ?check: checkEmpty)
-                      ],
-                    ),
-                  ),
-                ),),
-
-                YMargin(20),
-                GestureDetector(
-                  onTap: ()async{
-                    DateTime time = await showDatePicker(context: context,
-                        initialDate: DateTime.now(),
-                        firstDate: DateTime(2020),
-                        lastDate: DateTime(2025));
-                    if(time != null){
+                  ...List.generate(dates.length, (index) => InkWell(
+                    onTap: (){
                       setState(() {
-                        _time = time;
+                          _index = index;
                       });
-                    }
-                  },
-                  child: Container(
-                    padding: EdgeInsets.symmetric(horizontal: 15),
-                    height: 60,
-                    width: double.infinity,
-                    decoration: BoxDecoration(
-                        color: AppColors.kGreyBg,
-                        borderRadius: BorderRadius.circular(12)
+                    },
+                    child: Container(
+                      height: 50,
+                      margin: EdgeInsets.only(top: 12),
+                      child: Row(
+                        children: [
+                          Text(dates[index], style: TextStyle(fontSize: 13),),
+                          Spacer(),
+                          AnimatedSwitcher(
+                              duration: Duration(milliseconds: 600),
+                              child: _index == index ?check: checkEmpty)
+                        ],
+                      ),
                     ),
-                    child: Row(
-                      children: [
-                        Text(_time == null ? "Set preferred Date":
-                        "${_time.year}/${AppUtils.addLeadingZeroIfNeeded(_time.month)}/${AppUtils.addLeadingZeroIfNeeded(_time.day)}", style: TextStyle(fontSize: 12,
-                            color: AppColors.kTextColor.withOpacity(0.53)),),
-                        Spacer(),
-                        Icon(Icons.keyboard_arrow_down_rounded)
-                      ],
+                  ),),
+
+                  YMargin(20),
+                  GestureDetector(
+                    onTap: ()async{
+                      DateTime time = await showDatePicker(context: context,
+                          initialDate: DateTime.now(),
+                          firstDate: DateTime(2020),
+                          lastDate: DateTime(2025));
+                      if(time != null){
+                        setState(() {
+                          _time = time;
+                        });
+                      }
+                    },
+                    child: Container(
+                      padding: EdgeInsets.symmetric(horizontal: 15),
+                      height: 60,
+                      width: double.infinity,
+                      decoration: BoxDecoration(
+                          color: AppColors.kGreyBg,
+                          borderRadius: BorderRadius.circular(12)
+                      ),
+                      child: Row(
+                        children: [
+                          Text(_time == null ? "Set preferred Date":
+                          "${_time.year}/${AppUtils.addLeadingZeroIfNeeded(_time.month)}/${AppUtils.addLeadingZeroIfNeeded(_time.day)}", style: TextStyle(fontSize: 12,
+                              color: AppColors.kTextColor.withOpacity(0.53)),),
+                          Spacer(),
+                          Icon(Icons.keyboard_arrow_down_rounded)
+                        ],
+                      ),
                     ),
                   ),
-                ),
 
-                YMargin(70),
+                  YMargin(70),
 
 
-                RoundedNextButton(
-                  onTap: (){
-                    Navigator.push(context, BulkSaveScreen.route());
-                  },
-                ),
-                YMargin(65),
-
+                  RoundedNextButton(
+                    onTap: (){
+                      Navigator.push(context, BulkSaveScreen.route());
+                    },
+                  ),
+                  YMargin(65),
 
 
 
-              ],),
+
+                ],),
+            ),
           ),
         ),
       ),

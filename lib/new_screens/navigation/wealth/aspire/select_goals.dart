@@ -22,19 +22,7 @@ class _SelectGoalScreenState extends State<SelectGoalScreen> {
   Widget build(BuildContext context) {
     List<String> goals = ['Rent', 'Vacation', 'Gift', 'Wedding', 'Education', 'Business'];
     return Scaffold(
-      appBar: AppBar(
-        elevation: 0,
-        iconTheme: IconThemeData(color: AppColors.kPrimaryColor),
-        leading: IconButton(
-          icon: Icon(Icons.arrow_back_ios_outlined,size: 20,),
-          onPressed: (){
-            Navigator.pop(context);
-          },
-        ),
-        backgroundColor: Colors.transparent,
-        title: Text("Create Zimvest Aspire",
-          style: TextStyle(color: Colors.black87,fontSize: 14),),
-      ),
+
       bottomNavigationBar: Container(
         height: 105,
         decoration: BoxDecoration(
@@ -57,63 +45,86 @@ class _SelectGoalScreenState extends State<SelectGoalScreen> {
           )
         ],),
       ),
-      body: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 20),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-          YMargin(52),
-          Text("Choose Savings Goal",
-            style: TextStyle(fontSize: 15,fontFamily: AppStrings.fontBold),),
-          YMargin(30),
-          Expanded(child: GridView.count(
-            crossAxisCount: 2,
-            crossAxisSpacing: 20,
-            mainAxisSpacing: 30,
-            children: [
-              ...List.generate(goals.length, (index) {
-                return Container(
+      body: CustomScrollView(
 
-
-                  decoration: BoxDecoration(
-                       borderRadius: BorderRadius.circular(10)),
-                  child: Stack(
-                    children: [
-                      ClipRRect(
-                        borderRadius: BorderRadius.circular(10),
-                        child: CachedNetworkImage(imageUrl: 'https://firebasestorage.googleapis.com/v0/b/tick-bc0e3.appspot.com/o/pexels-anete-lusina-5723322.'
-                            'jpg?alt=media&token=4858ef91-820b-4ff3-aae7-a02ce3507c6d',height: 154,fit: BoxFit.fill,),
-                      ),
-                      Container(
-                      height: 154,
-                        decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(10),
-                            color: Colors.black.withOpacity(0.4)
-                        ),
-                      ),
-                      Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
+        slivers: [
+          SliverAppBar(
+            elevation: 0,
+            iconTheme: IconThemeData(color: AppColors.kPrimaryColor),
+            leading: IconButton(
+              icon: Icon(Icons.arrow_back_ios_outlined,size: 20,),
+              onPressed: (){
+                Navigator.pop(context);
+              },
+            ),
+            backgroundColor: Colors.transparent,
+            title: Text("Create Zimvest Aspire",
+              style: TextStyle(color: Colors.black87,fontSize: 14, fontFamily: AppStrings.fontMedium),),
+          ),
+          SliverList(delegate: SliverChildListDelegate([
+            YMargin(52),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 20),
+              child: Text("Choose Savings Goal",
+                style: TextStyle(fontSize: 15,fontFamily: AppStrings.fontBold),),
+            ),
+            YMargin(30),
+          ]),),
+          SliverPadding(
+            padding: EdgeInsets.symmetric(horizontal: 20),
+            sliver: SliverGrid.count(
+              crossAxisCount: 2,
+              crossAxisSpacing: 20,
+              mainAxisSpacing: 30,
+              children: [
+                ...List.generate(goals.length, (index) {
+                  return GestureDetector(
+                    onTap: (){
+                      Navigator.push(context, NameYourGoalScreen.route(goalName: goals[index]));
+                    },
+                    child: Container(
+                      
+                      decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(10)),
+                      child: Stack(
                         children: [
-                          Row(
-                            children: [
-                              Spacer(),
-                              Text(goals[index], style: TextStyle(color: AppColors.kWhite),),
-                              Spacer(),
-                            ],
+                          ClipRRect(
+                            borderRadius: BorderRadius.circular(10),
+                            child: CachedNetworkImage(imageUrl: 'https://firebasestorage.googleapis.com/v0/b/tick-bc0e3.appspot.com/o/pexels-anete-lusina-5723322.'
+                                'jpg?alt=media&token=4858ef91-820b-4ff3-aae7-a02ce3507c6d',height: 154,fit: BoxFit.fill,),
                           ),
+                          Container(
+                            height: 154,
+                            decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(10),
+                                color: Colors.black.withOpacity(0.4)
+                            ),
+                          ),
+                          Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Row(
+                                children: [
+                                  Spacer(),
+                                  Text(goals[index], style: TextStyle(color: AppColors.kWhite),),
+                                  Spacer(),
+                                ],
+                              ),
+                            ],
+                          )
+
+
+
                         ],
-                      )
+                      ),
+                    ),
+                  );
+                })
+              ],
+            ),
+          )
 
-
-
-                    ],
-                  ),
-                );
-              })
-            ],
-          ))
-        ],),
-      ),
+      ],),
     );
   }
 }
