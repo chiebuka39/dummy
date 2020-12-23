@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_money_formatter/flutter_money_formatter.dart';
+import 'package:provider/provider.dart';
+import 'package:zimvest/data/view_models/dashboard_view_model.dart';
+import 'package:zimvest/data/view_models/identity_view_model.dart';
 import 'package:zimvest/styles/colors.dart';
 import 'package:zimvest/utils/margin.dart';
 import 'package:zimvest/utils/strings.dart';
@@ -19,8 +22,14 @@ class NairaPortfolioBreakdownScreen extends StatefulWidget {
 }
 
 class _NairaPortfolioBreakdownScreenState extends State<NairaPortfolioBreakdownScreen> {
+
+  ABSDashboardViewModel dashboardViewModel;
+  ABSIdentityViewModel identityViewModel;
+
   @override
   Widget build(BuildContext context) {
+    dashboardViewModel = Provider.of(context);
+    identityViewModel = Provider.of(context);
     return Scaffold(
       appBar: AppBar(
         elevation: 0,
@@ -38,7 +47,16 @@ class _NairaPortfolioBreakdownScreenState extends State<NairaPortfolioBreakdownS
       body: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 20),
         child: Column(children: [
-          PieChartSample2(),
+          PieChartSample2(
+            value: dashboardViewModel.dashboardModel.nairaPortfolio,
+            savingsValue: dashboardViewModel.portfolioDistribution.where((element)
+            => element.portfolioName == "Savings").isNotEmpty ? dashboardViewModel.portfolioDistribution.where((element)
+            => element.portfolioName == "Savings").first.percentageShare : 0.0,
+            investmentValue: dashboardViewModel.portfolioDistribution.where((element)
+            => element.portfolioName == "Investment").isNotEmpty ? dashboardViewModel.portfolioDistribution.where((element)
+            => element.portfolioName == "Investment").first.percentageShare : 0.0,
+            walletValue: 0.0,
+          ),
           YMargin(20),
           Divider(),
           Container(
@@ -46,9 +64,7 @@ class _NairaPortfolioBreakdownScreenState extends State<NairaPortfolioBreakdownS
             child: Row(children: [
               Text("Portfolio Value", style: TextStyle(color: AppColors.kSecondaryText),),
               Spacer(),
-              Text("${AppStrings.nairaSymbol}${FlutterMoneyFormatter(
-                amount: 31700
-              ).output.nonSymbol}", style: TextStyle(
+              Text("${dashboardViewModel.dashboardModel.nairaPortfolio}", style: TextStyle(
                   color: AppColors.kSecondaryBoldText, fontFamily: AppStrings.fontMedium),),
             ],),
           ),
@@ -56,6 +72,15 @@ class _NairaPortfolioBreakdownScreenState extends State<NairaPortfolioBreakdownS
           Container(
             height: 70,
             child: Row(children: [
+
+              Container(
+                height: 6,
+                width: 6,
+                decoration: BoxDecoration(
+                  color: AppColors.kYellow
+                ),
+              ),
+              XMargin(10),
               Text("Wallet balance", style: TextStyle(color: AppColors.kSecondaryText),),
               Spacer(),
               Text("${AppStrings.nairaSymbol}${FlutterMoneyFormatter(
@@ -68,6 +93,14 @@ class _NairaPortfolioBreakdownScreenState extends State<NairaPortfolioBreakdownS
           Container(
             height: 70,
             child: Row(children: [
+              Container(
+                height: 6,
+                width: 6,
+                decoration: BoxDecoration(
+                    color: AppColors.kInvestmentP
+                ),
+              ),
+              XMargin(10),
               Text("Investment Balance", style: TextStyle(color: AppColors.kSecondaryText),),
               Spacer(),
               Text("${AppStrings.nairaSymbol}${FlutterMoneyFormatter(
@@ -80,6 +113,14 @@ class _NairaPortfolioBreakdownScreenState extends State<NairaPortfolioBreakdownS
           Container(
             height: 70,
             child: Row(children: [
+              Container(
+                height: 6,
+                width: 6,
+                decoration: BoxDecoration(
+                    color: AppColors.kSavingsP
+                ),
+              ),
+              XMargin(10),
               Text("Savings Balance", style: TextStyle(color: AppColors.kSecondaryText),),
               Spacer(),
               Text("${AppStrings.nairaSymbol}${FlutterMoneyFormatter(
