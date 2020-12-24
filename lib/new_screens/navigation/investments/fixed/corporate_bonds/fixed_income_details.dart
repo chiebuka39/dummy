@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:zimvest/new_screens/navigation/investments/fixed/fixed_income_unique_name_input.dart';
-import 'package:zimvest/new_screens/navigation/investments/high_yield/naira/high_yield_investment_naira_name_input.dart';
+import 'package:zimvest/new_screens/navigation/investments/fixed/corporate_bonds/fixed_income_unique_name_input.dart';
 import 'package:zimvest/styles/colors.dart';
 import 'package:zimvest/utils/margins.dart';
 import 'package:zimvest/utils/strings.dart';
@@ -11,20 +10,31 @@ class FixedIncomeDetails extends StatefulWidget {
   final String bondName;
   final int investmentId;
   final String maturityDate;
-  final String rate;
-
+  final double rate;
+  final int investmentType;
+  final int instrumentId;
+  final num minimumAmount;
+  final String investmentMaturityDate;
   const FixedIncomeDetails({
     Key key,
     this.bondName,
     this.investmentId,
     this.maturityDate,
     this.rate,
+    this.investmentType,
+    this.instrumentId,
+    this.minimumAmount,
+    this.investmentMaturityDate,
   }) : super(key: key);
   static Route<dynamic> route({
     String bondName,
     int id,
     String maturityDate,
-    String rate,
+    double rate,
+    int investmentType,
+    int instrumentId,
+    num minimumAmount,
+    String investmentMaturityDate,
   }) {
     return MaterialPageRoute(
       builder: (_) => FixedIncomeDetails(
@@ -32,6 +42,10 @@ class FixedIncomeDetails extends StatefulWidget {
         investmentId: id,
         maturityDate: maturityDate,
         rate: rate,
+        investmentType: investmentType,
+        instrumentId: instrumentId,
+        minimumAmount: minimumAmount,
+        investmentMaturityDate: investmentMaturityDate,
       ),
       settings: RouteSettings(
         name: FixedIncomeDetails().toStringShort(),
@@ -166,6 +180,11 @@ class _FixedIncomeDetailsState extends State<FixedIncomeDetails> {
                                   bondName: widget.bondName,
                                   maturityDate: widget.maturityDate,
                                   rate: widget.rate,
+                                  investmentType: widget.investmentType,
+                                  instrumentId: widget.instrumentId,
+                                  minimumAmount: widget.minimumAmount,
+                                  investmentMaturityDate:
+                                      widget.investmentMaturityDate,
                                 ),
                               ),
                             ),

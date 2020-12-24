@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:zimvest/new_screens/navigation/investments/fixed/fixed_income_amount_input.dart';
-import 'package:zimvest/new_screens/navigation/investments/high_yield/naira/high_yield_investment_naira_amount_input.dart';
+import 'package:zimvest/new_screens/navigation/investments/fixed/treasury_bills/fixed_income_amount_input.dart';
 import 'package:zimvest/new_screens/navigation/investments/widgets/text_field.dart';
 import 'package:zimvest/styles/colors.dart';
 import 'package:zimvest/utils/margin.dart';
@@ -11,7 +10,12 @@ class FixedIncomeUniqueName extends StatefulWidget {
   final int investmentId;
   final String bondName;
   final String maturityDate;
-  final String rate;
+  final double rate;
+  final int investmentType;
+  final int instrumentId;
+  final num minimumAmount;
+  final String uniqueName;
+  final String investmentMaturityDate;
 
   const FixedIncomeUniqueName({
     Key key,
@@ -19,20 +23,35 @@ class FixedIncomeUniqueName extends StatefulWidget {
     this.bondName,
     this.maturityDate,
     this.rate,
+    this.investmentType,
+    this.instrumentId,
+    this.minimumAmount,
+    this.investmentMaturityDate, this.uniqueName,
   }) : super(key: key);
 
   static Route<dynamic> route({
     int investmentId,
     String bondName,
     String maturityDate,
-    String rate,
+    double rate,
+    int investmentType,
+    int instrumentId,
+    num minimumAmount,
+    String investmentMaturityDate,
+    String uniqueName
   }) {
+    // print("Duration $bondName");
     return MaterialPageRoute(
       builder: (_) => FixedIncomeUniqueName(
         investmentId: investmentId,
         bondName: bondName,
         maturityDate: maturityDate,
         rate: rate,
+        investmentType: investmentType,
+        instrumentId: instrumentId,
+        minimumAmount: minimumAmount,
+        investmentMaturityDate: investmentMaturityDate,
+        uniqueName: uniqueName,
       ),
       settings: RouteSettings(
         name: FixedIncomeUniqueName().toStringShort(),
@@ -98,6 +117,10 @@ class _FixedIncomeUniqueNameState extends State<FixedIncomeUniqueName> {
                   bondName: widget.bondName,
                   maturityDate: widget.maturityDate,
                   rate: widget.rate,
+                  investmentType: widget.investmentType,
+                  instrumentId: widget.instrumentId,
+                  minimumAmount: widget.minimumAmount,
+                  investmentMaturityDate: widget.investmentMaturityDate,
                 ),
               ),
             ),

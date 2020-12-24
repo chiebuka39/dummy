@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider_architecture/_viewmodel_provider.dart';
 import 'package:zimvest/data/view_models/investment_view_model.dart';
-import 'package:zimvest/new_screens/navigation/investments/fixed/fixed_income_summary.dart';
+import 'package:zimvest/new_screens/navigation/investments/fixed/promissory_note/fixed_income_summary.dart';
 import 'package:zimvest/styles/colors.dart';
 import 'package:zimvest/utils/margin.dart';
 import 'package:zimvest/utils/margins.dart';
@@ -14,8 +14,11 @@ class FixedIncomePurchaseSource extends StatefulWidget {
   final String uniqueName;
   final String duration;
   final String maturityDate;
-  final String rate;
-  // final String minimumAmount;
+  final double rate;
+  final int investmentType;
+  final int instrumentId;
+  final num minimumAmount;
+  final String investmentMaturityDate;
 
   const FixedIncomePurchaseSource({
     Key key,
@@ -25,6 +28,10 @@ class FixedIncomePurchaseSource extends StatefulWidget {
     this.duration,
     this.maturityDate,
     this.rate,
+    this.investmentType,
+    this.instrumentId,
+    this.minimumAmount,
+    this.investmentMaturityDate,
     // this.minimumAmount,
   }) : super(key: key);
   static Route<dynamic> route({
@@ -33,9 +40,13 @@ class FixedIncomePurchaseSource extends StatefulWidget {
     String uniqueName,
     String duration,
     String maturityDate,
-    String rate,
-    String minimumAmount,
+    double rate,
+    int minimumAmount,
+    int investmentType,
+    int instrumentId,
+    String investmentMaturityDate,
   }) {
+    // print("Duration Purchase Screen $uniqueName");
     return MaterialPageRoute(
       builder: (_) => FixedIncomePurchaseSource(
         amount: amount,
@@ -43,7 +54,11 @@ class FixedIncomePurchaseSource extends StatefulWidget {
         uniqueName: uniqueName,
         maturityDate: maturityDate,
         rate: rate,
-        // minimumAmount: minimumAmount,
+        investmentType: investmentType,
+        instrumentId: instrumentId,
+        minimumAmount: minimumAmount,
+        investmentMaturityDate: investmentMaturityDate,
+        duration: duration,
       ),
       settings: RouteSettings(
         name: FixedIncomePurchaseSource().toStringShort(),
@@ -100,8 +115,21 @@ class _FixedIncomePurchaseSourceState extends State<FixedIncomePurchaseSource> {
               verticalSpace(52),
               PaymentSourceButton(
                 onTap: () {
-                  // print("hmmm");
-                  // Navigator.push(context, InvestmentSummaryScreenNaira.route());
+                  Navigator.push(
+                    context,
+                    SavingsSummaryScreen.route(
+                      amount: widget.amount,
+                      investmentId: widget.productId,
+                      instrumentId: widget.instrumentId,
+                      maturityDate: widget.investmentMaturityDate,
+                      rate: widget.rate,
+                      investmentType: widget.investmentType,
+                      bondName: widget.duration,
+                      uniqueName: widget.uniqueName,
+                      channelId: 1,
+                      // intermediaryBankType: 1,
+                    ),
+                  );
                 },
                 paymentsource: "Debit Card",
                 image: "card",
@@ -109,20 +137,22 @@ class _FixedIncomePurchaseSourceState extends State<FixedIncomePurchaseSource> {
               YMargin(25),
               PaymentSourceButton(
                 onTap: () {
-                  Navigator.push(context, SavingsSummaryScreen.route());
-                  // Navigator.push(
-                  //   context,
-                    // InvestmentSummaryScreenNaira.route(;
-                  //     channelId: 5,
-                  //     productId: widget.productId,
-                  //     duration: widget.duration,
-                  //     amount: widget.amount,
-                  //     uniqueName: widget.uniqueName,
-                  //     maturityDate: widget.maturityDate,
-                  //     rate: widget.rate,
-                  //     minimumAmount: widget.minimumAmount,
-                  //   ),
-                  // );
+                  // print(widget.uniqueName);
+                  Navigator.push(
+                    context,
+                    SavingsSummaryScreen.route(
+                      amount: widget.amount,
+                      investmentId: widget.productId,
+                      instrumentId: widget.instrumentId,
+                      maturityDate: widget.investmentMaturityDate,
+                      rate: widget.rate,
+                      investmentType: widget.investmentType,
+                      bondName: widget.duration,
+                      uniqueName: widget.uniqueName,
+                      channelId: 5,
+                      // intermediaryBankType: 1,
+                    ),
+                  );
                 },
                 paymentsource: "Wallet",
                 image: "wallet",

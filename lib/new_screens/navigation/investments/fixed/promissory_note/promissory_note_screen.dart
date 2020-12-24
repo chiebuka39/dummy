@@ -1,37 +1,38 @@
 import 'package:flutter/material.dart';
-import 'package:provider_architecture/provider_architecture.dart';
+import 'package:provider_architecture/_viewmodel_provider.dart';
 import 'package:zimvest/data/models/investment/fixed_models.dart';
 import 'package:zimvest/data/view_models/investment_view_model.dart';
-import 'package:zimvest/new_screens/navigation/investments/fixed/all_tbills_investments.dart';
-import 'package:zimvest/new_screens/navigation/investments/fixed/fixed_income_details.dart';
+import 'package:zimvest/new_screens/navigation/investments/fixed/promissory_note/all_promissory_note_investment.dart';
+import 'package:zimvest/new_screens/navigation/investments/fixed/promissory_note/fixed_income_details.dart';
 import 'package:zimvest/new_screens/navigation/investments/widgets/card_widget.dart';
 import 'package:zimvest/styles/colors.dart';
 import 'package:zimvest/utils/margins.dart';
 import 'package:zimvest/utils/strings.dart';
 
-class TreasuryBillPage extends StatefulWidget {
+class PromissoryNotePage extends StatefulWidget {
   @override
-  _TreasuryBillPageState createState() => _TreasuryBillPageState();
+  _PromissoryNotePageState createState() => _PromissoryNotePageState();
 }
 
-class _TreasuryBillPageState extends State<TreasuryBillPage> {
+class _PromissoryNotePageState extends State<PromissoryNotePage> {
   @override
   Widget build(BuildContext context) {
     return ViewModelProvider<InvestmentHighYieldViewModel>.withConsumer(
-      onModelReady: (model) => model.getTreasuryBill(),
+      onModelReady: (model) => model.getPromissoryNote(),
       builder: (context, model, _) => Container(
         child: Center(
-          child: model.treasuryBills.data == null
+          child: model.promissoryNote.data == null
               ? CircularProgressIndicator(
-                  valueColor: AlwaysStoppedAnimation(AppColors.kPrimaryColor),
+                  valueColor: AlwaysStoppedAnimation(AppColors.kGreen),
                 )
-              : model.treasuryBills.data.tBillsItems[1].treasureBills.length ==
+              : model.promissoryNote.data.promissoryNoteItems[1].promissoryNotes
+                          .length ==
                       0
-                  ? Text("Nothing to Show")
+                  ? Text("Not Available")
                   : ListView.builder(
                       itemBuilder: (context, index) {
-                        List<TBillsItems> timePeriod =
-                            model.treasuryBills.data.tBillsItems;
+                        List<PromissoryNoteItems> timePeriod =
+                            model.promissoryNote.data.promissoryNoteItems;
                         return Padding(
                           padding: const EdgeInsets.only(
                               left: 8.0, right: 8.0, bottom: 8.0),
@@ -59,10 +60,11 @@ class _TreasuryBillPageState extends State<TreasuryBillPage> {
                                       InkWell(
                                         onTap: () => Navigator.push(
                                           context,
-                                          AllTreasurryBillBonds.route(
-                                            title: timePeriod[index].tenorBandName,
-                                            bondItem: model.treasuryBills.data.tBillsItems
-                                          ),
+                                          AllPromissoryNoteBonds.route(
+                                              title: timePeriod[index]
+                                                  .tenorBandName,
+                                              bondItem: model.promissoryNote
+                                                  .data.promissoryNoteItems),
                                         ),
                                         child: Row(
                                           children: [
@@ -94,30 +96,33 @@ class _TreasuryBillPageState extends State<TreasuryBillPage> {
                                       Expanded(
                                         child: ListView(
                                           scrollDirection: Axis.horizontal,
-                                          children: model
-                                              .treasuryBills.data.tBillsItems
+                                          children: model.promissoryNote.data
+                                              .promissoryNoteItems
                                               .where((element) =>
                                                   element.tenorBandName ==
                                                   timePeriod[index]
                                                       .tenorBandName)
                                               .toList()[0]
-                                              .treasureBills
+                                              .promissoryNotes
                                               .map(
                                                 (e) => GestureDetector(
                                                   onTap: () => Navigator.push(
                                                     context,
                                                     FixedIncomeDetails.route(
-                                                      bondName:
-                                                          e.treasuryBillName,
-                                                      id: e.instrumentId,
+                                                     bondName: e.promissoryNoteName,
+                                                      id: e.id,
                                                       maturityDate:
-                                                          e.maturityDate,
-                                                      rate: e.rate.toString(),
+                                                          e.investmentMaturityDate,
+                                                      rate: e.rate,
+                                                      investmentType: e.investmentType,
+                                                      instrumentId: e.instrumentId,
+                                                      minimumAmount: e.minimumAmount,
+                                                      investmentMaturityDate: e.investmentMaturityDate,
                                                     ),
                                                   ),
                                                   child: FixedIncomeCard(
                                                     bondName:
-                                                        e.treasuryBillName,
+                                                        e.promissoryNoteName,
                                                     maturityDate: e
                                                         .investmentMaturityDate,
                                                     minimumAmount:
@@ -137,7 +142,8 @@ class _TreasuryBillPageState extends State<TreasuryBillPage> {
                           ),
                         );
                       },
-                      itemCount: model.treasuryBills.data.tBillsItems.length,
+                      itemCount:
+                          model.promissoryNote.data.promissoryNoteItems.length,
                     ),
         ),
       ),

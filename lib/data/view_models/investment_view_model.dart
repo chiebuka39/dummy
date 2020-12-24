@@ -2,7 +2,9 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:zimvest/data/local/user_local.dart';
+import 'package:zimvest/data/models/investment/bond_amount_payable_model.dart';
 import 'package:zimvest/data/models/investment/fixed_models.dart';
+import 'package:zimvest/data/models/investment/gotten_naira_rate.dart';
 import 'package:zimvest/data/models/investment/investment_fixed_fund.dart';
 import 'package:zimvest/data/models/investment/investment_fund_model.dart';
 import 'package:zimvest/data/models/investment/investment_termed_fund.dart';
@@ -13,6 +15,7 @@ import 'package:zimvest/data/models/product_transaction.dart';
 import 'package:zimvest/data/services/investment_service.dart';
 
 import 'package:zimvest/locator.dart';
+import 'package:zimvest/screens/tabs/invstment/invest_term.dart';
 import 'package:zimvest/utils/result.dart';
 
 abstract class ABSInvestmentViewModel extends ChangeNotifier {
@@ -325,14 +328,16 @@ class InvestmentHighYieldViewModel extends ChangeNotifier {
   Result<List<TermInstrument>> nairaInstrument = Result<List<TermInstrument>>();
   Result<List<TermInstrument>> dollarInstrument =
       Result<List<TermInstrument>>();
-  Result<CommercialPaper> commercialPaper =
-      Result<CommercialPaper>();
+  Result<CommercialPaper> commercialPaper = Result<CommercialPaper>();
   Result<TreasuryBill> treasuryBills = Result<TreasuryBill>();
   Result<CorporateBond> corporateBond = Result<CorporateBond>();
   Result<EuroBond> euroBond = Result<EuroBond>();
 
   Result<FGNBond> fgnBond = Result<FGNBond>();
   Result<PromissoryNote> promissoryNote = Result<PromissoryNote>();
+  ConvertedDollarRate dollarConversion = ConvertedDollarRate();
+  Result<GottenRate> gotRate = Result<GottenRate>();
+  AmountPayableResponse amountPayableResponse = AmountPayableResponse();
   bool _busy = false;
   bool get busy => _busy;
 
@@ -397,6 +402,7 @@ class InvestmentHighYieldViewModel extends ChangeNotifier {
     String token = _localStorage.getUser().token;
     final fgnBond = await _investmentService.getFGNBond(token: token);
     this.fgnBond = fgnBond;
+    print(fgnBond.data.fgnBondItems[1].bonds[0].rate);
     setBusy(false);
     notifyListeners();
   }
@@ -427,6 +433,7 @@ class InvestmentHighYieldViewModel extends ChangeNotifier {
       String proofOfPayment,
       double amount,
       String uniqueName}) async {
+    setBusy(true);
     String token = _localStorage.getUser().token;
     await _investmentService.buyNairaInstrument(
         productId: productId,
@@ -434,7 +441,281 @@ class InvestmentHighYieldViewModel extends ChangeNotifier {
         amount: amount,
         uniqueName: uniqueName,
         token: token);
-
+    setBusy(false);
     notifyListeners();
   }
+
+  Future<void> buyDollarInstrument(
+      {int productId,
+      int beneficiaryBankType,
+      int fundingChannel,
+      String proofOfPayment,
+      double amount,
+      double nairaAmount,
+      String uniqueName,
+      String token}) async {
+    setBusy(true);
+    String token = _localStorage.getUser().token;
+    var getAmount =
+        await _investmentService.calculateRate(token: token, amountUsd: amount);
+    this.dollarConversion = getAmount;
+    await _investmentService.buyDollarnstrument(
+      productId: productId,
+      beneficiaryBankType: beneficiaryBankType,
+      fundingChannel: fundingChannel,
+      amount: amount,
+      nairaAmount: double.tryParse(this.dollarConversion.amountNGN.toString()),
+      uniqueName: uniqueName,
+      token: token,
+    );
+    setBusy(false);
+    notifyListeners();
+  }
+
+  Future<void> getRate() async {
+    String token = _localStorage.getUser().token;
+    var gotRate = await _investmentService.getRate(token);
+    this.gotRate = gotRate;
+    notifyListeners();
+  }
+
+  Future<void> buyCommercialPaper(
+      {int productId,
+      int fundingChannel,
+      int intermediaryBankType,
+      int instrumentId,
+      // double amount,
+      double rate,
+      String uniqueName,
+      int instrumentType,
+      bool upFront,
+      DateTime maturityDate,
+      String instrumentName,
+      double investmentAmount}) async {
+    // TODO: Some fine tunning
+    String token = _localStorage.getUser().token;
+    this.amountPayableResponse =
+        await _investmentService.calculateAmountPayable(
+      token: token,
+      instrumentId: instrumentId,
+      instrumentType: instrumentType,
+      investmentAmount: investmentAmount,
+      rate: rate,
+      instrumentName: instrumentName,
+      maturityDate: maturityDate,
+      productId: productId,
+      upFront: upFront,
+    );
+    await _investmentService.buyCommercialPaper(
+      token: token,
+      productId: productId,
+      fundingChannel: fundingChannel,
+      intermediaryBankType: intermediaryBankType,
+      // amount: amount,
+      rate: rate,
+      uniqueName: uniqueName,
+      upFront: upFront,
+      faceValue: this.amountPayableResponse.faceValue,
+      investmentAmount: this.amountPayableResponse.investmentAmount,
+    );
+  }
+
+  Future<void> buyCorporateBond(
+      {int productId,
+      int fundingChannel,
+      int intermediaryBankType,
+      int instrumentId,
+      double amount,
+      double rate,
+      String uniqueName,
+      int instrumentType,
+      bool upFront,
+      DateTime maturityDate,
+      String instrumentName,
+      double investmentAmount}) async {
+    // TODO: Some fine tunning
+    String token = _localStorage.getUser().token;
+    this.amountPayableResponse =
+        await _investmentService.calculateAmountPayable(
+      token: token,
+      instrumentId: instrumentId,
+      instrumentType: instrumentType,
+      investmentAmount: investmentAmount,
+      rate: rate,
+      instrumentName: instrumentName,
+      maturityDate: maturityDate,
+      productId: productId,
+      upFront: upFront,
+    );
+    await _investmentService.buyCorporateBond(
+      token: token,
+      productId: productId,
+      fundingChannel: fundingChannel,
+      intermediaryBankType: intermediaryBankType,
+      amount: this.amountPayableResponse.investmentAmount,
+      rate: rate,
+      uniqueName: uniqueName,
+      faceValue: this.amountPayableResponse.faceValue,
+    );
+  }
+
+  Future<void> buyFGNBond(
+      {int productId,
+      int fundingChannel,
+      int intermediaryBankType,
+      int instrumentId,
+      double amount,
+      double rate,
+      String uniqueName,
+      int instrumentType,
+      bool upFront,
+      DateTime maturityDate,
+      String instrumentName,
+      double investmentAmount}) async {
+    // TODO: Some fine tunning
+    String token = _localStorage.getUser().token;
+    this.amountPayableResponse =
+        await _investmentService.calculateAmountPayable(
+      token: token,
+      instrumentId: instrumentId,
+      instrumentType: instrumentType,
+      investmentAmount: investmentAmount,
+      rate: rate,
+      instrumentName: instrumentName,
+      maturityDate: maturityDate,
+      productId: productId,
+      upFront: upFront,
+    );
+    await _investmentService.buyFGNBond(
+      productId: productId,
+      token: token,
+      fundingChannel: fundingChannel,
+      amount: this.amountPayableResponse.investmentAmount,
+      rate: this.amountPayableResponse.rateValue,
+      uniqueName: uniqueName,
+      faceValue: this.amountPayableResponse.faceValue,
+      investmentAmount: this.amountPayableResponse.investmentAmount,
+    );
+  }
+
+  Future<void> buyPromissoryNote(
+      {int productId,
+      int fundingChannel,
+      int intermediaryBankType,
+      int instrumentId,
+      double amount,
+      double rate,
+      String uniqueName,
+      int instrumentType,
+      bool upFront,
+      DateTime maturityDate,
+      String instrumentName,
+      double investmentAmount}) async {
+    // TODO: Some fine tunning
+    String token = _localStorage.getUser().token;
+    this.amountPayableResponse =
+        await _investmentService.calculateAmountPayable(
+      token: token,
+      instrumentId: instrumentId,
+      instrumentType: instrumentType,
+      investmentAmount: investmentAmount,
+      rate: rate,
+      instrumentName: instrumentName,
+      maturityDate: maturityDate,
+      productId: productId,
+      upFront: upFront,
+    );
+    await _investmentService.buyPromissoryNote(
+      productId: productId,
+      token: token,
+      fundingChannel: fundingChannel,
+      amount: this.amountPayableResponse.investmentAmount,
+      rate: this.amountPayableResponse.rateValue,
+      uniqueName: uniqueName,
+      faceValue: this.amountPayableResponse.faceValue,
+      investmentAmount: this.amountPayableResponse.investmentAmount,
+    );
+  }
+
+  Future<void> buyTreasuryBills(
+      {int productId,
+      int fundingChannel,
+      int intermediaryBankType,
+      int instrumentId,
+      double amount,
+      double rate,
+      String uniqueName,
+      int instrumentType,
+      bool upFront,
+      DateTime maturityDate,
+      String instrumentName,
+      double investmentAmount}) async {
+    // TODO: Some fine tunning
+    String token = _localStorage.getUser().token;
+    this.amountPayableResponse =
+        await _investmentService.calculateAmountPayable(
+      token: token,
+      instrumentId: instrumentId,
+      instrumentType: instrumentType,
+      investmentAmount: investmentAmount,
+      rate: rate,
+      instrumentName: instrumentName,
+      maturityDate: maturityDate,
+      productId: productId,
+      upFront: upFront,
+    );
+    await _investmentService.buyTreasuryBill(
+      productId: productId,
+      token: token,
+      fundingChannel: fundingChannel,
+      amount: this.amountPayableResponse.investmentAmount,
+      rate: this.amountPayableResponse.rateValue,
+      uniqueName: uniqueName,
+      faceValue: this.amountPayableResponse.faceValue,
+      investmentAmount: this.amountPayableResponse.investmentAmount,
+    );
+  }
+    Future<void> buyEuroBond(
+      {int productId,
+      int fundingChannel,
+      int intermediaryBankType,
+      int instrumentId,
+      double amount,
+      double rate,
+      String uniqueName,
+      int instrumentType,
+      bool upFront,
+      DateTime maturityDate,
+      String instrumentName,
+      double investmentAmount}) async {
+    // TODO: Some fine tunning
+    String token = _localStorage.getUser().token;
+    this.amountPayableResponse =
+        await _investmentService.calculateAmountPayable(
+      token: token,
+      instrumentId: instrumentId,
+      instrumentType: instrumentType,
+      investmentAmount: investmentAmount,
+      rate: rate,
+      instrumentName: instrumentName,
+      maturityDate: maturityDate,
+      productId: productId,
+      upFront: upFront,
+    );
+    await _investmentService.buyEuroBond(
+      productId: productId,
+      token: token,
+      fundingChannel: fundingChannel,
+      amount: this.amountPayableResponse.investmentAmount,
+      rate: this.amountPayableResponse.rateValue,
+      uniqueName: uniqueName,
+      faceValue: this.amountPayableResponse.faceValue,
+      investmentAmount: this.amountPayableResponse.investmentAmount,
+    );
+  }
+}
+
+
+class FixedIncomeViewModel extends ChangeNotifier{
+
 }
