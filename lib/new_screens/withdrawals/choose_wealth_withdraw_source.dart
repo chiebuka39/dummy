@@ -47,7 +47,9 @@ class _ChooseWealthWithdrawScreenState extends State<ChooseWealthWithdrawScreen>
           ),
           backgroundColor: Colors.transparent,
           title: Text("Withdraw",
-            style: TextStyle(color: Colors.black87,fontSize: 14),),
+            style: TextStyle(color: Colors.black87,
+                fontSize: 13,
+                fontFamily: AppStrings.fontMedium),),
         ),
         body: GestureDetector(
           onTap: (){
@@ -65,7 +67,7 @@ class _ChooseWealthWithdrawScreenState extends State<ChooseWealthWithdrawScreen>
                 YMargin(50),
                 GestureDetector(
                   onTap: (){
-                    Navigator.of(context).push(ConfirmWithdrawalScreen.route());
+                    Navigator.of(context).push(SelectBankAccount.route());
                   },
                   child: Container(
                     padding: EdgeInsets.symmetric(horizontal: 20),

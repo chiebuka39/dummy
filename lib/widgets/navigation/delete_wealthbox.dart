@@ -1,5 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:provider/provider.dart';
+import 'package:zimvest/data/models/saving_plan.dart';
+import 'package:zimvest/data/view_models/identity_view_model.dart';
+import 'package:zimvest/data/view_models/savings_view_model.dart';
 import 'package:zimvest/new_screens/funding/top_up_successful.dart';
 import 'package:zimvest/styles/colors.dart';
 import 'package:zimvest/utils/margin.dart';
@@ -9,11 +13,15 @@ import 'package:zimvest/widgets/navigation/wealthbox_activity.dart';
 
 class DeleteWealthbox extends StatelessWidget {
   const DeleteWealthbox({
-    Key key,
+    Key key, this.savingPlanModel,
   }) : super(key: key);
+
+  final SavingPlanModel savingPlanModel;
 
   @override
   Widget build(BuildContext context) {
+    ABSSavingViewModel savingViewModel = Provider.of(context);
+    ABSIdentityViewModel identityViewModel = Provider.of(context);
     final buttonWidth = (MediaQuery
         .of(context)
         .size
@@ -60,9 +68,16 @@ class DeleteWealthbox extends StatelessWidget {
                 PrimaryButtonNew(
                   width: buttonWidth,
                   title: "Yes",
+                  onTap: ()async{
+                    Navigator.of(context).pop();
+
+                  },
                 ),
                 XMargin(20,),
                 PrimaryButtonNew(
+                  onTap: (){
+                    Navigator.of(context).pop();
+                  },
                   textColor: AppColors.kGreyText,
                   bg: AppColors.kGreyBg,
                   width: buttonWidth,

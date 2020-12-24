@@ -10,6 +10,7 @@ import 'package:zimvest/data/view_models/identity_view_model.dart';
 import 'package:zimvest/data/view_models/investment_view_model.dart';
 import 'package:zimvest/new_screens/account/login_screen.dart';
 import 'package:zimvest/new_screens/profile/account_screen.dart';
+import 'package:zimvest/new_screens/profile/add_bank_cards.dart';
 import 'package:zimvest/new_screens/profile/widgets/profile_widgets.dart';
 import 'package:zimvest/styles/colors.dart';
 import 'package:zimvest/utils/margin.dart';
@@ -65,7 +66,11 @@ class _ProfileScreenState extends State<ProfileScreen> {
             Navigator.push(context, AccountScreen.route());
           },icon: 'account',),
           ProfileWidget(title: "Notifications",icon: 'notif',),
-          ProfileWidget(title: "Banks & Cards",icon: 'cards',),
+          ProfileWidget(title: "Banks & Cards",icon: 'cards',
+            onClick: (){
+            Navigator.push(context, AddBankAndCards.route());
+            },
+          ),
           ProfileWidget(title: "Security",icon: 'security',),
           ProfileWidget(title: "Investment Persona Analysis",icon: 'ips',),
           ProfileWidget(title: "Earn Free Cash",icon: 'earn',),

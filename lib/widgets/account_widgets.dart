@@ -14,6 +14,7 @@ import 'package:zimvest/styles/colors.dart';
 import 'package:zimvest/utils/app_utils.dart';
 import 'package:zimvest/utils/margin.dart';
 import "package:flutter_bloc/flutter_bloc.dart";
+import 'package:zimvest/utils/strings.dart';
 
 class TextWidget extends StatelessWidget {
   final ValueChanged<String> onChange;
@@ -616,15 +617,15 @@ class DropdownBorderInputWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(height: 70+bottomMargin,
+    return Container(height: 105+bottomMargin,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
             title,
-            style: TextStyle(color: textColor, fontSize: labelSize),
+            style: TextStyle(color: textColor, fontSize: labelSize,fontFamily: AppStrings.fontMedium),
           ),
-          YMargin(8),
+          YMargin(20),
           InkWell(
             onTap: (){
               SelectDialog.showModal<String>(
@@ -645,14 +646,14 @@ class DropdownBorderInputWidget extends StatelessWidget {
               );
             },
             child: Container(
-              height: 45,
+              height: 65,
               padding: EdgeInsets.symmetric(horizontal: 10),
               decoration: BoxDecoration(
-                  color: Colors.transparent,
+                  color: AppColors.kGreyBg,
                   border: Border.all(color:  AppColors.kLightText),
-                  borderRadius: BorderRadius.circular(4)),
+                  borderRadius: BorderRadius.circular(12)),
               child: Row(children: [
-                Text(source ?? "", style: TextStyle(fontSize: 14, color: AppColors.kPrimaryColor),),
+                Text(source ?? "Select Bank", style: TextStyle(fontSize: 12, color: AppColors.kTextColor),),
                 Spacer(),
                 Icon(Icons.keyboard_arrow_down, size: 23,)
               ],),

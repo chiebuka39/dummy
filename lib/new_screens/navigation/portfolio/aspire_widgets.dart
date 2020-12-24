@@ -62,7 +62,9 @@ class AspireContainerWidget extends StatelessWidget {
                                 radius: 35.0,
                                 lineWidth: 3.0,
                                 animation: true,
-                                percent: double.parse(goal.successRate.replaceAll("%", ""))/100,
+                                percent:( double.parse(goal.successRate.replaceAll("%", ""))/100) > 1 ? 0.5:
+                                ( double.parse(goal.successRate.replaceAll("%", ""))/100),
+                                //percent: 0.2,
                                 center: new Text(
                                   "${goal.successRate}",
                                   style:

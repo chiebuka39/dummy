@@ -267,7 +267,8 @@ class PrimaryButtonNew extends StatelessWidget {
 
 class RoundedNextButton extends StatelessWidget {
   const RoundedNextButton({
-    Key key, this.onTap, this.loading = false,
+    Key key, this.onTap,
+    this.loading = false,
   }) : super(key: key);
 
   final VoidCallback onTap;
