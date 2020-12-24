@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:zimvest/new_screens/navigation/investments/fixed/commercial_paper_screen.dart';
-import 'package:zimvest/new_screens/navigation/investments/fixed/corporate_bond_screen.dart';
-import 'package:zimvest/new_screens/navigation/investments/fixed/euro_bond_screen.dart';
-import 'package:zimvest/new_screens/navigation/investments/fixed/fbn_bond_screen.dart';
-import 'package:zimvest/new_screens/navigation/investments/fixed/promissory_note_screen.dart';
-import 'package:zimvest/new_screens/navigation/investments/fixed/treasury_bill_screen.dart';
+import 'package:zimvest/new_screens/navigation/investments/fixed/commercial_papers/commercial_paper_screen.dart';
+import 'package:zimvest/new_screens/navigation/investments/fixed/corporate_bonds/corporate_bond_screen.dart';
+import 'package:zimvest/new_screens/navigation/investments/fixed/euro_bond/euro_bond_screen.dart';
+import 'package:zimvest/new_screens/navigation/investments/fixed/fbn_bonds/fbn_bond_screen.dart';
+import 'package:zimvest/new_screens/navigation/investments/fixed/promissory_note/promissory_note_screen.dart';
+import 'package:zimvest/new_screens/navigation/investments/fixed/treasury_bills/treasury_bill_screen.dart';
 import 'package:zimvest/styles/colors.dart';
 import 'package:zimvest/utils/margin.dart';
 import 'package:zimvest/utils/margins.dart';

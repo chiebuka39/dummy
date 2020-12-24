@@ -1,38 +1,38 @@
 import 'package:flutter/material.dart';
-import 'package:provider_architecture/_viewmodel_provider.dart';
+import 'package:provider_architecture/provider_architecture.dart';
 import 'package:zimvest/data/models/investment/fixed_models.dart';
 import 'package:zimvest/data/view_models/investment_view_model.dart';
-import 'package:zimvest/new_screens/navigation/investments/fixed/all_fbn_bond_investments.dart';
-import 'package:zimvest/new_screens/navigation/investments/fixed/fixed_income_details.dart';
+import 'package:zimvest/new_screens/navigation/investments/fixed/corporate_bonds/all_corporate_bond_investments.dart';
+import 'package:zimvest/new_screens/navigation/investments/fixed/corporate_bonds/fixed_income_details.dart';
 import 'package:zimvest/new_screens/navigation/investments/widgets/card_widget.dart';
 import 'package:zimvest/styles/colors.dart';
-import 'package:zimvest/utils/app_utils.dart';
-import 'package:zimvest/utils/margin.dart';
 import 'package:zimvest/utils/margins.dart';
 import 'package:zimvest/utils/strings.dart';
 
-class FBNBondPagePage extends StatefulWidget {
+class CorporateBondPage extends StatefulWidget {
   @override
-  _FBNBondPagePageState createState() => _FBNBondPagePageState();
+  _CorporateBondPageState createState() => _CorporateBondPageState();
 }
 
-class _FBNBondPagePageState extends State<FBNBondPagePage> {
+class _CorporateBondPageState extends State<CorporateBondPage> {
   @override
   Widget build(BuildContext context) {
     return ViewModelProvider<InvestmentHighYieldViewModel>.withConsumer(
-      onModelReady: (model) => model.getFGNBond(),
+      onModelReady: (model) => model.getCorporateBond(),
       builder: (context, model, _) => Container(
         child: Center(
-          child: model.fgnBond.data == null
+          child: model.corporateBond.data == null
               ? CircularProgressIndicator(
-                  valueColor: AlwaysStoppedAnimation(AppColors.kPrimaryColor),
+                  valueColor: AlwaysStoppedAnimation(AppColors.kGreen),
                 )
-              : model.fgnBond.data.fgnBondItems[1].bonds.length == 0
+              : model.corporateBond.data.corporateBondItems[1]
+                          .corporateBondBonds ==
+                      null
                   ? Text("Not Available")
                   : ListView.builder(
                       itemBuilder: (context, index) {
-                        List<FgnBondItems> timePeriod =
-                            model.fgnBond.data.fgnBondItems;
+                        List<CorporateBondItems> timePeriod =
+                            model.corporateBond.data.corporateBondItems;
                         return Padding(
                           padding: const EdgeInsets.only(
                               left: 8.0, right: 8.0, bottom: 8.0),
@@ -58,16 +58,14 @@ class _FBNBondPagePageState extends State<FBNBondPagePage> {
                                         ),
                                       ),
                                       InkWell(
-                                        onTap: () => {
-                                          Navigator.push(
-                                            context,
-                                            AllFBNBonds.route(
-                                                bondItem: model
-                                                    .fgnBond.data.fgnBondItems,
-                                                title: timePeriod[index]
-                                                    .tenorBandName),
-                                          )
-                                        },
+                                        onTap: () => Navigator.push(
+                                          context,
+                                          AllCorporateBonds.route(
+                                              bondItem: model.corporateBond.data
+                                                  .corporateBondItems,
+                                              title: timePeriod[index]
+                                                  .tenorBandName),
+                                        ),
                                         child: Row(
                                           children: [
                                             Text(
@@ -98,31 +96,35 @@ class _FBNBondPagePageState extends State<FBNBondPagePage> {
                                       Expanded(
                                         child: ListView(
                                           scrollDirection: Axis.horizontal,
-                                          children: model
-                                              .fgnBond.data.fgnBondItems
+                                          children: model.corporateBond.data
+                                              .corporateBondItems
                                               .where((element) =>
                                                   element.tenorBandName ==
                                                   timePeriod[index]
                                                       .tenorBandName)
                                               .toList()[0]
-                                              .bonds
+                                              .corporateBondBonds
                                               .map(
                                                 (e) => GestureDetector(
                                                   onTap: () => Navigator.push(
                                                     context,
                                                     FixedIncomeDetails.route(
-                                                      bondName: e.bondName,
-                                                      id: e.instrumentId,
+                                                     bondName: e.bondName,
+                                                      id: e.id,
                                                       maturityDate:
-                                                          e.maturityDate,
-                                                      rate: e.rate.toString(),
+                                                          e.investmentMaturityDate,
+                                                      rate: e.rate,
+                                                      investmentType: e.investmentType,
+                                                      instrumentId: e.instrumentId,
+                                                      minimumAmount: e.minimumAmount,
+                                                      investmentMaturityDate: e.investmentMaturityDate,
                                                     ),
                                                   ),
                                                   child: FixedIncomeCard(
                                                     bondName: e.bondName,
                                                     maturityDate:
                                                         e.maturityDate,
-                                                    minimumAmount: 
+                                                    minimumAmount:
                                                         e.minimumAmount,
                                                     rate: e.rate,
                                                   ),
@@ -139,7 +141,8 @@ class _FBNBondPagePageState extends State<FBNBondPagePage> {
                           ),
                         );
                       },
-                      itemCount: model.fgnBond.data.fgnBondItems.length,
+                      itemCount:
+                          model.corporateBond.data.corporateBondItems.length,
                     ),
         ),
       ),

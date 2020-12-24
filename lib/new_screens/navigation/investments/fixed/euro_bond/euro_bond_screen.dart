@@ -1,38 +1,36 @@
 import 'package:flutter/material.dart';
-import 'package:provider_architecture/provider_architecture.dart';
+import 'package:provider_architecture/_viewmodel_provider.dart';
 import 'package:zimvest/data/models/investment/fixed_models.dart';
 import 'package:zimvest/data/view_models/investment_view_model.dart';
-import 'package:zimvest/new_screens/navigation/investments/fixed/all_corporate_bond_investments.dart';
-import 'package:zimvest/new_screens/navigation/investments/fixed/fixed_income_details.dart';
+import 'package:zimvest/new_screens/navigation/investments/fixed/euro_bond/all_euro_bond_investments.dart';
+import 'package:zimvest/new_screens/navigation/investments/fixed/euro_bond/fixed_income_details.dart';
 import 'package:zimvest/new_screens/navigation/investments/widgets/card_widget.dart';
 import 'package:zimvest/styles/colors.dart';
 import 'package:zimvest/utils/margins.dart';
 import 'package:zimvest/utils/strings.dart';
 
-class CorporateBondPage extends StatefulWidget {
+class EuroBondPage extends StatefulWidget {
   @override
-  _CorporateBondPageState createState() => _CorporateBondPageState();
+  _EuroBondPageState createState() => _EuroBondPageState();
 }
 
-class _CorporateBondPageState extends State<CorporateBondPage> {
+class _EuroBondPageState extends State<EuroBondPage> {
   @override
   Widget build(BuildContext context) {
     return ViewModelProvider<InvestmentHighYieldViewModel>.withConsumer(
-      onModelReady: (model) => model.getCorporateBond(),
+      onModelReady: (model) => model.getEuroBond(),
       builder: (context, model, _) => Container(
         child: Center(
-          child: model.corporateBond.data == null
+          child: model.euroBond.data == null
               ? CircularProgressIndicator(
                   valueColor: AlwaysStoppedAnimation(AppColors.kGreen),
                 )
-              : model.corporateBond.data.corporateBondItems[1]
-                          .corporateBondBonds ==
-                      null
+              : model.euroBond.data.euroBondItems[1].bonds.length == 0
                   ? Text("Not Available")
                   : ListView.builder(
                       itemBuilder: (context, index) {
-                        List<CorporateBondItems> timePeriod =
-                            model.corporateBond.data.corporateBondItems;
+                        List<EuroBondItems> timePeriod =
+                            model.euroBond.data.euroBondItems;
                         return Padding(
                           padding: const EdgeInsets.only(
                               left: 8.0, right: 8.0, bottom: 8.0),
@@ -60,11 +58,12 @@ class _CorporateBondPageState extends State<CorporateBondPage> {
                                       InkWell(
                                         onTap: () => Navigator.push(
                                           context,
-                                          AllCorporateBonds.route(
-                                              bondItem: model.corporateBond.data
-                                                  .corporateBondItems,
-                                              title: timePeriod[index]
-                                                  .tenorBandName),
+                                          AllEuroBonds.route(
+                                            title:
+                                                timePeriod[index].tenorBandName,
+                                            bondItem: model
+                                                .euroBond.data.euroBondItems,
+                                          ),
                                         ),
                                         child: Row(
                                           children: [
@@ -96,30 +95,34 @@ class _CorporateBondPageState extends State<CorporateBondPage> {
                                       Expanded(
                                         child: ListView(
                                           scrollDirection: Axis.horizontal,
-                                          children: model.corporateBond.data
-                                              .corporateBondItems
+                                          children: model
+                                              .euroBond.data.euroBondItems
                                               .where((element) =>
                                                   element.tenorBandName ==
                                                   timePeriod[index]
                                                       .tenorBandName)
                                               .toList()[0]
-                                              .corporateBondBonds
+                                              .bonds
                                               .map(
                                                 (e) => GestureDetector(
                                                   onTap: () => Navigator.push(
                                                     context,
                                                     FixedIncomeDetails.route(
-                                                      bondName: e.bondName,
-                                                      id: e.instrumentId,
+                                                      bondName: e.euroBondName,
+                                                      id: e.id,
                                                       maturityDate:
-                                                          e.maturityDate,
-                                                      rate: e.rate.toString(),
+                                                          e.investmentMaturityDate,
+                                                      rate: e.rate,
+                                                      investmentType: e.investmentType,
+                                                      instrumentId: e.instrumentId,
+                                                      minimumAmount: e.minimumAmount,
+                                                      investmentMaturityDate: e.investmentMaturityDate,
                                                     ),
                                                   ),
                                                   child: FixedIncomeCard(
-                                                    bondName: e.bondName,
-                                                    maturityDate:
-                                                        e.maturityDate,
+                                                    bondName: e.euroBondName,
+                                                    maturityDate: e
+                                                        .investmentMaturityDate,
                                                     minimumAmount:
                                                         e.minimumAmount,
                                                     rate: e.rate,
@@ -137,8 +140,7 @@ class _CorporateBondPageState extends State<CorporateBondPage> {
                           ),
                         );
                       },
-                      itemCount:
-                          model.corporateBond.data.corporateBondItems.length,
+                      itemCount: model.euroBond.data.euroBondItems.length,
                     ),
         ),
       ),

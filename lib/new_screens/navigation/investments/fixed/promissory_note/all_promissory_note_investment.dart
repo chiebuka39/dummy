@@ -1,33 +1,34 @@
 import 'package:flutter/material.dart';
 import 'package:zimvest/data/models/investment/fixed_models.dart';
-import 'package:zimvest/new_screens/navigation/investments/fixed/fixed_income_details.dart';
+import 'package:zimvest/new_screens/navigation/investments/fixed/promissory_note/fixed_income_details.dart';
 import 'package:zimvest/new_screens/navigation/investments/widgets/card_widget.dart';
 import 'package:zimvest/styles/colors.dart';
 import 'package:zimvest/utils/strings.dart';
 
-class AllEuroBonds extends StatefulWidget {
+class AllPromissoryNoteBonds extends StatefulWidget {
   final String title;
-  final List<EuroBondItems> bondItem;
+  final List<PromissoryNoteItems> bondItem;
 
-  static Route<dynamic> route({String title, List<EuroBondItems> bondItem}) {
+  static Route<dynamic> route(
+      {String title, List<PromissoryNoteItems> bondItem}) {
     return MaterialPageRoute(
-      builder: (_) => AllEuroBonds(
+      builder: (_) => AllPromissoryNoteBonds(
         title: title,
         bondItem: bondItem,
       ),
       settings: RouteSettings(
-        name: AllEuroBonds().toStringShort(),
+        name: AllPromissoryNoteBonds().toStringShort(),
       ),
     );
   }
 
-  const AllEuroBonds({Key key, this.title, this.bondItem})
+  const AllPromissoryNoteBonds({Key key, this.title, this.bondItem})
       : super(key: key);
   @override
-  _AllEuroBondsState createState() => _AllEuroBondsState();
+  _AllPromissoryNoteBondsState createState() => _AllPromissoryNoteBondsState();
 }
 
-class _AllEuroBondsState extends State<AllEuroBonds> {
+class _AllPromissoryNoteBondsState extends State<AllPromissoryNoteBonds> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -53,20 +54,24 @@ class _AllEuroBondsState extends State<AllEuroBonds> {
         children: widget.bondItem
             .where((element) => element.tenorBandName == widget.title)
             .toList()[0]
-            .bonds
+            .promissoryNotes
             .map(
               (e) => GestureDetector(
                 onTap: () => Navigator.push(
                   context,
                   FixedIncomeDetails.route(
-                    bondName: e.euroBondName,
-                    id: e.instrumentId,
+                    bondName: e.promissoryNoteName,
+                    id: e.id,
                     maturityDate: e.investmentMaturityDate,
-                    rate: e.rate.toString(),
+                    rate: e.rate,
+                    investmentType: e.investmentType,
+                    instrumentId: e.instrumentId,
+                    minimumAmount: e.minimumAmount,
+                    investmentMaturityDate: e.investmentMaturityDate,
                   ),
                 ),
                 child: FixedIncomeCard(
-                  bondName: e.euroBondName,
+                  bondName: e.promissoryNoteName,
                   maturityDate: e.investmentMaturityDate,
                   minimumAmount: e.minimumAmount,
                   rate: e.rate,

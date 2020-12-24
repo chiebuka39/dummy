@@ -3,12 +3,10 @@ import 'package:flutter/material.dart';
 import 'package:numeric_keyboard/numeric_keyboard.dart';
 import 'package:provider_architecture/provider_architecture.dart';
 import 'package:zimvest/data/view_models/investment_view_model.dart';
-import 'package:zimvest/new_screens/navigation/investments/fixed/fixed_income_purchase.dart';
-import 'package:zimvest/new_screens/navigation/investments/high_yield/naira/high_yield_investment_naira_purchase_source.dart';
+import 'package:zimvest/new_screens/navigation/investments/fixed/corporate_bonds/fixed_income_purchase.dart';
 import 'package:zimvest/new_screens/navigation/investments/widgets/text_field.dart';
 import 'package:zimvest/styles/colors.dart';
 import 'package:zimvest/utils/margin.dart';
-import 'package:zimvest/utils/nums.dart';
 import 'package:zimvest/utils/strings.dart';
 import 'package:zimvest/widgets/buttons.dart';
 
@@ -17,32 +15,48 @@ class FixedIncomeAmountInput extends StatefulWidget {
   final int investmentId;
   final String bondName;
   final String maturityDate;
-  final String rate;
+  final double rate;
+  final int investmentType;
+  final int instrumentId;
+  final num minimumAmount;
+  final String investmentMaturityDate;
 
-
-  const FixedIncomeAmountInput(
-      {Key key,
-      this.uniqueName,
-      this.investmentId,
-      this.bondName,
-      this.maturityDate,
-      this.rate,})
-      : super(key: key);
+  const FixedIncomeAmountInput({
+    Key key,
+    this.uniqueName,
+    this.investmentId,
+    this.bondName,
+    this.maturityDate,
+    this.rate,
+    this.investmentType,
+    this.instrumentId,
+    this.minimumAmount,
+    this.investmentMaturityDate,
+  }) : super(key: key);
   static Route<dynamic> route({
     String uniqueName,
     int investmentId,
     String bondName,
     String maturityDate,
-    String rate,
+    double rate,
+    int investmentType,
+    int instrumentId,
+    num minimumAmount,
+    String investmentMaturityDate,
   }) {
     // print("minimumAmount $minimumAmount");
     return MaterialPageRoute(
       builder: (_) => FixedIncomeAmountInput(
-        bondName: bondName,
-          uniqueName: uniqueName,
-          investmentId: investmentId,
-          maturityDate: maturityDate,
-          rate: rate,),
+               bondName: bondName,
+        uniqueName: uniqueName,
+        investmentId: investmentId,
+        maturityDate: maturityDate,
+        rate: rate,
+        investmentType: investmentType,
+        instrumentId: instrumentId,
+        minimumAmount: minimumAmount,
+        investmentMaturityDate: investmentMaturityDate,
+      ),
       settings: RouteSettings(
         name: FixedIncomeAmountInput().toStringShort(),
       ),
@@ -50,12 +64,10 @@ class FixedIncomeAmountInput extends StatefulWidget {
   }
 
   @override
-  _FixedIncomeAmountInputState createState() =>
-      _FixedIncomeAmountInputState();
+  _FixedIncomeAmountInputState createState() => _FixedIncomeAmountInputState();
 }
 
-class _FixedIncomeAmountInputState
-    extends State<FixedIncomeAmountInput> {
+class _FixedIncomeAmountInputState extends State<FixedIncomeAmountInput> {
   // static String amountController.text;
   TextEditingController amountController = TextEditingController();
   @override
@@ -116,52 +128,52 @@ class _FixedIncomeAmountInputState
               YMargin(91),
               RoundedNextButton(
                 onTap: () {
-                  Navigator.push(context, FixedIncomePurchaseSource.route());
-                  // // double.tryParse(widget.minimumAmount)
-                  // double amount = double.tryParse(amountController.text);
-                  // if (amount < AppNums.oneMillionAmount) {
-                  //   Flushbar(
-                  //     icon: ImageIcon(
-                  //       AssetImage("images/failed.png"),
-                  //       color: AppColors.kRed,
-                  //       size: 70,
-                  //     ),
-                  //     margin: EdgeInsets.all(12),
-                  //     borderRadius: 20,
-                  //     flushbarPosition: FlushbarPosition.TOP,
-                  //     titleText: Text(
-                  //       "Error !",
-                  //       style: TextStyle(
-                  //         fontSize: 13,
-                  //         fontFamily: AppStrings.fontBold,
-                  //         color: AppColors.kRed4,
-                  //       ),
-                  //     ),
-                  //     backgroundColor: AppColors.kRed3,
-                  //     messageText: Text(
-                  //       "Minimum purchase amount is ₦5,000,001.00",
-                  //       style: TextStyle(
-                  //         fontSize: 11,
-                  //         fontFamily: AppStrings.fontLight,
-                  //         color: AppColors.kRed4,
-                  //       ),
-                  //     ),
-                  //     duration: Duration(seconds: 1),
-                  //   ).show(context);
-                  // } else {
-                  //   Navigator.push(
-                  //     context,
-                      // HighYieldInvestmentPurchaseSource.route(
-                        
-                  //         amount: amount,
-                  //         productId: widget.id,
-                  //         uniqueName: widget.uniqueName,
-                  //         maturityDate: widget.maturityDate,
-                  //         rate: widget.rate,
-                  //         minimumAmount: widget.minimumAmount,
-                  //         maximumAmount: widget.maximumAmount),
-                  //   );
-                  // }
+                  double amount = double.tryParse(amountController.text);
+                  if (amount < widget.minimumAmount) {
+                    Flushbar(
+                      icon: ImageIcon(
+                        AssetImage("images/failed.png"),
+                        color: AppColors.kRed,
+                        size: 70,
+                      ),
+                      margin: EdgeInsets.all(12),
+                      borderRadius: 20,
+                      flushbarPosition: FlushbarPosition.TOP,
+                      titleText: Text(
+                        "Error !",
+                        style: TextStyle(
+                          fontSize: 13,
+                          fontFamily: AppStrings.fontBold,
+                          color: AppColors.kRed4,
+                        ),
+                      ),
+                      backgroundColor: AppColors.kRed3,
+                      messageText: Text(
+                        "Minimum purchase amount is ₦${widget.minimumAmount}",
+                        style: TextStyle(
+                          fontSize: 11,
+                          fontFamily: AppStrings.fontLight,
+                          color: AppColors.kRed4,
+                        ),
+                      ),
+                      duration: Duration(seconds: 1),
+                    ).show(context);
+                  } else {
+                    Navigator.push(
+                      context,
+                      FixedIncomePurchaseSource.route(
+                        amount: amount,
+                        productId: widget.investmentId,
+                        uniqueName: widget.uniqueName,
+                        maturityDate: widget.maturityDate,
+                        rate: widget.rate,
+                        investmentType: widget.investmentType,
+                        instrumentId: widget.instrumentId,
+                        minimumAmount: widget.minimumAmount,
+                        investmentMaturityDate: widget.investmentMaturityDate,
+                      ),
+                    );
+                  }
                 },
               ),
               NumericKeyboard(

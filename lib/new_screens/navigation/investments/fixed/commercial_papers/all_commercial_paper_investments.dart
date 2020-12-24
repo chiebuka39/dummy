@@ -1,34 +1,35 @@
 import 'package:flutter/material.dart';
 import 'package:zimvest/data/models/investment/fixed_models.dart';
-import 'package:zimvest/new_screens/navigation/investments/fixed/fixed_income_details.dart';
+import 'package:zimvest/new_screens/navigation/investments/fixed/commercial_papers/fixed_income_details.dart';
 import 'package:zimvest/new_screens/navigation/investments/widgets/card_widget.dart';
 import 'package:zimvest/styles/colors.dart';
 import 'package:zimvest/utils/strings.dart';
 
-class AllTreasurryBillBonds extends StatefulWidget {
+class AllCommercialPaperBonds extends StatefulWidget {
   final String title;
-  final List<TBillsItems> bondItem;
+  final List<ComercialPaperItems> bondItem;
 
   static Route<dynamic> route(
-      {String title, List<TBillsItems> bondItem}) {
+      {String title, List<ComercialPaperItems> bondItem}) {
     return MaterialPageRoute(
-      builder: (_) => AllTreasurryBillBonds(
+      builder: (_) => AllCommercialPaperBonds(
         title: title,
         bondItem: bondItem,
       ),
       settings: RouteSettings(
-        name: AllTreasurryBillBonds().toStringShort(),
+        name: AllCommercialPaperBonds().toStringShort(),
       ),
     );
   }
 
-  const AllTreasurryBillBonds({Key key, this.title, this.bondItem})
+  const AllCommercialPaperBonds({Key key, this.title, this.bondItem})
       : super(key: key);
   @override
-  _AllTreasurryBillBondsState createState() => _AllTreasurryBillBondsState();
+  _AllCommercialPaperBondsState createState() =>
+      _AllCommercialPaperBondsState();
 }
 
-class _AllTreasurryBillBondsState extends State<AllTreasurryBillBonds> {
+class _AllCommercialPaperBondsState extends State<AllCommercialPaperBonds> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -54,22 +55,26 @@ class _AllTreasurryBillBondsState extends State<AllTreasurryBillBonds> {
         children: widget.bondItem
             .where((element) => element.tenorBandName == widget.title)
             .toList()[0]
-            .treasureBills
+            .commercialPapers
             .map(
               (e) => GestureDetector(
                 onTap: () => Navigator.push(
                   context,
                   FixedIncomeDetails.route(
-                    bondName: e.treasuryBillName,
+                    bondName: e.bondName,
                     id: e.instrumentId,
                     maturityDate: e.investmentMaturityDate,
-                    rate: e.rate.toString(),
+                    rate: e.rate,
+                    investmentType: e.investmentType,
+                    instrumentId: e.instrumentId,
+                    minimumAmount: e.minimumAmount,
+                    investmentMaturityDate: e.investmentMaturityDate,
                   ),
                 ),
                 child: FixedIncomeCard(
-                  bondName: e.treasuryBillName,
+                  bondName: e.bondName,
                   maturityDate: e.investmentMaturityDate,
-                  minimumAmount: e.minimumAmount,
+                  minimumAmount: e.investmentType,
                   rate: e.rate,
                 ),
               ),

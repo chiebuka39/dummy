@@ -3,7 +3,9 @@ import 'dart:typed_data';
 
 import 'package:dio/dio.dart';
 import 'package:zimvest/data/models/investment/bank_payment_details.dart';
+import 'package:zimvest/data/models/investment/bond_amount_payable_model.dart';
 import 'package:zimvest/data/models/investment/fixed_models.dart';
+import 'package:zimvest/data/models/investment/gotten_naira_rate.dart';
 import 'package:zimvest/data/models/investment/investment_fixed_fund.dart';
 import 'package:zimvest/data/models/investment/investment_fund_model.dart';
 import 'package:zimvest/data/models/investment/investment_termed_fund.dart';
@@ -76,6 +78,83 @@ abstract class ABSInvestmentService {
       double nairaAmount,
       String uniqueName,
       String token});
+
+  Future<Result<dynamic>> buyEuroBond(
+      {int productId,
+      String token,
+      int fundingChannel,
+      int intermediaryBankType,
+      num amount,
+      num rate,
+      String uniqueName,
+      num faceValue,
+      num investmentAmount});
+  Future<Result<dynamic>> buyFGNBond(
+      {int productId,
+      String token,
+      int fundingChannel,
+      num amount,
+      num rate,
+      String uniqueName,
+      num faceValue,
+      num investmentAmount});
+  Future<Result<dynamic>> buyPromissoryNote(
+      {int productId,
+      String token,
+      int fundingChannel,
+      int intermediaryBankType,
+      num amount,
+      num rate,
+      String uniqueName,
+      bool upFront,
+      num faceValue,
+      num investmentAmount});
+  Future<Result<dynamic>> buyTreasuryBill(
+      {int productId,
+      String token,
+      int fundingChannel,
+      int intermediaryBankType,
+      num amount,
+      num rate,
+      String uniqueName,
+      bool upFront,
+      num faceValue,
+      num investmentAmount});
+  Future<Result<dynamic>> buyCommercialPaper(
+      {int productId,
+      String token,
+      int fundingChannel,
+      int intermediaryBankType,
+      num amount,
+      num rate,
+      String uniqueName,
+      bool upFront,
+      num faceValue,
+      num investmentAmount});
+  Future<Result<dynamic>> buyCorporateBond(
+      {int productId,
+      String token,
+      int fundingChannel,
+      int intermediaryBankType,
+      num amount,
+      num rate,
+      String uniqueName,
+      num faceValue,
+      num investmentAmount});
+
+  Future<AmountPayableResponse> calculateAmountPayable(
+      {String token,
+      int instrumentId,
+      int instrumentType,
+      num investmentAmount,
+      num rate,
+      String instrumentName,
+      DateTime maturityDate,
+      int productId,
+      bool upFront});
+
+  Future<ConvertedDollarRate> calculateRate({num amountUsd, String token});
+  Future<Result<GottenRate>> getRate(String token);
 }
 
 class InvestmentService extends ABSInvestmentService {
@@ -427,8 +506,7 @@ class InvestmentService extends ABSInvestmentService {
   }
 
   @override
-  Future<Result<CommercialPaper>> getCommercialPaper(
-      {String token}) async {
+  Future<Result<CommercialPaper>> getCommercialPaper({String token}) async {
     Result<CommercialPaper> result = Result(error: false);
 
     var headers = {HttpHeaders.authorizationHeader: "Bearer $token"};
@@ -586,8 +664,7 @@ class InvestmentService extends ABSInvestmentService {
   }
 
   @override
-  Future<Result<PromissoryNote>> getPromissoryNotes(
-      {String token}) async {
+  Future<Result<PromissoryNote>> getPromissoryNotes({String token}) async {
     Result<PromissoryNote> result = Result(error: false);
 
     var headers = {HttpHeaders.authorizationHeader: "Bearer $token"};
@@ -955,9 +1032,48 @@ class InvestmentService extends ABSInvestmentService {
       double amount,
       double nairaAmount,
       String uniqueName,
-      String token}) {
-    // TODO: implement buyDollarnstrument
-    throw UnimplementedError();
+      String token}) async {
+    var url =
+        "${AppStrings.baseUrl}$microService/api/ZimvestTermInstruments/buydollarterminstrument";
+
+    var headers = {HttpHeaders.authorizationHeader: "Bearer $token"};
+
+    FormData data = FormData.fromMap({
+      "ProductId": productId,
+      "FundingChannel": fundingChannel,
+      "Amount": amount,
+      "UniqueName": uniqueName,
+      "BeneficiaryBankType": beneficiaryBankType,
+    });
+    Result<dynamic> result = Result(error: false);
+
+    try {
+      var buydollaInstrument = await dio.post(
+        url,
+        data: data,
+        options: Options(
+          headers: headers,
+          validateStatus: (status) {
+            return status < 500;
+          },
+        ),
+      );
+      if (buydollaInstrument.statusCode == 200) {
+        print("Success: ${buydollaInstrument.data}");
+        result.data = buydollaInstrument.data;
+        return result.data;
+      }
+      if (buydollaInstrument.statusCode == 400) {
+        print("Failure: ${buydollaInstrument.data}");
+        result.data = buydollaInstrument.data;
+        return result.data;
+      }
+    } on DioError catch (e) {
+      result.error = true;
+      print(e.message.toString());
+      throw Exception(e.response.toString());
+    }
+    return result;
   }
 
   @override
@@ -974,44 +1090,482 @@ class InvestmentService extends ABSInvestmentService {
 
     var headers = {HttpHeaders.authorizationHeader: "Bearer $token"};
 
-    print(url);
-
     // var imgname = DateTime.now().millisecondsSinceEpoch.toString();
 
     FormData data = FormData.fromMap({
       "ProductId": productId,
-      // "CardId": cardId,
       "FundingChannel": fundingChannel,
       "Amount": amount,
       "UniqueName": uniqueName
     });
     Result<dynamic> result = Result(error: false);
-    print({
-      "ProductId": productId,
-      "FundingChannel": fundingChannel,
-      "Amount": amount,
-      "UniqueName": uniqueName
-    });
-    var buyNairaInstrument = await dio.post(url,
+
+    try {
+      var buyNairaInstrument = await dio.post(
+        url,
         data: data,
         options: Options(
           headers: headers,
           validateStatus: (status) {
             return status < 500;
           },
-        ));
-    // print(buyNairaInst);
-    if (buyNairaInstrument.statusCode == 200) {
-      print("Success: ${buyNairaInstrument.data}");
-      result.data = buyNairaInstrument.data;
-      return result.data;
+        ),
+      );
+      if (buyNairaInstrument.statusCode == 200) {
+        print("Success: ${buyNairaInstrument.data}");
+        result.data = buyNairaInstrument.data;
+        return result.data;
+      }
+      if (buyNairaInstrument.statusCode == 400) {
+        print("Failure: ${buyNairaInstrument.data}");
+        result.data = buyNairaInstrument.data;
+        return result.data;
+      }
+    } on DioError catch (e) {
+      result.error = true;
+      print(e.message.toString());
+      throw Exception(e.response.toString());
     }
-    if (buyNairaInstrument.statusCode == 400) {
-      print("Failure: ${buyNairaInstrument.data}");
-      result.data = buyNairaInstrument.data;
-      return result.data;
-    }
+    return result;
+  }
 
-    throw UnimplementedError();
+  @override
+  Future<Result> buyCommercialPaper(
+      {int productId,
+      String token,
+      int fundingChannel,
+      int intermediaryBankType,
+      num amount,
+      num rate,
+      String uniqueName,
+      bool upFront,
+      num faceValue,
+      num investmentAmount}) async {
+    var url = "${AppStrings.baseUrl}$microService/api/CorporateBonds";
+
+    FormData data = FormData.fromMap({
+      "ProductId": productId,
+      "RateValue": rate,
+      "IntermediaryBankType": intermediaryBankType,
+      "FundingChannel": fundingChannel,
+      "Amount": amount,
+      "UniqueName": uniqueName,
+      "FaceValue": faceValue,
+      "InvestmentAmount": investmentAmount,
+      "UpFront": upFront
+    });
+
+    var headers = {HttpHeaders.authorizationHeader: "Bearer $token"};
+    Result<dynamic> result = Result(error: false);
+    try {
+      var buyCommercialPaper = await dio.post(
+        url,
+        data: data,
+        options: Options(
+          headers: headers,
+          validateStatus: (status) {
+            return status < 500;
+          },
+        ),
+      );
+
+      if (buyCommercialPaper.statusCode == 200) {
+        result.data = buyCommercialPaper.data;
+        return result.data;
+      } else if (buyCommercialPaper.statusCode == 400) {
+        result.data = buyCommercialPaper.data;
+        return result.data;
+      }
+    } on DioError catch (e) {
+      result.error = true;
+      print(e.message.toString());
+      throw Exception(e.response.toString());
+    }
+    return null;
+  }
+
+  @override
+  Future<Result> buyCorporateBond(
+      {int productId,
+      String token,
+      int fundingChannel,
+      int intermediaryBankType,
+      num amount,
+      num rate,
+      String uniqueName,
+      num faceValue,
+      num investmentAmount}) async {
+    var url = "${AppStrings.baseUrl}$microService/api/CorporateBonds";
+
+    FormData data = FormData.fromMap({
+      "ProductId": productId,
+      "RateValue": rate,
+      "IntermediaryBankType": intermediaryBankType,
+      "FundingChannel": fundingChannel,
+      "Amount": amount,
+      "UniqueName": uniqueName,
+      "FaceValue": faceValue,
+      "InvestmentAmount": investmentAmount
+    });
+
+    var headers = {HttpHeaders.authorizationHeader: "Bearer $token"};
+    Result<dynamic> result = Result(error: false);
+    try {
+      var buyCorporateBond = await dio.post(
+        url,
+        data: data,
+        options: Options(
+          headers: headers,
+          validateStatus: (status) {
+            return status < 500;
+          },
+        ),
+      );
+
+      if (buyCorporateBond.statusCode == 200) {
+        result.data = buyCorporateBond.data;
+        return result.data;
+      } else if (buyCorporateBond.statusCode == 400) {
+        result.data = buyCorporateBond.data;
+        return result.data;
+      }
+    } on DioError catch (e) {
+      result.error = true;
+      print(e.message.toString());
+      throw Exception(e.response.toString());
+    }
+    return result;
+  }
+
+  @override
+  Future<Result<dynamic>> buyEuroBond(
+      {int productId,
+      String token,
+      int fundingChannel,
+      int intermediaryBankType,
+      num amount,
+      num rate,
+      String uniqueName,
+      num faceValue,
+      num investmentAmount}) async {
+    var url = "${AppStrings.baseUrl}$microService/api/EuroBonds";
+
+    FormData data = FormData.fromMap({
+      "ProductId": productId,
+      "RateValue": rate,
+      "IntermediaryBankType": intermediaryBankType,
+      "FundingChannel": fundingChannel,
+      "Amount": amount,
+      "UniqueName": uniqueName,
+      "FaceValue": faceValue,
+      "InvestmentAmount": investmentAmount
+    });
+
+    var headers = {HttpHeaders.authorizationHeader: "Bearer $token"};
+    Result<dynamic> result = Result(error: false);
+    try {
+      var buyEuroBond = await dio.post(
+        url,
+        data: data,
+        options: Options(
+          headers: headers,
+          validateStatus: (status) {
+            return status < 500;
+          },
+        ),
+      );
+
+      if (buyEuroBond.statusCode == 200) {
+        result.data = buyEuroBond.data;
+        return result.data;
+      } else if (buyEuroBond.statusCode == 400) {
+        result.data = buyEuroBond.data;
+        return result.data;
+      }
+    } on DioError catch (e) {
+      result.error = true;
+      print(e.message.toString());
+      throw Exception(e.response.toString());
+    }
+    return null;
+  }
+
+  @override
+  Future<Result<dynamic>> buyFGNBond(
+      {int productId,
+      String token,
+      int fundingChannel,
+      num amount,
+      num rate,
+      String uniqueName,
+      num faceValue,
+      num investmentAmount}) async {
+    var url = "${AppStrings.baseUrl}$microService/api/FGNBonds";
+
+    FormData data = FormData.fromMap({
+      "ProductId": productId,
+      "RateValue": rate,
+      "FundingChannel": fundingChannel,
+      "Amount": amount,
+      "UniqueName": uniqueName,
+      "FaceValue": faceValue,
+      "InvestmentAmount": investmentAmount
+    });
+
+    var headers = {HttpHeaders.authorizationHeader: "Bearer $token"};
+    Result<dynamic> result = Result(error: false);
+    try {
+      var buyFGNBond = await dio.post(
+        url,
+        data: data,
+        options: Options(
+          headers: headers,
+          validateStatus: (status) {
+            return status < 500;
+          },
+        ),
+      );
+
+      if (buyFGNBond.statusCode == 200) {
+        result.data = buyFGNBond.data;
+        return result.data;
+      } else if (buyFGNBond.statusCode == 400) {
+        result.data = buyFGNBond.data;
+        return result.data;
+      }
+    } on DioError catch (e) {
+      result.error = true;
+      print(e.message.toString());
+      throw Exception(e.response.toString());
+    }
+    return null;
+  }
+
+  @override
+  Future<Result> buyPromissoryNote(
+      {int productId,
+      String token,
+      int fundingChannel,
+      int intermediaryBankType,
+      num amount,
+      num rate,
+      String uniqueName,
+      bool upFront,
+      num faceValue,
+      num investmentAmount}) async {
+    var url = "${AppStrings.baseUrl}$microService/api/PromissoryNotes";
+
+    FormData data = FormData.fromMap({
+      "ProductId": productId,
+      "RateValue": rate,
+      "IntermediaryBankType": intermediaryBankType,
+      "FundingChannel": fundingChannel,
+      "Amount": amount,
+      "UniqueName": uniqueName,
+      "FaceValue": faceValue,
+      "InvestmentAmount": investmentAmount,
+      "UpFront": upFront
+    });
+
+    var headers = {HttpHeaders.authorizationHeader: "Bearer $token"};
+    Result<dynamic> result = Result(error: false);
+    try {
+      var buyPromissoryNote = await dio.post(
+        url,
+        data: data,
+        options: Options(
+          headers: headers,
+          validateStatus: (status) {
+            return status < 500;
+          },
+        ),
+      );
+
+      if (buyPromissoryNote.statusCode == 200) {
+        result.data = buyPromissoryNote.data;
+        return result.data;
+      } else if (buyPromissoryNote.statusCode == 400) {
+        result.error = true;
+        result.data = buyPromissoryNote.data;
+        return result.data;
+      }
+    } on DioError catch (e) {
+      result.error = true;
+      print(e.message.toString());
+      throw Exception(e.response.toString());
+    }
+    return null;
+  }
+
+  @override
+  Future<Result> buyTreasuryBill(
+      {int productId,
+      String token,
+      int fundingChannel,
+      int intermediaryBankType,
+      num amount,
+      num rate,
+      String uniqueName,
+      bool upFront,
+      num faceValue,
+      num investmentAmount}) async {
+    var url = "${AppStrings.baseUrl}$microService/api/TreasuryBills";
+
+    FormData data = FormData.fromMap({
+      "ProductId": productId,
+      "RateValue": rate,
+      "IntermediaryBankType": intermediaryBankType,
+      "FundingChannel": fundingChannel,
+      "Amount": amount,
+      "UniqueName": uniqueName,
+      "FaceValue": faceValue,
+      "InvestmentAmount": investmentAmount,
+      "UpFront": upFront
+    });
+
+    var headers = {HttpHeaders.authorizationHeader: "Bearer $token"};
+    Result<dynamic> result = Result(error: false);
+    try {
+      var buyTreasuryBill = await dio.post(
+        url,
+        data: data,
+        options: Options(
+          headers: headers,
+          validateStatus: (status) {
+            return status < 500;
+          },
+        ),
+      );
+
+      if (buyTreasuryBill.statusCode == 200) {
+        result.data = buyTreasuryBill.data;
+        return result.data;
+      } else if (buyTreasuryBill.statusCode == 400) {
+        result.error = true;
+        result.data = buyTreasuryBill.data;
+        return result.data;
+      }
+    } on DioError catch (e) {
+      result.error = true;
+      print(e.message.toString());
+      throw Exception(e.response.toString());
+    }
+    return null;
+  }
+
+  @override
+  Future<AmountPayableResponse> calculateAmountPayable(
+      {String token,
+      int instrumentId,
+      int instrumentType,
+      num investmentAmount,
+      num rate,
+      String instrumentName,
+      DateTime maturityDate,
+      int productId,
+      bool upFront}) async {
+    var url =
+        "${AppStrings.baseUrl}$microService/api/Calculator/calculateamountpayable";
+
+    FormData data = FormData.fromMap({
+      "ProductId": productId,
+      "RateValue": rate,
+      "InstrumentName": instrumentName,
+      "InstrumentType": instrumentType,
+      "MaturityDate": maturityDate,
+      "InvestmentAmount": investmentAmount,
+      "UpFront": upFront,
+      "InstrumentId": instrumentId
+    });
+
+    var headers = {HttpHeaders.authorizationHeader: "Bearer $token"};
+    // Result<AmountPayableResponse> result = Result(error: false);
+    try {
+      var calculateAmountPayable = await dio.post(
+        url,
+        data: data,
+        options: Options(
+          headers: headers,
+          validateStatus: (status) {
+            return status < 500;
+          },
+        ),
+      );
+
+      if (calculateAmountPayable.statusCode == 200) {
+        // result.data = AmountPayableResponse.fromJson(calculateAmountPayable.data["data"]);
+        return AmountPayableResponse.fromJson(
+            calculateAmountPayable.data["data"]);
+      } else if (calculateAmountPayable.statusCode == 400) {
+        // result.data = calculateAmountPayable.data["data"];
+        return calculateAmountPayable.data;
+      }
+    } on DioError catch (e) {
+      print(e.message.toString());
+      throw Exception(e.response.toString());
+    }
+    return null;
+  }
+
+  @override
+  Future<ConvertedDollarRate> calculateRate(
+      {num amountUsd, String token}) async {
+    var url = "${AppStrings.baseUrl}$microService/api/Calculator/calculaterate";
+
+    FormData data = FormData.fromMap({
+      "AmountUSD": amountUsd,
+    });
+
+    var headers = {HttpHeaders.authorizationHeader: "Bearer $token"};
+    try {
+      var calculateRate = await dio.post(
+        url,
+        data: data,
+        options: Options(
+          headers: headers,
+          validateStatus: (status) {
+            return status < 500;
+          },
+        ),
+      );
+
+      if (calculateRate.statusCode == 200) {
+        return ConvertedDollarRate.fromJson(calculateRate.data["data"]);
+      } else if (calculateRate.statusCode == 400) {
+        return calculateRate.data;
+      }
+    } on DioError catch (e) {
+      print(e.message.toString());
+      throw Exception(e.response.toString());
+    }
+    return null;
+  }
+
+  @override
+  Future<Result<GottenRate>> getRate(String token) async {
+    var url = "${AppStrings.baseUrl}$microService/api/Calculator/getrate";
+    var headers = {HttpHeaders.authorizationHeader: "Bearer $token"};
+    Result<GottenRate> result = Result(error: false);
+    try {
+      var response = await dio.get(url, options: Options(headers: headers));
+      final int statusCode = response.statusCode;
+      var response1 = response.data;
+      if (statusCode != 200) {
+        result.errorMessage = response1['message'];
+        result.error = true;
+      } else {
+        result.error = false;
+        result.data = GottenRate.fromJson(response1['data']);
+      }
+    } on DioError catch (e) {
+      if (e.response != null) {
+        print(e.response.data);
+      } else {
+        print(e.toString());
+        result.errorMessage = "Sorry, We could not complete your request";
+      }
+      result.error = true;
+    }
+    return result;
   }
 }

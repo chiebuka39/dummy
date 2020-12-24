@@ -300,14 +300,10 @@ class PrimaryButtonNew extends StatelessWidget {
 
 class RoundedNextButton extends StatelessWidget {
   const RoundedNextButton({
-    Key key,
-    this.onTap,
-    this.loading = false,
+    Key key, this.onTap, this.loading = false,
   }) : super(key: key);
-
   final VoidCallback onTap;
   final bool loading;
-
   @override
   Widget build(BuildContext context) {
     return Center(
@@ -323,7 +319,8 @@ class RoundedNextButton extends StatelessWidget {
                 height: 74,
                 decoration: BoxDecoration(
                     shape: BoxShape.circle,
-                    color: AppColors.kPrimaryColorLight),
+                    color: AppColors.kPrimaryColorLight
+                ),
               ),
               Positioned(
                 left: 0,
@@ -334,9 +331,10 @@ class RoundedNextButton extends StatelessWidget {
                   height: 60,
                   decoration: BoxDecoration(
                       shape: BoxShape.circle,
-                      color: onTap == null
-                          ? AppColors.kPrimaryColor.withOpacity(0.5)
-                          : AppColors.kPrimaryColor),
+                      color: onTap == null ? AppColors.kPrimaryColor.withOpacity(0.5) : AppColors.kPrimaryColor
+                  ),
+                  child: Center(child: loading ?
+                  CircularProgressIndicator(valueColor: AlwaysStoppedAnimation<Color>(Colors.white),): Icon(Icons.navigate_next,color: Colors.white,),),
                 ),
               )
             ],
