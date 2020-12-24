@@ -10,6 +10,12 @@ class AppUtils{
         color: Color(0xFF000000).withOpacity(0.05),
         blurRadius: 5)
   ];
+  static List<BoxShadow> getBoxShaddowBank = [
+    BoxShadow(
+        offset: Offset(0, 5.3),
+        color: Color(0xFF000000).withOpacity(0.07),
+        blurRadius: 14.3)
+  ];
   static List<BoxShadow> getBoxShaddow3 = [
     BoxShadow(
         offset: Offset(0, 16),

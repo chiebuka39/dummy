@@ -1,10 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
+import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 import 'package:provider/provider.dart';
 import 'package:zimvest/data/models/payment/bank.dart';
 import 'package:zimvest/data/view_models/identity_view_model.dart';
 import 'package:zimvest/data/view_models/payment_view_model.dart';
 import 'package:zimvest/data/view_models/savings_view_model.dart';
+import 'package:zimvest/new_screens/profile/add_bank_cards.dart';
+import 'package:zimvest/new_screens/withdrawals/use_pin_widget.dart';
 import 'package:zimvest/styles/colors.dart';
 import 'package:zimvest/utils/app_utils.dart';
 import 'package:zimvest/utils/margin.dart';
@@ -75,103 +78,105 @@ class _AddBankAccScreenState extends State<AddBankAccScreen2> {
       ),
       body: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 20),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            YMargin(50),
-            Text("Enter Account Number"),
-            YMargin(30),
-            Container(
-              padding: EdgeInsets.symmetric(horizontal: 15),
-              height: 60,
-              width: double.infinity,
-              decoration: BoxDecoration(
-                  color: AppColors.kGreyBg,
-                  borderRadius: BorderRadius.circular(12)
-              ),
-              child: Transform.translate(
-                offset: Offset(0,5),
-                child: TextFormField(
-                  initialValue: accNumber,
-                keyboardType: TextInputType.number,
-                  onChanged: (value){
-                    accNumber = value;
-                    setState(() {});
-                  },
-                  decoration: InputDecoration(
-                      border: InputBorder.none,
-                      hintText: "Account Number",
-                      hintStyle: TextStyle(
-                          fontSize: 14
-                      )
+        child: SingleChildScrollView(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              YMargin(50),
+              Text("Enter Account Number"),
+              YMargin(30),
+              Container(
+                padding: EdgeInsets.symmetric(horizontal: 15),
+                height: 60,
+                width: double.infinity,
+                decoration: BoxDecoration(
+                    color: AppColors.kGreyBg,
+                    borderRadius: BorderRadius.circular(12)
+                ),
+                child: Transform.translate(
+                  offset: Offset(0,5),
+                  child: TextFormField(
+                    initialValue: accNumber,
+                  keyboardType: TextInputType.number,
+                    onChanged: (value){
+                      accNumber = value;
+                      setState(() {});
+                    },
+                    decoration: InputDecoration(
+                        border: InputBorder.none,
+                        hintText: "Account Number",
+                        hintStyle: TextStyle(
+                            fontSize: 14
+                        )
+                    ),
                   ),
                 ),
               ),
-            ),
-            if (autoValidate == false ? false : accNumber.length != 10) Padding(
-              padding: const EdgeInsets.only(left: 5,top: 5),
-              child: Text("Invalid Account number", style: TextStyle(fontSize: 11,color: AppColors.kRed),),
-            ) else SizedBox(),
-            YMargin(40),
-            DropdownBorderInputWidget(title: "Bank Name",
-              textColor: AppColors.kAccountTextColor,
-              items: banks.map((e) => e.name).toList(),
-              labelSize: 15,
-              source: selectedBank?.name ?? null,
-              onSelect: (value){
-                Bank bank = banks.where((element) =>
-                element.name == value).toList().first;
-                setState(() {
-                  selectedBank = bank;
-                });
-              },
-            ),
-            YMargin(100),
-            RoundedNextButton(
-                loading: loading,
-                onTap: () async{
+              if (autoValidate == false ? false : accNumber.length != 10) Padding(
+                padding: const EdgeInsets.only(left: 5,top: 5),
+                child: Text("Invalid Account number", style: TextStyle(fontSize: 11,color: AppColors.kRed),),
+              ) else SizedBox(),
+              YMargin(40),
+              DropdownBorderInputWidget(title: "Bank Name",
+                textColor: AppColors.kAccountTextColor,
+                items: banks.map((e) => e.name).toList(),
+                labelSize: 15,
+                source: selectedBank?.name ?? null,
+                onSelect: (value){
+                  Bank bank = banks.where((element) =>
+                  element.name == value).toList().first;
                   setState(() {
-                    autoValidate = true;
+                    selectedBank = bank;
                   });
-                  if( accNumber.length != 10){
-                    return;
-                  }
-                  setState(() {
-                    loading = true;
-                  });
-                  var result = await paymentViewModel.validateBank(
-                      token: identityViewModel.user.token,
-                      accountNum: accNumber,
-                      bankCode: selectedBank.code,
-                      customerId: 0
-                  );
-                  setState(() {
-                    loading = false;
-                  });
-                  if(result.error == true){
-
-                    AppUtils.showError(context,title: 'Phone Number unavailable',
-                        message: "The Phone Number you entered has already been taken, try another one");
-                    print("login failed");
-                    //widget.onNext(phoneNumber);
-                  }else{
-                    showModalBottomSheet < Null > (context: context, builder: (BuildContext context) {
-                      return ShowBankDetailsWidget(
-                        bank: selectedBank,
-                        accNum: accNumber,
-                        name: result.data[0],
-                      );
+                },
+              ),
+              YMargin(100),
+              RoundedNextButton(
+                  loading: loading,
+                  onTap: () async{
+                    setState(() {
+                      autoValidate = true;
                     });
+                    if( accNumber.length != 10){
+                      return;
+                    }
+                    setState(() {
+                      loading = true;
+                    });
+                    var result = await paymentViewModel.validateBank(
+                        token: identityViewModel.user.token,
+                        accountNum: accNumber,
+                        bankCode: selectedBank.code,
+                        customerId: 0
+                    );
+                    setState(() {
+                      loading = false;
+                    });
+                    if(result.error == true){
 
-                    print("success");
-                    //Navigator.of(context).pushReplacement(TabsContainer.route());
+                      AppUtils.showError(context,title: 'Phone Number unavailable',
+                          message: "The Phone Number you entered has already been taken, try another one");
+                      print("login failed");
+                      //widget.onNext(phoneNumber);
+                    }else{
+                      showModalBottomSheet < Null > (context: context, builder: (BuildContext context) {
+                        return ShowBankDetailsWidget(
+                          bank: selectedBank,
+                          accNum: accNumber,
+                          name: result.data[0],
+                        );
+                      });
+
+                      print("success");
+                      //Navigator.of(context).pushReplacement(TabsContainer.route());
+                    }
+
+                    //
                   }
-
-                  //
-                }
-            ),
-            YMargin(120)
-          ],),
+              ),
+              YMargin(120)
+            ],),
+        ),
       ),
     );
   }
@@ -244,8 +249,13 @@ class _SelectCardWidgetState extends State<ShowBankDetailsWidget> {
                 Center(
                   child: PrimaryButtonNew(
                     onTap: (){
-                      //Navigator.pop(context);
-                      processTransaction();
+                      Navigator.pop(context);
+                      //processTransaction();
+                      showCupertinoModalBottomSheet(context: context, builder: (context){
+                        return UsePinWidget(
+                          onNext: processTransaction,
+                        );
+                      });
                     },
                     title: "Confirm",
                     width: 200,
@@ -261,7 +271,7 @@ class _SelectCardWidgetState extends State<ShowBankDetailsWidget> {
   }
 
   processTransaction() async {
-    Navigator.pop(context);
+
     EasyLoading.show(status: "Add Bank");
     var result = await paymentViewModel.addBank(
       token: identityViewModel.user.token,
@@ -276,6 +286,7 @@ class _SelectCardWidgetState extends State<ShowBankDetailsWidget> {
     }else{
       EasyLoading.showSuccess("Failure");
     }
+
 
   }
 }
