@@ -13,6 +13,7 @@ import 'package:zimvest/data/view_models/savings_view_model.dart';
 import 'package:zimvest/new_screens/navigation/portfolio/aspire_widgets.dart';
 import 'package:zimvest/new_screens/navigation/wealth/aspire_box_details.dart';
 import 'package:zimvest/new_screens/navigation/wealth/investment_details.dart';
+import 'package:zimvest/new_screens/navigation/widgets/earn_free_cash.dart';
 import 'package:zimvest/new_screens/navigation/widgets/money_title_widget.dart';
 import 'package:zimvest/new_screens/navigation/wealth/wealth_box_details.dart';
 import 'package:zimvest/styles/colors.dart';
@@ -51,26 +52,7 @@ class _PortfolioScreenState extends State<PortfolioScreen> {
                           fontSize: 16, fontFamily: AppStrings.fontBold),
                     ),
                     Spacer(),
-                    Container(
-                      width: 115,
-                      height: 28,
-                      decoration: BoxDecoration(
-                          color: AppColors.kGrey,
-                          borderRadius: BorderRadius.circular(14)),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          SvgPicture.asset("images/gift.svg"),
-                          XMargin(6),
-                          Text(
-                            "Earn Free Cash",
-                            style: TextStyle(
-                                fontSize: 10,
-                                fontFamily: AppStrings.fontNormal),
-                          )
-                        ],
-                      ),
-                    )
+                    EarnFreeCashWidget()
                   ],
                 ),
               ),
@@ -253,10 +235,12 @@ class SavingsInvestmentWidget extends StatelessWidget {
     return SliverPadding(
       sliver: SliverList(
           delegate: SliverChildListDelegate([
-        YMargin(MediaQuery.of(context).size.height > 700 ? 350 : 250),
+        YMargin(MediaQuery.of(context).size.height > 700 ? 200 : 100),
+            SvgPicture.asset("images/new/savings_illus.svg"),
         Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
+
             SizedBox(
                 width: 200,
                 child: Text(

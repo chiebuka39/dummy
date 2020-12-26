@@ -41,6 +41,7 @@ class DashboardService extends ABSDashboardService{
 
     }on DioError catch(e){
       print("error $e");
+      print("error ${e.response.data}");
       result.error = true;
     }
 

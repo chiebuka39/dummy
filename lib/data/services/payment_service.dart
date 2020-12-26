@@ -459,7 +459,7 @@ class PaymentService extends ABSPaymentService {
       print("error $e}");
       if(e.response != null ){
         print(e.response.data);
-        result.errorMessage = e.response.data['message'];
+        result.errorMessage = "Sorry, We could not complete your request";
       }else{
         print(e.toString());
         result.errorMessage = "Sorry, We could not complete your request";

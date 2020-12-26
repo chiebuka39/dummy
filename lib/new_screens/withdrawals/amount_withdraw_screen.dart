@@ -1,6 +1,9 @@
+import 'package:after_layout/after_layout.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
+import 'package:zimvest/data/view_models/identity_view_model.dart';
+import 'package:zimvest/data/view_models/payment_view_model.dart';
 import 'package:zimvest/data/view_models/savings_view_model.dart';
 import 'package:zimvest/new_screens/withdrawals/choose_wealth_withdraw_source.dart';
 import 'package:zimvest/styles/colors.dart';
@@ -23,16 +26,26 @@ class AmountWithdrawScreen extends StatefulWidget {
   _SavingDailyScreenState createState() => _SavingDailyScreenState();
 }
 
-class _SavingDailyScreenState extends State<AmountWithdrawScreen> {
+class _SavingDailyScreenState extends State<AmountWithdrawScreen> with AfterLayoutMixin<AmountWithdrawScreen> {
 
   String amount = "";
   ABSSavingViewModel savingViewModel;
+  ABSPaymentViewModel paymentViewModel;
+  ABSIdentityViewModel identityViewModel;
+
+  @override
+  void afterFirstLayout(BuildContext context) {
+    paymentViewModel.getCustomerBank(identityViewModel.user.token);
+    savingViewModel.getWithdrawalChannel(token:identityViewModel.user.token);
+  }
 
 
   @override
   Widget build(BuildContext context) {
-    savingViewModel = Provider.of(context);
-    
+    savingViewModel =   Provider.of(context);
+    identityViewModel = Provider.of(context);
+    paymentViewModel =  Provider.of(context);
+
     return GestureDetector(
       onTap: (){
         FocusScope.of(context).requestFocus(new FocusNode());

@@ -252,6 +252,7 @@ class _AspireDetailsScreenState extends State<AspireDetailsScreen> with
                           child: Center(
                             child: GestureDetector(
                               onTap: (){
+                                savingViewModel.selectedPlan = widget.goal;
                                 Navigator.of(context).push(AmountWithdrawScreen.route());
                               },
                               child: Container(child: Column(children: [

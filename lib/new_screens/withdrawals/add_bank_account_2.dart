@@ -249,7 +249,7 @@ class _SelectCardWidgetState extends State<ShowBankDetailsWidget> {
                 Center(
                   child: PrimaryButtonNew(
                     onTap: (){
-                      Navigator.pop(context);
+
                       //processTransaction();
                       showCupertinoModalBottomSheet(context: context, builder: (context){
                         return UsePinWidget(
@@ -286,6 +286,10 @@ class _SelectCardWidgetState extends State<ShowBankDetailsWidget> {
     }else{
       EasyLoading.showSuccess("Failure");
     }
+
+    Navigator.pop(context);
+    Navigator.pop(context);
+    Navigator.pop(context, true);
 
 
   }

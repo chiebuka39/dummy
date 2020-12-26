@@ -25,6 +25,7 @@ class _WealthBoxScreenState extends State<WealthBoxScreen> {
       'Withdraw at the first day of every quarter',
       'Save daily, weekly or monthly'
     ];
+    double height = MediaQuery.of(context).size.height;
     return Scaffold(
       backgroundColor: Color(0xFFF49493),
       body: Column(children: [
@@ -34,7 +35,7 @@ class _WealthBoxScreenState extends State<WealthBoxScreen> {
               Navigator.of(context).pop();
           })
         ],),
-        Center(child: SvgPicture.asset("images/wealth_illus.svg",height: 200,)),
+        Center(child: SvgPicture.asset("images/wealth_illus.svg",height:height > 800 ? 200 + (height - 750):  200,)),
         YMargin(20),
         Expanded(
           child: Container(
@@ -61,13 +62,13 @@ class _WealthBoxScreenState extends State<WealthBoxScreen> {
                     return Container(
                       height: 40,
                       child: Row(children: [
-                        Icon(Icons.add, color: AppColors.kPrimaryColor,size: 17,),
+                        SvgPicture.asset("images/new/star.svg"),
                         XMargin(20),
                         Text(benefits[index], style: TextStyle(fontSize: 12),)
                       ],),
                     );
                   }),
-                  YMargin(50),
+                  YMargin( 50),
                   Center(
                     child: PrimaryButtonNew(
                       title: "Get Started",

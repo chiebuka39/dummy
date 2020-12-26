@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:zimvest/data/models/payment/bank.dart';
-import 'package:zimvest/new_screens/funding/review_bank_transfer.dart';
+import 'package:zimvest/data/view_models/payment_view_model.dart';
+import 'package:zimvest/new_screens/withdrawals/review_bank_transfer.dart';
 import 'package:zimvest/styles/colors.dart';
 import 'package:zimvest/utils/app_utils.dart';
 import 'package:zimvest/utils/margin.dart';
@@ -21,6 +23,7 @@ class SelectBankAccount extends StatefulWidget {
 class _SelectBankAccountState extends State<SelectBankAccount> {
   @override
   Widget build(BuildContext context) {
+    ABSPaymentViewModel paymentViewModel = Provider.of(context);
     return Scaffold(
       appBar: AppBar(
         elevation: 0,
@@ -44,10 +47,10 @@ class _SelectBankAccountState extends State<SelectBankAccount> {
           Text("Select Bank Account", style: TextStyle(fontFamily: AppStrings.fontBold,
               fontSize: 15,color: AppColors.kTextColor),),
 
-          BankItemWidget(bank: Bank(name: "Access Bank Plc",
-              accountNum: "0024923089", accountName: "Chiebuka Edwin"),),
-          BankItemWidget(bank: Bank(name: "EcoBank Plc",
-              accountNum: "0024923089", accountName: "Chiebuka Harry"),),
+          ...List.generate(paymentViewModel.userBanks.length, (index) {
+            Bank bank = paymentViewModel.userBanks[index];
+            return BankItemWidget(bank: bank,);
+          }),
         Spacer(),
       Center(
         child: PrimaryButtonNew(
@@ -71,8 +74,10 @@ class BankItemWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    ABSPaymentViewModel paymentViewModel = Provider.of(context);
     return GestureDetector(
       onTap: (){
+        paymentViewModel.selectedBank = bank;
         Navigator.push(context, ReviewBankTransfer.route());
       },
       child: Container(

@@ -18,7 +18,7 @@ abstract class ABSSavingService{
   Future<Result<void>> pauseSaving({String token,int savingModelId});
   Future<Result<void>> continueSaving({String token,int savingModelId});
   Future<Result<void>> withdrawFund({String token,int customerSavingId,
-    double amount, int customerBankId, String password});
+    double amount, int customerBankId, String password,int withdrawalChannel});
 
   ///Get Customer's Savings information
   Future<Result<List<SavingPlanModel>>> getSavingPlans({String token});
@@ -33,6 +33,7 @@ abstract class ABSSavingService{
 
   Future<Result<List<SavingsFrequency>>> getSavingFrequency({String token});
   Future<Result<List<FundingChannel>>> getFundingChannel({String token});
+  Future<Result<List<FundingChannel>>> getWithdrawalChannel({String token});
   Future<Result<List<ProductTransaction>>> getTransactionForProduct({String token,
     int id});
   Future<Result<AspireTarget>> calculateTargetSavings({
@@ -307,6 +308,50 @@ class SavingService extends ABSSavingService{
 
 
     var url = "${AppStrings.baseUrl}zimvest.services.savings/api/Products/FundingChannels";
+    print("url $url");
+    try{
+      var response = await dio.get(url,options: Options(headers: headers));
+      final int statusCode = response.statusCode;
+      var response1 = response.data;
+      print("iii ${response1}");
+
+      if (statusCode != 200) {
+        result.errorMessage = response1['message'];
+        result.error = true;
+      }else {
+        result.error = false;
+        List<FundingChannel> channels = [];
+        (response1['data'] as List).forEach((chaList) {
+          //initialize Chat Object
+          channels.add(FundingChannel.fromJson(chaList));
+        });
+        result.data = channels;
+      }
+
+    }on DioError catch(e){
+      print("error $e}");
+      if(e.response != null ){
+        print(e.response.data);
+        //result.errorMessage = e.response.data['message'];
+      }else{
+        print(e.toString());
+        result.errorMessage = "Sorry, We could not complete your request";
+      }
+      result.error = true;
+    }
+
+    return result;
+  }
+  Future<Result<List<FundingChannel>>> getWithdrawalChannel({String token})async {
+    Result<List<FundingChannel>> result = Result(error: false);
+
+
+    var headers = {
+      HttpHeaders.authorizationHeader: "Bearer $token"
+    };
+
+
+    var url = "${AppStrings.baseUrl}zimvest.services.savings/api/Products/WithdrawalChannels";
     print("url $url");
     try{
       var response = await dio.get(url,options: Options(headers: headers));
@@ -695,7 +740,7 @@ class SavingService extends ABSSavingService{
 
   @override
   Future<Result<void>> withdrawFund({String token, int customerSavingId,
-    double amount, int customerBankId, String password}) async{
+    double amount, int customerBankId, String password,int withdrawalChannel}) async{
     Result<void> result = Result(error: false);
 
 
@@ -703,15 +748,15 @@ class SavingService extends ABSSavingService{
       HttpHeaders.authorizationHeader: "Bearer $token"
     };
     var body = {
+      'withdrawalChannel':withdrawalChannel,
       "customerSavingId": customerSavingId,
       "amount": amount,
       "customerBankId": customerBankId,
       "password": password,
-
     };
 
 
-    var url = "${AppStrings.baseUrl}zimvest.services.savings/api/Savings/Pause";
+    var url = "${AppStrings.baseUrl}zimvest.services.savings/api/v2/Savings/Withdrawals";
     print("url $url");
     print("body $body");
     try{

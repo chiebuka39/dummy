@@ -1,10 +1,16 @@
 import 'package:after_layout/after_layout.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:flutterwave/core/flutterwave.dart';
+import 'package:flutterwave/models/responses/charge_response.dart';
+import 'package:flutterwave/utils/flutterwave_constants.dart';
 import 'package:provider/provider.dart';
+import 'package:rave_flutter/rave_flutter.dart';
 import 'package:zimvest/data/models/payment/bank.dart';
 import 'package:zimvest/data/models/payment/card.dart';
+import 'package:zimvest/data/models/payment/card_payload.dart';
 import 'package:zimvest/data/view_models/identity_view_model.dart';
 import 'package:zimvest/data/view_models/payment_view_model.dart';
 import 'package:zimvest/new_screens/withdrawals/add_bank_account.dart';
@@ -79,20 +85,34 @@ class _AddBankAndCardsState extends State<AddBankAndCards> with AfterLayoutMixin
   }
 }
 
-class CardWidget extends StatelessWidget {
+class CardWidget extends StatefulWidget {
   const CardWidget({
     Key key,
   }) : super(key: key);
 
   @override
+  _CardWidgetState createState() => _CardWidgetState();
+}
+
+class _CardWidgetState extends State<CardWidget> {
+
+  ABSPaymentViewModel paymentViewModel;
+  ABSIdentityViewModel identityViewModel;
+
+  CardPayload cardPayload;
+
+  @override
   Widget build(BuildContext context) {
-    ABSPaymentViewModel paymentViewModel = Provider.of(context);
+     paymentViewModel = Provider.of(context);
+     identityViewModel = Provider.of(context);
     return paymentViewModel.userCards == null ? Container(
       child: Center(child: CupertinoActivityIndicator(),),
     ):paymentViewModel.userCards.isEmpty ?  Container(
       child: Column(children: [
         Spacer(flex: 2,),
-        SvgPicture.asset("images/new/Addd1.svg"),
+        GestureDetector(
+          onTap: processTransaction2,
+            child: SvgPicture.asset("images/new/Addd1.svg")),
         YMargin(20),
         Text("Add your Debit Card", style: TextStyle(fontSize: 13,
             fontFamily: AppStrings.fontMedium,
@@ -157,11 +177,65 @@ class CardWidget extends StatelessWidget {
         }),
         Spacer(),
         PrimaryButtonNew(
+          onTap: processTransaction2,
           title: "Add Debit Card",
         ),
         YMargin(30),
       ],),
     );
+  }
+
+
+  processTransaction2() async {
+    EasyLoading.show(status: "Initializing transaction");
+    var result = await paymentViewModel.registerNewCard(identityViewModel.user.token);
+
+    if(result.error == false){
+      EasyLoading.showSuccess("Success");
+      setState(() {
+        cardPayload = result.data;
+      });
+      var initializer = RavePayInitializer(
+          amount: 100, publicKey: cardPayload.pbfPubKey,
+          encryptionKey: cardPayload.encKey)
+        ..country = "NG"
+        ..currency = "NGN"
+        ..email = cardPayload.customerEmail
+        ..fName = cardPayload.customerFirstname
+        ..lName = cardPayload.customerLastname
+        ..narration ="Add card"?? ''
+        ..txRef = cardPayload.txref
+
+        ..acceptCardPayments = true
+        ..staging = true
+        ..isPreAuth = false
+        ..displayFee = true;
+
+      // Initialize and get the transaction result
+      RaveResult response = await RavePayManager()
+          .prompt(context: context, initializer: initializer);
+      print("response ${response.rawResponse}");
+      if(response.status == RaveStatus.success){
+        EasyLoading.show(status: "Loading");
+        var result = await paymentViewModel.paymentConfirmation(identityViewModel.user.token,
+            cardPayload.txref
+        );
+        if(result.error == false){
+          await paymentViewModel.getUserCards(identityViewModel.user.token);
+          EasyLoading.showSuccess("Card Added");
+          Navigator.pop(context);
+        }else{
+          EasyLoading.showError("Error occured");
+        }
+
+      }else{
+        EasyLoading.showError("Error occurred");
+      }
+    }else{
+      EasyLoading.showError("Error occurred");
+    }
+
+
   }
 }
 
@@ -173,14 +247,18 @@ class BankWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     ABSPaymentViewModel paymentViewModel = Provider.of(context);
+    ABSIdentityViewModel identityViewModel = Provider.of(context);
     return paymentViewModel.userBanks == null ? Container(
       child: Center(child: CupertinoActivityIndicator(),),
-    ): paymentViewModel.userBanks.isEmpty ?Container(
+    ):paymentViewModel.userBanks.isEmpty ?Container(
       child: Column(children: [
         Spacer(flex: 2,),
         GestureDetector(
-          onTap: (){
-            Navigator.push(context, AddBankAccScreen.route());
+          onTap: ()async{
+            var result = await Navigator.push(context, AddBankAccScreen.route());
+            if(result == true){
+              paymentViewModel.getCustomerBank(identityViewModel.user.token);
+            }
           },
             child: SvgPicture.asset("images/new/Addd1.svg")),
         YMargin(20),
@@ -236,6 +314,12 @@ class BankWidget extends StatelessWidget {
         }),
         Spacer(),
         PrimaryButtonNew(
+          onTap: ()async{
+            var result = await Navigator.push(context, AddBankAccScreen.route());
+            if(result == true){
+              paymentViewModel.getCustomerBank(identityViewModel.user.token);
+            }
+          },
           title: "Add Bank Account",
         ),
         YMargin(30),

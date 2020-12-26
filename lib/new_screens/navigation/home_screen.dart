@@ -67,8 +67,8 @@ class _HomeScreenState extends State<HomeScreen> {
                           child:
                               Center(child: SvgPicture.asset("images/profile.svg"))),
                     ),
-                    XMargin(20),
-                    Text("Hi, ${identityViewModel.user.fullname.split(" ").first}"),
+                    XMargin(10),
+                    Text("Hi, ${identityViewModel.user.fullname.split(" ").first}", style: TextStyle(fontFamily: AppStrings.fontMedium),),
                     Spacer(),
                     EarnFreeCashWidget()
                   ],
@@ -290,12 +290,13 @@ class Timeline1 extends StatelessWidget {
               decoration: BoxDecoration(
                   shape: BoxShape.circle,
                   color: Colors.transparent,
-                border: Border.all(color: Color(0xFF979797))
+                border: Border.all(color: AppColors.kPrimaryColor,width: 0.5)
               ),
             ),),
             decoration: BoxDecoration(
               shape: BoxShape.circle,
-              color: Color(0xffE9E9E9)
+                color: Colors.transparent,
+                border: Border.all(color: AppColors.kPrimaryColor.withOpacity(0.2))
             ),
           );
         },
@@ -320,7 +321,7 @@ class _EmptyContents extends StatelessWidget {
       child: Row(children: [
         Text(title, style: TextStyle(fontSize: 12, fontFamily: AppStrings.fontNormal),),
         Spacer(),
-        Icon(Icons.arrow_forward_ios_rounded,size: 16,)
+        Icon(Icons.arrow_forward_ios_rounded,size: 16,color: AppColors.kPrimaryColor,)
       ],),
     );
   }

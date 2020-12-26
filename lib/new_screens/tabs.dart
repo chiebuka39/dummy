@@ -54,11 +54,11 @@ class _TabsContainerState extends State<TabsContainer> with AfterLayoutMixin<Tab
 
   @override
   void afterFirstLayout(BuildContext context) async{
+    dashboardViewModel.getPortfolioValue(identityViewModel.user.token);
     savingViewModel.getSavingPlans(token: identityViewModel.user.token);
     paymentViewModel.getWallet(identityViewModel.user.token);
-     dashboardViewModel.getPortfolioValue(identityViewModel.user.token);
-     dashboardViewModel.getAssetDistribution(identityViewModel.user.token);
-     dashboardViewModel.getPortfolioDistribution(identityViewModel.user.token);
+    dashboardViewModel.getAssetDistribution(identityViewModel.user.token);
+    dashboardViewModel.getPortfolioDistribution(identityViewModel.user.token);
 
   }
 
