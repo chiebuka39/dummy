@@ -39,6 +39,7 @@ class AppColors {
   static const kRed3 = Color(0xffFBCBCB);
   static const kRed4 = Color(0xffF53232);
   static var kGreen = Color(0xFF2ab750);
+  static const knewBlue = Color(0xff010D57);
 
   static List<Color> donutColor =  [
     AppColors.kPrimaryColor,

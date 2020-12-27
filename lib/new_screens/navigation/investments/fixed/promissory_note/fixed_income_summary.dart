@@ -172,7 +172,7 @@ class _SavingsSummaryScreenState extends State<SavingsSummaryScreen> {
           child: Stack(
             children: [
               Positioned.fill(
-                child: confirmed
+                child: model.status
                     ? PlayAnimation<MultiTweenValues<AniProps>>(
                         tween: _tween,
                         duration: _tween.duration,
@@ -232,7 +232,90 @@ class _SavingsSummaryScreenState extends State<SavingsSummaryScreen> {
                           );
                         },
                       )
-                    : SizedBox(),
+                    : model.busy
+                        ? Center(child: CircularProgressIndicator())
+                        : model.status
+                            ? Text(
+                                model.status.toString(),
+                                style: TextStyle(color: AppColors.kWhite),
+                              )
+                            : PlayAnimation<MultiTweenValues<AniProps>>(
+                                tween: _tween,
+                                duration: _tween.duration,
+                                builder: (context, child, value) {
+                                  return Container(
+                                    width: screenWidth(context),
+                                    height: MediaQuery.of(context).size.height,
+                                    child: Center(
+                                      child: Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.center,
+                                        children: [
+                                          Spacer(),
+                                          Transform.scale(
+                                            scale: value.get(AniProps.scale),
+                                            child: Transform.translate(
+                                              offset:
+                                                  value.get(AniProps.offset1),
+                                              child: Opacity(
+                                                opacity: value
+                                                    .get(AniProps.opacity1),
+                                                child: SvgPicture.asset(
+                                                    "images/new/errfetti.svg"),
+                                              ),
+                                            ),
+                                          ),
+                                          YMargin(40),
+                                          ItemFader(
+                                            offset: 10,
+                                            curve: Curves.easeIn,
+                                            key: keys[0],
+                                            child: Text(
+                                              "Your investment was not successful",
+                                              textAlign: TextAlign.center,
+                                              style: TextStyle(
+                                                  color: Colors.white),
+                                            ),
+                                          ),
+                                          Spacer(),
+                                          ItemFader(
+                                            offset: 10,
+                                            curve: Curves.easeIn,
+                                            key: keys[1],
+                                            child: PrimaryButtonNew(
+                                              onTap: () {
+                                                model.buyPromissoryNote(
+                                                    productId: widget
+                                                        .investmentId,
+                                                    instrumentId: widget
+                                                        .instrumentId,
+                                                    fundingChannel: widget
+                                                        .channelId,
+                                                    investmentAmount: widget
+                                                        .amount,
+                                                    maturityDate:
+                                                        DateTime.tryParse(widget
+                                                            .maturityDate),
+                                                    rate: widget.rate,
+                                                    instrumentName:
+                                                        widget.bondName,
+                                                    uniqueName:
+                                                        widget.uniqueName,
+                                                    instrumentType:
+                                                        widget.investmentType);
+                                              },
+                                              textColor: Colors.white,
+                                              title: "Retry",
+                                              bg: AppColors.kPrimaryColor,
+                                            ),
+                                          ),
+                                          YMargin(50)
+                                        ],
+                                      ),
+                                    ),
+                                  );
+                                },
+                              ),
               ),
               AnimatedPositioned(
                 duration: Duration(milliseconds: 500),

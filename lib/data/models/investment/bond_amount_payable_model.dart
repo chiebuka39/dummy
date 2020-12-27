@@ -1,4 +1,4 @@
-class AmountPayableResponse {
+class AmountPayableResponse{
   int fundingAmount;
   String principalRepayment;
   int numberOfInterestPaymentLeft;
@@ -103,6 +103,33 @@ class AmountPayableResponse {
     data['secondCouponDay'] = this.secondCouponDay;
     data['firstCouponMonth'] = this.firstCouponMonth;
     data['secondCouponMonth'] = this.secondCouponMonth;
+    return data;
+  }
+}
+
+
+
+class AmountPayableError{
+  bool status;
+  String message;
+  List<String> errors;
+  String traceId;
+
+  AmountPayableError({this.status, this.message, this.errors, this.traceId});
+
+  AmountPayableError.fromJson(Map<String, dynamic> json) {
+    status = json['status'];
+    message = json['message'];
+    errors = json['errors'].cast<String>();
+    traceId = json['traceId'];
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = new Map<String, dynamic>();
+    data['status'] = this.status;
+    data['message'] = this.message;
+    data['errors'] = this.errors;
+    data['traceId'] = this.traceId;
     return data;
   }
 }

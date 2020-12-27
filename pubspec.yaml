@@ -44,6 +44,7 @@ dependencies:
   path_provider: ^1.6.11
   custom_dropdown: ^0.0.2
   flutter_masked_text: ^0.7.0
+  image_picker: ^0.6.7+4
   animations: ^1.1.1
   modal_bottom_sheet: ^1.0.0+1
   simple_animations: ^2.2.1
@@ -63,6 +64,7 @@ dependencies:
   flutter_easyloading: ^2.2.1
   keyboard_actions: ^3.3.1+1
   flutterwave: ^0.0.2
+  fluttertoast: 7.0.2
   image_picker: ^0.6.7+17
 
 

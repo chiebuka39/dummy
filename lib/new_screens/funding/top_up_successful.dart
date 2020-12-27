@@ -97,8 +97,9 @@ class ItemFader extends StatefulWidget {
   final Widget child;
   final Curve curve;
   final int offset;
+  final double visible;
 
-  const ItemFader({Key key, this.child, this.curve = Curves.easeInOut, this.offset = 64}) : super(key: key);
+  const ItemFader({Key key, this.child, this.curve = Curves.easeInOut, this.offset = 64, this.visible}) : super(key: key);
   @override
   ItemFaderState createState() => ItemFaderState();
 }
@@ -126,7 +127,7 @@ class ItemFaderState extends State<ItemFader>
 
   @override
   Widget build(BuildContext context) {
-
+    print(widget.visible);
     return AnimatedBuilder(
       animation: _animation,
       child: widget.child,
@@ -134,7 +135,7 @@ class ItemFaderState extends State<ItemFader>
         return Transform.translate(
           offset: Offset(0, widget.offset * position * (1 - _animation.value)),
           child: Opacity(
-            opacity: _animation.value,
+            opacity: _animation.value + widget.visible,
             child: child,
           ),
         );

@@ -338,8 +338,12 @@ class InvestmentHighYieldViewModel extends ChangeNotifier {
   ConvertedDollarRate dollarConversion = ConvertedDollarRate();
   Result<GottenRate> gotRate = Result<GottenRate>();
   AmountPayableResponse amountPayableResponse = AmountPayableResponse();
+
   bool _busy = false;
   bool get busy => _busy;
+
+  bool _status = false;
+  bool get status => _status;
 
   void setBusy(bool value) {
     _busy = value;
@@ -441,6 +445,7 @@ class InvestmentHighYieldViewModel extends ChangeNotifier {
         amount: amount,
         uniqueName: uniqueName,
         token: token);
+    
     setBusy(false);
     notifyListeners();
   }
@@ -463,7 +468,7 @@ class InvestmentHighYieldViewModel extends ChangeNotifier {
       productId: productId,
       beneficiaryBankType: beneficiaryBankType,
       fundingChannel: fundingChannel,
-      amount: amount,
+      amount: getAmount.amountUSD.toDouble(),
       nairaAmount: double.tryParse(this.dollarConversion.amountNGN.toString()),
       uniqueName: uniqueName,
       token: token,
@@ -492,10 +497,9 @@ class InvestmentHighYieldViewModel extends ChangeNotifier {
       DateTime maturityDate,
       String instrumentName,
       double investmentAmount}) async {
-    // TODO: Some fine tunning
+    setBusy(true);
     String token = _localStorage.getUser().token;
-    this.amountPayableResponse =
-        await _investmentService.calculateAmountPayable(
+    var amountPayableRes = await _investmentService.calculateAmountPayable(
       token: token,
       instrumentId: instrumentId,
       instrumentType: instrumentType,
@@ -506,18 +510,27 @@ class InvestmentHighYieldViewModel extends ChangeNotifier {
       productId: productId,
       upFront: upFront,
     );
-    await _investmentService.buyCommercialPaper(
-      token: token,
-      productId: productId,
-      fundingChannel: fundingChannel,
-      intermediaryBankType: intermediaryBankType,
-      // amount: amount,
-      rate: rate,
-      uniqueName: uniqueName,
-      upFront: upFront,
-      faceValue: this.amountPayableResponse.faceValue,
-      investmentAmount: this.amountPayableResponse.investmentAmount,
-    );
+    setBusy(false);
+    if (amountPayableRes == null) {
+      setBusy(false);
+      _status = false;
+    } else {
+      _status = true;
+      this.amountPayableResponse = amountPayableRes;
+      await _investmentService.buyCommercialPaper(
+        token: token,
+        productId: productId,
+        fundingChannel: fundingChannel,
+        intermediaryBankType: intermediaryBankType,
+        // amount: amount,
+        rate: rate,
+        uniqueName: uniqueName,
+        upFront: upFront,
+        faceValue: this.amountPayableResponse.faceValue,
+        investmentAmount: this.amountPayableResponse.investmentAmount,
+      );
+      setBusy(false);
+    }
   }
 
   Future<void> buyCorporateBond(
@@ -533,10 +546,9 @@ class InvestmentHighYieldViewModel extends ChangeNotifier {
       DateTime maturityDate,
       String instrumentName,
       double investmentAmount}) async {
-    // TODO: Some fine tunning
+    setBusy(true);
     String token = _localStorage.getUser().token;
-    this.amountPayableResponse =
-        await _investmentService.calculateAmountPayable(
+    var amountPayableRes = await _investmentService.calculateAmountPayable(
       token: token,
       instrumentId: instrumentId,
       instrumentType: instrumentType,
@@ -547,16 +559,28 @@ class InvestmentHighYieldViewModel extends ChangeNotifier {
       productId: productId,
       upFront: upFront,
     );
-    await _investmentService.buyCorporateBond(
-      token: token,
-      productId: productId,
-      fundingChannel: fundingChannel,
-      intermediaryBankType: intermediaryBankType,
-      amount: this.amountPayableResponse.investmentAmount,
-      rate: rate,
-      uniqueName: uniqueName,
-      faceValue: this.amountPayableResponse.faceValue,
-    );
+    setBusy(false);
+    if (amountPayableRes == null) {
+      setBusy(false);
+      _status = false;
+    } else {
+      _status = true;
+      this.amountPayableResponse = amountPayableRes;
+      await _investmentService.buyCorporateBond(
+        token: token,
+        productId: productId,
+        fundingChannel: fundingChannel,
+        intermediaryBankType: intermediaryBankType,
+        amount: this.amountPayableResponse.investmentAmount,
+        rate: rate,
+        uniqueName: uniqueName,
+        faceValue: this.amountPayableResponse.faceValue,
+      );
+      setBusy(false);
+    }
+
+    setBusy(false);
+    notifyListeners();
   }
 
   Future<void> buyFGNBond(
@@ -572,10 +596,9 @@ class InvestmentHighYieldViewModel extends ChangeNotifier {
       DateTime maturityDate,
       String instrumentName,
       double investmentAmount}) async {
-    // TODO: Some fine tunning
+    setBusy(true);
     String token = _localStorage.getUser().token;
-    this.amountPayableResponse =
-        await _investmentService.calculateAmountPayable(
+    var amountPayableRes = await _investmentService.calculateAmountPayable(
       token: token,
       instrumentId: instrumentId,
       instrumentType: instrumentType,
@@ -586,16 +609,28 @@ class InvestmentHighYieldViewModel extends ChangeNotifier {
       productId: productId,
       upFront: upFront,
     );
-    await _investmentService.buyFGNBond(
-      productId: productId,
-      token: token,
-      fundingChannel: fundingChannel,
-      amount: this.amountPayableResponse.investmentAmount,
-      rate: this.amountPayableResponse.rateValue,
-      uniqueName: uniqueName,
-      faceValue: this.amountPayableResponse.faceValue,
-      investmentAmount: this.amountPayableResponse.investmentAmount,
-    );
+    setBusy(false);
+    if (amountPayableRes == null) {
+      setBusy(false);
+      _status = false;
+    } else {
+      _status = true;
+      this.amountPayableResponse = amountPayableRes;
+      await _investmentService.buyFGNBond(
+        productId: productId,
+        token: token,
+        fundingChannel: fundingChannel,
+        amount: this.amountPayableResponse.investmentAmount,
+        rate: this.amountPayableResponse.rateValue,
+        uniqueName: uniqueName,
+        faceValue: this.amountPayableResponse.faceValue,
+        investmentAmount: this.amountPayableResponse.investmentAmount,
+      );
+      setBusy(false);
+    }
+
+    setBusy(false);
+    notifyListeners();
   }
 
   Future<void> buyPromissoryNote(
@@ -611,10 +646,9 @@ class InvestmentHighYieldViewModel extends ChangeNotifier {
       DateTime maturityDate,
       String instrumentName,
       double investmentAmount}) async {
-    // TODO: Some fine tunning
+    setBusy(true);
     String token = _localStorage.getUser().token;
-    this.amountPayableResponse =
-        await _investmentService.calculateAmountPayable(
+    var amountPayableRes = await _investmentService.calculateAmountPayable(
       token: token,
       instrumentId: instrumentId,
       instrumentType: instrumentType,
@@ -625,16 +659,28 @@ class InvestmentHighYieldViewModel extends ChangeNotifier {
       productId: productId,
       upFront: upFront,
     );
-    await _investmentService.buyPromissoryNote(
-      productId: productId,
-      token: token,
-      fundingChannel: fundingChannel,
-      amount: this.amountPayableResponse.investmentAmount,
-      rate: this.amountPayableResponse.rateValue,
-      uniqueName: uniqueName,
-      faceValue: this.amountPayableResponse.faceValue,
-      investmentAmount: this.amountPayableResponse.investmentAmount,
-    );
+    setBusy(false);
+    if (amountPayableRes == null) {
+      setBusy(false);
+      _status = false;
+    } else {
+      _status = true;
+      this.amountPayableResponse = amountPayableRes;
+      await _investmentService.buyPromissoryNote(
+        productId: productId,
+        token: token,
+        fundingChannel: fundingChannel,
+        amount: this.amountPayableResponse.investmentAmount,
+        rate: this.amountPayableResponse.rateValue,
+        uniqueName: uniqueName,
+        faceValue: this.amountPayableResponse.faceValue,
+        investmentAmount: this.amountPayableResponse.investmentAmount,
+      );
+      setBusy(false);
+    }
+
+    setBusy(false);
+    notifyListeners();
   }
 
   Future<void> buyTreasuryBills(
@@ -650,10 +696,9 @@ class InvestmentHighYieldViewModel extends ChangeNotifier {
       DateTime maturityDate,
       String instrumentName,
       double investmentAmount}) async {
-    // TODO: Some fine tunning
+    setBusy(true);
     String token = _localStorage.getUser().token;
-    this.amountPayableResponse =
-        await _investmentService.calculateAmountPayable(
+    var amountPayableRes = await _investmentService.calculateAmountPayable(
       token: token,
       instrumentId: instrumentId,
       instrumentType: instrumentType,
@@ -664,18 +709,32 @@ class InvestmentHighYieldViewModel extends ChangeNotifier {
       productId: productId,
       upFront: upFront,
     );
-    await _investmentService.buyTreasuryBill(
-      productId: productId,
-      token: token,
-      fundingChannel: fundingChannel,
-      amount: this.amountPayableResponse.investmentAmount,
-      rate: this.amountPayableResponse.rateValue,
-      uniqueName: uniqueName,
-      faceValue: this.amountPayableResponse.faceValue,
-      investmentAmount: this.amountPayableResponse.investmentAmount,
-    );
+    print(amountPayableRes);
+    setBusy(false);
+    if (amountPayableRes == null) {
+      setBusy(false);
+      _status = false;
+    } else {
+      _status = true;
+      this.amountPayableResponse = amountPayableRes;
+      await _investmentService.buyTreasuryBill(
+        productId: productId,
+        token: token,
+        fundingChannel: fundingChannel,
+        amount: this.amountPayableResponse.investmentAmount,
+        rate: this.amountPayableResponse.rateValue,
+        uniqueName: uniqueName,
+        faceValue: this.amountPayableResponse.faceValue,
+        investmentAmount: this.amountPayableResponse.investmentAmount,
+      );
+      setBusy(false);
+    }
+
+    setBusy(false);
+    notifyListeners();
   }
-    Future<void> buyEuroBond(
+
+  Future<void> buyEuroBond(
       {int productId,
       int fundingChannel,
       int intermediaryBankType,
@@ -688,10 +747,9 @@ class InvestmentHighYieldViewModel extends ChangeNotifier {
       DateTime maturityDate,
       String instrumentName,
       double investmentAmount}) async {
-    // TODO: Some fine tunning
+    setBusy(true);
     String token = _localStorage.getUser().token;
-    this.amountPayableResponse =
-        await _investmentService.calculateAmountPayable(
+    var amountPayableRes = await _investmentService.calculateAmountPayable(
       token: token,
       instrumentId: instrumentId,
       instrumentType: instrumentType,
@@ -702,20 +760,28 @@ class InvestmentHighYieldViewModel extends ChangeNotifier {
       productId: productId,
       upFront: upFront,
     );
-    await _investmentService.buyEuroBond(
-      productId: productId,
-      token: token,
-      fundingChannel: fundingChannel,
-      amount: this.amountPayableResponse.investmentAmount,
-      rate: this.amountPayableResponse.rateValue,
-      uniqueName: uniqueName,
-      faceValue: this.amountPayableResponse.faceValue,
-      investmentAmount: this.amountPayableResponse.investmentAmount,
-    );
+    setBusy(false);
+    if (amountPayableRes == null) {
+      setBusy(false);
+      _status = false;
+    } else {
+      _status = true;
+      this.amountPayableResponse = amountPayableRes;
+      await _investmentService.buyEuroBond(
+        productId: productId,
+        token: token,
+        fundingChannel: fundingChannel,
+        amount: this.amountPayableResponse.investmentAmount,
+        rate: this.amountPayableResponse.rateValue,
+        uniqueName: uniqueName,
+        faceValue: this.amountPayableResponse.faceValue,
+        investmentAmount: this.amountPayableResponse.investmentAmount,
+      );
+      setBusy(false);
+    }
+    setBusy(false);
+    notifyListeners();
   }
 }
 
-
-class FixedIncomeViewModel extends ChangeNotifier{
-
-}
+class FixedIncomeViewModel extends ChangeNotifier {}
