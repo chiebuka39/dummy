@@ -518,6 +518,7 @@ class _InvestmentSummaryScreenNairaState
                 child: GestureDetector(
                   onPanUpdate: (details) {
                     if (details.delta.dy < 0) {
+                      startAnim();
                       model.buyNairaInstrument(
                           amount: widget.amount,
                           productId: widget.productId,

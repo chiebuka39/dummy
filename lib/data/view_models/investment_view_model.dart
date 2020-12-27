@@ -445,6 +445,7 @@ class InvestmentHighYieldViewModel extends ChangeNotifier {
         amount: amount,
         uniqueName: uniqueName,
         token: token);
+    print(purchaseRes.toString());
     if (purchaseRes = null) {
       _status = false;
       setBusy(false);
@@ -479,6 +480,7 @@ class InvestmentHighYieldViewModel extends ChangeNotifier {
       uniqueName: uniqueName,
       token: token,
     );
+    print("Purchase $purchaseRes");
     if (purchaseRes = null) {
       _status = false;
       setBusy(false);
