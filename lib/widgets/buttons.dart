@@ -402,20 +402,25 @@ class PaymentSourceButtonSpecial extends StatefulWidget {
   final String paymentsource;
   final String amount;
   final Color color;
+  final Color textColor;
+  final Color iconColor;
 
   const PaymentSourceButtonSpecial(
       {Key key,
         @required this.onTap,
         this.image,
         @required this.paymentsource,
-        this.amount = "", this.color = AppColors.kPrimaryColor})
+        this.amount = "",
+        this.color = AppColors.kPrimaryColor, this.textColor = AppColors.kWhite, this.iconColor = AppColors.kWhite})
       : super(key: key);
 
   @override
-  _PaymentSourceButtonSpecialState createState() => _PaymentSourceButtonSpecialState();
+  _PaymentSourceButtonSpecialState createState() =>
+      _PaymentSourceButtonSpecialState();
 }
 
-class _PaymentSourceButtonSpecialState extends State<PaymentSourceButtonSpecial> {
+class _PaymentSourceButtonSpecialState
+    extends State<PaymentSourceButtonSpecial> {
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
@@ -445,7 +450,7 @@ class _PaymentSourceButtonSpecialState extends State<PaymentSourceButtonSpecial>
                     style: TextStyle(
                       fontSize: 14,
                       fontFamily: AppStrings.fontLight,
-                      color: AppColors.kWhite,
+                      color: widget.textColor,
                     ),
                   ),
                 ],
@@ -463,7 +468,7 @@ class _PaymentSourceButtonSpecialState extends State<PaymentSourceButtonSpecial>
                   XMargin(10),
                   Icon(
                     Icons.arrow_forward_ios,
-                    color: AppColors.kWhite,
+                    color: widget.iconColor,
                     size: 15,
                   ),
                 ],

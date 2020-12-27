@@ -55,28 +55,28 @@ class _AllNairaInvestmentsState extends State<AllNairaInvestments> {
             .where((element) => element.instrumentName == widget.title)
             .map(
               (e) => GestureDetector(
-                onTap: () => Navigator.push(
-                  context,
-                  HighYieldDetails.route(
-                      dur: "${widget.title}",
-                      id: e.id,
-                      maturityDate: e.maturityDate,
-                      rate: e.depositRate,
-                      minimumAmount: e.minimumAmount,
-                      maximumAmount: e.maximumAmount),
-                ),
-                child: Padding(
-                  padding: const EdgeInsets.only(bottom: 20.0),
-                  child: InvestmentCardNaira(
-                    height: 4.5,
-                    investmentDuration: e.instrumentName,
-                    maximumAmount: e.maximumAmount,
-                    minimumAmount: e.minimumAmount,
-                    percentage: e.depositRate,
-                  ),
-                ),
+            onTap: () => Navigator.push(
+              context,
+              HighYieldDetails.route(
+                  dur: "${widget.title}",
+                  id: e.id,
+                  maturityDate: e.maturityDate,
+                  rate: e.depositRate,
+                  minimumAmount: e.minimumAmount,
+                  maximumAmount: e.maximumAmount),
+            ),
+            child: Padding(
+              padding: const EdgeInsets.only(bottom: 20.0),
+              child: InvestmentCardNaira(
+                height: 4.5,
+                investmentDuration: e.instrumentName,
+                maximumAmount: e.maximumAmount,
+                minimumAmount: e.minimumAmount,
+                percentage: e.depositRate,
               ),
-            )
+            ),
+          ),
+        )
             .toList(),
       ),
     );
@@ -132,28 +132,28 @@ class _AllDollarInvestmentsState extends State<AllDollarInvestments> {
             .where((element) => element.instrumentName == widget.title)
             .map(
               (e) => GestureDetector(
-                onTap: () => Navigator.push(
-                  context,
-                  HighYieldDetailsDollar.route(
-                      duration: "${widget.title}",
-                      productId: e.id,
-                      maturityDate: e.maturityDate,
-                      rate: e.depositRate,
-                      minimumAmount: e.minimumAmount,
-                      maximumAmount: e.maximumAmount),
-                ),
-                child: Padding(
-                  padding: const EdgeInsets.only(bottom: 20.0),
-                  child: InvestmentCardDollar(
-                    height: 4.5,
-                    investmentDuration: e.instrumentName,
-                    maximumAmount: e.maximumAmount,
-                    minimumAmount: e.minimumAmount,
-                    percentage: e.depositRate,
-                  ),
-                ),
+            onTap: () => Navigator.push(
+              context,
+              HighYieldDetailsDollar.route(
+                  duration: "${widget.title}",
+                  productId: e.id,
+                  maturityDate: e.maturityDate,
+                  rate: e.depositRate,
+                  minimumAmount: e.minimumAmount,
+                  maximumAmount: e.maximumAmount),
+            ),
+            child: Padding(
+              padding: const EdgeInsets.only(bottom: 20.0),
+              child: InvestmentCardDollar(
+                height: 4.5,
+                investmentDuration: e.instrumentName,
+                maximumAmount: e.maximumAmount,
+                minimumAmount: e.minimumAmount,
+                percentage: e.depositRate,
               ),
-            )
+            ),
+          ),
+        )
             .toList(),
       ),
     );

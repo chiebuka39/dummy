@@ -10,7 +10,6 @@ import 'package:zimvest/utils/margin.dart';
 import 'package:zimvest/utils/margins.dart';
 import 'package:zimvest/utils/strings.dart';
 import 'package:zimvest/widgets/buttons.dart';
-import 'package:supercharged_dart/supercharged_dart.dart';
 import 'package:supercharged/supercharged.dart';
 
 import '../../../../tabs.dart';

@@ -135,7 +135,7 @@ class ItemFaderState extends State<ItemFader>
         return Transform.translate(
           offset: Offset(0, widget.offset * position * (1 - _animation.value)),
           child: Opacity(
-            opacity: _animation.value + widget.visible,
+            opacity: _animation.value,
             child: child,
           ),
         );

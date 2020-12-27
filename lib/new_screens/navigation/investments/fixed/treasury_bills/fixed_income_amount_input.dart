@@ -168,7 +168,7 @@ class _FixedIncomeAmountInputState extends State<FixedIncomeAmountInput> {
                         rate: widget.rate,
                         investmentType: widget.investmentType,
                         instrumentId: widget.instrumentId,
-                        minimumAmount: widget.minimumAmount,
+                        minimumAmount: widget.minimumAmount.toInt(),
                         investmentMaturityDate: widget.investmentMaturityDate,
                         duration: widget.bondName
                       ),

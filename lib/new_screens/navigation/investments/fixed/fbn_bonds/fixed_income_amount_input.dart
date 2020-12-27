@@ -161,7 +161,7 @@ class _FixedIncomeAmountInputState extends State<FixedIncomeAmountInput> {
                     Navigator.push(
                       context,
                       FixedIncomePurchaseSource.route(
-                        amount: amount,
+                        amount: amount.toDouble(),
                         productId: widget.investmentId,
                         uniqueName: widget.uniqueName,
                         maturityDate: widget.maturityDate,

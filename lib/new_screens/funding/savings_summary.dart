@@ -45,6 +45,7 @@ class _SavingsSummaryScreenState extends State<SavingsSummaryScreen> {
   bool confirmed = false;
 
   bool slideUp = false;
+  bool error = false;
 
   @override
   void initState() {
@@ -76,6 +77,11 @@ class _SavingsSummaryScreenState extends State<SavingsSummaryScreen> {
         confirmed = true;
       });
       Future.delayed(1000.milliseconds).then((value) => onInit());
+    }else{
+      setState(() {
+        loading = false;
+        error = true;
+      });
     }
 
 
@@ -272,12 +278,31 @@ class _SavingsSummaryScreenState extends State<SavingsSummaryScreen> {
               ),
             ),
           ),
-          Container(
+          error == false ? Container(
             height: size.height,
             width: size.width,
             child: Center(child: loading ? CircularProgressIndicator():SizedBox()
               ,),
-          ),
+          ):Container(
+            height: size.height,
+            width: size.width,
+            child: Center(child:Column(children: [
+              Spacer(),
+              Text("Error Occured", style: TextStyle(color: AppColors.kWhite),),
+              YMargin(20),
+              PrimaryButtonNew(
+                title: "Back to Home",
+                onTap: (){
+                  Navigator.pushAndRemoveUntil(
+                      context,
+                      MaterialPageRoute(builder: (context) => TabsContainer()),
+                          (Route<dynamic> route) => false);
+                },
+              ),
+              Spacer(),
+            ],)
+              ,),
+          )
         ],),
       ),
     );
