@@ -432,6 +432,8 @@ class PaymentSourceButtonSpecial extends StatefulWidget {
   final String paymentsource;
   final String amount;
   final Color color;
+  final Color textColor;
+  final Color iconColor;
 
   const PaymentSourceButtonSpecial(
       {Key key,
@@ -439,7 +441,7 @@ class PaymentSourceButtonSpecial extends StatefulWidget {
       this.image,
       @required this.paymentsource,
       this.amount = "",
-      this.color = AppColors.kPrimaryColor})
+      this.color = AppColors.kPrimaryColor, this.textColor = AppColors.kWhite, this.iconColor = AppColors.kWhite})
       : super(key: key);
 
   @override
@@ -478,7 +480,7 @@ class _PaymentSourceButtonSpecialState
                     style: TextStyle(
                       fontSize: 14,
                       fontFamily: AppStrings.fontLight,
-                      color: AppColors.kWhite,
+                      color: widget.textColor,
                     ),
                   ),
                 ],
@@ -496,7 +498,7 @@ class _PaymentSourceButtonSpecialState
                   XMargin(10),
                   Icon(
                     Icons.arrow_forward_ios,
-                    color: AppColors.kWhite,
+                    color: widget.iconColor,
                     size: 15,
                   ),
                 ],

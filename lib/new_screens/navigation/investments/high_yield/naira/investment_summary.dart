@@ -1,12 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:provider_architecture/provider_architecture.dart';
+import 'package:simple_animations/simple_animations.dart';
 import 'package:zimvest/data/view_models/investment_view_model.dart';
+import 'package:zimvest/new_screens/funding/top_up_successful.dart';
 import 'package:zimvest/new_screens/navigation/investments/high_yield/naira/investment_confirmation_naira.dart';
 import 'package:zimvest/styles/colors.dart';
 import 'package:zimvest/utils/app_utils.dart';
 import 'package:zimvest/utils/margin.dart';
 import 'package:zimvest/utils/margins.dart';
 import 'package:zimvest/utils/strings.dart';
+import 'package:supercharged_dart/supercharged_dart.dart';
+import 'package:supercharged/supercharged.dart';
 
 class InvestmentSummaryScreenNaira extends StatefulWidget {
   final double amount;
@@ -65,6 +69,63 @@ class InvestmentSummaryScreenNaira extends StatefulWidget {
 
 class _InvestmentSummaryScreenNairaState
     extends State<InvestmentSummaryScreenNaira> {
+  List<GlobalKey<ItemFaderState>> keys;
+
+  bool loading = false;
+
+  final _tween = MultiTween<AniProps>()
+    ..add(
+        AniProps.offset1,
+        Tween(begin: Offset(0, 10), end: Offset(0, 0)),
+        800.milliseconds,
+        Interval(
+          0.0,
+          1.0,
+          curve: Curves.easeIn,
+        ))
+    ..add(
+        AniProps.scale,
+        Tween(begin: 0.0, end: 1.0),
+        800.milliseconds,
+        Interval(
+          0.0,
+          0.6,
+          curve: Curves.bounceInOut,
+        ))
+    ..add(
+        AniProps.opacity1,
+        0.0.tweenTo(1.0),
+        800.milliseconds,
+        Interval(
+          0.0,
+          1.0,
+          curve: Curves.ease,
+        ));
+
+  bool confirmed = false;
+
+  bool slideUp = false;
+
+  @override
+  void initState() {
+    keys = List.generate(2, (index) => GlobalKey<ItemFaderState>());
+
+    super.initState();
+  }
+
+  void startAnim() async {
+    setState(() {
+      slideUp = true;
+      loading = true;
+    });
+  }
+
+  void onInit() async {
+    for (var key in keys) {
+      key.currentState.show();
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return ViewModelProvider<InvestmentHighYieldViewModel>.withConsumer(
@@ -85,13 +146,12 @@ class _InvestmentSummaryScreenNairaState
         body: GestureDetector(
           onPanUpdate: (details) {
             if (details.delta.dy < 0) {
-              if(details.delta.dy == -0.5){
+              if (details.delta.dy == -0.5) {
                 model.buyNairaInstrument(
-                  amount: widget.amount,
-                  productId: widget.productId,
-                  uniqueName: widget.uniqueName,
-                  fundingChannel: widget.channelId
-                );
+                    amount: widget.amount,
+                    productId: widget.productId,
+                    uniqueName: widget.uniqueName,
+                    fundingChannel: widget.channelId);
               }
               // print("swiped ${details.delta.dy}");
               // Navigator.of(context).push(_createRoute());
@@ -130,10 +190,9 @@ class _InvestmentSummaryScreenNairaState
                         YMargin(27),
                         Container(
                           decoration: BoxDecoration(
-                            color: AppColors.kWhite,
-                            borderRadius: BorderRadius.circular(10),
-                            boxShadow: AppUtils.getBoxShaddow
-                          ),
+                              color: AppColors.kWhite,
+                              borderRadius: BorderRadius.circular(10),
+                              boxShadow: AppUtils.getBoxShaddow),
                           height: screenHeight(context) / 2.2,
                           width: screenWidth(context),
                           child: Column(
@@ -382,3 +441,6 @@ Route _createRoute() {
     },
   );
 }
+
+
+

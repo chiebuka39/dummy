@@ -142,7 +142,7 @@ abstract class ABSInvestmentService {
       num faceValue,
       num investmentAmount});
 
-  Future<AmountPayableResponse> calculateAmountPayable(
+  Future<dynamic> calculateAmountPayable(
       {String token,
       int instrumentId,
       int instrumentType,
@@ -1058,6 +1058,7 @@ class InvestmentService extends ABSInvestmentService {
           },
         ),
       );
+      print("Success: ${buydollaInstrument.data}");
       if (buydollaInstrument.statusCode == 200) {
         print("Success: ${buydollaInstrument.data}");
         result.data = buydollaInstrument.data;
@@ -1070,6 +1071,9 @@ class InvestmentService extends ABSInvestmentService {
       }
     } on DioError catch (e) {
       result.error = true;
+      print(e.message.toString());
+      throw Exception(e.response.toString());
+    } catch (e) {
       print(e.message.toString());
       throw Exception(e.response.toString());
     }
@@ -1111,6 +1115,7 @@ class InvestmentService extends ABSInvestmentService {
           },
         ),
       );
+      print("Success: ${buyNairaInstrument.data}");
       if (buyNairaInstrument.statusCode == 200) {
         print("Success: ${buyNairaInstrument.data}");
         result.data = buyNairaInstrument.data;
@@ -1123,6 +1128,9 @@ class InvestmentService extends ABSInvestmentService {
       }
     } on DioError catch (e) {
       result.error = true;
+      print(e.message.toString());
+      throw Exception(e.response.toString());
+    } catch (e) {
       print(e.message.toString());
       throw Exception(e.response.toString());
     }
@@ -1274,7 +1282,7 @@ class InvestmentService extends ABSInvestmentService {
           },
         ),
       );
-
+      print(buyEuroBond.data);
       if (buyEuroBond.statusCode == 200) {
         result.data = buyEuroBond.data;
         return result.data;
@@ -1325,7 +1333,7 @@ class InvestmentService extends ABSInvestmentService {
           },
         ),
       );
-
+      print(buyFGNBond.data);
       if (buyFGNBond.statusCode == 200) {
         result.data = buyFGNBond.data;
         return result.data;
@@ -1436,7 +1444,7 @@ class InvestmentService extends ABSInvestmentService {
           },
         ),
       );
-
+      print(buyTreasuryBill.data);
       if (buyTreasuryBill.statusCode == 200) {
         result.data = buyTreasuryBill.data;
         return result.data;
@@ -1454,7 +1462,7 @@ class InvestmentService extends ABSInvestmentService {
   }
 
   @override
-  Future<AmountPayableResponse> calculateAmountPayable(
+  Future<dynamic> calculateAmountPayable(
       {String token,
       int instrumentId,
       int instrumentType,
@@ -1464,12 +1472,13 @@ class InvestmentService extends ABSInvestmentService {
       DateTime maturityDate,
       int productId,
       bool upFront}) async {
+    print("instrumentType $instrumentType");
     var url =
         "${AppStrings.baseUrl}$microService/api/Calculator/calculateamountpayable";
 
     FormData data = FormData.fromMap({
       "ProductId": productId,
-      "RateValue": rate,
+      "Rate": rate,
       "InstrumentName": instrumentName,
       "InstrumentType": instrumentType,
       "MaturityDate": maturityDate,
@@ -1491,14 +1500,15 @@ class InvestmentService extends ABSInvestmentService {
           },
         ),
       );
-
+      print(calculateAmountPayable.statusCode);
+      print(calculateAmountPayable.data);
       if (calculateAmountPayable.statusCode == 200) {
         // result.data = AmountPayableResponse.fromJson(calculateAmountPayable.data["data"]);
         return AmountPayableResponse.fromJson(
-            calculateAmountPayable.data["data"]);
+            jsonDecode(calculateAmountPayable.data["data"]));
       } else if (calculateAmountPayable.statusCode == 400) {
         // result.data = calculateAmountPayable.data["data"];
-        return calculateAmountPayable.data;
+        return null;
       }
     } on DioError catch (e) {
       print(e.message.toString());

@@ -64,6 +64,7 @@ dependencies:
   flutter_easyloading: ^2.2.0
   keyboard_actions: ^3.3.1+1
   flutterwave: ^0.0.2
+  fluttertoast: 7.0.2
 
 
 
