@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:provider_architecture/provider_architecture.dart';
 import 'package:simple_animations/simple_animations.dart';
 import 'package:zimvest/data/view_models/investment_view_model.dart';
 import 'package:zimvest/new_screens/funding/top_up_successful.dart';
 import 'package:zimvest/new_screens/navigation/investments/high_yield/naira/investment_confirmation_naira.dart';
+import 'package:zimvest/new_screens/tabs.dart';
 import 'package:zimvest/styles/colors.dart';
 import 'package:zimvest/utils/app_utils.dart';
 import 'package:zimvest/utils/margin.dart';
@@ -11,6 +13,7 @@ import 'package:zimvest/utils/margins.dart';
 import 'package:zimvest/utils/strings.dart';
 import 'package:supercharged_dart/supercharged_dart.dart';
 import 'package:supercharged/supercharged.dart';
+import 'package:zimvest/widgets/buttons.dart';
 
 class InvestmentSummaryScreenNaira extends StatefulWidget {
   final double amount;
@@ -131,253 +134,372 @@ class _InvestmentSummaryScreenNairaState
     return ViewModelProvider<InvestmentHighYieldViewModel>.withConsumer(
       viewModelBuilder: () => InvestmentHighYieldViewModel(),
       builder: (context, model, _) => Scaffold(
-        backgroundColor: AppColors.kTextColor,
-        appBar: AppBar(
-          backgroundColor: AppColors.kWhite,
-          elevation: 0,
-          leading: IconButton(
-            icon: Icon(
-              Icons.arrow_back_ios,
-              color: AppColors.kPrimaryColor,
-            ),
-            onPressed: () => Navigator.pop(context),
-          ),
-        ),
-        body: GestureDetector(
-          onPanUpdate: (details) {
-            if (details.delta.dy < 0) {
-              if (details.delta.dy == -0.5) {
-                model.buyNairaInstrument(
-                    amount: widget.amount,
-                    productId: widget.productId,
-                    uniqueName: widget.uniqueName,
-                    fundingChannel: widget.channelId);
-              }
-              // print("swiped ${details.delta.dy}");
-              // Navigator.of(context).push(_createRoute());
-            }
-          },
+        backgroundColor: AppColors.kSecondaryColor,
+        body: Container(
+          height: MediaQuery.of(context).size.height,
           child: Stack(
             children: [
-              Positioned(
-                top: 0,
-                right: 0,
-                left: 0,
+              Positioned.fill(
+                child: model.status
+                    ? PlayAnimation<MultiTweenValues<AniProps>>(
+                        tween: _tween,
+                        duration: _tween.duration,
+                        builder: (context, child, value) {
+                          return Container(
+                            height: MediaQuery.of(context).size.height,
+                            child: Center(
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.center,
+                                children: [
+                                  Spacer(),
+                                  Transform.scale(
+                                    scale: value.get(AniProps.scale),
+                                    child: Transform.translate(
+                                      offset: value.get(AniProps.offset1),
+                                      child: Opacity(
+                                        opacity: value.get(AniProps.opacity1),
+                                        child: SvgPicture.asset(
+                                            "images/new/confetti.svg"),
+                                      ),
+                                    ),
+                                  ),
+                                  YMargin(40),
+                                  ItemFader(
+                                    offset: 10,
+                                    curve: Curves.easeIn,
+                                    key: keys[0],
+                                    child: Text(
+                                      "You Have Successfully Invested In Zimvest High Yield Naira",
+                                      textAlign: TextAlign.center,
+                                      style: TextStyle(color: Colors.white),
+                                    ),
+                                  ),
+                                  Spacer(),
+                                  ItemFader(
+                                    offset: 10,
+                                    curve: Curves.easeIn,
+                                    key: keys[1],
+                                    child: PrimaryButtonNew(
+                                      onTap: () {
+                                        Navigator.pushAndRemoveUntil(
+                                            context,
+                                            MaterialPageRoute(
+                                                builder: (context) =>
+                                                    TabsContainer()),
+                                            (Route<dynamic> route) => false);
+                                      },
+                                      textColor: Colors.white,
+                                      title: "Done",
+                                      bg: AppColors.kPrimaryColor,
+                                    ),
+                                  ),
+                                  YMargin(50)
+                                ],
+                              ),
+                            ),
+                          );
+                        },
+                      )
+                    : model.busy
+                        ? Center(child: CircularProgressIndicator())
+                        : model.status
+                            ? Text(
+                                model.status.toString(),
+                                style: TextStyle(color: AppColors.kWhite),
+                              )
+                            : PlayAnimation<MultiTweenValues<AniProps>>(
+                                tween: _tween,
+                                duration: _tween.duration,
+                                builder: (context, child, value) {
+                                  return Container(
+                                    width: screenWidth(context),
+                                    height: MediaQuery.of(context).size.height,
+                                    child: Center(
+                                      child: Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.center,
+                                        children: [
+                                          Spacer(),
+                                          Transform.scale(
+                                            scale: value.get(AniProps.scale),
+                                            child: Transform.translate(
+                                              offset:
+                                                  value.get(AniProps.offset1),
+                                              child: Opacity(
+                                                opacity: value
+                                                    .get(AniProps.opacity1),
+                                                child: SvgPicture.asset(
+                                                    "images/new/errfetti.svg"),
+                                              ),
+                                            ),
+                                          ),
+                                          YMargin(40),
+                                          ItemFader(
+                                            offset: 10,
+                                            curve: Curves.easeIn,
+                                            key: keys[0],
+                                            child: Text(
+                                              "Your investment was not successful",
+                                              textAlign: TextAlign.center,
+                                              style: TextStyle(
+                                                  color: Colors.white),
+                                            ),
+                                          ),
+                                          Spacer(),
+                                          ItemFader(
+                                            offset: 10,
+                                            curve: Curves.easeIn,
+                                            key: keys[1],
+                                            child: PrimaryButtonNew(
+                                              onTap: () {
+                                                model.buyNairaInstrument(
+                                                    amount: widget.amount,
+                                                    productId: widget.productId,
+                                                    uniqueName:
+                                                        widget.uniqueName,
+                                                    fundingChannel:
+                                                        widget.channelId);
+                                              },
+                                              textColor: Colors.white,
+                                              title: "Retry",
+                                              bg: AppColors.kPrimaryColor,
+                                            ),
+                                          ),
+                                          YMargin(50)
+                                        ],
+                                      ),
+                                    ),
+                                  );
+                                },
+                              ),
+              ),
+              AnimatedPositioned(
+                duration: Duration(milliseconds: 500),
+                //top: -(MediaQuery.of(context).size.height - 200),
+                top: slideUp ? -(MediaQuery.of(context).size.height - 200) : 0,
+                left: 0, right: 0,
                 child: Container(
-                  height: screenHeight(context) / 1.4,
-                  width: screenWidth(context),
+                  width: double.infinity,
+                  height: MediaQuery.of(context).size.height - 200,
                   decoration: BoxDecoration(
-                    borderRadius: BorderRadius.only(
-                      bottomLeft: Radius.circular(40),
-                      bottomRight: Radius.circular(40),
-                    ),
-                    color: AppColors.kWhite,
-                  ),
-                  child: Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 20.0),
+                      color: Colors.white,
+                      borderRadius: BorderRadius.only(
+                        bottomLeft: Radius.circular(25),
+                        bottomRight: Radius.circular(25),
+                      ),
+                      boxShadow: AppUtils.getBoxShaddow3),
+                  child: SafeArea(
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        YMargin(73),
-                        Text(
-                          "Investment Summary",
-                          style: TextStyle(
-                            fontSize: 13,
-                            fontFamily: AppStrings.fontMedium,
-                            color: AppColors.kTextColor,
+                        BackButton(
+                          color: AppColors.kPrimaryColor,
+                          onPressed: () {
+                            Navigator.pop(context);
+                          },
+                        ),
+                        YMargin(70),
+                        Padding(
+                          padding: const EdgeInsets.only(left: 20),
+                          child: Text(
+                            "Investment Summary",
+                            style: TextStyle(fontFamily: AppStrings.fontMedium),
                           ),
                         ),
-                        YMargin(27),
-                        Container(
-                          decoration: BoxDecoration(
-                              color: AppColors.kWhite,
-                              borderRadius: BorderRadius.circular(10),
-                              boxShadow: AppUtils.getBoxShaddow),
-                          height: screenHeight(context) / 2.2,
-                          width: screenWidth(context),
-                          child: Column(
-                            // mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              YMargin(27),
-                              Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Text(
-                                    "INVESTMENT NAME (Zimvest High Yield Naira ${widget.duration} Days)",
-                                    textAlign: TextAlign.start,
-                                    style: TextStyle(
-                                      fontSize: 11,
-                                      fontFamily: AppStrings.fontMedium,
-                                      color: AppColors.kLightText5,
+                        YMargin(20),
+                        Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 20.0),
+                          child: Container(
+                            decoration: BoxDecoration(
+                                color: AppColors.kWhite,
+                                borderRadius: BorderRadius.circular(10),
+                                boxShadow: AppUtils.getBoxShaddow),
+                            height: screenHeight(context) / 2.2,
+                            width: screenWidth(context),
+                            child: Column(
+                              // mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                YMargin(27),
+                                Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text(
+                                      "INVESTMENT NAME (Zimvest High Yield Naira ${widget.duration} Days)",
+                                      textAlign: TextAlign.start,
+                                      style: TextStyle(
+                                        fontSize: 11,
+                                        fontFamily: AppStrings.fontMedium,
+                                        color: AppColors.kLightText5,
+                                      ),
                                     ),
+                                    Text(
+                                      "${widget.uniqueName}",
+                                      style: TextStyle(
+                                        fontSize: 11,
+                                        fontFamily: AppStrings.fontBold,
+                                        color: AppColors.kTextColor,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                                YMargin(40),
+                                Padding(
+                                  padding: const EdgeInsets.only(
+                                      left: 23.0, right: 23.0),
+                                  child: Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      Column(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.spaceBetween,
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: [
+                                          Text(
+                                            "INTEREST RATE",
+                                            textAlign: TextAlign.justify,
+                                            style: TextStyle(
+                                              fontSize: 11,
+                                              fontFamily: AppStrings.fontMedium,
+                                              color: AppColors.kLightText5,
+                                            ),
+                                          ),
+                                          Text(
+                                            "${widget.rate} P.A",
+                                            style: TextStyle(
+                                              fontSize: 11,
+                                              fontFamily: AppStrings.fontBold,
+                                              color: AppColors.kTextColor,
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                      Column(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.spaceBetween,
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: [
+                                          Text(
+                                            "NEXT MATURITY DATE",
+                                            textAlign: TextAlign.justify,
+                                            style: TextStyle(
+                                              fontSize: 11,
+                                              fontFamily: AppStrings.fontMedium,
+                                              color: AppColors.kLightText5,
+                                            ),
+                                          ),
+                                          Text(
+                                            "${widget.maturityDate}",
+                                            style: TextStyle(
+                                              fontSize: 11,
+                                              fontFamily: AppStrings.fontBold,
+                                              color: AppColors.kTextColor,
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    ],
                                   ),
-                                  Text(
-                                    "${widget.uniqueName}",
-                                    style: TextStyle(
-                                      fontSize: 11,
-                                      fontFamily: AppStrings.fontBold,
-                                      color: AppColors.kTextColor,
-                                    ),
+                                ),
+                                YMargin(40),
+                                Padding(
+                                  padding: const EdgeInsets.only(
+                                      left: 23.0, right: 23.0),
+                                  child: Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      Column(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.spaceBetween,
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: [
+                                          Text(
+                                            "AMOUNT",
+                                            textAlign: TextAlign.justify,
+                                            style: TextStyle(
+                                              fontSize: 11,
+                                              fontFamily: AppStrings.fontMedium,
+                                              color: AppColors.kLightText5,
+                                            ),
+                                          ),
+                                          Text(
+                                            "${AppStrings.nairaSymbol}${widget.amount}",
+                                            style: TextStyle(
+                                              fontSize: 11,
+                                              fontFamily: AppStrings.fontBold,
+                                              color: AppColors.kTextColor,
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                      Column(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.spaceBetween,
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: [
+                                          Text(
+                                            "PROCESSING FEE (1.5%)",
+                                            textAlign: TextAlign.justify,
+                                            style: TextStyle(
+                                              fontSize: 11,
+                                              fontFamily: AppStrings.fontMedium,
+                                              color: AppColors.kLightText5,
+                                            ),
+                                          ),
+                                          Text(
+                                            "${AppStrings.nairaSymbol}${0.015 * widget.amount}",
+                                            style: TextStyle(
+                                              fontSize: 11,
+                                              fontFamily: AppStrings.fontBold,
+                                              color: AppColors.kTextColor,
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    ],
                                   ),
-                                ],
-                              ),
-                              YMargin(40),
-                              Padding(
-                                padding: const EdgeInsets.only(
-                                    left: 23.0, right: 23.0),
-                                child: Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
-                                  children: [
-                                    Column(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.spaceBetween,
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                      children: [
-                                        Text(
-                                          "INTEREST RATE",
-                                          textAlign: TextAlign.justify,
-                                          style: TextStyle(
-                                            fontSize: 11,
-                                            fontFamily: AppStrings.fontMedium,
-                                            color: AppColors.kLightText5,
-                                          ),
-                                        ),
-                                        Text(
-                                          "${widget.rate} P.A",
-                                          style: TextStyle(
-                                            fontSize: 11,
-                                            fontFamily: AppStrings.fontBold,
-                                            color: AppColors.kTextColor,
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                    Column(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.spaceBetween,
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                      children: [
-                                        Text(
-                                          "NEXT MATURITY DATE",
-                                          textAlign: TextAlign.justify,
-                                          style: TextStyle(
-                                            fontSize: 11,
-                                            fontFamily: AppStrings.fontMedium,
-                                            color: AppColors.kLightText5,
-                                          ),
-                                        ),
-                                        Text(
-                                          "${widget.maturityDate}",
-                                          style: TextStyle(
-                                            fontSize: 11,
-                                            fontFamily: AppStrings.fontBold,
-                                            color: AppColors.kTextColor,
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                  ],
                                 ),
-                              ),
-                              YMargin(40),
-                              Padding(
-                                padding: const EdgeInsets.only(
-                                    left: 23.0, right: 23.0),
-                                child: Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
-                                  children: [
-                                    Column(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.spaceBetween,
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                      children: [
-                                        Text(
-                                          "AMOUNT",
-                                          textAlign: TextAlign.justify,
-                                          style: TextStyle(
-                                            fontSize: 11,
-                                            fontFamily: AppStrings.fontMedium,
-                                            color: AppColors.kLightText5,
+                                YMargin(40),
+                                Padding(
+                                  padding: const EdgeInsets.only(left: 23.0),
+                                  child: Row(
+                                    mainAxisAlignment: MainAxisAlignment.start,
+                                    children: [
+                                      Column(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.spaceBetween,
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: [
+                                          Text(
+                                            "TOTAL",
+                                            textAlign: TextAlign.justify,
+                                            style: TextStyle(
+                                              fontSize: 11,
+                                              fontFamily: AppStrings.fontMedium,
+                                              color: AppColors.kLightText5,
+                                            ),
                                           ),
-                                        ),
-                                        Text(
-                                          "${AppStrings.nairaSymbol}${widget.amount}",
-                                          style: TextStyle(
-                                            fontSize: 11,
-                                            fontFamily: AppStrings.fontBold,
-                                            color: AppColors.kTextColor,
+                                          Text(
+                                            "${AppStrings.nairaSymbol}${(0.015 * widget.amount) + widget.amount}",
+                                            style: TextStyle(
+                                              fontSize: 11,
+                                              fontFamily: AppStrings.fontBold,
+                                              color: AppColors.kTextColor,
+                                            ),
                                           ),
-                                        ),
-                                      ],
-                                    ),
-                                    Column(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.spaceBetween,
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                      children: [
-                                        Text(
-                                          "PROCESSING FEE (1.5%)",
-                                          textAlign: TextAlign.justify,
-                                          style: TextStyle(
-                                            fontSize: 11,
-                                            fontFamily: AppStrings.fontMedium,
-                                            color: AppColors.kLightText5,
-                                          ),
-                                        ),
-                                        Text(
-                                          "${AppStrings.nairaSymbol}${0.015 * widget.amount}",
-                                          style: TextStyle(
-                                            fontSize: 11,
-                                            fontFamily: AppStrings.fontBold,
-                                            color: AppColors.kTextColor,
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                  ],
+                                        ],
+                                      ),
+                                    ],
+                                  ),
                                 ),
-                              ),
-                              YMargin(40),
-                              Padding(
-                                padding: const EdgeInsets.only(left: 23.0),
-                                child: Row(
-                                  mainAxisAlignment: MainAxisAlignment.start,
-                                  children: [
-                                    Column(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.spaceBetween,
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                      children: [
-                                        Text(
-                                          "TOTAL",
-                                          textAlign: TextAlign.justify,
-                                          style: TextStyle(
-                                            fontSize: 11,
-                                            fontFamily: AppStrings.fontMedium,
-                                            color: AppColors.kLightText5,
-                                          ),
-                                        ),
-                                        Text(
-                                          "${AppStrings.nairaSymbol}${(0.015 * widget.amount) + widget.amount}",
-                                          style: TextStyle(
-                                            fontSize: 11,
-                                            fontFamily: AppStrings.fontBold,
-                                            color: AppColors.kTextColor,
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                  ],
-                                ),
-                              ),
-                            ],
+                              ],
+                            ),
                           ),
                         ),
                       ],
@@ -385,32 +507,58 @@ class _InvestmentSummaryScreenNairaState
                   ),
                 ),
               ),
-              Positioned(
-                bottom: 34,
-                left: 50,
-                right: 50,
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    RotatedBox(
-                      quarterTurns: 1,
-                      child: Icon(
-                        Icons.arrow_back_ios,
-                        color: AppColors.kWhite,
-                      ),
+              AnimatedPositioned(
+                duration: Duration(milliseconds: 500),
+                //top: MediaQuery.of(context).size.height - 100,
+                top: slideUp == true
+                    ? -60
+                    : (MediaQuery.of(context).size.height - 100),
+                left: 0,
+                right: 0,
+                child: GestureDetector(
+                  onPanUpdate: (details) {
+                    if (details.delta.dy < 0) {
+                      model.buyNairaInstrument(
+                          amount: widget.amount,
+                          productId: widget.productId,
+                          uniqueName: widget.uniqueName,
+                          fundingChannel: widget.channelId);
+                    }
+                  },
+                  // onVerticalDragStart: (details) {
+                  //   print("dff ${details.toString()}");
+                  //   //
+                  // },
+                  child: Container(
+                    height: 60,
+                    child: Column(
+                      children: [
+                        Column(
+                          children: [
+                            Icon(
+                              Icons.keyboard_arrow_up,
+                              color: AppColors.kWhite,
+                            ),
+                            Text(
+                              "Swipe up to confirm",
+                              style: TextStyle(
+                                  fontFamily: AppStrings.fontMedium,
+                                  color: Colors.white),
+                            ),
+                          ],
+                        )
+                      ],
                     ),
-                    Text(
-                      "Swipe up to confirm",
-                      style: TextStyle(
-                        fontSize: 13,
-                        fontFamily: AppStrings.fontLight,
-                        color: AppColors.kWhite,
-                      ),
-                    )
-                  ],
+                  ),
                 ),
-              )
+              ),
+              // Container(
+              //   height: size.height,
+              //   width: size.width,
+              //   child: Center(
+              //     child: model.busy ? CircularProgressIndicator() : SizedBox(),
+              //   ),
+              // ),
             ],
           ),
         ),
@@ -441,6 +589,3 @@ Route _createRoute() {
     },
   );
 }
-
-
-

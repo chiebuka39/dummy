@@ -105,7 +105,7 @@ class _HighYieldInvestmentPurchaseSourceState
               PaymentSourceButton(
                 onTap: () {
                   print("hmmm");
-                  Navigator.push(context, InvestmentSummaryScreenNaira.route());
+                  // Navigator.push(context, InvestmentSummaryScreenNaira.route());
                 },
                 paymentsource: "Debit Card",
                 image: "card",

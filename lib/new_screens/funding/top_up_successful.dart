@@ -127,7 +127,6 @@ class ItemFaderState extends State<ItemFader>
 
   @override
   Widget build(BuildContext context) {
-    print(widget.visible);
     return AnimatedBuilder(
       animation: _animation,
       child: widget.child,
@@ -135,7 +134,7 @@ class ItemFaderState extends State<ItemFader>
         return Transform.translate(
           offset: Offset(0, widget.offset * position * (1 - _animation.value)),
           child: Opacity(
-            opacity: _animation.value + widget.visible,
+            opacity: _animation.value,
             child: child,
           ),
         );

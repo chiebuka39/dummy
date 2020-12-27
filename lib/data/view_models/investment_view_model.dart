@@ -439,13 +439,19 @@ class InvestmentHighYieldViewModel extends ChangeNotifier {
       String uniqueName}) async {
     setBusy(true);
     String token = _localStorage.getUser().token;
-    await _investmentService.buyNairaInstrument(
+    var purchaseRes = await _investmentService.buyNairaInstrument(
         productId: productId,
         fundingChannel: fundingChannel,
         amount: amount,
         uniqueName: uniqueName,
         token: token);
-    
+    if (purchaseRes = null) {
+      _status = false;
+      setBusy(false);
+    } else {
+      _status = true;
+      setBusy(false);
+    }
     setBusy(false);
     notifyListeners();
   }
@@ -464,7 +470,7 @@ class InvestmentHighYieldViewModel extends ChangeNotifier {
     var getAmount =
         await _investmentService.calculateRate(token: token, amountUsd: amount);
     this.dollarConversion = getAmount;
-    await _investmentService.buyDollarnstrument(
+    var purchaseRes = await _investmentService.buyDollarnstrument(
       productId: productId,
       beneficiaryBankType: beneficiaryBankType,
       fundingChannel: fundingChannel,
@@ -473,6 +479,13 @@ class InvestmentHighYieldViewModel extends ChangeNotifier {
       uniqueName: uniqueName,
       token: token,
     );
+    if (purchaseRes = null) {
+      _status = false;
+      setBusy(false);
+    } else {
+      _status = true;
+      setBusy(false);
+    }
     setBusy(false);
     notifyListeners();
   }

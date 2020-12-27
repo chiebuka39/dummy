@@ -1134,7 +1134,7 @@ class InvestmentService extends ABSInvestmentService {
       print(e.message.toString());
       throw Exception(e.response.toString());
     }
-    return result;
+    return null;
   }
 
   @override
