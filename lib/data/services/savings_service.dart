@@ -18,7 +18,7 @@ abstract class ABSSavingService{
   Future<Result<void>> pauseSaving({String token,int savingModelId});
   Future<Result<void>> continueSaving({String token,int savingModelId});
   Future<Result<void>> withdrawFund({String token,int customerSavingId,
-    double amount, int customerBankId, String password});
+    double amount, int customerBankId, String password,int withdrawalChannel});
 
   ///Get Customer's Savings information
   Future<Result<List<SavingPlanModel>>> getSavingPlans({String token});
@@ -33,6 +33,7 @@ abstract class ABSSavingService{
 
   Future<Result<List<SavingsFrequency>>> getSavingFrequency({String token});
   Future<Result<List<FundingChannel>>> getFundingChannel({String token});
+  Future<Result<List<FundingChannel>>> getWithdrawalChannel({String token});
   Future<Result<List<ProductTransaction>>> getTransactionForProduct({String token,
     int id});
   Future<Result<AspireTarget>> calculateTargetSavings({
@@ -46,7 +47,8 @@ abstract class ABSSavingService{
 
   Future<Result<SavingPlanModel>> createTargetSavings({int cardId,
     int fundingChannel, int frequency, String planName, DateTime maturityDate,
-    DateTime startDate, int productId, double targetAmount, int savingsAmount, String token});
+    DateTime startDate, int productId, double targetAmount, bool autoSave,
+    int savingsAmount, String token});
 
 
   Future<Result<List<ProductTransaction>>> getTransactionForProductType({String token, int productId});
@@ -340,6 +342,50 @@ class SavingService extends ABSSavingService{
 
     return result;
   }
+  Future<Result<List<FundingChannel>>> getWithdrawalChannel({String token})async {
+    Result<List<FundingChannel>> result = Result(error: false);
+
+
+    var headers = {
+      HttpHeaders.authorizationHeader: "Bearer $token"
+    };
+
+
+    var url = "${AppStrings.baseUrl}zimvest.services.savings/api/Products/WithdrawalChannels";
+    print("url $url");
+    try{
+      var response = await dio.get(url,options: Options(headers: headers));
+      final int statusCode = response.statusCode;
+      var response1 = response.data;
+      print("iii ${response1}");
+
+      if (statusCode != 200) {
+        result.errorMessage = response1['message'];
+        result.error = true;
+      }else {
+        result.error = false;
+        List<FundingChannel> channels = [];
+        (response1['data'] as List).forEach((chaList) {
+          //initialize Chat Object
+          channels.add(FundingChannel.fromJson(chaList));
+        });
+        result.data = channels;
+      }
+
+    }on DioError catch(e){
+      print("error $e}");
+      if(e.response != null ){
+        print(e.response.data);
+        //result.errorMessage = e.response.data['message'];
+      }else{
+        print(e.toString());
+        result.errorMessage = "Sorry, We could not complete your request";
+      }
+      result.error = true;
+    }
+
+    return result;
+  }
 
   @override
   Future<Result<SavingPlanModel>> createWealthBox({String token,
@@ -521,7 +567,7 @@ class SavingService extends ABSSavingService{
   @override
   Future<Result<SavingPlanModel>> createTargetSavings({int cardId,
     int fundingChannel, int frequency, String planName, DateTime maturityDate,
-    DateTime startDate, int productId, double targetAmount,
+    DateTime startDate, int productId, double targetAmount,bool autoSave,
     int savingsAmount, String token}) async{
     Result<SavingPlanModel> result = Result(error: false);
 
@@ -531,6 +577,7 @@ class SavingService extends ABSSavingService{
     };
     var body = {
       "cardId": cardId,
+      'isAutoSave':autoSave,
       "frequency": frequency,
       "fundingChannel": fundingChannel,
       "maturityDate": maturityDate.toIso8601String(),
@@ -560,7 +607,7 @@ class SavingService extends ABSSavingService{
       else {
         print("33333333333333oooooooo");
         result.error = false;
-        result.data = SavingPlanModel.fromJson(response1['data']);
+        //result.data = SavingPlanModel.fromJson(response1['data']);
         if(response1['message'] != null){
           result.errorMessage = response1['message'];
         }
@@ -693,7 +740,7 @@ class SavingService extends ABSSavingService{
 
   @override
   Future<Result<void>> withdrawFund({String token, int customerSavingId,
-    double amount, int customerBankId, String password}) async{
+    double amount, int customerBankId, String password,int withdrawalChannel}) async{
     Result<void> result = Result(error: false);
 
 
@@ -701,15 +748,15 @@ class SavingService extends ABSSavingService{
       HttpHeaders.authorizationHeader: "Bearer $token"
     };
     var body = {
+      'withdrawalChannel':withdrawalChannel,
       "customerSavingId": customerSavingId,
       "amount": amount,
       "customerBankId": customerBankId,
       "password": password,
-
     };
 
 
-    var url = "${AppStrings.baseUrl}zimvest.services.savings/api/Savings/Pause";
+    var url = "${AppStrings.baseUrl}zimvest.services.savings/api/v2/Savings/Withdrawals";
     print("url $url");
     print("body $body");
     try{

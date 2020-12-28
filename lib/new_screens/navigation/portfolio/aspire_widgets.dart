@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:percent_indicator/percent_indicator.dart';
 import 'package:zimvest/data/models/saving_plan.dart';
+import 'package:zimvest/new_screens/navigation/wealth/aspire/select_goals.dart';
 import 'package:zimvest/new_screens/navigation/wealth/aspire_box_details.dart';
 import 'package:zimvest/styles/colors.dart';
 import 'package:zimvest/utils/margin.dart';
@@ -61,7 +62,9 @@ class AspireContainerWidget extends StatelessWidget {
                                 radius: 35.0,
                                 lineWidth: 3.0,
                                 animation: true,
-                                percent: double.parse(goal.successRate)/100,
+                                percent:( double.parse(goal.successRate.replaceAll("%", ""))/100) > 1 ? 0.5:
+                                ( double.parse(goal.successRate.replaceAll("%", ""))/100),
+                                //percent: 0.2,
                                 center: new Text(
                                   "${goal.successRate}",
                                   style:
@@ -112,21 +115,26 @@ class AspireNewGoalWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Expanded(
-      child: Container(
-        padding: EdgeInsets.symmetric(horizontal: 15, vertical: 15),
-        height: 154,
-        decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(13)),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.center,
-          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-          children: [
-            SvgPicture.asset("images/new/Addd.svg"),
-            Text(
-              "Create New Goal",
-              style: TextStyle(fontSize: 12, fontFamily: AppStrings.fontMedium, color: AppColors.kPrimaryColor),
-            )
-          ],
+      child: GestureDetector(
+        onTap: (){
+          Navigator.push(context, SelectGoalScreen.route());
+        },
+        child: Container(
+          padding: EdgeInsets.symmetric(horizontal: 15, vertical: 15),
+          height: 154,
+          decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(13)),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            children: [
+              SvgPicture.asset("images/new/Addd.svg"),
+              Text(
+                "Create New Goal",
+                style: TextStyle(fontSize: 12, fontFamily: AppStrings.fontMedium, color: AppColors.kPrimaryColor),
+              )
+            ],
+          ),
         ),
       ),
     );

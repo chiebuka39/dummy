@@ -94,9 +94,9 @@ class _CreateAccountScreenState extends State<CreateAccountScreen>
             Expanded(
               child: Container(
                 child: PageView(
+                  physics: NeverScrollableScrollPhysics(),
                   controller: pageController,
                   children: [
-
                     EnterMailWidget(
                       onNext: (value){
                         setState(() {

@@ -51,7 +51,7 @@ class _ReviewBankTransferState extends State<ReviewBankTransfer> {
                   YMargin(70),
                   Padding(
                     padding: const EdgeInsets.only(left: 20),
-                    child: Text("Savings Summary", style: TextStyle(fontFamily: AppStrings.fontMedium),),
+                    child: Text("Review Bank Transfer", style: TextStyle(fontFamily: AppStrings.fontMedium),),
                   ),
                   YMargin(20),
                   Container(

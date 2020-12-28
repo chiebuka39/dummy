@@ -1,18 +1,20 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:provider/provider.dart';
+import 'package:zimvest/data/view_models/identity_view_model.dart';
+import 'package:zimvest/data/view_models/payment_view_model.dart';
+import 'package:zimvest/data/view_models/savings_view_model.dart';
 import 'package:zimvest/new_screens/funding/top_up_successful.dart';
 import 'package:zimvest/new_screens/tabs.dart';
 import 'package:zimvest/styles/colors.dart';
 import 'package:zimvest/utils/app_utils.dart';
 import 'package:zimvest/utils/margin.dart';
 import 'package:zimvest/utils/strings.dart';
-import 'package:provider/provider.dart';
 import 'package:simple_animations/simple_animations.dart';
 import 'package:supercharged/supercharged.dart';
-import 'package:zimvest/data/view_models/identity_view_model.dart';
-import 'package:zimvest/data/view_models/payment_view_model.dart';
-import 'package:zimvest/data/view_models/savings_view_model.dart';
 import 'package:zimvest/widgets/buttons.dart';
+import 'package:zimvest/widgets/navigation/delete_wealthbox.dart';
 
 class SavingsSummaryScreen extends StatefulWidget {
   static Route<dynamic> route() {
@@ -45,7 +47,6 @@ class _SavingsSummaryScreenState extends State<SavingsSummaryScreen> {
   bool confirmed = false;
 
   bool slideUp = false;
-  bool error = false;
 
   @override
   void initState() {
@@ -60,14 +61,20 @@ class _SavingsSummaryScreenState extends State<SavingsSummaryScreen> {
       slideUp = true;
       loading = true;
     });
-    var result = await savingViewModel.topUp(
-        cardId:paymentViewModel.selectedCard?.id ?? null,
-        token: identityViewModel.user.token,
-        custSavingId: savingViewModel.selectedPlan.id,
-        fundingChannel: paymentViewModel.selectedCard == null ?
-        savingViewModel.fundingChannels.firstWhere((element) => element.name == "Wallet").id:
-        savingViewModel.fundingChannels.firstWhere((element) => element.name == "Card").id,
-        savingsAmount: savingViewModel.amountToSave
+    var result = await savingViewModel.createTargetSavings(
+      maturityDate: savingViewModel.endDate,
+      autoSave: savingViewModel.autoSave,
+      targetAmount: savingViewModel.amountToSave,
+      planName: savingViewModel.goalName,
+      productId: 2,
+      cardId:paymentViewModel.selectedCard?.id ?? null,
+      token: identityViewModel.user.token,
+      frequency: savingViewModel.selectedFrequency.id,
+      startDate: savingViewModel.startDate,
+      fundingChannel: paymentViewModel.selectedCard == null ?
+          savingViewModel.fundingChannels.firstWhere((element) => element.name == "Wallet").id:
+      savingViewModel.fundingChannels.firstWhere((element) => element.name == "Card").id,
+      savingsAmount: savingViewModel.amountToSave.toInt()
     );
     print("ooooo ${result.error}");
     print("4444 ${result.errorMessage}");
@@ -77,13 +84,13 @@ class _SavingsSummaryScreenState extends State<SavingsSummaryScreen> {
         confirmed = true;
       });
       Future.delayed(1000.milliseconds).then((value) => onInit());
-    }else{
-      setState(() {
-        loading = false;
-        error = true;
-      });
     }
-
+    // Future.delayed(Duration(seconds: 1)).then((value) {
+    //   setState(() {
+    //     confirmed = true;
+    //   });
+    //   Future.delayed(1000.milliseconds).then((value) => onInit());
+    // });
 
 
   }
@@ -95,6 +102,7 @@ class _SavingsSummaryScreenState extends State<SavingsSummaryScreen> {
     }
 
   }
+
 
   @override
   Widget build(BuildContext context) {
@@ -131,7 +139,7 @@ class _SavingsSummaryScreenState extends State<SavingsSummaryScreen> {
                             offset: 10,
                             curve: Curves.easeIn,
                             key: keys[0],
-                            child: Text("Your Topup was succesful", style: TextStyle(color: Colors.white),)),
+                            child: Text("Your Target creation was succesful", style: TextStyle(color: Colors.white),)),
                         Spacer(),
                         ItemFader(
                           offset: 10,
@@ -156,6 +164,7 @@ class _SavingsSummaryScreenState extends State<SavingsSummaryScreen> {
               },
             ):SizedBox(),
           ),
+
           AnimatedPositioned(
             duration: Duration(milliseconds: 500),
             //top: -(MediaQuery.of(context).size.height - 200),
@@ -182,7 +191,7 @@ class _SavingsSummaryScreenState extends State<SavingsSummaryScreen> {
                         Navigator.pop(context);
                       },
                     ),
-                    YMargin(70),
+                    YMargin(50),
                     Padding(
                       padding: const EdgeInsets.only(left: 20),
                       child: Text("Savings Summary", style: TextStyle(fontFamily: AppStrings.fontMedium),),
@@ -191,7 +200,7 @@ class _SavingsSummaryScreenState extends State<SavingsSummaryScreen> {
                     Container(
                       margin: EdgeInsets.symmetric(horizontal: 20),
                       padding: EdgeInsets.symmetric(horizontal: 20,vertical: 25),
-                      height: 280,
+                      height: 380,
                       width: double.infinity,
                       decoration: BoxDecoration(
                         color: AppColors.kWhite,
@@ -203,7 +212,7 @@ class _SavingsSummaryScreenState extends State<SavingsSummaryScreen> {
                         Text("Plan name".toUpperCase(), style: TextStyle(fontSize: 12,
                             color: AppColors.kSecondaryText,fontFamily: AppStrings.fontNormal,),),
                           YMargin(15),
-                          Text(savingViewModel.selectedPlan.planName, style: TextStyle(
+                          Text(savingViewModel.goalName, style: TextStyle(
                               fontFamily: AppStrings.fontMedium,
                               fontSize: 13,color: AppColors.kGreyText
                           ),),
@@ -212,10 +221,38 @@ class _SavingsSummaryScreenState extends State<SavingsSummaryScreen> {
                             Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
+                                Text("Frequency".toUpperCase(), style: TextStyle(fontSize: 11,
+                                  color: AppColors.kSecondaryText,fontFamily: AppStrings.fontNormal,),),
+                                YMargin(15),
+                                Text(savingViewModel.selectedFrequency.name, style: TextStyle(
+                                    fontFamily: AppStrings.fontMedium,
+                                    fontSize: 13,color: AppColors.kGreyText
+                                ),),
+                              ],),
+                            Spacer(),
+                            Column(
+                              crossAxisAlignment: CrossAxisAlignment.end,
+                              children: [
                                 Text("amount".toUpperCase(), style: TextStyle(fontSize: 12,
                                   color: AppColors.kSecondaryText,fontFamily: AppStrings.fontNormal,),),
                                 YMargin(15),
                                 Text("${AppStrings.nairaSymbol}${savingViewModel.amountToSave}", style: TextStyle(
+                                    fontFamily: AppStrings.fontMedium,
+                                    fontSize: 13,color: AppColors.kGreyText
+                                ),),
+                              ],),
+
+
+                          ],),
+                          YMargin(40),
+                          Row(children: [
+                            Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text("start date".toUpperCase(), style: TextStyle(fontSize: 12,
+                                  color: AppColors.kSecondaryText,fontFamily: AppStrings.fontNormal,),),
+                                YMargin(15),
+                                Text(AppUtils.getReadableDate2(savingViewModel.startDate), style: TextStyle(
                                     fontFamily: AppStrings.fontMedium,
                                     fontSize: 13,color: AppColors.kGreyText
                                 ),),
@@ -227,7 +264,7 @@ class _SavingsSummaryScreenState extends State<SavingsSummaryScreen> {
                                 Text("Next maturity date".toUpperCase(), style: TextStyle(fontSize: 11,
                                   color: AppColors.kSecondaryText,fontFamily: AppStrings.fontNormal,),),
                                 YMargin(15),
-                                Text(AppUtils.getReadableDate(DateTime.now()), style: TextStyle(
+                                Text(AppUtils.getReadableDate2(savingViewModel.endDate), style: TextStyle(
                                     fontFamily: AppStrings.fontMedium,
                                     fontSize: 13,color: AppColors.kGreyText
                                 ),),
@@ -237,7 +274,7 @@ class _SavingsSummaryScreenState extends State<SavingsSummaryScreen> {
                           Text("Interest rate".toUpperCase(), style: TextStyle(fontSize: 12,
                             color: AppColors.kSecondaryText,fontFamily: AppStrings.fontNormal,),),
                           YMargin(15),
-                          Text("${savingViewModel.selectedPlan.interestRate}% P.A", style: TextStyle(
+                          Text("6% P.A", style: TextStyle(
                               fontFamily: AppStrings.fontMedium,
                               fontSize: 13,color: AppColors.kGreyText
                           ),),
@@ -248,6 +285,7 @@ class _SavingsSummaryScreenState extends State<SavingsSummaryScreen> {
               ),
             ),
           ),
+
           AnimatedPositioned(
             duration: Duration(milliseconds: 500),
             //top: MediaQuery.of(context).size.height - 100,
@@ -278,33 +316,77 @@ class _SavingsSummaryScreenState extends State<SavingsSummaryScreen> {
               ),
             ),
           ),
-          error == false ? Container(
+          Container(
             height: size.height,
             width: size.width,
             child: Center(child: loading ? CircularProgressIndicator():SizedBox()
               ,),
-          ):Container(
-            height: size.height,
-            width: size.width,
-            child: Center(child:Column(children: [
-              Spacer(),
-              Text("Error Occured", style: TextStyle(color: AppColors.kWhite),),
-              YMargin(20),
-              PrimaryButtonNew(
-                title: "Back to Home",
-                onTap: (){
-                  Navigator.pushAndRemoveUntil(
-                      context,
-                      MaterialPageRoute(builder: (context) => TabsContainer()),
-                          (Route<dynamic> route) => false);
-                },
-              ),
-              Spacer(),
-            ],)
-              ,),
-          )
+          ),
         ],),
       ),
     );
+  }
+}
+class ItemFader extends StatefulWidget {
+  final Widget child;
+  final Curve curve;
+  final int offset;
+
+  const ItemFader({Key key, this.child, this.curve = Curves.easeInOut, this.offset = 64}) : super(key: key);
+  @override
+  ItemFaderState createState() => ItemFaderState();
+}
+
+class ItemFaderState extends State<ItemFader>
+    with SingleTickerProviderStateMixin {
+  int position = 1;
+  AnimationController _animationController;
+  Animation _animation;
+
+  @override
+  void initState() {
+    _animationController =
+        AnimationController(vsync: this, duration: Duration(milliseconds: 300));
+    _animation =
+        CurvedAnimation(parent: _animationController, curve: widget.curve);
+    super.initState();
+  }
+
+  @override
+  void dispose() {
+    _animationController.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+
+    return AnimatedBuilder(
+      animation: _animation,
+      child: widget.child,
+      builder: (context, child) {
+        return Transform.translate(
+          offset: Offset(0, widget.offset * position * (1 - _animation.value)),
+          child: Opacity(
+            opacity: _animation.value,
+            child: child,
+          ),
+        );
+      },
+    );
+  }
+
+  show() {
+    setState(() {
+      position = 1;
+    });
+    _animationController.forward();
+  }
+
+  hide() {
+    setState(() {
+      position = -1;
+    });
+    _animationController.reverse();
   }
 }

@@ -12,10 +12,12 @@ import 'package:zimvest/utils/result.dart';
 abstract class ABSPaymentViewModel extends ChangeNotifier{
 
   PaymentCard _selectedCard;
+  Bank _selectedBank;
   PaymentCard get selectedCard => _selectedCard;
-  List<Bank> _userBanks = [];
+  Bank get selectedBank => _selectedBank;
+  List<Bank> _userBanks;
   List<WalletTransaction> _walletTransactions = [];
-  List<PaymentCard> _userCards = [];
+  List<PaymentCard> _userCards;
   List<Bank> get userBanks => _userBanks;
   List<PaymentCard> get userCards => _userCards;
 
@@ -27,6 +29,7 @@ abstract class ABSPaymentViewModel extends ChangeNotifier{
   set walletTransaction(List<WalletTransaction> value);
   set wallet(Wallet value);
   set selectedCard(PaymentCard value);
+  set selectedBank(Bank value);
   set userCards(List<PaymentCard> value);
 
   Future<Result<List<Bank>>> getBanks(String token);
@@ -60,6 +63,11 @@ class PaymentViewModel extends ABSPaymentViewModel{
 
   set selectedCard(PaymentCard value){
     _selectedCard = value;
+    notifyListeners();
+  }
+
+  set selectedBank(Bank value){
+    _selectedBank = value;
     notifyListeners();
   }
 

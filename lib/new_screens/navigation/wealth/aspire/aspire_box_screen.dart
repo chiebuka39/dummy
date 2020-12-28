@@ -27,6 +27,8 @@ class _AspireSavingScreenState extends State<AspireSavingScreen> {
       'Save daily, weekly or monthly',
       'Savings Recommendation'
     ];
+    double height = MediaQuery.of(context).size.height;
+    print("ppp $height");
     return Scaffold(
       backgroundColor: AppColors.kAspire,
 
@@ -37,7 +39,7 @@ class _AspireSavingScreenState extends State<AspireSavingScreen> {
               Navigator.of(context).pop();
           })
         ],),
-        Center(child: SvgPicture.asset("images/aspire.svg",height: 200,)),
+        Center(child: SvgPicture.asset("images/aspire.svg",height: height > 800 ? 200 + (height - 750): 200,)),
         YMargin(20),
         Expanded(
           child: Container(
@@ -64,13 +66,13 @@ class _AspireSavingScreenState extends State<AspireSavingScreen> {
                     return Container(
                       height: 40,
                       child: Row(children: [
-                        Icon(Icons.add, color: AppColors.kPrimaryColor,size: 17,),
+                        SvgPicture.asset("images/new/star.svg"),
                         XMargin(20),
                         Text(benefits[index], style: TextStyle(fontSize: 12),)
                       ],),
                     );
                   }),
-                  YMargin(50),
+                  YMargin( 50),
                   Center(
                     child: PrimaryButtonNew(
                       title: "Get Started",

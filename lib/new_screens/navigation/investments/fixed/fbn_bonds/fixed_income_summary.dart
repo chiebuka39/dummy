@@ -4,6 +4,7 @@ import 'package:provider_architecture/provider_architecture.dart';
 import 'package:simple_animations/simple_animations.dart';
 import 'package:zimvest/data/view_models/investment_view_model.dart';
 import 'package:zimvest/new_screens/funding/top_up_successful.dart';
+import 'package:zimvest/new_screens/tabs.dart';
 import 'package:zimvest/styles/colors.dart';
 import 'package:zimvest/utils/app_utils.dart';
 import 'package:zimvest/utils/margin.dart';

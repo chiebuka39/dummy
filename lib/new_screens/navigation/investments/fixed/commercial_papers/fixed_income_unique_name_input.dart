@@ -3,6 +3,7 @@ import 'package:zimvest/new_screens/navigation/investments/fixed/commercial_pape
 import 'package:zimvest/new_screens/navigation/investments/widgets/text_field.dart';
 import 'package:zimvest/styles/colors.dart';
 import 'package:zimvest/utils/margin.dart';
+import 'package:zimvest/utils/margins.dart';
 import 'package:zimvest/utils/strings.dart';
 import 'package:zimvest/widgets/buttons.dart';
 
@@ -86,7 +87,7 @@ class _FixedIncomeUniqueNameState extends State<FixedIncomeUniqueName> {
       body: SingleChildScrollView(
         child: Column(
           children: [
-            YMargin(72),
+            Spacer(),
             Padding(
               padding: const EdgeInsets.only(left: 20.0, right: 76),
               child: Text(
@@ -98,12 +99,12 @@ class _FixedIncomeUniqueNameState extends State<FixedIncomeUniqueName> {
                 ),
               ),
             ),
-            YMargin(36),
+            // YMargin(36),
             InvestmentTextField(
                 readOnly: false,
                 controller: investmentName,
                 hintText: "Enter a unique name"),
-            YMargin(252),
+            // YMargin(252),
             RoundedNextButton(
               onTap: () => Navigator.push(
                 context,

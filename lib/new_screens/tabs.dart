@@ -4,6 +4,7 @@ import 'package:provider/provider.dart';
 import 'package:zimvest/data/models/payment/wallet.dart';
 import 'package:zimvest/data/view_models/dashboard_view_model.dart';
 import 'package:zimvest/data/view_models/identity_view_model.dart';
+import 'package:zimvest/data/view_models/payment_view_model.dart';
 import 'package:zimvest/data/view_models/savings_view_model.dart';
 import 'package:zimvest/new_screens/navigation/WalletScreen.dart';
 import 'package:zimvest/new_screens/navigation/home_screen.dart';
@@ -37,6 +38,7 @@ class _TabsContainerState extends State<TabsContainer>
   ABSDashboardViewModel dashboardViewModel;
   ABSIdentityViewModel identityViewModel;
   ABSSavingViewModel savingViewModel;
+  ABSPaymentViewModel paymentViewModel;
 
   List<Widget> _screenWidgetList = [
     HomeScreen(),
@@ -50,12 +52,13 @@ class _TabsContainerState extends State<TabsContainer>
   int _currentIndex = 0;
 
   @override
-  void afterFirstLayout(BuildContext context) async {
+  void afterFirstLayout(BuildContext context) async{
+    dashboardViewModel.getPortfolioValue(identityViewModel.user.token);
     savingViewModel.getSavingPlans(token: identityViewModel.user.token);
-    await dashboardViewModel.getPortfolioValue(identityViewModel.user.token);
-    await dashboardViewModel.getAssetDistribution(identityViewModel.user.token);
-    await dashboardViewModel
-        .getPortfolioDistribution(identityViewModel.user.token);
+    paymentViewModel.getWallet(identityViewModel.user.token);
+    dashboardViewModel.getAssetDistribution(identityViewModel.user.token);
+    dashboardViewModel.getPortfolioDistribution(identityViewModel.user.token);
+
   }
 
   @override
@@ -68,6 +71,7 @@ class _TabsContainerState extends State<TabsContainer>
     identityViewModel = Provider.of(context);
     dashboardViewModel = Provider.of(context);
     savingViewModel = Provider.of(context);
+    paymentViewModel = Provider.of(context);
     return Container(
         decoration: BoxDecoration(borderRadius: BorderRadius.circular(20)),
         child: Stack(

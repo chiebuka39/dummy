@@ -5,7 +5,7 @@ import 'package:provider/provider.dart';
 import 'package:zimvest/data/view_models/identity_view_model.dart';
 import 'package:zimvest/data/view_models/payment_view_model.dart';
 import 'package:zimvest/data/view_models/savings_view_model.dart';
-import 'package:zimvest/new_screens/navigation/wealth/create/savings_summary.dart';
+import 'package:zimvest/new_screens/navigation/wealth/aspire/savings_summary.dart';
 import 'package:zimvest/new_screens/profile/widgets/verification_failed_widget.dart';
 import 'package:zimvest/styles/colors.dart';
 import 'package:zimvest/utils/margin.dart';
@@ -58,8 +58,8 @@ class _ChooseFundingScreenState extends State<ChooseFundingScreen> with AfterLay
             },
           ),
           backgroundColor: Colors.transparent,
-          title: Text("Top Up",
-            style: TextStyle(color: Colors.black87,fontSize: 14),),
+          title: Text("Create Zimvest Aspire",
+            style: TextStyle(color: Colors.black87,fontSize: 13, fontFamily: AppStrings.fontMedium),),
         ),
         body: GestureDetector(
           onTap: (){
@@ -78,7 +78,9 @@ class _ChooseFundingScreenState extends State<ChooseFundingScreen> with AfterLay
                 GestureDetector(
                   onTap: (){
                     showModalBottomSheet < Null > (context: context, builder: (BuildContext context) {
-                      return SelectCardWidget(success: false,);
+                      return SelectCardWidget(success: false,navigate: (){
+                        Navigator.of(context).push(SavingsSummaryScreen.route());
+                      },);
                     });
                   },
                   child: Container(
@@ -129,7 +131,7 @@ class _ChooseFundingScreenState extends State<ChooseFundingScreen> with AfterLay
                 ),
                 YMargin(5),
                 Text("Funding with your Zimvest wallet is free",
-                  style: TextStyle(fontSize: 12, fontFamily: AppStrings.fontNormal),)
+                  style: TextStyle(fontSize: 11, fontFamily: AppStrings.fontNormal),)
 
 
 

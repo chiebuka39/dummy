@@ -17,16 +17,24 @@ abstract class ABSSavingViewModel extends ChangeNotifier{
   SavingPlanModel _selectedPlan;
   SavingPlanModel get selectedPlan => _selectedPlan;
   double _amountToSave;
+  String _goalName;
+  String get goalName => _goalName;
   double get amountToSave => _amountToSave;
   DateTime _startDate;
+  DateTime _endDate;
+  bool _autoSave;
+  bool get autoSave => _autoSave;
   DateTime get startDate => _startDate;
+  DateTime get endDate => _endDate;
   SavingsFrequency get selectedFrequency => _selectedFrequency;
   FundingChannel get selectedChannel => _selectedChannel;
 
   List<SavingPlanModel> _savingPlanModel;
   List<ProductType> _productTypes = [];
   List<FundingChannel> _fundingChannels = [];
+  List<FundingChannel> _withdrawalChannels = [];
   List<FundingChannel> get fundingChannels => _fundingChannels;
+  List<FundingChannel> get withdrawalChannels => _withdrawalChannels;
 
   List<SavingsFrequency> _savingFrequency = [];
   List<SavingsFrequency> get savingFrequency => _savingFrequency;
@@ -38,12 +46,16 @@ abstract class ABSSavingViewModel extends ChangeNotifier{
 
   set savingPlanModel(List<SavingPlanModel> plans);
   set startDate(DateTime time);
+  set endDate(DateTime time);
+  set goalName(String name);
   set amountToSave(double value);
   set selectedFrequency(SavingsFrequency value);
+  set autoSave(bool value);
   set selectedPlan(SavingPlanModel value);
   set selectedChannel(FundingChannel value);
   set productTypes(List<ProductType> types);
   set fundingChannels(List<FundingChannel> channels);
+  set withdrawalChannels(List<FundingChannel> channels);
   set savingFrequency(List<SavingsFrequency> value);
   set savingsTransactions(Map<int,List<ProductTransaction>> transations);
 
@@ -57,6 +69,7 @@ abstract class ABSSavingViewModel extends ChangeNotifier{
   Future<Result<List<ProductTransaction>>> getTransactionForProduct({String token,
     int id});
   Future<Result<List<FundingChannel>>> getFundingChannel({String token});
+  Future<Result<List<FundingChannel>>> getWithdrawalChannel({String token});
   Future<Result<List<SavingsFrequency>>> getSavingFrequency({String token});
   Future<Result<SavingPlanModel>> createWealthBox({String token,
     int cardId,
@@ -68,7 +81,7 @@ abstract class ABSSavingViewModel extends ChangeNotifier{
   Future<Result<SavingPlanModel>> createTargetSavings({int cardId,
     int fundingChannel, int frequency, String planName, DateTime maturityDate,
     DateTime startDate, int productId, double targetAmount,
-    int savingsAmount, String token});
+    int savingsAmount, String token, bool autoSave});
 
   Future<Result<void>> topUp({String token,
     int cardId, int custSavingId, int fundingChannel,
@@ -79,7 +92,7 @@ abstract class ABSSavingViewModel extends ChangeNotifier{
   Future<Result<void>> pauseSaving({String token,int savingModelId});
   Future<Result<void>> continueSaving({String token,int savingModelId});
   Future<Result<void>> withdrawFund({String token,int customerSavingId,
-    double amount, int customerBankId, String password});
+    double amount, int customerBankId, String password, int withdrawalChannel});
 }
 
 class SavingViewModel extends ABSSavingViewModel{
@@ -94,6 +107,18 @@ class SavingViewModel extends ABSSavingViewModel{
     _startDate = time;
     notifyListeners();
   }
+  set goalName(String time){
+    _goalName = time;
+    notifyListeners();
+  }
+  set autoSave(bool time){
+    _autoSave = time;
+    notifyListeners();
+  }
+  set endDate(DateTime time){
+    _endDate = time;
+    notifyListeners();
+  }
   set amountToSave(double value){
     _amountToSave = value;
     notifyListeners();
@@ -106,6 +131,11 @@ class SavingViewModel extends ABSSavingViewModel{
 
   set fundingChannels(List<FundingChannel> value){
     _fundingChannels = value;
+    notifyListeners();
+  }
+
+  set withdrawalChannels(List<FundingChannel> value){
+    _withdrawalChannels = value;
     notifyListeners();
   }
 
@@ -185,6 +215,16 @@ class SavingViewModel extends ABSSavingViewModel{
     print(",,, ${result.data}");
     return result;
   }
+  @override
+  Future<Result<List<FundingChannel>>> getWithdrawalChannel({String token})async {
+    var result =await _savingService.getWithdrawalChannel(token: token);
+
+    if(result.error == false){
+      withdrawalChannels = result.data;
+    }
+
+    return result;
+  }
 
   @override
   Future<Result<List<SavingsFrequency>>> getSavingFrequency({String token}) async{
@@ -241,7 +281,7 @@ class SavingViewModel extends ABSSavingViewModel{
   Future<Result<SavingPlanModel>> createTargetSavings({int cardId, int fundingChannel,
     int frequency, String planName, DateTime maturityDate,
     DateTime startDate, int productId, double targetAmount,
-    int savingsAmount, String token})async {
+    int savingsAmount, String token,bool autoSave})async {
     var result = await _savingService.createTargetSavings(
         token: token,
         savingsAmount: savingsAmount,
@@ -250,6 +290,7 @@ class SavingViewModel extends ABSSavingViewModel{
         targetAmount: targetAmount,
         startDate: startDate,
         productId: productId,
+        autoSave: autoSave,
         fundingChannel: fundingChannel,
         planName: planName,
         cardId: cardId,
@@ -273,10 +314,12 @@ class SavingViewModel extends ABSSavingViewModel{
   }
 
   @override
-  Future<Result<void>> withdrawFund({String token, double amount, int customerSavingId,int customerBankId, String password}) {
+  Future<Result<void>> withdrawFund({String token, double amount, int customerSavingId,
+    int customerBankId, String password,int withdrawalChannel}) {
     return _savingService.withdrawFund(token: token,
         amount: amount,
       customerBankId: customerBankId,
+      withdrawalChannel: withdrawalChannel,
       customerSavingId: customerSavingId,
       password: password
     );

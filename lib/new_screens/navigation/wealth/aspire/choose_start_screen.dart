@@ -1,4 +1,8 @@
+import 'package:after_layout/after_layout.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:zimvest/data/view_models/identity_view_model.dart';
+import 'package:zimvest/data/view_models/savings_view_model.dart';
 import 'package:zimvest/new_screens/navigation/wealth/aspire/choose_due_screen.dart';
 import 'package:zimvest/new_screens/navigation/wealth/create/choose_funding_source.dart';
 
@@ -25,16 +29,29 @@ class ChooseStartScreen extends StatefulWidget {
   _ChooseStartScreenState createState() => _ChooseStartScreenState();
 }
 
-class _ChooseStartScreenState extends State<ChooseStartScreen> {
+class _ChooseStartScreenState extends State<ChooseStartScreen> with AfterLayoutMixin<ChooseStartScreen> {
 
   DateTime _time;
+  DateTime _selectedTime;
 
-  bool today = true;
+  bool today = false;
+
+  ABSSavingViewModel savingViewModel;
+  ABSIdentityViewModel identityViewModel;
+
+  @override
+  void afterFirstLayout(BuildContext context) async{
+
+    await savingViewModel.getSavingFrequency(token:identityViewModel.user.token);
+    await savingViewModel.getFundingChannel(token:identityViewModel.user.token);
+  }
 
 
   @override
   Widget build(BuildContext context) {
-    
+    savingViewModel = Provider.of(context);
+    identityViewModel = Provider.of(context);
+
     return GestureDetector(
       onTap: (){
         FocusScope.of(context).requestFocus(new FocusNode());
@@ -50,8 +67,9 @@ class _ChooseStartScreenState extends State<ChooseStartScreen> {
             },
           ),
           backgroundColor: Colors.transparent,
-          title: Text("Create Zimvest WealthBox",
-            style: TextStyle(color: Colors.black87,fontSize: 14),),
+          title: Text("Create Zimvest Aspire",
+            style: TextStyle(color: Colors.black87,fontSize: 14,
+                fontFamily: AppStrings.fontMedium),),
         ),
         body: GestureDetector(
           onTap: (){
@@ -70,7 +88,9 @@ class _ChooseStartScreenState extends State<ChooseStartScreen> {
                 InkWell(
                   onTap: (){
                     setState(() {
-
+                      _time = DateTime.now();
+                      _selectedTime = null;
+                      today = true;
                     });
                   },
                   child: Container(
@@ -96,6 +116,8 @@ class _ChooseStartScreenState extends State<ChooseStartScreen> {
                     if(time != null){
                       setState(() {
                         _time = time;
+                        _selectedTime = time;
+                        today = false;
                       });
                     }
                   },
@@ -109,8 +131,8 @@ class _ChooseStartScreenState extends State<ChooseStartScreen> {
                     ),
                     child: Row(
                       children: [
-                        Text(_time == null ? "Set preferred Date":
-                        "${_time.year}/${AppUtils.addLeadingZeroIfNeeded(_time.month)}/${AppUtils.addLeadingZeroIfNeeded(_time.day)}", style: TextStyle(fontSize: 12,
+                        Text(_selectedTime == null ? "Set preferred Date":
+                        "${_selectedTime.year}/${AppUtils.addLeadingZeroIfNeeded(_time.month)}/${AppUtils.addLeadingZeroIfNeeded(_time.day)}", style: TextStyle(fontSize: 12,
                             color: AppColors.kTextColor.withOpacity(0.53)),),
                         Spacer(),
                         Icon(Icons.keyboard_arrow_down_rounded)
@@ -130,6 +152,7 @@ class _ChooseStartScreenState extends State<ChooseStartScreen> {
 
                 RoundedNextButton(
                   onTap: (){
+                    savingViewModel.startDate = _time;
                     Navigator.push(context, ChooseDuedateScreen.route());
                   },
                 ),

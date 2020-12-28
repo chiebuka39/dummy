@@ -30,6 +30,9 @@ class AppColors {
   static const kAccentColor = Color(0xffbf9931);
   static const kInstruments = Color(0xffF5EBD0);
   static const kBg = Color(0xfff8fbfb);
+  static const kInvestmentP = Color(0xff189D4D);
+  static const kSavingsP = Color(0xffFC8A21);
+  static const kYellow = Color.fromRGBO(255, 201, 54, 1);
 
   static var kRed = Color(0xFFd14747);
   static var kRed2 = Color(0xFFe02020);

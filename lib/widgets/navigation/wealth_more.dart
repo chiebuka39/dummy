@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:zimvest/data/models/saving_plan.dart';
 import 'package:zimvest/styles/colors.dart';
 import 'package:zimvest/utils/margin.dart';
 import 'package:zimvest/utils/strings.dart';
@@ -9,8 +10,10 @@ import 'package:zimvest/widgets/navigation/wealthbox_activity.dart';
 
 class WealthMore extends StatelessWidget {
   const WealthMore({
-    Key key,
+    Key key, this.savingPlanModel,
   }) : super(key: key);
+
+  final SavingPlanModel savingPlanModel;
 
   @override
   Widget build(BuildContext context) {

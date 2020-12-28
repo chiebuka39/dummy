@@ -13,6 +13,7 @@ import 'package:zimvest/new_screens/funding/top_up_screen.dart';
 import 'package:zimvest/new_screens/funding/withdraw_screen.dart';
 import 'package:zimvest/new_screens/navigation/portfolio_screen.dart';
 import 'package:zimvest/new_screens/navigation/widgets/money_title_widget.dart';
+import 'package:zimvest/new_screens/withdrawals/amount_withdraw_screen.dart';
 import 'package:zimvest/styles/colors.dart';
 import 'package:zimvest/utils/app_utils.dart';
 import 'package:zimvest/utils/margin.dart';
@@ -48,11 +49,11 @@ class _AspireDetailsScreenState extends State<AspireDetailsScreen> with
 
   @override
   void afterFirstLayout(BuildContext context) async{
+    savingViewModel.selectedPlan = widget.goal;
     var result =await  savingViewModel.getTransactionForProduct(
         token: identityViewModel.user.token,
         id: widget.goal.id);
     if(result.error == false){
-      ;
       transactions = result.data;
       transactionsLoading = false;
     }else{
@@ -180,7 +181,8 @@ class _AspireDetailsScreenState extends State<AspireDetailsScreen> with
                                 radius: 70.0,
                                 lineWidth: 7.0,
                                 animation: true,
-                                percent: double.parse(widget.goal.successRate.replaceAll("%", ""))/100,
+                                percent:( double.parse(widget.goal.successRate.replaceAll("%", ""))/100) > 1 ? 0.5:
+                                ( double.parse(widget.goal.successRate.replaceAll("%", ""))/100),
                                 center: new Text(
                                   "${widget.goal.successRate}",
                                   style:
@@ -194,7 +196,7 @@ class _AspireDetailsScreenState extends State<AspireDetailsScreen> with
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
                                   Spacer(),
-                                  Text("${AppStrings.nairaSymbol}5,000,000", style: TextStyle(
+                                  Text("${widget.goal.targetAmount}", style: TextStyle(
                                       fontFamily: AppStrings.fontMedium,color: AppColors.kGreyText
                                   ),),
                                   YMargin(8),
@@ -202,7 +204,7 @@ class _AspireDetailsScreenState extends State<AspireDetailsScreen> with
                                       fontFamily: AppStrings.fontNormal,color: AppColors.kGreyText
                                   ),),
                                   YMargin(30),
-                                  Text("Feb 02 2021", style: TextStyle(
+                                  Text(AppUtils.getReadableDate2(widget.goal.maturityDate), style: TextStyle(
                                       fontFamily: AppStrings.fontMedium,color: AppColors.kGreyText
                                   ),),
                                   YMargin(8),
@@ -250,7 +252,8 @@ class _AspireDetailsScreenState extends State<AspireDetailsScreen> with
                           child: Center(
                             child: GestureDetector(
                               onTap: (){
-                                Navigator.of(context).push(WithdrawWealthScreen.route());
+                                savingViewModel.selectedPlan = widget.goal;
+                                Navigator.of(context).push(AmountWithdrawScreen.route());
                               },
                               child: Container(child: Column(children: [
                                 Container(
@@ -260,7 +263,7 @@ class _AspireDetailsScreenState extends State<AspireDetailsScreen> with
                                         color: AppColors.kPrimaryColorLight,
                                         shape: BoxShape.circle
                                     ),
-                                    child: Center(child: SvgPicture.asset("images/new/top_up.svg", color: AppColors.kPrimaryColor))),
+                                    child: Center(child: SvgPicture.asset("images/new/withdraw.svg", color: AppColors.kPrimaryColor))),
                                 YMargin(12),
                                 Text("Withdraw", style: TextStyle(
                                     fontSize: 12,
@@ -280,7 +283,7 @@ class _AspireDetailsScreenState extends State<AspireDetailsScreen> with
                                       color: AppColors.kPrimaryColorLight,
                                       shape: BoxShape.circle
                                   ),
-                                  child: Center(child: SvgPicture.asset("images/new/top_up.svg", color: AppColors.kPrimaryColor))),
+                                  child: Center(child: SvgPicture.asset("images/new/pause.svg", color: AppColors.kPrimaryColor))),
                               YMargin(12),
                               Text("Pause", style: TextStyle(
                                   fontSize: 12,

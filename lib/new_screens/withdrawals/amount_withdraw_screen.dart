@@ -1,36 +1,51 @@
+import 'package:after_layout/after_layout.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
+import 'package:zimvest/data/view_models/identity_view_model.dart';
+import 'package:zimvest/data/view_models/payment_view_model.dart';
 import 'package:zimvest/data/view_models/savings_view_model.dart';
-import 'package:zimvest/new_screens/navigation/wealth/aspire/choose_start_screen.dart';
+import 'package:zimvest/new_screens/withdrawals/choose_wealth_withdraw_source.dart';
 import 'package:zimvest/styles/colors.dart';
 import 'package:zimvest/utils/margin.dart';
 import 'package:zimvest/utils/strings.dart';
 import 'package:zimvest/widgets/buttons.dart';
 
-class SavingsTargetScreen extends StatefulWidget {
-  const SavingsTargetScreen({
+class AmountWithdrawScreen extends StatefulWidget {
+  const AmountWithdrawScreen({
     Key key,
   }) : super(key: key);
   static Route<dynamic> route() {
     return MaterialPageRoute(
-        builder: (_) => SavingsTargetScreen(),
+        builder: (_) => AmountWithdrawScreen(),
         settings:
-        RouteSettings(name: SavingsTargetScreen().toStringShort()));
+        RouteSettings(name: AmountWithdrawScreen().toStringShort()));
   }
 
   @override
-  _SavingsTargetScreenState createState() => _SavingsTargetScreenState();
+  _SavingDailyScreenState createState() => _SavingDailyScreenState();
 }
 
-class _SavingsTargetScreenState extends State<SavingsTargetScreen> {
+class _SavingDailyScreenState extends State<AmountWithdrawScreen> with AfterLayoutMixin<AmountWithdrawScreen> {
 
   String amount = "";
   ABSSavingViewModel savingViewModel;
+  ABSPaymentViewModel paymentViewModel;
+  ABSIdentityViewModel identityViewModel;
+
+  @override
+  void afterFirstLayout(BuildContext context) {
+    paymentViewModel.getCustomerBank(identityViewModel.user.token);
+    savingViewModel.getWithdrawalChannel(token:identityViewModel.user.token);
+  }
 
 
   @override
   Widget build(BuildContext context) {
-    savingViewModel = Provider.of(context);
+    savingViewModel =   Provider.of(context);
+    identityViewModel = Provider.of(context);
+    paymentViewModel =  Provider.of(context);
+
     return GestureDetector(
       onTap: (){
         FocusScope.of(context).requestFocus(new FocusNode());
@@ -46,8 +61,8 @@ class _SavingsTargetScreenState extends State<SavingsTargetScreen> {
             },
           ),
           backgroundColor: Colors.transparent,
-          title: Text("Create Zimvest Aspire",
-            style: TextStyle(color: Colors.black87,fontSize: 14),),
+          title: Text("Withdraw",
+            style: TextStyle(color: Colors.black87,fontSize: 13,fontFamily: AppStrings.fontMedium),),
         ),
         body: GestureDetector(
           onTap: (){
@@ -59,7 +74,7 @@ class _SavingsTargetScreenState extends State<SavingsTargetScreen> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 YMargin(40),
-                Text("Set a target amount for this goal ?", style: TextStyle(fontSize: 15,
+                Text("How much do you want to withdraw?", style: TextStyle(fontSize: 15,
                     color: AppColors.kGreyText,
                     fontFamily: AppStrings.fontBold),),
                 YMargin(12),
@@ -75,21 +90,14 @@ class _SavingsTargetScreenState extends State<SavingsTargetScreen> {
                     alignment: Alignment.centerLeft,
                       child: Text(convertWithComma(amount), style: TextStyle(fontSize: 15),)),
                 ),
-                YMargin(10),
-                SizedBox(
-                  width: 300,
-                  child: Text("You can always top up your savings anytime "
-                      "once you create this savings plan", style: TextStyle(
-                      fontSize: 10,height: 1.6),),
-                ),
                 YMargin(70),
 
 
                 RoundedNextButton(
-                  onTap:amount.isEmpty ? null : double.parse(amount) > 1000 ? (){
+                  onTap: amount.isEmpty? null : double.parse(amount) < 1000 ? null: (){
                     savingViewModel.amountToSave = double.parse(amount);
-                    Navigator.push(context, ChooseStartScreen.route());
-                  }:null,
+                    Navigator.push(context, ChooseWealthWithdrawScreen.route());
+                  },
                 ),
                 YMargin(65),
                 Expanded(
@@ -309,7 +317,7 @@ class _SavingsTargetScreenState extends State<SavingsTargetScreen> {
                     Expanded(
                       child: InkWell(
                         onTap: (){
-                          if(amount.length > 1){
+                          if(amount.length < 1){
                             return;
                           }
                           setState(() {

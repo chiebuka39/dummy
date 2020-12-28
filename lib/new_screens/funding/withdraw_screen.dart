@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:zimvest/new_screens/funding/choose_funding_source.dart';
-import 'package:zimvest/new_screens/funding/choose_wealth_withdraw_source.dart';
+import 'package:zimvest/new_screens/withdrawals/choose_wealth_withdraw_source.dart';
+
 import 'package:zimvest/payment/input_formaters.dart';
 import 'package:zimvest/styles/colors.dart';
 import 'package:zimvest/utils/margin.dart';

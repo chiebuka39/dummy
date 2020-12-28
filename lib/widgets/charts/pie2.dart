@@ -7,8 +7,15 @@ import 'package:zimvest/utils/strings.dart';
 
 class PieChartSample2 extends StatefulWidget {
   final bool dollar;
+  final String value;
+  final double investmentValue;
+  final double savingsValue;
+  final double walletValue;
 
-  PieChartSample2({Key key, this.dollar = false}) : super(key: key);
+  PieChartSample2({Key key, this.dollar = false, this.value,
+    this.investmentValue = 15,
+    this.savingsValue = 35,
+    this.walletValue = 50}) : super(key: key);
   @override
   State<StatefulWidget> createState() => PieChart2State();
 }
@@ -20,6 +27,7 @@ class PieChart2State extends State<PieChartSample2> {
 
   @override
   Widget build(BuildContext context) {
+    print("ppppnmn ${widget.value}");
 
     return Row(
       children: <Widget>[
@@ -34,14 +42,14 @@ class PieChart2State extends State<PieChartSample2> {
                   offset:Offset(0,-4),
                   child: Text(widget.dollar ?'\$' :'${AppStrings.nairaSymbol}', style: TextStyle(fontSize: 14,color: AppColors.kSecondaryBoldText),)),
               XMargin(2),
-              Text("000,000",
+              Text(widget.value.split(".").first.substring(1),
                 style: TextStyle(fontSize: 25,
                     color: AppColors.kSecondaryBoldText,
                     fontFamily: AppStrings.fontMedium),),
               XMargin(3),
               Transform.translate(
                 offset:Offset(0,-4),
-                child: Text(".00",
+                child: Text(".${widget.value.split(".").last}",
                   style: TextStyle(fontSize: 14, fontFamily: AppStrings.fontMedium, color: AppColors.kSecondaryBoldText,)),
               ),
             ],),
@@ -117,27 +125,27 @@ class PieChart2State extends State<PieChartSample2> {
       switch (i) {
         case 0:
           return PieChartSectionData(
-            color: const Color(0xffFC8A21),
-            value: 40,
-            title: '40%',
+            color: AppColors.kSavingsP,
+            value: widget.savingsValue,
+            title: '${widget.savingsValue}%',
             radius: radius,
             titleStyle: TextStyle(
                 fontSize: fontSize, fontWeight: FontWeight.bold, color: const Color(0xffffffff)),
           );
         case 1:
           return PieChartSectionData(
-            color: const Color(0xffFFC936),
-            value: 30,
-            title: '30%',
+            color: AppColors.kInvestmentP,
+            value: widget.investmentValue,
+            title: '${widget.investmentValue}%',
             radius: radius,
             titleStyle: TextStyle(
                 fontSize: fontSize, fontWeight: FontWeight.bold, color: const Color(0xffffffff)),
           );
         case 2:
           return PieChartSectionData(
-            color: const Color(0xff189D4D),
-            value: 15,
-            title: '15%',
+            color: AppColors.kYellow,
+            value: widget.walletValue,
+            title: '${widget.walletValue}%',
             radius: radius,
             titleStyle: TextStyle(
                 fontSize: fontSize, fontWeight: FontWeight.bold, color: const Color(0xffffffff)),
