@@ -152,22 +152,24 @@ class _WealthScreenState extends State<WealthScreen> {
                     child: Column(
                       children: [
                         ActionBoxWidget(
-                          img: "high_yield",
+                          img: "high",
                           onTap: () {
                             Navigator.push(
                                 context, InvestmentHighYieldScreen.route());
                           },
                           title: "Zimvest High Yield",
-                          desc:
-                              "Start saving in a disciplined manner with the WealthBox Savings Plan",
+                          desc: "This plan, which is similar to fixed"
+                              " deposits run by banks, offers you"
+                              "competitive interest rate.",
                           color: AppColors.kHighYield,
+                          
                         ),
                         ActionBoxWidget(
-                            img: "fixed_income",
+                            img: "fixed",
                             onTap: () => Navigator.push(
                                 context, FixedIncomeHome.route()),
                             title: "Zimvest Fixed Income",
-                            desc: "This savings plan assists you save in a ",
+                            desc: "Invest in fixed income vehicles such as Treasury Bills, FGN Bonds, Corporate Bonds, and Eurobonds",
                             color: AppColors.kFixed),
                       ],
                     ),
@@ -181,7 +183,7 @@ class _WealthScreenState extends State<WealthScreen> {
                                 "disciplined manner.",
                             color: AppColors.kWealth),
                         ActionBoxWidget(
-                          img: 'aspire',
+                            img: 'aspire',
                             title: "Zimvest Aspire",
                             desc: "This savings plan assists you save in a "
                                 "disciplined manner.",

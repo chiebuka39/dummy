@@ -220,10 +220,10 @@ class FixedIncomeCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.all(8.0),
+      padding: const EdgeInsets.only(left: 8.0, right: 8.0),
       child: Container(
         padding: EdgeInsets.all(11),
-        margin: EdgeInsets.only(top: 25),
+        margin: EdgeInsets.only(top: 20),
         height: screenHeight(context) / 5,
         width: screenWidth(context) / 1.5,
         decoration: BoxDecoration(

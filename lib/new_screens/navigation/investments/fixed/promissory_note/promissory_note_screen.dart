@@ -33,7 +33,14 @@ class _PromissoryNotePageState extends State<PromissoryNotePage> {
                       itemBuilder: (context, index) {
                         List<PromissoryNoteItems> timePeriod =
                             model.promissoryNote.data.promissoryNoteItems;
-                        return Padding(
+                        List<PromissoryNotes> toShow = model
+                            .promissoryNote.data.promissoryNoteItems
+                            .where((element) =>
+                                element.tenorBandName ==
+                                timePeriod[index].tenorBandName)
+                            .toList()[0]
+                            .promissoryNotes;
+                        return toShow.length == 0 ? Container() : Padding(
                           padding: const EdgeInsets.only(
                               left: 8.0, right: 8.0, bottom: 8.0),
                           child: Container(
@@ -109,15 +116,20 @@ class _PromissoryNotePageState extends State<PromissoryNotePage> {
                                                   onTap: () => Navigator.push(
                                                     context,
                                                     FixedIncomeDetails.route(
-                                                     bondName: e.promissoryNoteName,
+                                                      bondName:
+                                                          e.promissoryNoteName,
                                                       id: e.id,
-                                                      maturityDate:
-                                                          e.investmentMaturityDate,
+                                                      maturityDate: e
+                                                          .investmentMaturityDate,
                                                       rate: e.rate,
-                                                      investmentType: e.investmentType,
-                                                      instrumentId: e.instrumentId,
-                                                      minimumAmount: e.minimumAmount,
-                                                      investmentMaturityDate: e.investmentMaturityDate,
+                                                      investmentType:
+                                                          e.investmentType,
+                                                      instrumentId:
+                                                          e.instrumentId,
+                                                      minimumAmount:
+                                                          e.minimumAmount,
+                                                      investmentMaturityDate: e
+                                                          .investmentMaturityDate,
                                                     ),
                                                   ),
                                                   child: FixedIncomeCard(

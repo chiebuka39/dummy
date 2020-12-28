@@ -32,9 +32,15 @@ class _TreasuryBillPageState extends State<TreasuryBillPage> {
                       itemBuilder: (context, index) {
                         List<TBillsItems> timePeriod =
                             model.treasuryBills.data.tBillsItems;
-                        return Padding(
-                          padding: const EdgeInsets.only(
-                              left: 8.0, right: 8.0, bottom: 8.0),
+                        List<TreasureBills> toShow = model
+                            .treasuryBills.data.tBillsItems
+                            .where((element) =>
+                                element.tenorBandName ==
+                                timePeriod[index].tenorBandName)
+                            .toList()[0]
+                            .treasureBills;
+                        return toShow.length == 0 ? Container(): Padding(
+                          padding: const EdgeInsets.only(left: 8.0, right: 8.0),
                           child: Container(
                             height: screenHeight(context) / 3.0,
                             width: screenWidth(context),
@@ -43,7 +49,7 @@ class _TreasuryBillPageState extends State<TreasuryBillPage> {
                                 Padding(
                                   padding: const EdgeInsets.symmetric(
                                       horizontal: 20.0),
-                                  child: Row(
+                                  child:  Row(
                                     mainAxisAlignment:
                                         MainAxisAlignment.spaceBetween,
                                     children: [
@@ -60,9 +66,10 @@ class _TreasuryBillPageState extends State<TreasuryBillPage> {
                                         onTap: () => Navigator.push(
                                           context,
                                           AllTreasurryBillBonds.route(
-                                            title: timePeriod[index].tenorBandName,
-                                            bondItem: model.treasuryBills.data.tBillsItems
-                                          ),
+                                              title: timePeriod[index]
+                                                  .tenorBandName,
+                                              bondItem: model.treasuryBills.data
+                                                  .tBillsItems),
                                         ),
                                         child: Row(
                                           children: [
@@ -107,15 +114,20 @@ class _TreasuryBillPageState extends State<TreasuryBillPage> {
                                                   onTap: () => Navigator.push(
                                                     context,
                                                     FixedIncomeDetails.route(
-                                                     bondName: e.treasuryBillName,
+                                                      bondName:
+                                                          e.treasuryBillName,
                                                       id: e.id,
-                                                      maturityDate:
-                                                          e.investmentMaturityDate,
+                                                      maturityDate: e
+                                                          .investmentMaturityDate,
                                                       rate: e.rate,
-                                                      investmentType: e.investmentType,
-                                                      instrumentId: e.instrumentId,
-                                                      minimumAmount: e.minimumAmount,
-                                                      investmentMaturityDate: e.investmentMaturityDate,
+                                                      investmentType:
+                                                          e.investmentType,
+                                                      instrumentId:
+                                                          e.instrumentId,
+                                                      minimumAmount:
+                                                          e.minimumAmount,
+                                                      investmentMaturityDate: e
+                                                          .investmentMaturityDate,
                                                     ),
                                                   ),
                                                   child: FixedIncomeCard(

@@ -45,19 +45,20 @@ class _FixedIncomeHomeState extends State<FixedIncomeHome> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: AppColors.kWhite,
+      appBar: AppBar(
+        leading: InkWell(
+          onTap: () => Navigator.pop(context),
+          child: ImageIcon(AssetImage("images/cancel.png"),
+              color: AppColors.kPrimaryColor),
+        ),
+        elevation: 0,
+        backgroundColor: AppColors.kWhite,
+      ),
       body: Stack(
         children: [
           Positioned(
-            top: screenHeight(context) / 15,
-            left: screenWidth(context) / 19.8,
-            child: GestureDetector(
-              onTap: () => Navigator.pop(context),
-              child: ImageIcon(AssetImage("images/cancel.png"),
-                  color: AppColors.kPrimaryColor),
-            ),
-          ),
-          Positioned(
-            top: screenHeight(context) / 8,
+            top: 10,
             left: screenWidth(context) / 19.8,
             child: Text(
               "Zimvest Fixed Income",
@@ -68,7 +69,7 @@ class _FixedIncomeHomeState extends State<FixedIncomeHome> {
             ),
           ),
           Positioned(
-            top: 145,
+            top: 40,
             left: screenWidth(context) / 19.8,
             child: Container(
               height: screenHeight(context) / 18,
@@ -78,8 +79,7 @@ class _FixedIncomeHomeState extends State<FixedIncomeHome> {
                 scrollDirection: Axis.horizontal,
                 children: [
                   InkWell(
-                    onTap: (){
-                      
+                    onTap: () {
                       controller.jumpToPage(0);
                     },
                     child: Container(
@@ -110,7 +110,7 @@ class _FixedIncomeHomeState extends State<FixedIncomeHome> {
                   ),
                   XMargin(20),
                   InkWell(
-                    onTap: (){
+                    onTap: () {
                       controller.jumpToPage(1);
                       // print(listController.position.pixels);
                     },
@@ -142,7 +142,7 @@ class _FixedIncomeHomeState extends State<FixedIncomeHome> {
                   ),
                   XMargin(20),
                   InkWell(
-                    onTap: (){
+                    onTap: () {
                       controller.jumpToPage(2);
                     },
                     child: Container(
@@ -173,7 +173,7 @@ class _FixedIncomeHomeState extends State<FixedIncomeHome> {
                   ),
                   XMargin(20),
                   InkWell(
-                    onTap: (){
+                    onTap: () {
                       controller.jumpToPage(3);
                     },
                     child: Container(
@@ -204,7 +204,7 @@ class _FixedIncomeHomeState extends State<FixedIncomeHome> {
                   ),
                   XMargin(20),
                   InkWell(
-                    onTap: (){
+                    onTap: () {
                       controller.jumpToPage(4);
                     },
                     child: Container(
@@ -235,7 +235,7 @@ class _FixedIncomeHomeState extends State<FixedIncomeHome> {
                   ),
                   XMargin(20),
                   InkWell(
-                    onTap: (){
+                    onTap: () {
                       controller.jumpToPage(5);
                     },
                     child: Container(
@@ -287,7 +287,7 @@ class _FixedIncomeHomeState extends State<FixedIncomeHome> {
                 ],
               ),
             ),
-            top: 199,
+            top: 94,
             // left: 20,
           ),
         ],
