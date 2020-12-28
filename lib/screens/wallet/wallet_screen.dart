@@ -29,7 +29,7 @@ class _WalletScreenState extends State<WalletScreen> with AfterLayoutMixin<Walle
   ABSIdentityViewModel identityViewModel;
   ABSPaymentViewModel paymentViewModel;
 
-  Wallet wallet;
+  List<Wallet> wallet;
   List<WalletTransaction> transactions = [];
   @override
   void afterFirstLayout(BuildContext context)async {
@@ -77,7 +77,7 @@ class _WalletScreenState extends State<WalletScreen> with AfterLayoutMixin<Walle
                     fontSize: 12,
                   ),),
                 YMargin(10),
-                Text("\u20A6 ${wallet.balance}",
+                Text("\u20A6 ${wallet.first.balance}",
                   style: TextStyle(
                       color: AppColors.kWhite,
                       fontSize: 24,
@@ -93,7 +93,7 @@ class _WalletScreenState extends State<WalletScreen> with AfterLayoutMixin<Walle
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    Text(wallet.walletNum,
+                    Text(wallet.first.walletNum,
                       style: TextStyle(
                         color: AppColors.kWhite,
                         fontSize: 16,

@@ -181,7 +181,7 @@ class _InvestInMutualScreenState extends State<InvestInMutualScreen>
                         .firstWhere((element) => element.name == value);
                     print("koo ${channel.id}");
                     _hasFunds = channel.name == "Bank Transfer" ?true : channel.name == "Wallet" ?
-                    paymentViewModel.wallet.hasWallet == false?false:true :
+                    true :
                     paymentViewModel.userCards.length == 0 ? false:true;
                   });
                   print("oooo ${_hasFunds}");

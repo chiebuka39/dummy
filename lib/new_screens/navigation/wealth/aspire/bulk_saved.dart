@@ -8,6 +8,7 @@ import 'package:zimvest/utils/margin.dart';
 import 'package:zimvest/utils/strings.dart';
 import 'package:zimvest/widgets/buttons.dart';
 import 'package:zimvest/widgets/navigation/checkBox.dart';
+import 'package:zimvest/widgets/new/new_widgets.dart';
 
 class BulkSaveScreen extends StatefulWidget {
   static Route<dynamic> route() {
@@ -28,19 +29,9 @@ class _BulkSaveScreenState extends State<BulkSaveScreen> {
     ABSSavingViewModel savingViewModel = Provider.of(context);
     print("pppmmmgg h ${savingViewModel.endDate.toIso8601String()}");
     return Scaffold(
-      appBar: AppBar(
-        elevation: 0,
-        iconTheme: IconThemeData(color: Colors.black87),
-        leading: IconButton(
-          icon: Icon(Icons.keyboard_arrow_left_rounded,size: 25,),
-          onPressed: (){
-            Navigator.pop(context);
-          },
-        ),
-        backgroundColor: Colors.transparent,
-        title: Text("Create Zimvest WealthBox",
-          style: TextStyle(color: Colors.black87,fontSize: 13,fontFamily: AppStrings.fontMedium),),
-      ),
+      appBar: ZimAppBar(callback: (){
+        Navigator.pop(context);
+      },icon: Icons.arrow_back_ios_outlined,text: "Create Zimvest Aspire",),
       body: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 20),
         child: Column(

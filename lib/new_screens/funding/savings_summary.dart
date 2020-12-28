@@ -83,9 +83,6 @@ class _SavingsSummaryScreenState extends State<SavingsSummaryScreen> {
         error = true;
       });
     }
-
-
-
   }
 
   void onInit() async {

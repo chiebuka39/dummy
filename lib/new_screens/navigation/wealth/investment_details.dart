@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:zimvest/data/models/product_transaction.dart';
 import 'package:zimvest/new_screens/funding/top_up_screen.dart';
 import 'package:zimvest/new_screens/funding/withdraw_screen.dart';
 import 'package:zimvest/new_screens/navigation/widgets/money_title_widget.dart';
@@ -188,7 +189,15 @@ class _InvestmentDetailsScreenState extends State<InvestmentDetailsScreen> {
                 ],),
               ),
               ...List.generate(4, (index) {
-                return WealthBoxActivity();
+                return WealthBoxActivity(productTransaction: ProductTransaction(
+                  id: 9,
+                  dateCreated: DateTime.now(),
+                  dateUpdated: DateTime.now(),
+                  status: 2,
+                  statusText: "Paid",
+                  amount: 30000,
+                  transactionDescription: "Funding from wallet"
+                ),);
               })
 
             ],

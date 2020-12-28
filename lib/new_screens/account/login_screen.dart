@@ -11,6 +11,7 @@ import 'package:zimvest/utils/margin.dart';
 import 'package:zimvest/utils/strings.dart';
 import 'package:zimvest/utils/validator.dart';
 import 'package:zimvest/widgets/buttons.dart';
+import 'package:zimvest/widgets/new/new_widgets.dart';
 
 class LoginScreen extends StatefulWidget {
   static Route<dynamic> route() {
@@ -38,19 +39,9 @@ class _LoginScreenState extends State<LoginScreen> {
     //Password@1
     //testex.testex@mailinator.com
     return Scaffold(
-      appBar: AppBar(
-        elevation: 0,
-        iconTheme: IconThemeData(color: Colors.black87),
-        leading: IconButton(
-          icon: Icon(Icons.clear,size: 20,),
-          onPressed: (){
-            Navigator.pop(context);
-          },
-        ),
-        backgroundColor: Colors.transparent,
-        title: Text("Log In",
-          style: TextStyle(color: Colors.black87,fontSize: 14,fontFamily: AppStrings.fontMedium),),
-      ),
+      appBar: ZimAppBar(callback: (){
+        Navigator.pop(context);
+      },),
       body: Container(
         padding: const EdgeInsets.symmetric(horizontal: 20),
         child: SingleChildScrollView(
@@ -200,3 +191,5 @@ class _LoginScreenState extends State<LoginScreen> {
     );
   }
 }
+
+

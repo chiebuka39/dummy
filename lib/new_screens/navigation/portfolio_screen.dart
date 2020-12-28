@@ -587,7 +587,7 @@ class InvestmentItemWidget extends StatelessWidget {
                        fontFamily: AppStrings.fontNormal,
                        color: AppColors.kTextColor),),
                   YMargin(8),
-                  Text("${AppStrings.nairaSymbol}5,000,000", style: TextStyle(fontSize: 11,
+                  Text("\$5,000,000", style: TextStyle(fontSize: 11,
                       fontFamily: AppStrings.fontMedium,
                       color: AppColors.kTextColor),),
               ],),

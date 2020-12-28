@@ -5,7 +5,9 @@ import 'package:zimvest/new_screens/navigation/wealth/aspire/choose_start_screen
 import 'package:zimvest/styles/colors.dart';
 import 'package:zimvest/utils/margin.dart';
 import 'package:zimvest/utils/strings.dart';
+import 'package:zimvest/utils/app_utils.dart';
 import 'package:zimvest/widgets/buttons.dart';
+import 'package:zimvest/widgets/new/new_widgets.dart';
 
 class SavingsTargetScreen extends StatefulWidget {
   const SavingsTargetScreen({
@@ -36,19 +38,9 @@ class _SavingsTargetScreenState extends State<SavingsTargetScreen> {
         FocusScope.of(context).requestFocus(new FocusNode());
       },
       child: Scaffold(
-        appBar: AppBar(
-          elevation: 0,
-          iconTheme: IconThemeData(color: AppColors.kPrimaryColor),
-          leading: IconButton(
-            icon: Icon(Icons.arrow_back_ios_outlined,size: 20,),
-            onPressed: (){
-              Navigator.pop(context);
-            },
-          ),
-          backgroundColor: Colors.transparent,
-          title: Text("Create Zimvest Aspire",
-            style: TextStyle(color: Colors.black87,fontSize: 14),),
-        ),
+        appBar: ZimAppBar(callback: (){
+          Navigator.pop(context);
+        },icon: Icons.arrow_back_ios_outlined,text: "Create Zimvest Aspire",),
         body: GestureDetector(
           onTap: (){
             FocusScope.of(context).requestFocus(new FocusNode());
@@ -73,7 +65,7 @@ class _SavingsTargetScreenState extends State<SavingsTargetScreen> {
                   ),
                   child: Align(
                     alignment: Alignment.centerLeft,
-                      child: Text(convertWithComma(amount), style: TextStyle(fontSize: 15),)),
+                      child: Text(amount.convertWithComma(), style: TextStyle(fontSize: 15),)),
                 ),
                 YMargin(10),
                 SizedBox(
@@ -337,79 +329,5 @@ class _SavingsTargetScreenState extends State<SavingsTargetScreen> {
     );
   }
 
-  convertWithComma(String newValue){
-    String value = newValue;
-    var buffer = new StringBuffer();
 
-    if(value.length == 4){
-      buffer.write(value[0]);
-      buffer.write(',');
-      buffer.write(value[1]);
-      buffer.write(value[2]);
-      buffer.write(value[3]);
-    }else if(value.length == 5){
-      buffer.write(value[0]);
-      buffer.write(value[1]);
-      buffer.write(',');
-      buffer.write(value[2]);
-      buffer.write(value[3]);
-      buffer.write(value[4]);
-    }else if(value.length == 6){
-      buffer.write(value[0]);
-      buffer.write(value[1]);
-      buffer.write(value[2]);
-      buffer.write(',');
-      buffer.write(value[3]);
-      buffer.write(value[4]);
-      buffer.write(value[5]);
-    }else if(value.length == 7){
-      buffer.write(value[0]);
-      buffer.write(',');
-      buffer.write(value[1]);
-      buffer.write(value[2]);
-      buffer.write(value[3]);
-      buffer.write(',');
-      buffer.write(value[4]);
-      buffer.write(value[5]);
-      buffer.write(value[6]);
-    }else if(value.length == 8){
-      buffer.write(value[0]);
-      buffer.write(value[1]);
-      buffer.write(',');
-      buffer.write(value[2]);
-      buffer.write(value[3]);
-      buffer.write(value[4]);
-      buffer.write(',');
-      buffer.write(value[5]);
-      buffer.write(value[6]);
-      buffer.write(value[7]);
-    }else if(value.length == 9){
-      buffer.write(value[0]);
-      buffer.write(value[1]);
-      buffer.write(value[2]);
-      buffer.write(',');
-      buffer.write(value[3]);
-      buffer.write(value[4]);
-      buffer.write(value[5]);
-      buffer.write(',');
-      buffer.write(value[6]);
-      buffer.write(value[7]);
-      buffer.write(value[8]);
-    }
-    else{
-      for (int i = 0; i < value.length; i++) {
-        print('lllllf $i');
-        buffer.write(value[i]);
-        var nonZeroIndex = i + 1;
-
-        if (nonZeroIndex % 3 == 0 && nonZeroIndex != value.length) {
-          buffer.write(',');
-        }
-
-      }
-    }
-
-    return buffer.toString();
-
-  }
 }

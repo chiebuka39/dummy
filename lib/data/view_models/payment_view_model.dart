@@ -21,13 +21,13 @@ abstract class ABSPaymentViewModel extends ChangeNotifier{
   List<Bank> get userBanks => _userBanks;
   List<PaymentCard> get userCards => _userCards;
 
-  Wallet _wallet;
-  Wallet get wallet => _wallet;
+  List<Wallet> _wallet;
+  List<Wallet> get wallet => _wallet;
   List<WalletTransaction> get walletTransaction => _walletTransactions;
 
   set userBanks(List<Bank> value);
   set walletTransaction(List<WalletTransaction> value);
-  set wallet(Wallet value);
+  set wallet(List<Wallet> value);
   set selectedCard(PaymentCard value);
   set selectedBank(Bank value);
   set userCards(List<PaymentCard> value);
@@ -37,7 +37,7 @@ abstract class ABSPaymentViewModel extends ChangeNotifier{
     String accountNum, String bankCode});
   Future<Result<List<Bank>>> getCustomerBank(String token);
   Future<Result<List<PaymentCard>>> getUserCards(String token);
-  Future<Result<Wallet>> getWallet(String token);
+  Future<Result<List<Wallet>>> getWallet(String token);
   Future<Result<List<WalletTransaction>>> getWalletTransactions(String token);
   Future<Result<Bank>> addBank(
       {String token,
@@ -81,7 +81,7 @@ class PaymentViewModel extends ABSPaymentViewModel{
     notifyListeners();
   }
 
-  set wallet(Wallet value){
+  set wallet(List<Wallet> value){
     _wallet = value;
     notifyListeners();
   }
@@ -148,7 +148,7 @@ class PaymentViewModel extends ABSPaymentViewModel{
   }
 
   @override
-  Future<Result<Wallet>> getWallet(String token) async{
+  Future<Result<List<Wallet>>> getWallet(String token) async{
     var result =  await _paymentService.getWallet(token);
 
     if(result.error == false){

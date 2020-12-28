@@ -18,6 +18,7 @@ import 'package:zimvest/styles/colors.dart';
 import 'package:zimvest/utils/margin.dart';
 import 'package:zimvest/utils/strings.dart';
 import 'package:zimvest/widgets/buttons.dart';
+import 'package:zimvest/widgets/new/new_widgets.dart';
 
 class ChooseFundingScreen extends StatefulWidget {
   const ChooseFundingScreen({
@@ -98,36 +99,12 @@ class _ChooseFundingScreenState extends State<ChooseFundingScreen> {
                   ),
                 ),
                 YMargin(25),
-                GestureDetector(
-                  onTap: (){
-                    Navigator.of(context).push(SavingsSummaryScreen.route());
-                  },
-                  child: Container(
-                    padding: EdgeInsets.symmetric(horizontal: 20),
-                    width: double.infinity,
-                    height: 55,
-                    decoration: BoxDecoration(
-                      color: AppColors.kSecondaryColor,
-                      borderRadius: BorderRadius.circular(15)
-                    ),
-                    child: Row(children: [
-                      SvgPicture.asset("images/new/wallet1.svg"),
-                      XMargin(10),
-                      Text("Wallet", style: TextStyle(color: AppColors.kWhite,
-                          fontSize: 13,fontFamily: AppStrings.fontNormal),),
-                      Spacer(),
-                      Text("${AppStrings.nairaSymbol} 300,000", style: TextStyle(color: AppColors.kWhite,
-                          fontSize: 13,fontFamily: AppStrings.fontNormal),),
-                      XMargin(5),
-                      Icon(Icons.navigate_next_rounded,color: AppColors.kWhite,)
-                    ],),
-                  ),
-                ),
+                SelectWallet(onPressed: (){
+                  Navigator.of(context).push(SavingsSummaryScreen.route());
+                },),
                 YMargin(5),
                 Text("Funding with your Zimvest wallet is free",
                   style: TextStyle(fontSize: 12, fontFamily: AppStrings.fontNormal),)
-
-
 
               ],),
           ),
@@ -136,6 +113,8 @@ class _ChooseFundingScreenState extends State<ChooseFundingScreen> {
     );
   }
 }
+
+
 
 class SelectCardWidget extends StatefulWidget {
   const SelectCardWidget({

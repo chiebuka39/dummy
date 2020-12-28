@@ -201,7 +201,7 @@ class _VerifCodeWidgetState extends State<VerifCodeWidget> with AfterLayoutMixin
           Expanded(
             child: Row(children: [
               Expanded(
-                child: GestureDetector(
+                child: InkWell(
                   onTap: (){
                     if(pin1.isEmpty){
                       setState(() {
@@ -233,6 +233,7 @@ class _VerifCodeWidgetState extends State<VerifCodeWidget> with AfterLayoutMixin
                   },
                   child: Container(
                     height: 50,
+                    color: Colors.transparent,
                     child: Center(
                       child: Text("1", style: TextStyle(fontSize: 20),),
                     ),
@@ -240,7 +241,7 @@ class _VerifCodeWidgetState extends State<VerifCodeWidget> with AfterLayoutMixin
                 ),
               ),
               Expanded(
-                child: GestureDetector(
+                child: InkWell(
                   onTap: (){
                       if(pin1.isEmpty){
                         setState(() {
@@ -273,6 +274,7 @@ class _VerifCodeWidgetState extends State<VerifCodeWidget> with AfterLayoutMixin
                   },
                   child: Container(
                     height: 50,
+                    color: Colors.transparent,
                     child: Center(
                       child: Text("2", style: TextStyle(fontSize: 20),),
                     ),
@@ -280,7 +282,7 @@ class _VerifCodeWidgetState extends State<VerifCodeWidget> with AfterLayoutMixin
                 ),
               ),
               Expanded(
-                child: GestureDetector(
+                child: InkWell(
                   onTap: (){
                     if(pin1.isEmpty){
                       setState(() {
@@ -313,6 +315,7 @@ class _VerifCodeWidgetState extends State<VerifCodeWidget> with AfterLayoutMixin
                   },
                   child: Container(
                     height: 50,
+                    color: Colors.transparent,
                     child: Center(
                       child: Text("3", style: TextStyle(fontSize: 20),),
                     ),
@@ -325,7 +328,7 @@ class _VerifCodeWidgetState extends State<VerifCodeWidget> with AfterLayoutMixin
             child: Expanded(
               child: Row(children: [
                 Expanded(
-                  child: GestureDetector(
+                  child: InkWell(
                     onTap:(){
                       if(pin1.isEmpty){
                         setState(() {
@@ -358,6 +361,7 @@ class _VerifCodeWidgetState extends State<VerifCodeWidget> with AfterLayoutMixin
                     },
                     child: Container(
                       height: 50,
+                    color: Colors.transparent,
                       child: Center(
                         child: Text("4", style: TextStyle(fontSize: 20),),
                       ),
@@ -365,7 +369,7 @@ class _VerifCodeWidgetState extends State<VerifCodeWidget> with AfterLayoutMixin
                   ),
                 ),
                 Expanded(
-                  child: GestureDetector(
+                  child: InkWell(
                     onTap: (){
                       if(pin1.isEmpty){
                         setState(() {
@@ -397,6 +401,7 @@ class _VerifCodeWidgetState extends State<VerifCodeWidget> with AfterLayoutMixin
                     },
                     child: Container(
                       height: 50,
+                    color: Colors.transparent,
                       child: Center(
                         child: Text("5", style: TextStyle(fontSize: 20),),
                       ),
@@ -404,7 +409,7 @@ class _VerifCodeWidgetState extends State<VerifCodeWidget> with AfterLayoutMixin
                   ),
                 ),
                 Expanded(
-                  child: GestureDetector(
+                  child: InkWell(
                     onTap: (){
                       if(pin1.isEmpty){
                         setState(() {
@@ -435,6 +440,7 @@ class _VerifCodeWidgetState extends State<VerifCodeWidget> with AfterLayoutMixin
                     },
                     child: Container(
                       height: 50,
+                    color: Colors.transparent,
                       child: Center(
                         child: Text("6", style: TextStyle(fontSize: 20),),
                       ),
@@ -448,7 +454,7 @@ class _VerifCodeWidgetState extends State<VerifCodeWidget> with AfterLayoutMixin
           Expanded(
             child: Row(children: [
               Expanded(
-                child: GestureDetector(
+                child: InkWell(
                   onTap: (){
                     if(pin1.isEmpty){
                       setState(() {
@@ -481,6 +487,7 @@ class _VerifCodeWidgetState extends State<VerifCodeWidget> with AfterLayoutMixin
                   },
                   child: Container(
                     height: 50,
+                    color: Colors.transparent,
                     child: Center(
                       child: Text("7", style: TextStyle(fontSize: 20),),
                     ),
@@ -488,7 +495,7 @@ class _VerifCodeWidgetState extends State<VerifCodeWidget> with AfterLayoutMixin
                 ),
               ),
               Expanded(
-                child: GestureDetector(
+                child: InkWell(
                   onTap: (){
                     if(pin1.isEmpty){
                       setState(() {
@@ -522,6 +529,7 @@ class _VerifCodeWidgetState extends State<VerifCodeWidget> with AfterLayoutMixin
                   },
                   child: Container(
                     height: 50,
+                    color: Colors.transparent,
                     child: Center(
                       child: Text("8", style: TextStyle(fontSize: 20),),
                     ),
@@ -529,7 +537,7 @@ class _VerifCodeWidgetState extends State<VerifCodeWidget> with AfterLayoutMixin
                 ),
               ),
               Expanded(
-                child: GestureDetector(
+                child: InkWell(
                   onTap: (){
                     if(pin1.isEmpty){
                       setState(() {
@@ -560,6 +568,7 @@ class _VerifCodeWidgetState extends State<VerifCodeWidget> with AfterLayoutMixin
                   },
                   child: Container(
                     height: 50,
+                    color: Colors.transparent,
                     child: Center(
                       child: Text("9", style: TextStyle(fontSize: 20),),
                     ),
@@ -573,13 +582,14 @@ class _VerifCodeWidgetState extends State<VerifCodeWidget> with AfterLayoutMixin
               Expanded(
                 child: Container(
                   height: 50,
+                    color: Colors.transparent,
                   child: Center(
                     child: Text("", style: TextStyle(fontSize: 20),),
                   ),
                 ),
               ),
               Expanded(
-                child: GestureDetector(
+                child: InkWell(
                   onTap: (){
                     if(pin1.isEmpty){
                       setState(() {
@@ -610,6 +620,7 @@ class _VerifCodeWidgetState extends State<VerifCodeWidget> with AfterLayoutMixin
                   },
                   child: Container(
                     height: 50,
+                    color: Colors.transparent,
                     child: Center(
                       child: Text("0", style: TextStyle(fontSize: 20),),
                     ),
@@ -617,7 +628,7 @@ class _VerifCodeWidgetState extends State<VerifCodeWidget> with AfterLayoutMixin
                 ),
               ),
               Expanded(
-                child: GestureDetector(
+                child: InkWell(
                   onTap: (){
                     if(pin6.isNotEmpty){
                       pin6 = '';
@@ -638,6 +649,7 @@ class _VerifCodeWidgetState extends State<VerifCodeWidget> with AfterLayoutMixin
                   },
                   child: Container(
                     height: 50,
+                    color: Colors.transparent,
                     child: Center(
                       child: Icon(Icons.arrow_back_ios,size: 18,color: AppColors.kPrimaryColor,),
                     ),

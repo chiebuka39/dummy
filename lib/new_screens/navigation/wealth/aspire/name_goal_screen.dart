@@ -11,6 +11,7 @@ import 'package:zimvest/styles/colors.dart';
 import 'package:zimvest/utils/margin.dart';
 import 'package:zimvest/utils/strings.dart';
 import 'package:zimvest/widgets/buttons.dart';
+import 'package:zimvest/widgets/new/new_widgets.dart';
 
 class NameYourGoalScreen extends StatefulWidget {
   final String goalName;
@@ -57,19 +58,9 @@ class _NameYourGoalScreenState extends State<NameYourGoalScreen> {
     savingViewModel = Provider.of(context);
     final width = MediaQuery.of(context).size.width;
     return Scaffold(
-      appBar: AppBar(
-        elevation: 0,
-        iconTheme: IconThemeData(color: AppColors.kPrimaryColor),
-        leading: IconButton(
-          icon: Icon(Icons.arrow_back_ios_outlined,size: 20,),
-          onPressed: (){
-            Navigator.pop(context);
-          },
-        ),
-        backgroundColor: Colors.transparent,
-        title: Text("Create Zimvest Aspire",
-          style: TextStyle(color: Colors.black87,fontSize: 14),),
-      ),
+      appBar: ZimAppBar(callback: (){
+        Navigator.pop(context);
+      },icon: Icons.arrow_back_ios_outlined,text: "Create Zimvest Aspire",),
       body: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 20),
         child: Column(
@@ -142,7 +133,7 @@ class _NameYourGoalScreenState extends State<NameYourGoalScreen> {
             ),
             YMargin(35),
             RoundedNextButton(
-              onTap: goalName.length >1 ?  (){
+              onTap: (goalName?.length ?? 0) >1 ?  (){
                 savingViewModel.goalName = goalName;
                 Navigator.push(context, SavingsTargetScreen.route());
               }:null,

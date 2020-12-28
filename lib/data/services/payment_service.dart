@@ -15,7 +15,7 @@ abstract class ABSPaymentService {
   Future<Result<List<Bank>>> getBanks(String token);
   Future<Result<List<PaymentCard>>> getUserCards(String token);
   Future<Result<void>> deleteBank(String token,int bankId);
-  Future<Result<Wallet>> getWallet(String token);
+  Future<Result<List<Wallet>>> getWallet(String token);
   Future<Result<void>> setBankAsActive(String token,int bankId);
   Future<Result<List<Bank>>> getCustomerBank(String token);
   Future<Result<CardPayload>> registerNewCard(String token);
@@ -380,14 +380,14 @@ class PaymentService extends ABSPaymentService {
   }
 
   @override
-  Future<Result<Wallet>> getWallet(String token) async{
-    Result<Wallet> result = Result(error: false);
+  Future<Result<List<Wallet>>> getWallet(String token) async{
+    Result<List<Wallet>> result = Result(error: false);
 
     var headers = {"Authorization": "Bearer $token"};
 
 
     var url = "${AppStrings.baseUrl}zimvest.services.wallet/api/"
-        "Wallet";
+        "Wallet/wallets";
 
     print("lll $url");
     try {
@@ -401,14 +401,16 @@ class PaymentService extends ABSPaymentService {
         result.error = true;
       } else {
         result.error = false;
-        if(response1['data'] == null){
-          result.data = Wallet(hasWallet: false);
 
-        }else{
-          var wallet = Wallet.fromJson(response1['data']);
-          wallet.hasWallet = true;
-          result.data = wallet;
-        }
+
+
+        List<Wallet> wallets = [];
+        (response1['data'] as List).forEach((chaList) {
+          //initialize Chat Object
+          wallets.add(Wallet.fromJson(chaList));
+        });
+        result.data = wallets;
+
       }
     } on DioError catch (e) {
       print("error $e}");

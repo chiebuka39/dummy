@@ -10,6 +10,7 @@ import 'package:zimvest/utils/margin.dart';
 import 'package:zimvest/utils/strings.dart';
 import 'package:zimvest/widgets/buttons.dart';
 import 'package:zimvest/widgets/navigation/checkBox.dart';
+import 'package:zimvest/widgets/new/new_widgets.dart';
 
 class SaveFrequencyScreen extends StatefulWidget {
   static Route<dynamic> route() {
@@ -41,34 +42,24 @@ class _SaveFrequencyScreenState extends State<SaveFrequencyScreen> with
     savingViewModel = Provider.of(context);
 
     return Scaffold(
-      appBar: AppBar(
-        elevation: 0,
-        iconTheme: IconThemeData(color: Colors.black87),
-        leading: IconButton(
-          icon: Icon(Icons.keyboard_arrow_left_rounded,size: 25,),
-          onPressed: (){
-            Navigator.pop(context);
-          },
-        ),
-        backgroundColor: Colors.transparent,
-        title: Text("Create Zimvest WealthBox",
-          style: TextStyle(color: Colors.black87,fontSize: 13,fontFamily: AppStrings.fontMedium),),
-      ),
+      appBar: ZimAppBar(callback: (){
+        Navigator.pop(context);
+      },icon: Icons.arrow_back_ios_outlined,text: "Create Zimvest Aspire",),
       body: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 20),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-          YMargin(72),
+          YMargin(42),
           Text("How often would you like to save?",
             style: TextStyle(fontSize: 15,
                 fontFamily: AppStrings.fontBold),),
           YMargin(35),
-            ...List.generate(savingViewModel.savingFrequency.length, (index) {
+            ...List.generate( buildLength(), (index) {
               var freq = savingViewModel.savingFrequency[index];
               return InkWell(
                 onTap: (){
-
+                  print("lll ${freq.id}");
                   savingViewModel.selectedFrequency = freq;
                 },
                 child: Container(
@@ -87,12 +78,22 @@ class _SaveFrequencyScreenState extends State<SaveFrequencyScreen> with
             }),
             YMargin(110),
             RoundedNextButton(
-              onTap: (){
+              onTap: savingViewModel.selectedFrequency == null ? null: (){
                 Navigator.push(context, AutomateSavingsScreen.route());
               },
             )
         ],),
       ),
     );
+  }
+
+  int buildLength() {
+    print("ooooo ${savingViewModel.endDate.difference(savingViewModel.startDate).inDays}");
+    if(savingViewModel.endDate.difference(savingViewModel.startDate).inDays < 180){
+      return savingViewModel.savingFrequency.length -2;
+    }else{
+      return savingViewModel.savingFrequency.length;
+    }
+
   }
 }

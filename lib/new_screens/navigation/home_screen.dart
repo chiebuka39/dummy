@@ -242,7 +242,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
               ActionBoxWidget(title: "Invest in Zimvest Fixed Income",
                 desc: "Invest in fixed income vehicles such as Treasury Bills, FGN Bonds, Corporate Bonds, and Eurobonds",color: AppColors.kFixed,img: 'fixed',),
-              YMargin(50)
+              YMargin(100)
             ],
           ),
         ),

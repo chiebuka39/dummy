@@ -222,7 +222,7 @@ class _CreateZimvestAspireScreenState extends State<CreateZimvestAspireScreen> {
                             .firstWhere((element) => element.name == value);
                         print("koo ${fundingChannel.id}");
                         _hasFunds = fundingChannel.name == "Wallet" ?
-                        paymentViewModel.wallet.hasWallet == false?false:true :
+                        true :
                         paymentViewModel.userCards.length == 0 ? false:true;
                       });
                     },
