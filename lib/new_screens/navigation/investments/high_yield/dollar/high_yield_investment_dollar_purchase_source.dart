@@ -1,3 +1,4 @@
+import 'package:flushbar/flushbar.dart';
 import 'package:flutter/material.dart';
 import 'package:zimvest/new_screens/navigation/investments/high_yield/dollar/investment_summary_high_yield_dollar.dart';
 import 'package:zimvest/new_screens/navigation/investments/high_yield/dollar/payment_source_wired_transfer.dart';
@@ -6,6 +7,7 @@ import 'package:zimvest/utils/margin.dart';
 import 'package:zimvest/utils/margins.dart';
 import 'package:zimvest/utils/strings.dart';
 import 'package:zimvest/widgets/buttons.dart';
+import 'package:zimvest/widgets/new/new_widgets.dart';
 
 class HighYieldInvestmentDollarPurchaseSource extends StatefulWidget {
   final String uniqueName;
@@ -15,7 +17,7 @@ class HighYieldInvestmentDollarPurchaseSource extends StatefulWidget {
   final String rate;
   final String minimumAmount;
   final String maximumAmount;
-  final String amount;
+  final double amount;
 
   const HighYieldInvestmentDollarPurchaseSource(
       {Key key,
@@ -36,7 +38,7 @@ class HighYieldInvestmentDollarPurchaseSource extends StatefulWidget {
       String rate,
       String minimumAmount,
       String maximumAmount,
-      String amount}) {
+      double amount}) {
     return MaterialPageRoute(
       builder: (_) => HighYieldInvestmentDollarPurchaseSource(
         uniqueName: uniqueName,
@@ -59,14 +61,22 @@ class HighYieldInvestmentDollarPurchaseSource extends StatefulWidget {
 }
 
 class _HighYieldInvestmentDollarPurchaseSourceState
-    extends State<HighYieldInvestmentDollarPurchaseSource> {
+    extends State<HighYieldInvestmentDollarPurchaseSource>
+    with SingleTickerProviderStateMixin {
   bool isNaira = true;
+  TabController controller;
+
+  @override
+  void initState() {
+    controller = TabController(length: 2, vsync: this);
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: AppColors.kWhite,
+        backgroundColor: Colors.transparent,
         title: Text(
           "Invest",
           style: TextStyle(
@@ -100,159 +110,261 @@ class _HighYieldInvestmentDollarPurchaseSourceState
             ),
           ),
           verticalSpace(52),
-          Row(
-            children: <Widget>[
-              Spacer(),
+          TabBar(
+            controller: controller,
+            tabs: [
+              Tab(text: "Naira"),
+              Tab(text: "Dollar"),
+            ],
+            unselectedLabelColor: AppColors.kLightText5,
+            indicatorColor: AppColors.kPrimaryColor,
+            labelColor: AppColors.kPrimaryColor,
+          ),
+          Expanded(
+            child: TabBarView(controller: controller, children: [
               Container(
-                width: screenWidth(context),
-                height: 40,
-                child: Stack(
-                  children: <Widget>[
-                    AnimatedPositioned(
-                      left: isNaira == true ? screenWidth(context) / 2 : 0,
-                      duration: Duration(milliseconds: 300),
-                      child: Container(
-                        width: screenWidth(context) / 2,
-                        height: 40,
-                        decoration: BoxDecoration(
-                            // color: AppColors.kPrimaryColor,
-                            borderRadius: BorderRadius.circular(13)),
+                child: Column(
+                  children: [
+                    YMargin(25),
+                    // PaymentSourceButton(
+                    //   paymentsource: "Naira Wallet",
+                    //   image: "wallet",
+                    //   amount: "${AppStrings.nairaSymbol}30,000,000",
+                    //   color: AppColors.kTextColor,
+                    //   onTap: () =>
+                    //       Navigator.push(context, InvestmentSummaryScreenDollar.route()),
+                    // ),
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 20.0),
+                      child: SelectWallet(
+                        onPressed: () => Navigator.push(
+                          context,
+                          InvestmentSummaryScreenDollar.route(
+                            channelId: 5,
+                            productId: widget.id,
+                            duration: widget.duration,
+                            amount: widget.amount,
+                            uniqueName: widget.uniqueName,
+                            maturityDate: widget.maturityDate,
+                            rate: widget.rate,
+                            minimumAmount: widget.minimumAmount,
+                            maximumAmount: widget.maximumAmount,
+                          ),
+                        ),
+                      ),
+                    )
+                  ],
+                ),
+              ),
+              Container(
+                child: Column(
+                  children: [
+                    YMargin(25),
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 20.0),
+                      child: DollarWallet(
+                        onPressed: () => Navigator.push(
+                          context,
+                          InvestmentSummaryScreenDollar.route(
+                            channelId: 5,
+                            productId: widget.id,
+                            duration: widget.duration,
+                            amount: widget.amount,
+                            uniqueName: widget.uniqueName,
+                            maturityDate: widget.maturityDate,
+                            rate: widget.rate,
+                            minimumAmount: widget.minimumAmount,
+                            maximumAmount: widget.maximumAmount,
+                          ),
+                        ),
                       ),
                     ),
-                    Container(
-                      child: Row(
-                        children: <Widget>[
-                          Expanded(
-                              child: InkWell(
-                            onTap: () {
-                              setState(() {
-                                isNaira = !isNaira;
-                              });
-                            },
-                            child: Container(
-                              child: Column(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: [
-                                  Text(
-                                    "Naira",
-                                    style: TextStyle(
-                                        fontSize: 12,
-                                        color: isNaira == true
-                                            ? AppColors.kPrimaryColor
-                                            : AppColors.kLightText4),
-                                  ),
-                                  Container(
-                                    height: screenWidth(context) / 55,
-                                    decoration: BoxDecoration(
-                                      borderRadius: BorderRadius.circular(10),
-                                      color: isNaira == true
-                                          ? AppColors.kPrimaryColor
-                                          : AppColors.kWhite,
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ),
-                          )),
-                          Expanded(
-                              child: InkWell(
-                            onTap: () {
-                              setState(() {
-                                isNaira = !isNaira;
-                              });
-                            },
-                            child: Container(
-                              child: Column(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: [
-                                  Text(
-                                    "Dollar",
-                                    style: TextStyle(
-                                        fontSize: 12,
-                                        color: isNaira == false
-                                            ? AppColors.kPrimaryColor
-                                            : AppColors.kLightText4),
-                                  ),
-                                  Container(
-                                    height: screenWidth(context) / 55,
-                                    decoration: BoxDecoration(
-                                      borderRadius: BorderRadius.circular(10),
-                                      color: isNaira == false
-                                          ? AppColors.kPrimaryColor
-                                          : AppColors.kWhite,
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ),
-                          )),
-                        ],
-                      ),
+                    YMargin(25),
+                    PaymentSourceButtonSpecial(
+                      paymentsource: "Wired Transfer",
+                      image: "wallet",
+                      onTap: () => Flushbar(
+                        margin: EdgeInsets.all(12),
+                        borderRadius: 20,
+                        flushbarPosition: FlushbarPosition.TOP,
+                        titleText: Text(
+                          "Coming Soon!",
+                          style: TextStyle(
+                            fontSize: 13,
+                            fontFamily: AppStrings.fontBold,
+                            color: AppColors.kPrimaryColor,
+                          ),
+                        ),
+                        backgroundColor: AppColors.kPrimaryColorLight,
+                        messageText: Text(
+                          "This is not currently available",
+                          style: TextStyle(
+                            fontSize: 11,
+                            fontFamily: AppStrings.fontLight,
+                            color: AppColors.kPrimaryColor,
+                          ),
+                        ),
+                        duration: Duration(seconds: 3),
+                      ).show(context),
+                    ),
+                    YMargin(25),
+                    PaymentSourceButtonSpecial(
+                      paymentsource: "R|rexelpay",
+                      color: AppColors.kHighYield,
+                      onTap: () => Flushbar(
+                        // icon: ImageIcon(
+                        //   AssetImage("images/failed.png"),
+                        //   color: AppColors.kRed,
+                        //   size: 70,
+                        // ),
+                        margin: EdgeInsets.all(12),
+                        borderRadius: 20,
+                        flushbarPosition: FlushbarPosition.TOP,
+                        titleText: Text(
+                          "Coming Soon!",
+                          style: TextStyle(
+                            fontSize: 13,
+                            fontFamily: AppStrings.fontBold,
+                            color: AppColors.kPrimaryColor,
+                          ),
+                        ),
+                        backgroundColor: AppColors.kPrimaryColorLight,
+                        messageText: Text(
+                          "This is not currently available",
+                          style: TextStyle(
+                            fontSize: 11,
+                            fontFamily: AppStrings.fontLight,
+                            color: AppColors.kPrimaryColor,
+                          ),
+                        ),
+                        duration: Duration(seconds: 3),
+                      ).show(context),
                     ),
                   ],
                 ),
               ),
-              Spacer(),
-            ],
-          ),
-          isNaira == true
-              ? Expanded(child: NairaPage())
-              : Expanded(child: DollarPage())
+            ]),
+          )
         ],
       ),
     );
   }
 }
 
-class NairaPage extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      child: Column(
-        children: [
-          YMargin(25),
-          PaymentSourceButton(
-            paymentsource: "Naira Wallet",
-            image: "wallet",
-            amount: "${AppStrings.nairaSymbol}30,000,000",
-            color: AppColors.kTextColor,
-            onTap: () =>
-                Navigator.push(context, InvestmentSummaryScreenDollar.route()),
-          ),
-        ],
-      ),
-    );
-  }
-}
+// // class NairaPage extends StatelessWidget {
+// //   @override
+// //   Widget build(BuildContext context) {
+// //     return Container(
+// //       child: Column(
+// //         children: [
+// //           YMargin(25),
+// //           // PaymentSourceButton(
+// //           //   paymentsource: "Naira Wallet",
+// //           //   image: "wallet",
+// //           //   amount: "${AppStrings.nairaSymbol}30,000,000",
+// //           //   color: AppColors.kTextColor,
+// //           //   onTap: () =>
+// //           //       Navigator.push(context, InvestmentSummaryScreenDollar.route()),
+// //           // ),
+// //           Padding(
+// //             padding: const EdgeInsets.symmetric(horizontal: 20.0),
+// //             child: SelectWallet(
+// //               onPressed: () => Navigator.push(
+// //                   context, InvestmentSummaryScreenDollar.route(
+// //                     channelId: 5,
+// //                           productId: widget.productId,
+// //                           duration: widget.duration,
+// //                           amount: widget.amount,
+// //                           uniqueName: widget.uniqueName,
+// //                           maturityDate: widget.maturityDate,
+// //                           rate: widget.rate,
+// //                           minimumAmount: widget.minimumAmount,
+// //                           maximumAmount: widget.maximumAmount
+// //                   )),
+// //             ),
+// //           )
+// //         ],
+// //       ),
+// //     );
+// //   }
+// // }
 
-class DollarPage extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-        child: Column(
-      children: [
-        YMargin(25),
-        PaymentSourceButton(
-          paymentsource: "Dollar Wallet",
-          image: "wallet",
-          amount: "${AppStrings.dollarSymbol}30,000,000",
-          color: AppColors.kTextColor,
-          onTap: () =>
-              Navigator.push(context, InvestmentSummaryScreenDollar.route()),
-        ),
-        YMargin(25),
-        PaymentSourceButtonSpecial(
-          paymentsource: "Wired Transfer",
-          image: "wallet",
-          onTap: () => Navigator.push(context, WiredTransferScreen.route()),
-        ),
-        YMargin(25),
-        PaymentSourceButtonSpecial(
-          paymentsource: "R|rexelpay",
-          color: AppColors.kHighYield,
-          onTap: null,
-        ),
-      ],
-    ));
-  }
-}
+// class DollarPage extends StatelessWidget {
+//   @override
+//   Widget build(BuildContext context) {
+//     return Container(
+//         child: Column(
+//       children: [
+//         YMargin(25),
+//         Padding(
+//           padding: const EdgeInsets.symmetric(horizontal: 20.0),
+//           child: DollarWallet(
+//             onPressed: () =>
+//                 Navigator.push(context, InvestmentSummaryScreenDollar.route()),
+//           ),
+//         ),
+//         YMargin(25),
+//         PaymentSourceButtonSpecial(
+//           paymentsource: "Wired Transfer",
+//           image: "wallet",
+//           onTap: () => Flushbar(
+//             margin: EdgeInsets.all(12),
+//             borderRadius: 20,
+//             flushbarPosition: FlushbarPosition.TOP,
+//             titleText: Text(
+//               "Coming Soon!",
+//               style: TextStyle(
+//                 fontSize: 13,
+//                 fontFamily: AppStrings.fontBold,
+//                 color: AppColors.kPrimaryColor,
+//               ),
+//             ),
+//             backgroundColor: AppColors.kPrimaryColorLight,
+//             messageText: Text(
+//               "This is not currently available",
+//               style: TextStyle(
+//                 fontSize: 11,
+//                 fontFamily: AppStrings.fontLight,
+//                 color: AppColors.kPrimaryColor,
+//               ),
+//             ),
+//             duration: Duration(seconds: 3),
+//           ).show(context),
+//         ),
+//         YMargin(25),
+//         PaymentSourceButtonSpecial(
+//           paymentsource: "R|rexelpay",
+//           color: AppColors.kHighYield,
+//           onTap: () => Flushbar(
+//             // icon: ImageIcon(
+//             //   AssetImage("images/failed.png"),
+//             //   color: AppColors.kRed,
+//             //   size: 70,
+//             // ),
+//             margin: EdgeInsets.all(12),
+//             borderRadius: 20,
+//             flushbarPosition: FlushbarPosition.TOP,
+//             titleText: Text(
+//               "Coming Soon!",
+//               style: TextStyle(
+//                 fontSize: 13,
+//                 fontFamily: AppStrings.fontBold,
+//                 color: AppColors.kPrimaryColor,
+//               ),
+//             ),
+//             backgroundColor: AppColors.kPrimaryColorLight,
+//             messageText: Text(
+//               "This is not currently available",
+//               style: TextStyle(
+//                 fontSize: 11,
+//                 fontFamily: AppStrings.fontLight,
+//                 color: AppColors.kPrimaryColor,
+//               ),
+//             ),
+//             duration: Duration(seconds: 3),
+//           ).show(context),
+//         ),
+//       ],
+//     ));
+//   }
+// }

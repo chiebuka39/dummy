@@ -59,8 +59,8 @@ class _HighYieldDetailsDollarState extends State<HighYieldDetailsDollar> {
       body: Stack(
         children: [
           Positioned(
-            top: screenHeight(context) / 31.5,
-            left: screenHeight(context) / 37.8,
+            top: 24,
+            left: 15,
             // top: 24,
             // left: 20,
             child: IconButton(
@@ -114,9 +114,11 @@ class _HighYieldDetailsDollarState extends State<HighYieldDetailsDollar> {
                       padding: const EdgeInsets.symmetric(horizontal: 20),
                       child: Text(
                         "This investment is designed for investors with moderate risk tolerance and a short to medium-term investment horizon.",
-                        textAlign: TextAlign.justify,
+                        textAlign: TextAlign.left,
                         style: TextStyle(
-                            fontSize: 13, fontFamily: AppStrings.fontLight),
+                            letterSpacing: 0.5,
+                            fontSize: 13,
+                            fontFamily: AppStrings.fontLight),
                       ),
                     ),
                     verticalSpace(screenHeight(context) / 22.2352941176),
@@ -141,7 +143,7 @@ class _HighYieldDetailsDollarState extends State<HighYieldDetailsDollar> {
                                 ),
                               ],
                             ),
-                            verticalSpace(screenHeight(context) / 28),
+                            verticalSpace(11),
                             Row(
                               mainAxisAlignment: MainAxisAlignment.start,
                               children: [
@@ -157,7 +159,7 @@ class _HighYieldDetailsDollarState extends State<HighYieldDetailsDollar> {
                                 ),
                               ],
                             ),
-                            verticalSpace(screenHeight(context) / 28),
+                            verticalSpace(11),
                             Row(
                               mainAxisAlignment: MainAxisAlignment.start,
                               children: [

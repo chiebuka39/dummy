@@ -74,8 +74,8 @@ abstract class ABSInvestmentService {
       int beneficiaryBankType,
       int fundingChannel,
       String proofOfPayment,
-      double amount,
-      double nairaAmount,
+      num amount,
+      num nairaAmount,
       String uniqueName,
       String token});
 
@@ -1029,8 +1029,8 @@ class InvestmentService extends ABSInvestmentService {
       int beneficiaryBankType,
       int fundingChannel,
       String proofOfPayment,
-      double amount,
-      double nairaAmount,
+      num amount,
+      num nairaAmount,
       String uniqueName,
       String token}) async {
     var url =
@@ -1067,7 +1067,7 @@ class InvestmentService extends ABSInvestmentService {
       if (buydollaInstrument.statusCode == 400) {
         print("Failure: ${buydollaInstrument.data}");
         result.data = buydollaInstrument.data;
-        return result.data;
+        return null;
       }
     } on DioError catch (e) {
       result.error = true;
@@ -1091,7 +1091,7 @@ class InvestmentService extends ABSInvestmentService {
       String token}) async {
     var url =
         "${AppStrings.baseUrl}$microService/api/ZimvestTermInstruments/buynairaterminstrument";
-
+    print(url);
     var headers = {HttpHeaders.authorizationHeader: "Bearer $token"};
 
     // var imgname = DateTime.now().millisecondsSinceEpoch.toString();
@@ -1115,7 +1115,7 @@ class InvestmentService extends ABSInvestmentService {
           },
         ),
       );
-      print("Success: ${buyNairaInstrument.data}");
+      print("Success: ${buyNairaInstrument.statusCode}");
       if (buyNairaInstrument.statusCode == 200) {
         print("Success: ${buyNairaInstrument.data}");
         result.data = buyNairaInstrument.data;
@@ -1124,7 +1124,7 @@ class InvestmentService extends ABSInvestmentService {
       if (buyNairaInstrument.statusCode == 400) {
         print("Failure: ${buyNairaInstrument.data}");
         result.data = buyNairaInstrument.data;
-        return result.data;
+        return null;
       }
     } on DioError catch (e) {
       result.error = true;

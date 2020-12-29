@@ -35,10 +35,11 @@ void main() async {
   //initialize service locator
   setUpLocator();
   runApp(
-    DevicePreview(
-      enabled: !kReleaseMode,
-      builder: (context) => MyApp(), // Wrap your app
-    ),
+    // DevicePreview(
+    //   enabled: !kReleaseMode,
+    //   builder: (context) =>
+    MyApp(), // Wrap your app
+    // ),
   );
   configLoading();
 }
@@ -107,7 +108,7 @@ class _MyAppState extends State<MyApp> {
         home: _localStorage.getSecondaryState().isLoggedIn == false
             ? LandingScreen()
             : TabsContainer(),
-            
+
         // ),
       ),
     );

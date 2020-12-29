@@ -7,6 +7,7 @@ import 'package:zimvest/utils/margin.dart';
 import 'package:zimvest/utils/margins.dart';
 import 'package:zimvest/utils/strings.dart';
 import 'package:zimvest/widgets/buttons.dart';
+import 'package:zimvest/widgets/new/new_widgets.dart';
 
 class HighYieldInvestmentPurchaseSource extends StatefulWidget {
   final double amount;
@@ -67,7 +68,7 @@ class _HighYieldInvestmentPurchaseSourceState
       viewModelBuilder: () => InvestmentHighYieldViewModel(),
       builder: (context, model, _) => Scaffold(
         appBar: AppBar(
-          backgroundColor: AppColors.kWhite,
+          backgroundColor: Colors.transparent,
           title: Text(
             "Invest",
             style: TextStyle(
@@ -111,26 +112,29 @@ class _HighYieldInvestmentPurchaseSourceState
                 image: "card",
               ),
               YMargin(25),
-              PaymentSourceButton(
-                onTap: () {
-                  Navigator.push(
-                    context,
-                    InvestmentSummaryScreenNaira.route(
-                        channelId: 5,
-                        productId: widget.productId,
-                        duration: widget.duration,
-                        amount: widget.amount,
-                        uniqueName: widget.uniqueName,
-                        maturityDate: widget.maturityDate,
-                        rate: widget.rate,
-                        minimumAmount: widget.minimumAmount,
-                        maximumAmount: widget.maximumAmount),
-                  );
-                },
-                paymentsource: "Wallet",
-                image: "wallet",
-                amount: "${AppStrings.nairaSymbol}30,000,000",
-                color: AppColors.kTextColor,
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 20.0),
+                child: SelectWallet(
+                  onPressed: () {
+                    Navigator.push(
+                      context,
+                      InvestmentSummaryScreenNaira.route(
+                          channelId: 5,
+                          productId: widget.productId,
+                          duration: widget.duration,
+                          amount: widget.amount,
+                          uniqueName: widget.uniqueName,
+                          maturityDate: widget.maturityDate,
+                          rate: widget.rate,
+                          minimumAmount: widget.minimumAmount,
+                          maximumAmount: widget.maximumAmount),
+                    );
+                  },
+                  // paymentsource: "Wallet",
+                  // image: "wallet",
+                  // amount: "${AppStrings.nairaSymbol}30,000,000",
+                  // color: AppColors.kTextColor,
+                ),
               ),
               YMargin(12),
               Padding(

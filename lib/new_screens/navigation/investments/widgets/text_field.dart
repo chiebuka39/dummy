@@ -8,11 +8,12 @@ class InvestmentTextField extends StatefulWidget {
   final String hintText;
   final String initalValue;
   final bool readOnly;
+  final bool showCursor;
   const InvestmentTextField(
       {Key key,
       @required this.controller,
       @required this.hintText,
-      this.initalValue, this.readOnly = true})
+      this.initalValue, this.readOnly = true, this.showCursor = true})
       : super(key: key);
   @override
   _InvestmentTextFieldState createState() => _InvestmentTextFieldState();
@@ -32,7 +33,7 @@ class _InvestmentTextFieldState extends State<InvestmentTextField> {
         height: screenHeight(context) / 12.5,
         child: Center(
           child: TextFormField(
-            showCursor: true,
+            showCursor: widget.showCursor,
             readOnly: widget.readOnly,
             initialValue: widget.initalValue,
             controller: widget.controller,

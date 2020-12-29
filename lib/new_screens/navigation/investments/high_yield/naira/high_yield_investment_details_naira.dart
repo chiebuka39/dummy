@@ -57,8 +57,8 @@ class _HighYieldDetailsState extends State<HighYieldDetails> {
       body: Stack(
         children: [
           Positioned(
-            top: screenHeight(context) / 10,
-            left: screenWidth(context) / 15,
+            top: 24,
+            left: 15,
             child: IconButton(
               icon: ImageIcon(
                 AssetImage("images/cancel.png"),
@@ -70,17 +70,17 @@ class _HighYieldDetailsState extends State<HighYieldDetails> {
             ),
           ),
           Positioned(
-              top: screenHeight(context) / 10,
-              left: screenWidth(context) / 15,
-              right: screenWidth(context) / 15,
-              bottom: screenHeight(context) / 1.6,
+              top: screenHeight(context) / 15.0370370371,
+              left: screenHeight(context) / 9.5,
+              right: screenHeight(context) / 9.5,
+              bottom: screenHeight(context) / 1.65426695842,
               child: SvgPicture.asset("images/money_glass.svg")),
           Positioned(
-            top: screenHeight(context) / 2.5,
+            top: screenHeight(context) / 2.25,
             left: 0,
             right: 0,
             child: Container(
-              height: screenHeight(context) / 1.5,
+              height: screenHeight(context) / 1.4,
               decoration: BoxDecoration(
                 color: AppColors.kWhite,
                 borderRadius: BorderRadius.only(
@@ -99,17 +99,19 @@ class _HighYieldDetailsState extends State<HighYieldDetails> {
                           fontSize: 15, fontFamily: AppStrings.fontBold),
                     ),
                   ),
-                  verticalSpace(18),
+                  verticalSpace(screenHeight(context) / 42),
                   Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 20),
                     child: Text(
                       "This investment is designed for investors with moderate risk tolerance and a short to medium-term investment horizon.",
-                      textAlign: TextAlign.justify,
+                      textAlign: TextAlign.left,
                       style: TextStyle(
-                          fontSize: 13, fontFamily: AppStrings.fontLight),
+                          letterSpacing: 0.5,
+                          fontSize: 13,
+                          fontFamily: AppStrings.fontLight),
                     ),
                   ),
-                  verticalSpace(33),
+                  verticalSpace(screenHeight(context) / 22.2352941176),
                   Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 19),
                     child: Container(
@@ -131,6 +133,7 @@ class _HighYieldDetailsState extends State<HighYieldDetails> {
                               ),
                             ],
                           ),
+                          verticalSpace(11),
                           Row(
                             mainAxisAlignment: MainAxisAlignment.start,
                             children: [
@@ -146,6 +149,7 @@ class _HighYieldDetailsState extends State<HighYieldDetails> {
                               ),
                             ],
                           ),
+                          verticalSpace(11),
                           Row(
                             mainAxisAlignment: MainAxisAlignment.start,
                             children: [
@@ -161,7 +165,7 @@ class _HighYieldDetailsState extends State<HighYieldDetails> {
                               ),
                             ],
                           ),
-                          verticalSpace(112),
+                          verticalSpace(46),
                           Center(
                             child: PrimaryButtonNew(
                               title: "Get Started",

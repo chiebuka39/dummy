@@ -64,6 +64,7 @@ dependencies:
   flutterwave: ^0.0.2
   fluttertoast: 7.0.2
   image_picker: ^0.6.7+17
+  intl: ^0.16.1
 
 
 

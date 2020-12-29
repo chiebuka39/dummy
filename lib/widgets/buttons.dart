@@ -375,7 +375,7 @@ class _PaymentSourceButtonState extends State<PaymentSourceButton> {
         padding: const EdgeInsets.symmetric(horizontal: 20.0),
         child: Container(
           padding: EdgeInsets.only(left: 19.0, right: 15),
-          height: screenHeight(context) / 13,
+          height: screenHeight(context) / 14,
           width: screenWidth(context),
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(15),
@@ -460,7 +460,7 @@ class _PaymentSourceButtonSpecialState
         padding: const EdgeInsets.symmetric(horizontal: 20.0),
         child: Container(
           padding: EdgeInsets.only(left: 19.0, right: 15),
-          height: screenHeight(context) / 13,
+          height: screenHeight(context) / 14,
           width: screenWidth(context),
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(15),

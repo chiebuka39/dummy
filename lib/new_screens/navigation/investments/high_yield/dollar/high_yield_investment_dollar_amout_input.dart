@@ -1,9 +1,13 @@
 import 'package:flushbar/flushbar.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
+import 'package:intl/number_symbols_data.dart';
 import 'package:zimvest/new_screens/navigation/investments/high_yield/dollar/high_yield_investment_dollar_purchase_source.dart';
 import 'package:zimvest/new_screens/navigation/investments/widgets/text_field.dart';
 import 'package:zimvest/styles/colors.dart';
+import 'package:zimvest/utils/app_utils.dart';
 import 'package:zimvest/utils/margin.dart';
+import 'package:zimvest/utils/nums.dart';
 import 'package:zimvest/utils/strings.dart';
 import 'package:zimvest/widgets/buttons.dart';
 import 'package:zimvest/widgets/number_keyboard.dart';
@@ -106,7 +110,8 @@ class _InvestmentHighYieldDollarAmountInputState
                 ),
               ),
               YMargin(36),
-              InvestmentTextFieldDollar(
+              InvestmentTextField(
+                  showCursor: false,
                   // initalValue: "1",
                   controller: amountController,
                   hintText: "Enter amount"),
@@ -128,7 +133,7 @@ class _InvestmentHighYieldDollarAmountInputState
                 child: Text(
                   amountController.text == ""
                       ? ""
-                      : "₦ ${double.tryParse(amountController.text) * 390} (1 USD = 390.0 NGN)",
+                      : "₦ ${double.tryParse(amountController.text.split(',').join()) * 390} (1 USD = 390.0 NGN)",
                   style: TextStyle(
                     fontSize: 12,
                     fontFamily: AppStrings.fontNormal,
@@ -140,49 +145,78 @@ class _InvestmentHighYieldDollarAmountInputState
               RoundedNextButton(
                 onTap: () {
                   double amount = double.tryParse(amountController.text);
-                  // if (amount < ) {
-                  //   Flushbar(
-                  //     icon: ImageIcon(
-                  //       AssetImage("images/failed.png"),
-                  //       color: AppColors.kRed,
-                  //       size: 70,
-                  //     ),
-                  //     margin: EdgeInsets.all(12),
-                  //     borderRadius: 20,
-                  //     flushbarPosition: FlushbarPosition.TOP,
-                  //     titleText: Text(
-                  //       "Error !",
-                  //       style: TextStyle(
-                  //         fontSize: 13,
-                  //         fontFamily: AppStrings.fontBold,
-                  //         color: AppColors.kRed4,
-                  //       ),
-                  //     ),
-                  //     backgroundColor: AppColors.kRed3,
-                  //     messageText: Text(
-                  //       "Minimum purchase amount is ${widget.minimumAmount}",
-                  //       style: TextStyle(
-                  //         fontSize: 11,
-                  //         fontFamily: AppStrings.fontLight,
-                  //         color: AppColors.kRed4,
-                  //       ),
-                  //     ),
-                  //     duration: Duration(seconds: 1),
-                  //   ).show(context);
-                  // } else {
-                  Navigator.push(
-                    context,
-                    HighYieldInvestmentDollarPurchaseSource.route(
-                      uniqueName: widget.uniqueName,
-                      id: widget.id,
-                      maturityDate: widget.maturityDate,
-                      rate: widget.rate,
-                      minimumAmount: widget.minimumAmount,
-                      maximumAmount: widget.maximumAmount,
-                      amount: amountController.text,
-                    ),
-                  );
-                  // }
+                  if (amount == null) {
+                    Flushbar(
+                      icon: ImageIcon(
+                        AssetImage("images/failed.png"),
+                        color: AppColors.kRed,
+                        size: 70,
+                      ),
+                      margin: EdgeInsets.all(12),
+                      borderRadius: 20,
+                      flushbarPosition: FlushbarPosition.TOP,
+                      titleText: Text(
+                        "Error !",
+                        style: TextStyle(
+                          fontSize: 13,
+                          fontFamily: AppStrings.fontBold,
+                          color: AppColors.kRed4,
+                        ),
+                      ),
+                      backgroundColor: AppColors.kRed3,
+                      messageText: Text(
+                        "Field Cannot be Empty",
+                        style: TextStyle(
+                          fontSize: 11,
+                          fontFamily: AppStrings.fontLight,
+                          color: AppColors.kRed4,
+                        ),
+                      ),
+                      duration: Duration(seconds: 3),
+                    ).show(context);
+                  } else if (amount < AppNums.oneMillionAmount) {
+                    Flushbar(
+                      icon: ImageIcon(
+                        AssetImage("images/failed.png"),
+                        color: AppColors.kRed,
+                        size: 70,
+                      ),
+                      margin: EdgeInsets.all(12),
+                      borderRadius: 20,
+                      flushbarPosition: FlushbarPosition.TOP,
+                      titleText: Text(
+                        "Error !",
+                        style: TextStyle(
+                          fontSize: 13,
+                          fontFamily: AppStrings.fontBold,
+                          color: AppColors.kRed4,
+                        ),
+                      ),
+                      backgroundColor: AppColors.kRed3,
+                      messageText: Text(
+                        "Minimum purchase amount is ${widget.minimumAmount}",
+                        style: TextStyle(
+                          fontSize: 11,
+                          fontFamily: AppStrings.fontLight,
+                          color: AppColors.kRed4,
+                        ),
+                      ),
+                      duration: Duration(seconds: 2),
+                    ).show(context);
+                  } else {
+                    Navigator.push(
+                      context,
+                      HighYieldInvestmentDollarPurchaseSource.route(
+                        uniqueName: widget.uniqueName,
+                        id: widget.id,
+                        maturityDate: widget.maturityDate,
+                        rate: widget.rate,
+                        minimumAmount: widget.minimumAmount,
+                        maximumAmount: widget.maximumAmount,
+                        amount: amount,
+                      ),
+                    );
+                  }
                 },
               ),
               NumericKeyboard(
@@ -207,8 +241,11 @@ class _InvestmentHighYieldDollarAmountInputState
   }
 
   _onKeyboardTap(String value) {
+    // NumberFormat().format(double.tryParse(amountController.text));
     setState(() {
       amountController.text = amountController.text + value;
+      // amountController.text = NumberFormat("#,##0").format(double.tryParse(amountController.text));
+      // print(amountController.text);
     });
   }
 }

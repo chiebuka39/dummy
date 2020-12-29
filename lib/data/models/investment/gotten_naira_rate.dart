@@ -18,8 +18,8 @@ class GottenRate {
 }
 
 class ConvertedDollarRate {
-  int amountUSD;
-  int amountNGN;
+  num amountUSD;
+  num amountNGN;
   String conversationRate;
 
   ConvertedDollarRate({this.amountUSD, this.amountNGN, this.conversationRate});

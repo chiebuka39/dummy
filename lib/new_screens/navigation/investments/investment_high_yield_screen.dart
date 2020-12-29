@@ -31,7 +31,7 @@ class _InvestmentHighYieldScreenState extends State<InvestmentHighYieldScreen> {
       viewModelBuilder: () => InvestmentHighYieldViewModel(),
       onModelReady: (model) => model.getNairaTermInstruments(),
       builder: (context, model, _) => Scaffold(
-        backgroundColor: AppColors.kWhite,
+        
         appBar: AppBar(leading: IconButton(
                 icon: ImageIcon(
                   AssetImage("images/cancel.png"),
@@ -40,7 +40,7 @@ class _InvestmentHighYieldScreenState extends State<InvestmentHighYieldScreen> {
                 onPressed: () {
                   Navigator.pop(context);
                 },
-              ), elevation: 0, backgroundColor: AppColors.kWhite,),
+              ), elevation: 0, backgroundColor: Colors.transparent,),
         body: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [

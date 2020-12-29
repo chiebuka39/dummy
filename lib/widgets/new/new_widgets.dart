@@ -42,6 +42,43 @@ class SelectWallet extends StatelessWidget {
   }
 }
 
+
+class DollarWallet extends StatelessWidget {
+  const DollarWallet({
+    Key key,@required this.onPressed,
+  }) : super(key: key);
+
+  final VoidCallback onPressed;
+
+  @override
+  Widget build(BuildContext context) {
+    ABSPaymentViewModel paymentViewModel = Provider.of(context);
+    return GestureDetector(
+      onTap: onPressed,
+      child: Container(
+        padding: EdgeInsets.symmetric(horizontal: 20),
+        width: double.infinity,
+        height: 55,
+        decoration: BoxDecoration(
+            color: AppColors.kSecondaryColor,
+            borderRadius: BorderRadius.circular(15)
+        ),
+        child: Row(children: [
+          SvgPicture.asset("images/new/wallet1.svg"),
+          XMargin(10),
+          Text("Wallet", style: TextStyle(color: AppColors.kWhite,
+              fontSize: 13,fontFamily: AppStrings.fontNormal),),
+          Spacer(),
+          Text("${AppStrings.dollarSymbol} ${paymentViewModel.wallet.where((element) => element.currency == "USD").first.balance}", style: TextStyle(color: AppColors.kWhite,
+              fontSize: 13,fontFamily: AppStrings.fontNormal),),
+          XMargin(5),
+          Icon(Icons.navigate_next_rounded,color: AppColors.kWhite,)
+        ],),
+      ),
+    );
+  }
+}
+
 class ZimAppBar extends StatelessWidget implements PreferredSizeWidget {
   const ZimAppBar({
     Key key, this.icon = Icons.clear,@required this.callback, this.text = "Top Up",

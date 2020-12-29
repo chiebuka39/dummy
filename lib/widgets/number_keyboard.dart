@@ -14,13 +14,13 @@ class NumericKeyboard extends StatefulWidget {
 
   NumericKeyboard(
       {Key key,
-        @required this.onKeyboardTap,
-        this.textColor = Colors.black,
-        this.rightButtonFn,
-        this.rightIcon,
-        this.leftButtonFn,
-        this.leftIcon,
-        this.mainAxisAlignment = MainAxisAlignment.spaceEvenly})
+      @required this.onKeyboardTap,
+      this.textColor = Colors.black,
+      this.rightButtonFn,
+      this.rightIcon,
+      this.leftButtonFn,
+      this.leftIcon,
+      this.mainAxisAlignment = MainAxisAlignment.spaceEvenly})
       : super(key: key);
 
   @override
@@ -33,7 +33,7 @@ class _NumericKeyboardState extends State<NumericKeyboard> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: const EdgeInsets.only(left: 16, right: 16, top: 20, bottom: 20),
+      padding: const EdgeInsets.only(left: 20, right: 20, top: 20, bottom: 20),
       alignment: Alignment.center,
       child: Column(
         children: <Widget>[
@@ -90,22 +90,23 @@ class _NumericKeyboardState extends State<NumericKeyboard> {
 
   Widget _calcButton(String value) {
     return InkWell(
-        borderRadius: BorderRadius.circular(45),
-        onTap: () {
-          widget.onKeyboardTap(value);
-        },
-        child: Container(
-          alignment: Alignment.center,
-          width: 50,
-          height: 60,
-          child: Text(
-            value,
-            style: TextStyle(
-                fontSize: 20,
-                fontWeight: FontWeight.w400,
-                fontFamily: AppStrings.fontNormal,
-                color: widget.textColor),
-          ),
-        ));
+      borderRadius: BorderRadius.circular(45),
+      onTap: () {
+        widget.onKeyboardTap(value);
+      },
+      child: Container(
+        alignment: Alignment.center,
+        width: 50,
+        height: 50,
+        child: Text(
+          value,
+          style: TextStyle(
+              fontSize: 20,
+              fontWeight: FontWeight.w400,
+              fontFamily: AppStrings.fontNormal,
+              color: widget.textColor),
+        ),
+      ),
+    );
   }
 }

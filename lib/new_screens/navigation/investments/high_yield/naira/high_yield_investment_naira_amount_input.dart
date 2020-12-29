@@ -105,25 +105,27 @@ class _InvestmentHighYieldNairaAmountInputState
               ),
               YMargin(36),
               InvestmentTextField(
-                  controller: amountController, hintText: "Enter amount"),
+                  showCursor: false,
+                  controller: amountController,
+                  hintText: "Enter amount"),
               YMargin(10),
               Padding(
-                padding: const EdgeInsets.only(left: 20.0, right: 76),
+                padding: const EdgeInsets.only(left: 20.0, right: 20),
                 child: Text(
-                  "How much do you want to invest",
+                  "Minimum of ${widget.minimumAmount} and Maximum of Above ${widget.maximumAmount}",
                   style: TextStyle(
-                    fontSize: 12,
-                    fontFamily: AppStrings.fontBold,
+                    fontSize: 10,
+                    fontFamily: AppStrings.fontNormal,
                     color: AppColors.kTextColor,
                   ),
                 ),
               ),
-              YMargin(91),
+              YMargin(77),
               RoundedNextButton(
                 onTap: () {
-                  // double.tryParse(widget.minimumAmount)
+                  print(double.tryParse(amountController.text));
                   double amount = double.tryParse(amountController.text);
-                  if (amount < AppNums.oneMillionAmount) {
+                  if (amount == null) {
                     Flushbar(
                       icon: ImageIcon(
                         AssetImage("images/failed.png"),
@@ -143,14 +145,43 @@ class _InvestmentHighYieldNairaAmountInputState
                       ),
                       backgroundColor: AppColors.kRed3,
                       messageText: Text(
-                        "Minimum purchase amount is ₦5,000,001.00",
+                        "Field Cannot be Empty",
                         style: TextStyle(
                           fontSize: 11,
                           fontFamily: AppStrings.fontLight,
                           color: AppColors.kRed4,
                         ),
                       ),
-                      duration: Duration(seconds: 1),
+                      duration: Duration(seconds: 3),
+                    ).show(context);
+                  } else if (amount < AppNums.oneMillionAmount) {
+                    Flushbar(
+                      icon: ImageIcon(
+                        AssetImage("images/failed.png"),
+                        color: AppColors.kRed,
+                        size: 70,
+                      ),
+                      margin: EdgeInsets.all(12),
+                      borderRadius: 20,
+                      flushbarPosition: FlushbarPosition.TOP,
+                      titleText: Text(
+                        "Error !",
+                        style: TextStyle(
+                          fontSize: 13,
+                          fontFamily: AppStrings.fontBold,
+                          color: AppColors.kRed4,
+                        ),
+                      ),
+                      backgroundColor: AppColors.kRed3,
+                      messageText: Text(
+                        "Minimum purchase amount is ${widget.minimumAmount}",
+                        style: TextStyle(
+                          fontSize: 11,
+                          fontFamily: AppStrings.fontLight,
+                          color: AppColors.kRed4,
+                        ),
+                      ),
+                      duration: Duration(seconds: 2),
                     ).show(context);
                   } else {
                     Navigator.push(

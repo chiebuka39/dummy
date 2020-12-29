@@ -1,3 +1,4 @@
+import 'package:flushbar/flushbar.dart';
 import 'package:flutter/material.dart';
 import 'package:zimvest/new_screens/navigation/investments/widgets/text_field.dart';
 import 'package:zimvest/styles/colors.dart';
@@ -100,17 +101,50 @@ class _HighYieldInvestmentNairaUniqueNameState
                 hintText: "Enter a unique name"),
             YMargin(252),
             RoundedNextButton(
-              onTap: () => Navigator.push(
-                context,
-                InvestmentHighYieldNairaAmountInput.route(
-                    uniqueName: investmentName.text,
-                    id: widget.id,
-                    duration: widget.duration,
-                    maturityDate: widget.maturityDate,
-                    rate: widget.rate,
-                    minimumAmount: widget.minimumAmount,
-                    maximumAmount: widget.maximumAmount),
-              ),
+              onTap: () {
+                if (investmentName.text == "") {
+                  Flushbar(
+                    icon: ImageIcon(
+                      AssetImage("images/failed.png"),
+                      color: AppColors.kRed,
+                      size: 70,
+                    ),
+                    margin: EdgeInsets.all(12),
+                    borderRadius: 20,
+                    flushbarPosition: FlushbarPosition.TOP,
+                    titleText: Text(
+                      "Error !",
+                      style: TextStyle(
+                        fontSize: 13,
+                        fontFamily: AppStrings.fontBold,
+                        color: AppColors.kRed4,
+                      ),
+                    ),
+                    backgroundColor: AppColors.kRed3,
+                    messageText: Text(
+                      "Field Cannot be left empty",
+                      style: TextStyle(
+                        fontSize: 11,
+                        fontFamily: AppStrings.fontLight,
+                        color: AppColors.kRed4,
+                      ),
+                    ),
+                    duration: Duration(seconds: 3),
+                  ).show(context);
+                } else {
+                  Navigator.push(
+                    context,
+                    InvestmentHighYieldNairaAmountInput.route(
+                        uniqueName: investmentName.text,
+                        id: widget.id,
+                        duration: widget.duration,
+                        maturityDate: widget.maturityDate,
+                        rate: widget.rate,
+                        minimumAmount: widget.minimumAmount,
+                        maximumAmount: widget.maximumAmount),
+                  );
+                }
+              },
             ),
           ],
         ),
