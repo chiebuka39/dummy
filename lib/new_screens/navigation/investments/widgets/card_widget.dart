@@ -165,7 +165,7 @@ class InvestmentCardDollar extends StatelessWidget {
                     ),
                     YMargin(8),
                     Text(
-                      "$minimumAmount.00",
+                      "${AppStrings.dollarSymbol}$minimumAmount.00",
                       style: TextStyle(
                           fontSize: 11,
                           fontFamily: AppStrings.fontMedium,
@@ -186,7 +186,7 @@ class InvestmentCardDollar extends StatelessWidget {
                     ),
                     YMargin(8),
                     Text(
-                      "Above $maximumAmount.00",
+                      "Above ${AppStrings.dollarSymbol}$maximumAmount.00",
                       style: TextStyle(
                           fontSize: 11,
                           fontFamily: AppStrings.fontMedium,

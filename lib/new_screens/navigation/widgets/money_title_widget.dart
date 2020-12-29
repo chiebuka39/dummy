@@ -20,7 +20,7 @@ class MoneyTitleWidget extends StatelessWidget {
         Transform.translate(
             offset: Offset(0, -4),
             child: Text(
-              AppStrings.nairaSymbol,
+              "\$",
               style: TextStyle(fontSize: 14, color: textColor),
             )),
         XMargin(2),

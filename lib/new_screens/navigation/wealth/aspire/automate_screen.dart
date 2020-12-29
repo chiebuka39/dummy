@@ -2,11 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:provider/provider.dart';
 import 'package:zimvest/data/view_models/savings_view_model.dart';
-import 'package:zimvest/new_screens/navigation/wealth/create/choose_funding_source.dart';
-import 'package:zimvest/new_screens/navigation/wealth/create/save_frequency.dart';
+import 'package:zimvest/new_screens/navigation/wealth/aspire/choose_funding_source.dart';
 import 'package:zimvest/utils/margin.dart';
 import 'package:zimvest/utils/strings.dart';
 import 'package:zimvest/widgets/buttons.dart';
+import 'package:zimvest/widgets/new/new_widgets.dart';
 
 class AutomateSavingsScreen extends StatefulWidget {
   static Route<dynamic> route() {
@@ -28,25 +28,15 @@ class _AutomateSavingsScreenState extends State<AutomateSavingsScreen> {
   Widget build(BuildContext context) {
     savingViewModel = Provider.of(context);
     return Scaffold(
-      appBar: AppBar(
-        elevation: 0,
-        iconTheme: IconThemeData(color: Colors.black87),
-        leading: IconButton(
-          icon: Icon(Icons.keyboard_arrow_left_rounded,size: 25,),
-          onPressed: (){
-            Navigator.pop(context);
-          },
-        ),
-        backgroundColor: Colors.transparent,
-        title: Text("Create Zimvest WealthBox",
-          style: TextStyle(color: Colors.black87,fontSize: 13,fontFamily: AppStrings.fontMedium),),
-      ),
+        appBar: ZimAppBar(callback: (){
+          Navigator.pop(context);
+        },icon: Icons.arrow_back_ios_outlined,text: "Create Zimvest Aspire",),
       body: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 20),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-          YMargin(72),
+          YMargin(52),
           Text("Would you like to automate your savings ?",
             style: TextStyle(fontSize: 15,
                 fontFamily: AppStrings.fontBold),),

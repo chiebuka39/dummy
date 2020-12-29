@@ -58,7 +58,7 @@ class _HighYieldInvestmentDollarUniqueNameState
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: AppColors.kWhite,
+        backgroundColor: Colors.transparent,
         title: Text(
           "Invest",
           style: TextStyle(
@@ -98,7 +98,7 @@ class _HighYieldInvestmentDollarUniqueNameState
                 controller: investmentName, hintText: "Enter a unique name"),
             YMargin(252),
             RoundedNextButton(
-              onTap: () => Navigator.push(
+              onTap: investmentName.text == "" ? null : () => Navigator.push(
                 context,
                 InvestmentHighYieldDollarAmountInput.route(
                   uniqueName: investmentName.text,

@@ -13,6 +13,7 @@ import 'package:zimvest/utils/margin.dart';
 import 'package:zimvest/utils/strings.dart';
 import 'package:zimvest/widgets/buttons.dart';
 import 'package:zimvest/widgets/navigation/checkBox.dart';
+import 'package:zimvest/widgets/new/new_widgets.dart';
 
 class ChooseStartScreen extends StatefulWidget {
   const ChooseStartScreen({
@@ -57,20 +58,9 @@ class _ChooseStartScreenState extends State<ChooseStartScreen> with AfterLayoutM
         FocusScope.of(context).requestFocus(new FocusNode());
       },
       child: Scaffold(
-        appBar: AppBar(
-          elevation: 0,
-          iconTheme: IconThemeData(color: AppColors.kPrimaryColor),
-          leading: IconButton(
-            icon: Icon(Icons.arrow_back_ios_outlined,size: 20,),
-            onPressed: (){
-              Navigator.pop(context);
-            },
-          ),
-          backgroundColor: Colors.transparent,
-          title: Text("Create Zimvest Aspire",
-            style: TextStyle(color: Colors.black87,fontSize: 14,
-                fontFamily: AppStrings.fontMedium),),
-        ),
+        appBar: ZimAppBar(callback: (){
+          Navigator.pop(context);
+        },icon: Icons.arrow_back_ios_outlined,text: "Create Zimvest Aspire",),
         body: GestureDetector(
           onTap: (){
             FocusScope.of(context).requestFocus(new FocusNode());
@@ -140,18 +130,11 @@ class _ChooseStartScreenState extends State<ChooseStartScreen> with AfterLayoutM
                     ),
                   ),
                 ),
-                YMargin(10),
-                SizedBox(
-                  width: 300,
-                  child: Text("You can always top up your savings anytime "
-                      "once you create this savings plan", style: TextStyle(
-                      fontSize: 10,height: 1.6),),
-                ),
                 YMargin(70),
 
 
                 RoundedNextButton(
-                  onTap: (){
+                  onTap:_time == null ? null: (){
                     savingViewModel.startDate = _time;
                     Navigator.push(context, ChooseDuedateScreen.route());
                   },

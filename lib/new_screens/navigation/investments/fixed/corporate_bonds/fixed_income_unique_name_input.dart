@@ -86,7 +86,8 @@ class _FixedIncomeUniqueNameState extends State<FixedIncomeUniqueName> {
       body: SingleChildScrollView(
         child: Column(
           children: [
-            YMargin(72),
+            Spacer(),
+            // YMargin(72),
             Padding(
               padding: const EdgeInsets.only(left: 20.0, right: 76),
               child: Text(
@@ -98,12 +99,14 @@ class _FixedIncomeUniqueNameState extends State<FixedIncomeUniqueName> {
                 ),
               ),
             ),
-            YMargin(36),
+            // YMargin(36),
+            Spacer(),
             InvestmentTextField(
                 readOnly: false,
                 controller: investmentName,
                 hintText: "Enter a unique name"),
-            YMargin(252),
+            // YMargin(252),
+            Spacer(),
             RoundedNextButton(
               onTap: () => Navigator.push(
                 context,

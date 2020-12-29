@@ -11,6 +11,7 @@ import 'package:zimvest/utils/margin.dart';
 import 'package:zimvest/utils/strings.dart';
 import 'package:zimvest/widgets/buttons.dart';
 import 'package:zimvest/widgets/navigation/checkBox.dart';
+import 'package:zimvest/widgets/new/new_widgets.dart';
 
 class ChooseStartScreen extends StatefulWidget {
   const ChooseStartScreen({
@@ -30,6 +31,8 @@ class ChooseStartScreen extends StatefulWidget {
 class _ChooseStartScreenState extends State<ChooseStartScreen> {
 
 
+  DateTime _time;
+  DateTime _selectedTime;
 
   bool today = false;
 
@@ -44,19 +47,13 @@ class _ChooseStartScreenState extends State<ChooseStartScreen> {
         FocusScope.of(context).requestFocus(new FocusNode());
       },
       child: Scaffold(
-        appBar: AppBar(
-          elevation: 0,
-          iconTheme: IconThemeData(color: AppColors.kPrimaryColor),
-          leading: IconButton(
-            icon: Icon(Icons.arrow_back_ios_outlined,size: 20,),
-            onPressed: (){
+          appBar: ZimAppBar(
+            icon: Icons.arrow_back_ios_outlined,
+            text: 'Create Zimvest WealthBox',
+            callback: (){
               Navigator.pop(context);
             },
           ),
-          backgroundColor: Colors.transparent,
-          title: Text("Create Zimvest WealthBox",
-            style: TextStyle(color: Colors.black87,fontSize: 14),),
-        ),
         body: GestureDetector(
           onTap: (){
             FocusScope.of(context).requestFocus(new FocusNode());
@@ -73,8 +70,10 @@ class _ChooseStartScreenState extends State<ChooseStartScreen> {
                 YMargin(12),
                 InkWell(
                   onTap: (){
-                    savingViewModel.startDate = DateTime.now();
+                    //savingViewModel.startDate = DateTime.now();
                     setState(() {
+                      _time = DateTime.now();
+                      _selectedTime = null;
                       today = true;
                     });
                   },
@@ -100,7 +99,9 @@ class _ChooseStartScreenState extends State<ChooseStartScreen> {
                         lastDate: DateTime(2025));
                     if(time != null){
                       setState(() {
-                        savingViewModel.startDate = time;
+
+                        _time = time;
+                        _selectedTime = time;
                         today = false;
                       });
                     }
@@ -115,8 +116,8 @@ class _ChooseStartScreenState extends State<ChooseStartScreen> {
                     ),
                     child: Row(
                       children: [
-                        Text(savingViewModel.startDate == null ? "Set preferred Date":
-                        "${savingViewModel.startDate.year}/${AppUtils.addLeadingZeroIfNeeded(savingViewModel.startDate.month)}/${AppUtils.addLeadingZeroIfNeeded(savingViewModel.startDate.day)}", style: TextStyle(fontSize: 12,
+                        Text(_selectedTime == null ? "Set preferred Date":
+                        "${_selectedTime.year}/${AppUtils.addLeadingZeroIfNeeded(_selectedTime.month)}/${AppUtils.addLeadingZeroIfNeeded(_selectedTime.day)}", style: TextStyle(fontSize: 12,
                             color: AppColors.kTextColor.withOpacity(0.53)),),
                         Spacer(),
                         Icon(Icons.keyboard_arrow_down_rounded)
@@ -135,7 +136,8 @@ class _ChooseStartScreenState extends State<ChooseStartScreen> {
 
 
                 RoundedNextButton(
-                  onTap: savingViewModel.startDate == null ? null: (){
+                  onTap: _time == null ? null: (){
+                    savingViewModel.startDate = _time;
                     Navigator.push(context, ChooseFundingScreen.route());
                   },
                 ),

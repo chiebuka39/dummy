@@ -100,11 +100,13 @@ class _FixedIncomeUniqueNameState extends State<FixedIncomeUniqueName> {
               ),
             ),
             // YMargin(36),
+            Spacer(),
             InvestmentTextField(
                 readOnly: false,
                 controller: investmentName,
                 hintText: "Enter a unique name"),
             // YMargin(252),
+            Spacer(),
             RoundedNextButton(
               onTap: () => Navigator.push(
                 context,

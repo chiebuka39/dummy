@@ -5,8 +5,8 @@ import 'package:provider/provider.dart';
 import 'package:zimvest/data/view_models/identity_view_model.dart';
 import 'package:zimvest/data/view_models/payment_view_model.dart';
 import 'package:zimvest/data/view_models/savings_view_model.dart';
-import 'package:zimvest/new_screens/navigation/wealth/create/savings_summary.dart';
 import 'package:zimvest/new_screens/profile/widgets/verification_failed_widget.dart';
+import 'package:zimvest/new_screens/navigation/wealth/aspire/savings_summary.dart';
 import 'package:zimvest/styles/colors.dart';
 import 'package:zimvest/utils/margin.dart';
 import 'package:zimvest/utils/strings.dart';
@@ -51,7 +51,7 @@ class _ChooseFundingScreenState extends State<ChooseFundingScreen> with AfterLay
       child: Scaffold(
           appBar: ZimAppBar(callback: (){
             Navigator.pop(context);
-          },icon: Icons.arrow_back_ios_outlined,text: "Create Zimvest WeathBox",),
+          },icon: Icons.arrow_back_ios_outlined,text: "Create Zimvest Aspire",),
         body: GestureDetector(
           onTap: (){
             FocusScope.of(context).requestFocus(new FocusNode());

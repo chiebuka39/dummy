@@ -1,12 +1,12 @@
 import 'package:flushbar/flushbar.dart';
 import 'package:flutter/material.dart';
-import 'package:numeric_keyboard/numeric_keyboard.dart';
 import 'package:zimvest/new_screens/navigation/investments/high_yield/dollar/high_yield_investment_dollar_purchase_source.dart';
 import 'package:zimvest/new_screens/navigation/investments/widgets/text_field.dart';
 import 'package:zimvest/styles/colors.dart';
 import 'package:zimvest/utils/margin.dart';
 import 'package:zimvest/utils/strings.dart';
 import 'package:zimvest/widgets/buttons.dart';
+import 'package:zimvest/widgets/number_keyboard.dart';
 
 class InvestmentHighYieldDollarAmountInput extends StatefulWidget {
   final String uniqueName;
@@ -70,7 +70,7 @@ class _InvestmentHighYieldDollarAmountInputState
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: AppColors.kWhite,
+        backgroundColor: Colors.transparent,
         title: Text(
           "Invest",
           style: TextStyle(

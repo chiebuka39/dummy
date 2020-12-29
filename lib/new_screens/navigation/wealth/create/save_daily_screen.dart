@@ -9,6 +9,7 @@ import 'package:zimvest/styles/colors.dart';
 import 'package:zimvest/utils/margin.dart';
 import 'package:zimvest/utils/strings.dart';
 import 'package:zimvest/widgets/buttons.dart';
+import 'package:zimvest/widgets/new/new_widgets.dart';
 
 class SavingDailyScreen extends StatefulWidget {
   const SavingDailyScreen({
@@ -40,18 +41,12 @@ class _SavingDailyScreenState extends State<SavingDailyScreen> {
         FocusScope.of(context).requestFocus(new FocusNode());
       },
       child: Scaffold(
-        appBar: AppBar(
-          elevation: 0,
-          iconTheme: IconThemeData(color: AppColors.kPrimaryColor),
-          leading: IconButton(
-            icon: Icon(Icons.arrow_back_ios_outlined,size: 20,),
-            onPressed: (){
-              Navigator.pop(context);
-            },
-          ),
-          backgroundColor: Colors.transparent,
-          title: Text("Create Zimvest WealthBox",
-            style: TextStyle(color: Colors.black87,fontSize: 14),),
+        appBar: ZimAppBar(
+          icon: Icons.arrow_back_ios_outlined,
+          text: 'Create Zimvest Wealthbox',
+          callback: (){
+            Navigator.pop(context);
+          },
         ),
         body: GestureDetector(
           onTap: (){
@@ -63,7 +58,7 @@ class _SavingDailyScreenState extends State<SavingDailyScreen> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 YMargin(40),
-                Text("How much would you like to save daily?", style: TextStyle(fontSize: 15,
+                Text("How much would you like to save ${savingViewModel.selectedFrequency.name}?", style: TextStyle(fontSize: 15,
                     color: AppColors.kGreyText,
                     fontFamily: AppStrings.fontBold),),
                 YMargin(12),

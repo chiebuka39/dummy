@@ -1,3 +1,5 @@
+import 'package:device_preview/device_preview.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:hive/hive.dart';
@@ -32,7 +34,12 @@ void main() async {
 
   //initialize service locator
   setUpLocator();
-  runApp(MyApp());
+  runApp(
+    DevicePreview(
+      enabled: !kReleaseMode,
+      builder: (context) => MyApp(), // Wrap your app
+    ),
+  );
   configLoading();
 }
 
@@ -84,23 +91,23 @@ class _MyAppState extends State<MyApp> {
         )
       ],
       // child: FlutterEasyLoading(
-        child: MaterialApp(
-          title: 'Zimvest',
-          debugShowCheckedModeBanner: false,
-          // builder: EasyLoading.init(),
-          // navigatorKey: locator<NavigationService>().navigationKey,
-          // onGenerateRoute: generateRoute,
-          theme: ThemeData(
-            fontFamily: "Caros",
-            primarySwatch: Colors.blue,
-            bottomSheetTheme:
-                BottomSheetThemeData(backgroundColor: Colors.transparent),
-            visualDensity: VisualDensity.adaptivePlatformDensity,
-          ),
-          home: _localStorage.getSecondaryState().isLoggedIn == false
-              ? LandingScreen()
-              : TabsContainer(),
-         
+      child: MaterialApp(
+        title: 'Zimvest',
+        debugShowCheckedModeBanner: false,
+        // builder: EasyLoading.init(),
+        // navigatorKey: locator<NavigationService>().navigationKey,
+        // onGenerateRoute: generateRoute,
+        theme: ThemeData(
+          fontFamily: "Caros",
+          primarySwatch: Colors.blue,
+          bottomSheetTheme:
+              BottomSheetThemeData(backgroundColor: Colors.transparent),
+          visualDensity: VisualDensity.adaptivePlatformDensity,
+        ),
+        home: _localStorage.getSecondaryState().isLoggedIn == false
+            ? LandingScreen()
+            : TabsContainer(),
+            
         // ),
       ),
     );

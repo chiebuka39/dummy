@@ -406,7 +406,6 @@ class InvestmentHighYieldViewModel extends ChangeNotifier {
     String token = _localStorage.getUser().token;
     final fgnBond = await _investmentService.getFGNBond(token: token);
     this.fgnBond = fgnBond;
-    print(fgnBond.data.fgnBondItems[1].bonds[0].rate);
     setBusy(false);
     notifyListeners();
   }

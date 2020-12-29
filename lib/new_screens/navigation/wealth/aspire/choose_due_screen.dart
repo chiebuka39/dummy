@@ -12,6 +12,7 @@ import 'package:zimvest/utils/margin.dart';
 import 'package:zimvest/utils/strings.dart';
 import 'package:zimvest/widgets/buttons.dart';
 import 'package:zimvest/widgets/navigation/checkBox.dart';
+import 'package:zimvest/widgets/new/new_widgets.dart';
 
 class ChooseDuedateScreen extends StatefulWidget {
   const ChooseDuedateScreen({
@@ -70,19 +71,9 @@ class _ChooseDuedateScreenState extends State<ChooseDuedateScreen> with AfterLay
         FocusScope.of(context).requestFocus(new FocusNode());
       },
       child: Scaffold(
-        appBar: AppBar(
-          elevation: 0,
-          iconTheme: IconThemeData(color: AppColors.kPrimaryColor),
-          leading: IconButton(
-            icon: Icon(Icons.arrow_back_ios_outlined,size: 20,),
-            onPressed: (){
-              Navigator.pop(context);
-            },
-          ),
-          backgroundColor: Colors.transparent,
-          title: Text("Create Zimvest Aspire",
-            style: TextStyle(color: Colors.black87,fontSize: 14, fontFamily: AppStrings.fontMedium),),
-        ),
+        appBar: ZimAppBar(callback: (){
+          Navigator.pop(context);
+        },icon: Icons.arrow_back_ios_outlined,text: "Create Zimvest Aspire",),
         body: GestureDetector(
           onTap: (){
             FocusScope.of(context).requestFocus(new FocusNode());

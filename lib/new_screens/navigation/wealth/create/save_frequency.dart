@@ -8,6 +8,7 @@ import 'package:zimvest/utils/margin.dart';
 import 'package:zimvest/utils/strings.dart';
 import 'package:zimvest/widgets/buttons.dart';
 import 'package:zimvest/widgets/navigation/checkBox.dart';
+import 'package:zimvest/widgets/new/new_widgets.dart';
 
 class SaveFrequencyScreen extends StatefulWidget {
   static Route<dynamic> route() {
@@ -32,18 +33,12 @@ class _SaveFrequencyScreenState extends State<SaveFrequencyScreen> {
     identityViewModel = Provider.of(context);
     savingViewModel = Provider.of(context);
     return Scaffold(
-      appBar: AppBar(
-        elevation: 0,
-        iconTheme: IconThemeData(color: Colors.black87),
-        leading: IconButton(
-          icon: Icon(Icons.keyboard_arrow_left_rounded,size: 25,),
-          onPressed: (){
-            Navigator.pop(context);
-          },
-        ),
-        backgroundColor: Colors.transparent,
-        title: Text("Create Zimvest WealthBox",
-          style: TextStyle(color: Colors.black87,fontSize: 13,fontFamily: AppStrings.fontMedium),),
+      appBar: ZimAppBar(
+        icon: Icons.arrow_back_ios_outlined,
+        text: 'Create Zimvest WealthBox',
+        callback: (){
+          Navigator.pop(context);
+        },
       ),
       body: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 20),

@@ -8,8 +8,10 @@ import 'package:zimvest/new_screens/navigation/wealth/create/wealth_box_screen.d
 import 'package:zimvest/new_screens/navigation/wealth/wealth_box_details.dart';
 import 'package:zimvest/styles/colors.dart';
 import 'package:zimvest/utils/margin.dart';
+import 'package:zimvest/utils/margins.dart';
 import 'package:zimvest/utils/strings.dart';
 import 'package:zimvest/widgets/home/action_box_widgets.dart';
+import 'package:zimvest/widgets/new/new_widgets.dart';
 
 class WealthScreen extends StatefulWidget {
   static Route<dynamic> route() {
@@ -33,166 +35,162 @@ class _WealthScreenState extends State<WealthScreen> {
   @override
   Widget build(BuildContext context) {
     savingViewModel = Provider.of(context);
-    double tabWidth = MediaQuery.of(context).size.width - 40;
+    double tabWidth = MediaQuery.of(context).size.width / 1.18;
     return Scaffold(
-      body: SafeArea(
-        child: Column(
-          children: [
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 20),
-              child: Row(
-                children: [
-                  Text(
-                    "Wealth",
-                    style: TextStyle(
-                        fontSize: 16, fontFamily: AppStrings.fontBold),
+      body: Column(
+        children: [
+          YMargin(42),
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 20),
+            child: Row(
+              children: [
+                Text(
+                  "Wealth",
+                  style: TextStyle(
+                      fontSize: 16, fontFamily: AppStrings.fontBold),
+                ),
+                Spacer(),
+                Container(
+                  width: 115,
+                  height: 28,
+                  decoration: BoxDecoration(
+                      color: AppColors.kPrimaryColorLight,
+                      borderRadius: BorderRadius.circular(14)),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      SvgPicture.asset(
+                        "images/gift.svg",
+                        color: AppColors.kPrimaryColor,
+                      ),
+                      XMargin(6),
+                      Text(
+                        "Earn Free Cash",
+                        style: TextStyle(
+                            fontSize: 10,
+                            fontFamily: AppStrings.fontBold,
+                            color: AppColors.kPrimaryColor),
+                      )
+                    ],
                   ),
-                  Spacer(),
+                )
+              ],
+            ),
+          ),
+          YMargin(33),
+          Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Container(
+              width: tabWidth,
+              height: 40,
+              decoration: BoxDecoration(
+                  color: AppColors.kPrimaryColorLight,
+                  borderRadius: BorderRadius.circular(13)),
+              child: Stack(
+                children: <Widget>[
+                  AnimatedPositioned(
+                    left: showInvest == true ? tabWidth / 2 : 0,
+                    duration: Duration(milliseconds: 300),
+                    child: Container(
+                      width: tabWidth / 2,
+                      height: 40,
+                      decoration: BoxDecoration(
+              color: AppColors.kPrimaryColor,
+              borderRadius: BorderRadius.circular(13)),
+                    ),
+                  ),
                   Container(
-                    width: 115,
-                    height: 28,
-                    decoration: BoxDecoration(
-                        color: AppColors.kPrimaryColorLight,
-                        borderRadius: BorderRadius.circular(14)),
                     child: Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        SvgPicture.asset(
-                          "images/gift.svg",
-                          color: AppColors.kPrimaryColor,
-                        ),
-                        XMargin(6),
-                        Text(
-                          "Earn Free Cash",
-                          style: TextStyle(
-                              fontSize: 10,
-                              fontFamily: AppStrings.fontBold,
-                              color: AppColors.kPrimaryColor),
-                        )
+                      children: <Widget>[
+            Expanded(
+            child: InkWell(
+              onTap: () {
+            setState(() {
+              showInvest = false;
+            });
+              },
+              child: Container(
+              child: Center(
+                  child: Text(
+            "Save",
+            style: TextStyle(
+                fontSize: 12,
+                color: showInvest == false
+                    ? Colors.white
+                    : AppColors.kPrimaryColor),
+              ))),
+            )),
+            Expanded(
+            child: InkWell(
+              onTap: () {
+            setState(() {
+              showInvest = true;
+            });
+              },
+              child: Container(
+              child: Center(
+                  child: Text(
+            "Invest",
+            style: TextStyle(
+                fontSize: 12,
+                color: showInvest == true
+                    ? Colors.white
+                    : AppColors.kPrimaryColor),
+              ))),
+            )),
                       ],
                     ),
-                  )
+                  ),
                 ],
               ),
             ),
-            YMargin(33),
-            Row(
-              children: <Widget>[
-                Spacer(),
-                Container(
-                  width: tabWidth,
-                  height: 40,
-                  decoration: BoxDecoration(
-                      color: AppColors.kPrimaryColorLight,
-                      borderRadius: BorderRadius.circular(13)),
-                  child: Stack(
-                    children: <Widget>[
-                      AnimatedPositioned(
-                        left: showInvest == true ? tabWidth / 2 : 0,
-                        duration: Duration(milliseconds: 300),
-                        child: Container(
-                          width: tabWidth / 2,
-                          height: 40,
-                          decoration: BoxDecoration(
-                              color: AppColors.kPrimaryColor,
-                              borderRadius: BorderRadius.circular(13)),
-                        ),
+          ),
+          YMargin(22),
+          showInvest
+              ? Expanded(
+                  child: Column(
+                    children: [
+                      ActionBoxWidget(
+                        img: "high",
+                        onTap: () {
+                          Navigator.push(
+                              context, InvestmentHighYieldScreen.route());
+                        },
+                        title: "Zimvest High Yield",
+                        desc: "This plan, which is similar to fixed"
+                            " deposits run by banks, offers you"
+                            "competitive interest rate.",
+                        color: AppColors.khighyieldCard,
+                        
                       ),
-                      Container(
-                        child: Row(
-                          children: <Widget>[
-                            Expanded(
-                                child: InkWell(
-                              onTap: () {
-                                setState(() {
-                                  showInvest = false;
-                                });
-                              },
-                              child: Container(
-                                  child: Center(
-                                      child: Text(
-                                "Save",
-                                style: TextStyle(
-                                    fontSize: 12,
-                                    color: showInvest == false
-                                        ? Colors.white
-                                        : AppColors.kPrimaryColor),
-                              ))),
-                            )),
-                            Expanded(
-                                child: InkWell(
-                              onTap: () {
-                                setState(() {
-                                  showInvest = true;
-                                });
-                              },
-                              child: Container(
-                                  child: Center(
-                                      child: Text(
-                                "Invest",
-                                style: TextStyle(
-                                    fontSize: 12,
-                                    color: showInvest == true
-                                        ? Colors.white
-                                        : AppColors.kPrimaryColor),
-                              ))),
-                            )),
-                          ],
-                        ),
-                      ),
+                      ActionBoxWidget(
+                          img: "fixed",
+                          onTap: () => Navigator.push(
+                              context, FixedIncomeHome.route()),
+                          title: "Zimvest Fixed Income",
+                          desc: "Invest in fixed income vehicles such as Treasury Bills, FGN Bonds, Corporate Bonds, and Eurobonds",
+                          color: AppColors.kFixed),
+                    ],
+                  ),
+                )
+              : Expanded(
+                  child: Column(
+                    children: [
+                      ActionBoxWidget(
+                          title: "Zimvest wealth box",
+                          desc: "This savings plan assists you save in a "
+                              "disciplined manner.",
+                          color: AppColors.kWealth),
+                      ActionBoxWidget(
+                          img: 'aspire',
+                          title: "Zimvest Aspire",
+                          desc: "This savings plan assists you save in a "
+                              "disciplined manner.",
+                          color: AppColors.kAspire),
                     ],
                   ),
                 ),
-                Spacer(),
-              ],
-            ),
-            YMargin(30),
-            showInvest
-                ? Expanded(
-                    child: Column(
-                      children: [
-                        ActionBoxWidget(
-                          img: "high",
-                          onTap: () {
-                            Navigator.push(
-                                context, InvestmentHighYieldScreen.route());
-                          },
-                          title: "Zimvest High Yield",
-                          desc: "This plan, which is similar to fixed"
-                              " deposits run by banks, offers you"
-                              "competitive interest rate.",
-                          color: AppColors.kHighYield,
-                          
-                        ),
-                        ActionBoxWidget(
-                            img: "fixed",
-                            onTap: () => Navigator.push(
-                                context, FixedIncomeHome.route()),
-                            title: "Zimvest Fixed Income",
-                            desc: "Invest in fixed income vehicles such as Treasury Bills, FGN Bonds, Corporate Bonds, and Eurobonds",
-                            color: AppColors.kFixed),
-                      ],
-                    ),
-                  )
-                : Expanded(
-                    child: Column(
-                      children: [
-                        ActionBoxWidget(
-                            title: "Zimvest wealth box",
-                            desc: "This savings plan assists you save in a "
-                                "disciplined manner.",
-                            color: AppColors.kWealth),
-                        ActionBoxWidget(
-                            img: 'aspire',
-                            title: "Zimvest Aspire",
-                            desc: "This savings plan assists you save in a "
-                                "disciplined manner.",
-                            color: AppColors.kAspire),
-                      ],
-                    ),
-                  ),
-          ],
-        ),
+        ],
       ),
     );
   }

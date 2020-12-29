@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:numeric_keyboard/numeric_keyboard.dart';
 import 'package:zimvest/new_screens/funding/wallet/fund_with_dollar_wallet_summary.dart';
 import 'package:zimvest/new_screens/navigation/investments/widgets/text_field.dart';
 import 'package:zimvest/styles/colors.dart';
 import 'package:zimvest/utils/margin.dart';
 import 'package:zimvest/utils/strings.dart';
 import 'package:zimvest/widgets/buttons.dart';
+import 'package:zimvest/widgets/number_keyboard.dart';
 
 class FundNairaWalletWithDollar extends StatefulWidget {
   static Route<dynamic> route() {
@@ -35,7 +35,7 @@ class _FundNairaWalletWithDollarState extends State<FundNairaWalletWithDollar> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: AppColors.kWhite,
+        backgroundColor: Colors.transparent,
         elevation: 0,
         leading: IconButton(
             icon: Icon(

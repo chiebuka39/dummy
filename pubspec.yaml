@@ -57,7 +57,6 @@ dependencies:
   smooth_page_indicator: ^0.2.0
   timelines: ^0.0.2+1
   percent_indicator: ^2.1.8
-  numeric_keyboard: ^1.0.0
   provider_architecture: ^1.1.1+1
   device_preview: ^0.5.5
   flutter_easyloading: ^2.2.0

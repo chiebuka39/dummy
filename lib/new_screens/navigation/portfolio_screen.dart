@@ -612,51 +612,31 @@ class InvestmentItemWidget extends StatelessWidget {
                   fontFamily: AppStrings.fontLight),
             ),
             Spacer(),
-            Row(
-              children: [
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      "Balance",
-                      style: TextStyle(
-                          fontSize: 11,
-                          fontFamily: AppStrings.fontNormal,
-                          color: AppColors.kTextColor),
-                    ),
-                    YMargin(8),
-                    Text(
-                      "${AppStrings.nairaSymbol}5,000,000",
-                      style: TextStyle(
-                          fontSize: 11,
-                          fontFamily: AppStrings.fontMedium,
-                          color: AppColors.kTextColor),
-                    ),
-                  ],
-                ),
-                Spacer(),
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.end,
-                  children: [
-                    Text(
-                      "Balance",
-                      style: TextStyle(
-                          fontSize: 11,
-                          fontFamily: AppStrings.fontNormal,
-                          color: AppColors.kTextColor),
-                    ),
-                    YMargin(8),
-                    Text(
-                      "10%",
-                      style: TextStyle(
-                          fontSize: 11,
-                          fontFamily: AppStrings.fontMedium,
-                          color: AppColors.kWealthDark),
-                    ),
-                  ],
-                )
-              ],
-            ),
+            Row(children: [
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                   Text("Balance", style: TextStyle(fontSize: 11,
+                       fontFamily: AppStrings.fontNormal,
+                       color: AppColors.kTextColor),),
+                  YMargin(8),
+                  Text("\$5,000,000", style: TextStyle(fontSize: 11,
+                      fontFamily: AppStrings.fontMedium,
+                      color: AppColors.kTextColor),),
+              ],),
+              Spacer(),
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.end,
+                children: [
+                   Text("Balance", style: TextStyle(fontSize: 11,
+                       fontFamily: AppStrings.fontNormal,
+                       color: AppColors.kTextColor),),
+                  YMargin(8),
+                  Text("10%", style: TextStyle(fontSize: 11,
+                      fontFamily: AppStrings.fontMedium,
+                      color: AppColors.kWealthDark),),
+              ],)
+            ],),
             YMargin(8)
           ],
         ),

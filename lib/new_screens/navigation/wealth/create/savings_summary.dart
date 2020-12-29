@@ -47,6 +47,7 @@ class _SavingsSummaryScreenState extends State<SavingsSummaryScreen> {
   bool confirmed = false;
 
   bool slideUp = false;
+  bool error = false;
 
   @override
   void initState() {
@@ -79,6 +80,11 @@ class _SavingsSummaryScreenState extends State<SavingsSummaryScreen> {
         confirmed = true;
       });
       Future.delayed(1000.milliseconds).then((value) => onInit());
+    }else{
+      setState(() {
+        loading = false;
+        error = true;
+      });
     }
     // Future.delayed(Duration(seconds: 1)).then((value) {
     //   setState(() {
@@ -219,7 +225,7 @@ class _SavingsSummaryScreenState extends State<SavingsSummaryScreen> {
                                 Text("Frequency".toUpperCase(), style: TextStyle(fontSize: 11,
                                   color: AppColors.kSecondaryText,fontFamily: AppStrings.fontNormal,),),
                                 YMargin(15),
-                                Text("Monthly", style: TextStyle(
+                                Text(savingViewModel.selectedFrequency.name, style: TextStyle(
                                     fontFamily: AppStrings.fontMedium,
                                     fontSize: 13,color: AppColors.kGreyText
                                 ),),
@@ -231,7 +237,7 @@ class _SavingsSummaryScreenState extends State<SavingsSummaryScreen> {
                                 Text("amount".toUpperCase(), style: TextStyle(fontSize: 12,
                                   color: AppColors.kSecondaryText,fontFamily: AppStrings.fontNormal,),),
                                 YMargin(15),
-                                Text("${AppStrings.nairaSymbol}20,000", style: TextStyle(
+                                Text("${AppStrings.nairaSymbol}${savingViewModel.amountToSave.toInt().toString().convertWithComma()}", style: TextStyle(
                                     fontFamily: AppStrings.fontMedium,
                                     fontSize: 13,color: AppColors.kGreyText
                                 ),),
@@ -247,7 +253,7 @@ class _SavingsSummaryScreenState extends State<SavingsSummaryScreen> {
                                 Text("start date".toUpperCase(), style: TextStyle(fontSize: 12,
                                   color: AppColors.kSecondaryText,fontFamily: AppStrings.fontNormal,),),
                                 YMargin(15),
-                                Text("Oct 29, 2020", style: TextStyle(
+                                Text(AppUtils.getReadableDate2(savingViewModel.startDate), style: TextStyle(
                                     fontFamily: AppStrings.fontMedium,
                                     fontSize: 13,color: AppColors.kGreyText
                                 ),),
@@ -259,7 +265,7 @@ class _SavingsSummaryScreenState extends State<SavingsSummaryScreen> {
                                 Text("Next maturity date".toUpperCase(), style: TextStyle(fontSize: 11,
                                   color: AppColors.kSecondaryText,fontFamily: AppStrings.fontNormal,),),
                                 YMargin(15),
-                                Text("Feb 29, 2020", style: TextStyle(
+                                Text(AppUtils.getReadableDate2(savingViewModel.endDate), style: TextStyle(
                                     fontFamily: AppStrings.fontMedium,
                                     fontSize: 13,color: AppColors.kGreyText
                                 ),),
@@ -311,10 +317,37 @@ class _SavingsSummaryScreenState extends State<SavingsSummaryScreen> {
               ),
             ),
           ),
-          Container(
+          error == false ? Container(
             height: size.height,
             width: size.width,
             child: Center(child: loading ? CircularProgressIndicator():SizedBox()
+              ,),
+          ):Container(
+            height: size.height,
+            width: size.width,
+            child: Center(child:Column(children: [
+              Spacer(),
+              Text("Error Occured", style: TextStyle(color: AppColors.kWhite),),
+              YMargin(20),
+              PrimaryButtonNew(
+                title: "Back to Home",
+                onTap: (){
+
+                  Navigator.pushAndRemoveUntil(
+                      context,
+                      MaterialPageRoute(builder: (context) => TabsContainer()),
+                          (Route<dynamic> route) => false);
+                  Future.delayed(Duration(seconds: 1)).then((value) {
+                    savingViewModel.startDate = null;
+                    savingViewModel.selectedChannel = null;
+                    savingViewModel.amountToSave = 0.0;
+                    savingViewModel.autoSave = null;
+                    savingViewModel.selectedFrequency = null;
+                  });
+                },
+              ),
+              Spacer(),
+            ],)
               ,),
           ),
         ],),

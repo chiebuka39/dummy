@@ -1,13 +1,17 @@
 class Wallet{
   String walletNum;
+  String currency;
+  int walletId;
   double balance;
-  bool hasWallet;
 
-  Wallet({this.balance, this.walletNum, this.hasWallet});
+
+  Wallet({this.balance, this.walletNum, this.walletId,this.currency});
 
   factory Wallet.fromJson(Map<String, dynamic> json) => Wallet(
     walletNum: json["walletNumber"],
-    balance: json["balance"],
+    balance: json["walletBalance"],
+    currency: json["currency"],
+    walletId: json["walletId"],
   );
 
   Map<String, dynamic> toJson() => {

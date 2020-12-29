@@ -1,6 +1,5 @@
 import 'package:flushbar/flushbar.dart';
 import 'package:flutter/material.dart';
-import 'package:numeric_keyboard/numeric_keyboard.dart';
 import 'package:provider_architecture/provider_architecture.dart';
 import 'package:zimvest/data/view_models/investment_view_model.dart';
 import 'package:zimvest/new_screens/navigation/investments/high_yield/naira/high_yield_investment_naira_purchase_source.dart';
@@ -10,6 +9,7 @@ import 'package:zimvest/utils/margin.dart';
 import 'package:zimvest/utils/nums.dart';
 import 'package:zimvest/utils/strings.dart';
 import 'package:zimvest/widgets/buttons.dart';
+import 'package:zimvest/widgets/number_keyboard.dart';
 
 class InvestmentHighYieldNairaAmountInput extends StatefulWidget {
   final String uniqueName;
@@ -69,7 +69,7 @@ class _InvestmentHighYieldNairaAmountInputState
       viewModelBuilder: () => InvestmentHighYieldViewModel(),
       builder: (context, model, _) => Scaffold(
         appBar: AppBar(
-          backgroundColor: AppColors.kWhite,
+          backgroundColor: Colors.transparent,
           title: Text(
             "Invest",
             style: TextStyle(

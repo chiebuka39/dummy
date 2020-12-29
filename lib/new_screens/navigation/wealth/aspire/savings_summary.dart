@@ -48,6 +48,8 @@ class _SavingsSummaryScreenState extends State<SavingsSummaryScreen> {
 
   bool slideUp = false;
 
+  bool error = false;
+
   @override
   void initState() {
     keys = List.generate(2, (index) => GlobalKey<ItemFaderState>());
@@ -84,13 +86,13 @@ class _SavingsSummaryScreenState extends State<SavingsSummaryScreen> {
         confirmed = true;
       });
       Future.delayed(1000.milliseconds).then((value) => onInit());
+    }else{
+      setState(() {
+        loading= false;
+        error = true;
+      });
     }
-    // Future.delayed(Duration(seconds: 1)).then((value) {
-    //   setState(() {
-    //     confirmed = true;
-    //   });
-    //   Future.delayed(1000.milliseconds).then((value) => onInit());
-    // });
+
 
 
   }
@@ -151,6 +153,16 @@ class _SavingsSummaryScreenState extends State<SavingsSummaryScreen> {
                                   context,
                                   MaterialPageRoute(builder: (context) => TabsContainer()),
                                       (Route<dynamic> route) => false);
+                              Future.delayed(Duration(seconds: 2)).then((value) {
+                                paymentViewModel.selectedCard = null;
+                                savingViewModel.startDate = null;
+                                savingViewModel.goalName = "";
+                                savingViewModel.selectedFrequency = null;
+                                savingViewModel.amountToSave = null;
+                                savingViewModel.selectedChannel = null;
+                              });
+
+
                             },
                             textColor: Colors.white,
                             title: "Done",
@@ -185,11 +197,15 @@ class _SavingsSummaryScreenState extends State<SavingsSummaryScreen> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    BackButton(
-                      color: AppColors.kPrimaryColor,
-                      onPressed: (){
-                        Navigator.pop(context);
-                      },
+                    Padding(
+                      padding: const EdgeInsets.only(left: 10),
+                      child: BackButton(
+                        color: AppColors.kPrimaryColor,
+
+                        onPressed: (){
+                          Navigator.pop(context);
+                        },
+                      ),
                     ),
                     YMargin(50),
                     Padding(
@@ -230,19 +246,48 @@ class _SavingsSummaryScreenState extends State<SavingsSummaryScreen> {
                                 ),),
                               ],),
                             Spacer(),
+
                             Column(
                               crossAxisAlignment: CrossAxisAlignment.end,
                               children: [
-                                Text("amount".toUpperCase(), style: TextStyle(fontSize: 12,
+                                Text("Interest rate".toUpperCase(), style: TextStyle(fontSize: 12,
                                   color: AppColors.kSecondaryText,fontFamily: AppStrings.fontNormal,),),
                                 YMargin(15),
-                                Text("${AppStrings.nairaSymbol}${savingViewModel.amountToSave}", style: TextStyle(
+                                Text("6% P.A", style: TextStyle(
                                     fontFamily: AppStrings.fontMedium,
                                     fontSize: 13,color: AppColors.kGreyText
                                 ),),
                               ],),
 
 
+                          ],),
+                          YMargin(40),
+                          Row(children: [
+                            Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text("${savingViewModel.selectedFrequency.name} amount".toUpperCase(), style: TextStyle(fontSize: 12,
+                                  color: AppColors.kSecondaryText,fontFamily: AppStrings.fontNormal,),),
+                                YMargin(15),
+                                Text(getFrequencyAmount(), style: TextStyle(
+                                    fontFamily: AppStrings.fontMedium,
+                                    fontSize: 13,color: AppColors.kGreyText
+                                ),),
+                            ],),
+                            Spacer(),
+
+                            Column(
+
+                              crossAxisAlignment: CrossAxisAlignment.end,
+                              children: [
+                                Text("target amount".toUpperCase(), style: TextStyle(fontSize: 11,
+                                  color: AppColors.kSecondaryText,fontFamily: AppStrings.fontNormal,),),
+                                YMargin(15),
+                                Text("${AppStrings.nairaSymbol}${getAmount(savingViewModel.amountToSave.toInt())}", style: TextStyle(
+                                    fontFamily: AppStrings.fontMedium,
+                                    fontSize: 13,color: AppColors.kGreyText
+                                ),),
+                            ],)
                           ],),
                           YMargin(40),
                           Row(children: [
@@ -270,14 +315,7 @@ class _SavingsSummaryScreenState extends State<SavingsSummaryScreen> {
                                 ),),
                             ],)
                           ],),
-                          YMargin(40),
-                          Text("Interest rate".toUpperCase(), style: TextStyle(fontSize: 12,
-                            color: AppColors.kSecondaryText,fontFamily: AppStrings.fontNormal,),),
-                          YMargin(15),
-                          Text("6% P.A", style: TextStyle(
-                              fontFamily: AppStrings.fontMedium,
-                              fontSize: 13,color: AppColors.kGreyText
-                          ),),
+
 
                       ],),
                     )
@@ -316,15 +354,49 @@ class _SavingsSummaryScreenState extends State<SavingsSummaryScreen> {
               ),
             ),
           ),
-          Container(
+          error == false ? Container(
             height: size.height,
             width: size.width,
             child: Center(child: loading ? CircularProgressIndicator():SizedBox()
+              ,),
+          ):Container(
+            height: size.height,
+            width: size.width,
+            child: Center(child:Column(children: [
+              Spacer(),
+              Text("Error Occured", style: TextStyle(color: AppColors.kWhite),),
+              YMargin(20),
+              PrimaryButtonNew(
+                title: "Back to Home",
+                onTap: (){
+                  Navigator.pushAndRemoveUntil(
+                      context,
+                      MaterialPageRoute(builder: (context) => TabsContainer()),
+                          (Route<dynamic> route) => false);
+                },
+              ),
+              Spacer(),
+            ],)
               ,),
           ),
         ],),
       ),
     );
+  }
+
+  getFrequencyAmount() {
+    if(savingViewModel.selectedFrequency.id == 2){
+      return "${AppStrings.nairaSymbol}${getAmount(savingViewModel.amountToSave ~/
+          (savingViewModel.endDate.difference(savingViewModel.startDate).inDays) )}";
+    }else if(savingViewModel.selectedFrequency.id == 3){
+      return "${AppStrings.nairaSymbol}${getAmount(savingViewModel.amountToSave ~/
+          (savingViewModel.endDate.difference(savingViewModel.startDate).inDays) * 7 ) }";
+    }
+    return "${AppStrings.nairaSymbol}${getAmount(savingViewModel.amountToSave.toInt())}";
+  }
+
+  String getAmount(int amount) {
+    return amount.toString().convertWithComma();
   }
 }
 class ItemFader extends StatefulWidget {

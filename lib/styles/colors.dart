@@ -40,6 +40,7 @@ class AppColors {
   static const kRed4 = Color(0xffF53232);
   static var kGreen = Color(0xFF2ab750);
   static const knewBlue = Color(0xff010D57);
+  static const khighyieldCard = Color.fromRGBO(82,170,255,1);
 
   static List<Color> donutColor = [
     AppColors.kPrimaryColor,

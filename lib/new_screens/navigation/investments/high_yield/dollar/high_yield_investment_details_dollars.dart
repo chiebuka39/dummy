@@ -30,7 +30,7 @@ class HighYieldDetailsDollar extends StatefulWidget {
       String rate,
       String minimumAmount,
       String maximumAmount}) {
-        print(productId);
+    print(productId);
     return MaterialPageRoute(
       builder: (_) => HighYieldDetailsDollar(
         duration: duration,
@@ -53,13 +53,16 @@ class HighYieldDetailsDollar extends StatefulWidget {
 class _HighYieldDetailsDollarState extends State<HighYieldDetailsDollar> {
   @override
   Widget build(BuildContext context) {
+    print(screenHeight(context));
     return Scaffold(
       backgroundColor: AppColors.kHighYield,
       body: Stack(
         children: [
           Positioned(
-            top: screenHeight(context) / 10,
-            left: screenWidth(context) / 15,
+            top: screenHeight(context) / 31.5,
+            left: screenHeight(context) / 37.8,
+            // top: 24,
+            // left: 20,
             child: IconButton(
               icon: ImageIcon(
                 AssetImage("images/cancel.png"),
@@ -71,17 +74,21 @@ class _HighYieldDetailsDollarState extends State<HighYieldDetailsDollar> {
             ),
           ),
           Positioned(
-              top: screenHeight(context) / 10,
-              left: screenWidth(context) / 15,
-              right: screenWidth(context) / 15,
-              bottom: screenHeight(context) / 1.6,
-              child: SvgPicture.asset("images/money_glass.svg")),
+              top: screenHeight(context) / 15.0370370371,
+              left: screenHeight(context) / 9.5,
+              right: screenHeight(context) / 9.5,
+              bottom: screenHeight(context) / 1.65426695842,
+              child: SvgPicture.asset(
+                "images/money_glass.svg",
+                width: screenHeight(context),
+                height: screenWidth(context),
+              )),
           Positioned(
-            top: screenHeight(context) / 2.5,
+            top: screenHeight(context) / 2.25,
             left: 0,
             right: 0,
             child: Container(
-              height: screenHeight(context) / 1.5,
+              height: screenHeight(context) / 1.4,
               decoration: BoxDecoration(
                 color: AppColors.kWhite,
                 borderRadius: BorderRadius.only(
@@ -89,101 +96,106 @@ class _HighYieldDetailsDollarState extends State<HighYieldDetailsDollar> {
                   topRight: Radius.circular(30),
                 ),
               ),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Padding(
-                    padding: const EdgeInsets.only(top: 39.0, left: 20),
-                    child: Text(
-                      "Zimvest High Yield Dollar ${widget.duration}",
-                      style: TextStyle(
-                          fontSize: 15, fontFamily: AppStrings.fontBold),
-                    ),
-                  ),
-                  verticalSpace(18),
-                  Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 20),
-                    child: Text(
-                      "This investment is designed for investors with moderate risk tolerance and a short to medium-term investment horizon.",
-                      textAlign: TextAlign.justify,
-                      style: TextStyle(
-                          fontSize: 13, fontFamily: AppStrings.fontLight),
-                    ),
-                  ),
-                  verticalSpace(33),
-                  Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 19),
-                    child: Container(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.start,
-                            children: [
-                              ImageIcon(
-                                AssetImage("images/star.png"),
-                                color: AppColors.kPrimaryColor,
-                              ),
-                              Text(
-                                "Earn great returns.",
-                                style: TextStyle(
-                                    fontSize: 13,
-                                    fontFamily: AppStrings.fontLight),
-                              ),
-                            ],
-                          ),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.start,
-                            children: [
-                              ImageIcon(
-                                AssetImage("images/star.png"),
-                                color: AppColors.kPrimaryColor,
-                              ),
-                              Text(
-                                "Withdraw at the first day of every quarter.",
-                                style: TextStyle(
-                                    fontSize: 13,
-                                    fontFamily: AppStrings.fontLight),
-                              ),
-                            ],
-                          ),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.start,
-                            children: [
-                              ImageIcon(
-                                AssetImage("images/star.png"),
-                                color: AppColors.kPrimaryColor,
-                              ),
-                              Text(
-                                "Save daily, weekly or monthly.",
-                                style: TextStyle(
-                                    fontSize: 13,
-                                    fontFamily: AppStrings.fontLight),
-                              ),
-                            ],
-                          ),
-                          verticalSpace(112),
-                          Center(
-                            child: PrimaryButtonNew(
-                              title: "Get Started",
-                              onTap: () => Navigator.push(
-                                context,
-                                HighYieldInvestmentDollarUniqueName.route(
-                                    duration: widget.duration,
-                                    productId: widget.productId,
-                                    maturityDate: widget.maturityDate,
-                                    rate: widget.rate,
-                                    minimumAmount: widget.minimumAmount,
-                                    maximumAmount: widget.maximumAmount),
-                              ),
-                            ),
-                          ),
-                          verticalSpace(63),
-                        ],
+              child: Container(
+                height: double.infinity,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.only(top: 39.0, left: 20),
+                      child: Text(
+                        "Zimvest High Yield Dollar ${widget.duration}",
+                        style: TextStyle(
+                            fontSize: 15, fontFamily: AppStrings.fontBold),
                       ),
                     ),
-                  ),
-                ],
+                    verticalSpace(screenHeight(context) / 42),
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 20),
+                      child: Text(
+                        "This investment is designed for investors with moderate risk tolerance and a short to medium-term investment horizon.",
+                        textAlign: TextAlign.justify,
+                        style: TextStyle(
+                            fontSize: 13, fontFamily: AppStrings.fontLight),
+                      ),
+                    ),
+                    verticalSpace(screenHeight(context) / 22.2352941176),
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 19),
+                      child: Container(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              children: [
+                                ImageIcon(
+                                  AssetImage("images/star.png"),
+                                  color: AppColors.kPrimaryColor,
+                                ),
+                                Text(
+                                  "Earn great returns.",
+                                  style: TextStyle(
+                                      fontSize: 13,
+                                      fontFamily: AppStrings.fontLight),
+                                ),
+                              ],
+                            ),
+                            verticalSpace(screenHeight(context) / 28),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              children: [
+                                ImageIcon(
+                                  AssetImage("images/star.png"),
+                                  color: AppColors.kPrimaryColor,
+                                ),
+                                Text(
+                                  "Withdraw at the first day of every quarter.",
+                                  style: TextStyle(
+                                      fontSize: 13,
+                                      fontFamily: AppStrings.fontLight),
+                                ),
+                              ],
+                            ),
+                            verticalSpace(screenHeight(context) / 28),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              children: [
+                                ImageIcon(
+                                  AssetImage("images/star.png"),
+                                  color: AppColors.kPrimaryColor,
+                                ),
+                                Text(
+                                  "Save daily, weekly or monthly.",
+                                  style: TextStyle(
+                                      fontSize: 13,
+                                      fontFamily: AppStrings.fontLight),
+                                ),
+                              ],
+                            ),
+                            verticalSpace(46),
+                            Center(
+                              child: PrimaryButtonNew(
+                                title: "Get Started",
+                                onTap: () => Navigator.push(
+                                  context,
+                                  HighYieldInvestmentDollarUniqueName.route(
+                                      duration: widget.duration,
+                                      productId: widget.productId,
+                                      maturityDate: widget.maturityDate,
+                                      rate: widget.rate,
+                                      minimumAmount: widget.minimumAmount,
+                                      maximumAmount: widget.maximumAmount),
+                                ),
+                              ),
+                            ),
+                            verticalSpace(63),
+                          ],
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
               ),
             ),
           )
