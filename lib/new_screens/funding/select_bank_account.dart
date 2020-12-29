@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:zimvest/data/models/payment/bank.dart';
 import 'package:zimvest/data/view_models/payment_view_model.dart';
+import 'package:zimvest/new_screens/withdrawals/add_bank_account.dart';
 import 'package:zimvest/new_screens/withdrawals/review_bank_transfer.dart';
 import 'package:zimvest/styles/colors.dart';
 import 'package:zimvest/utils/app_utils.dart';
@@ -54,6 +55,9 @@ class _SelectBankAccountState extends State<SelectBankAccount> {
         Spacer(),
       Center(
         child: PrimaryButtonNew(
+          onTap: (){
+            Navigator.push(context, AddBankAccScreen.route());
+          },
           title: "Add Bank Account",
         ),
       ),

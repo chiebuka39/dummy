@@ -12,6 +12,8 @@ import 'package:zimvest/utils/result.dart';
 abstract class ABSIdentityViewModel extends ChangeNotifier{
   User _user;
   bool _isValidPassword = false;
+  bool _loading = false;
+  bool get loading => _loading;
 
   String email, password,firstName,lastName,phoneNumber,gender, verificationCode,pin;
   DateTime dob;
@@ -21,6 +23,7 @@ abstract class ABSIdentityViewModel extends ChangeNotifier{
   bool get isValidPassword => _isValidPassword;
   set user(User value);
   set isValidPassword(bool value);
+  set loading(bool value);
   Future<Result<void>> login(String email, String password);
   Future<Result<bool>> emailAvailability(String email);
   Future<Result<void>> resetPassword(String email);
@@ -55,6 +58,12 @@ class IdentityViewModel extends ABSIdentityViewModel{
   @override
   set isValidPassword(bool value) {
     _isValidPassword = value;
+    notifyListeners();
+  }
+
+  @override
+  set loading(bool value) {
+    _loading = value;
     notifyListeners();
   }
 

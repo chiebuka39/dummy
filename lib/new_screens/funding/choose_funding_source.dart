@@ -47,18 +47,12 @@ class _ChooseFundingScreenState extends State<ChooseFundingScreen> {
         FocusScope.of(context).requestFocus(new FocusNode());
       },
       child: Scaffold(
-        appBar: AppBar(
-          elevation: 0,
-          iconTheme: IconThemeData(color: AppColors.kPrimaryColor),
-          leading: IconButton(
-            icon: Icon(Icons.arrow_back_ios_outlined,size: 20,),
-            onPressed: (){
-              Navigator.pop(context);
-            },
-          ),
-          backgroundColor: Colors.transparent,
-          title: Text("Top Up",
-            style: TextStyle(color: Colors.black87,fontSize: 14),),
+        appBar: ZimAppBar(
+          callback: (){
+            Navigator.of(context).pop();
+          },
+          text: "Top Up",
+          icon: Icons.arrow_back_ios_outlined,
         ),
         body: GestureDetector(
           onTap: (){
