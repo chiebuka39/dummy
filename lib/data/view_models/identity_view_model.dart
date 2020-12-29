@@ -194,8 +194,8 @@ class IdentityViewModel extends ABSIdentityViewModel{
 
   @override
   Future<Result<void>> initiatePinReset() async{
-    var result = await _identityService.sendEmailOTP(
-        email
+    var result = await _identityService.initiatePinReset(
+        user.token
     );
 
     if(result.error == false){
@@ -224,7 +224,7 @@ class IdentityViewModel extends ABSIdentityViewModel{
   @override
   Future<Result<void>> resetCode({String code}) {
     return _identityService.resetPin(
-        pin: pin,token: user.token, trackingId: trackingId
+        pin: code,token: user.token, trackingId: trackingId
     );
   }
 

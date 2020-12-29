@@ -13,17 +13,18 @@ import 'package:zimvest/widgets/new/new_widgets.dart';
 
 
 class NewPinScreen extends StatefulWidget {
-  static Route<dynamic> route() {
+  final bool reset;
+  static Route<dynamic> route({bool reset = false}) {
     return MaterialPageRoute(
-        builder: (_) => NewPinScreen(),
+        builder: (_) => NewPinScreen(reset: reset,),
         settings:
         RouteSettings(name: NewPinScreen().toStringShort()));
   }
   const NewPinScreen({
-    Key key, this.onNext,
+    Key key,  this.reset,
   }) : super(key: key);
 
-  final VoidCallback onNext;
+
 
   @override
   _NewPinScreenState createState() => _NewPinScreenState();
@@ -36,10 +37,12 @@ class _NewPinScreenState extends State<NewPinScreen> {
   ABSIdentityViewModel identityViewModel;
 
   bool completed = false;
+  bool loading = false;
+  ABSPinViewModel pinViewModel;
   @override
   Widget build(BuildContext context) {
     identityViewModel = Provider.of(context);
-    ABSPinViewModel pinViewModel = Provider.of(context);
+     pinViewModel = Provider.of(context);
     final node = FocusScope.of(context);
     return Scaffold(
       appBar: ZimAppBar(
@@ -132,15 +135,21 @@ class _NewPinScreenState extends State<NewPinScreen> {
               Spacer(),
 
               RoundedNextButton(
-                onTap:completed ? (){
-                  showModalBottomSheet < Null > (context: context, builder: (BuildContext context) {
-                    return PasswordSuccessWidget(
-                      message: "Pin Reset was successful",
-                      onDone: (){
-                        Navigator.pop(context);
-                      },
-                    );
-                  });
+                loading: loading,
+                onTap:completed ?  (){
+                  if(widget.reset){
+                      resetPin();
+                  }else{
+                    showModalBottomSheet < Null > (context: context, builder: (BuildContext context) {
+                      return PasswordSuccessWidget(
+                        message: "Pin Reset was successful",
+                        onDone: (){
+                          Navigator.pop(context);
+                        },
+                      );
+                    });
+                  }
+
                 }:null,
               ),
               Spacer(),
@@ -161,9 +170,27 @@ class _NewPinScreenState extends State<NewPinScreen> {
     );
   }
 
-  void confirmCode() async{
-    Navigator.pop(context);
-    widget.onNext();
+  void resetPin() async{
+
+    setState(() {
+      loading = true;
+    });
+    identityViewModel.loading = true;
+    var result = await identityViewModel.resetCode(code: "${pinViewModel.pin1}${pinViewModel.pin2}${pinViewModel.pin3}${pinViewModel.pin4}");
+    setState(() {
+      loading = false;
+    });
+    if(result.error == true) {
+      identityViewModel.loading = false;
+      EasyLoading.showError('Error occurred');
+    }else{
+
+      Navigator.pop(context);
+      Navigator.pop(context);
+      Navigator.pop(context);
+      Navigator.pop(context);
+
+    }
   }
 }
 

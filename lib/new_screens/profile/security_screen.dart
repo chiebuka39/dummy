@@ -61,7 +61,11 @@ class _SecurityScreenState extends State<SecurityScreen> {
             Navigator.push(context, CurrentPinScreen.route());
           },
         ),
-        ProfileWidget(title: "Reset Zimvest Pin",),
+        ProfileWidget(title: "Reset Zimvest Pin",onClick: (){
+          showModalBottomSheet < Null > (context: context, builder: (BuildContext context) {
+            return ResetPinWidget();
+          });
+        },),
         ProfileWidget(
           title: "Change Password",
           onClick: (){
