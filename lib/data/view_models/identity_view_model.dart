@@ -30,7 +30,11 @@ abstract class ABSIdentityViewModel extends ChangeNotifier{
   Future<Result<void>> changePassword({String currentPassword, String newPassword});
   Future<Result<bool>> phoneAvailability(String phone);
   Future<Result<void>> sendEmailOTP(String email);
+  Future<Result<void>> initiatePinReset();
   Future<Result<void>> resendEmailOTP({String trackingId, int verificationId});
+  Future<Result<void>> resendPinResetCode();
+  Future<Result<void>> verifyPinResetCode({String code});
+  Future<Result<void>> resetCode({String code});
   Future<Result<void>> confirmEmailOTP({String code});
   Future<Result<void>> setUpPin({String pin});
   Future<Result<CompletedSections>> checkCompletedSections({String token});
@@ -186,6 +190,52 @@ class IdentityViewModel extends ABSIdentityViewModel{
   Future<Result<void>> changePassword({String currentPassword, String newPassword}) {
     return _identityService.changePassword(currentPassword: currentPassword,newPassword: newPassword,
         token: user.token);
+  }
+
+  @override
+  Future<Result<void>> initiatePinReset() async{
+    var result = await _identityService.sendEmailOTP(
+        email
+    );
+
+    if(result.error == false){
+      verificationId = result.data['verificationId'];
+      trackingId = result.data['trackingId'];
+    }
+
+    return result;
+  }
+
+  @override
+  Future<Result<void>> resendPinResetCode() async{
+    var result = await _identityService.resendPinResetCode(
+        verificationId: verificationId,
+        trackingId: trackingId,
+      token: user.token
+    );
+
+    if(result.error == false){
+      verificationId = result.data['verificationId'];
+      trackingId = result.data['trackingId'];
+    }
+    return result;
+  }
+
+  @override
+  Future<Result<void>> resetCode({String code}) {
+    return _identityService.resetPin(
+        pin: pin,token: user.token, trackingId: trackingId
+    );
+  }
+
+  @override
+  Future<Result<void>> verifyPinResetCode({String code}) {
+    return _identityService.verifyPinResetCode(
+        code: code,
+        verificationId: verificationId,
+        trackingId: trackingId,
+        token: user.token
+    );
   }
 
 

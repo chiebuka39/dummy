@@ -47,92 +47,94 @@ class _NairaPortfolioBreakdownScreenState extends State<NairaPortfolioBreakdownS
       ),
       body: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 20),
-        child: Column(children: [
-          PieChartSample2(
-            value: dashboardViewModel.dashboardModel.nairaPortfolio == "0.01"? "N50,000.00":dashboardViewModel.dashboardModel.nairaPortfolio ,
-            savingsValue: dashboardViewModel.portfolioDistribution == null ?40.0: dashboardViewModel.portfolioDistribution.where((element)
-            => element.portfolioName == "Savings").isNotEmpty ? dashboardViewModel.portfolioDistribution.where((element)
-            => element.portfolioName == "Savings").first.percentageShare : 20.0,
-            investmentValue: dashboardViewModel.portfolioDistribution == null ? 20.0: dashboardViewModel.portfolioDistribution.where((element)
-            => element.portfolioName == "Investment").isNotEmpty ? dashboardViewModel.portfolioDistribution.where((element)
-            => element.portfolioName == "Investment").first.percentageShare : 20.0,
-            walletValue: 0.0,
-          ),
-          YMargin(20),
-          Divider(),
-          Container(
-            height: 70,
-            child: Row(children: [
-              Text("Portfolio Value", style: TextStyle(color: AppColors.kSecondaryText),),
-              Spacer(),
-              Text("${dashboardViewModel.dashboardModel.nairaPortfolio}", style: TextStyle(
-                  color: AppColors.kSecondaryBoldText, fontFamily: AppStrings.fontMedium),),
-            ],),
-          ),
-          Divider(),
-          Container(
-            height: 70,
-            child: Row(children: [
+        child: SingleChildScrollView(
+          child: Column(children: [
+            PieChartSample2(
+              value: dashboardViewModel.dashboardModel.nairaPortfolio == "0.01"? "N50,000.00":dashboardViewModel.dashboardModel.nairaPortfolio ,
+              savingsValue: dashboardViewModel.portfolioDistribution == null ?40.0: dashboardViewModel.portfolioDistribution.where((element)
+              => element.portfolioName == "Savings").isNotEmpty ? dashboardViewModel.portfolioDistribution.where((element)
+              => element.portfolioName == "Savings").first.percentageShare : 20.0,
+              investmentValue: dashboardViewModel.portfolioDistribution == null ? 20.0: dashboardViewModel.portfolioDistribution.where((element)
+              => element.portfolioName == "Investment").isNotEmpty ? dashboardViewModel.portfolioDistribution.where((element)
+              => element.portfolioName == "Investment").first.percentageShare : 20.0,
+              walletValue: 0.0,
+            ),
+            YMargin(20),
+            Divider(),
+            Container(
+              height: 70,
+              child: Row(children: [
+                Text("Portfolio Value", style: TextStyle(color: AppColors.kSecondaryText),),
+                Spacer(),
+                Text("${dashboardViewModel.dashboardModel.nairaPortfolio}", style: TextStyle(
+                    color: AppColors.kSecondaryBoldText, fontFamily: AppStrings.fontMedium),),
+              ],),
+            ),
+            Divider(),
+            Container(
+              height: 70,
+              child: Row(children: [
 
-              Container(
-                height: 6,
-                width: 6,
-                decoration: BoxDecoration(
-                  color: AppColors.kYellow
+                Container(
+                  height: 6,
+                  width: 6,
+                  decoration: BoxDecoration(
+                    color: AppColors.kYellow
+                  ),
                 ),
-              ),
-              XMargin(10),
-              Text("Wallet balance", style: TextStyle(color: AppColors.kSecondaryText),),
-              Spacer(),
-              Text("${AppStrings.nairaSymbol}${FlutterMoneyFormatter(
-                  amount: 31700
-              ).output.nonSymbol}", style: TextStyle(
-                  color: AppColors.kSecondaryBoldText, fontFamily: AppStrings.fontMedium),),
-            ],),
-          ),
-          Divider(),
-          Container(
-            height: 70,
-            child: Row(children: [
-              Container(
-                height: 6,
-                width: 6,
-                decoration: BoxDecoration(
-                    color: AppColors.kInvestmentP
+                XMargin(10),
+                Text("Wallet balance", style: TextStyle(color: AppColors.kSecondaryText),),
+                Spacer(),
+                Text("${AppStrings.nairaSymbol}${FlutterMoneyFormatter(
+                    amount: 31700
+                ).output.nonSymbol}", style: TextStyle(
+                    color: AppColors.kSecondaryBoldText, fontFamily: AppStrings.fontMedium),),
+              ],),
+            ),
+            Divider(),
+            Container(
+              height: 70,
+              child: Row(children: [
+                Container(
+                  height: 6,
+                  width: 6,
+                  decoration: BoxDecoration(
+                      color: AppColors.kInvestmentP
+                  ),
                 ),
-              ),
-              XMargin(10),
-              Text("Investment Balance", style: TextStyle(color: AppColors.kSecondaryText),),
-              Spacer(),
-              Text("${AppStrings.nairaSymbol}${FlutterMoneyFormatter(
-                  amount: 31700
-              ).output.nonSymbol}", style: TextStyle(
-                  color: AppColors.kSecondaryBoldText, fontFamily: AppStrings.fontMedium),),
-            ],),
-          ),
-          Divider(),
-          Container(
-            height: 70,
-            child: Row(children: [
-              Container(
-                height: 6,
-                width: 6,
-                decoration: BoxDecoration(
-                    color: AppColors.kSavingsP
+                XMargin(10),
+                Text("Investment Balance", style: TextStyle(color: AppColors.kSecondaryText),),
+                Spacer(),
+                Text("${AppStrings.nairaSymbol}${FlutterMoneyFormatter(
+                    amount: 31700
+                ).output.nonSymbol}", style: TextStyle(
+                    color: AppColors.kSecondaryBoldText, fontFamily: AppStrings.fontMedium),),
+              ],),
+            ),
+            Divider(),
+            Container(
+              height: 70,
+              child: Row(children: [
+                Container(
+                  height: 6,
+                  width: 6,
+                  decoration: BoxDecoration(
+                      color: AppColors.kSavingsP
+                  ),
                 ),
-              ),
-              XMargin(10),
-              Text("Savings Balance", style: TextStyle(color: AppColors.kSecondaryText),),
-              Spacer(),
-              Text("${AppStrings.nairaSymbol}${FlutterMoneyFormatter(
-                  amount: 31700
-              ).output.nonSymbol}", style: TextStyle(
-                  color: AppColors.kSecondaryBoldText, fontFamily: AppStrings.fontMedium),),
-            ],),
-          ),
-          Divider(),
+                XMargin(10),
+                Text("Savings Balance", style: TextStyle(color: AppColors.kSecondaryText),),
+                Spacer(),
+                Text("${AppStrings.nairaSymbol}${FlutterMoneyFormatter(
+                    amount: 31700
+                ).output.nonSymbol}", style: TextStyle(
+                    color: AppColors.kSecondaryBoldText, fontFamily: AppStrings.fontMedium),),
+              ],),
+            ),
+            Divider(),
 
-        ],),
+          ],),
+        ),
       ),
     );
   }

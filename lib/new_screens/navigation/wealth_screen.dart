@@ -109,43 +109,49 @@ class _WealthScreenState extends State<WealthScreen> {
             ],
           ),
           YMargin(30),
-          showInvest ?Expanded(child: Column(children: [
-            ActionBoxWidget(title: "Zimvest High Yield", desc: "This savings plan assists you save in a "
-                "disciplined manner.",
-              onTap: (){
-                Navigator.push(context, InvestmentHighYieldScreen.route());
-              },
-              color: AppColors.kHighYield,img: 'high',),
-            ActionBoxWidget(desc: "Invest in fixed income vehicles"
-              "such as Treasury Bills, FGN Bonds"
-              "Corporate Bonds, and Eurobonds",title: "Zimvest Fixed Income",
-              color: AppColors.kFixed,img: 'fixed',
-              onTap: (){
-                Navigator.push(context, FixedIncomeHome.route());
-              },
-            ),
-          ],)):Expanded(child: Column(children: [
-            ActionBoxWidget(title: "Zimvest wealth box", desc: "This savings plan assists you save in a "
-                "disciplined manner.", color: AppColors.kWealth,
-              onTap: (){
-                if(savingViewModel.savingPlanModel == null ){
-                  Navigator.push(context, WealthBoxScreen.route());
-                }
-                else if( savingViewModel.savingPlanModel.where((element) => element.productId == 1).isEmpty){
-                  Navigator.push(context, WealthBoxScreen.route());
-                }else{
-                  Navigator.push(context, WealthBoxDetailsScreen.route(savingViewModel.savingPlanModel
-                      .where((element) => element.productId == 1).first));
-                }
-              },
-            ),
-            ActionBoxWidget(title: "Zimvest Aspire", desc: "This savings plan assists you save in a "
-                "disciplined manner.", color: AppColors.kAspire, img: 'aspire',
-              onTap: (){
-                Navigator.push(context, AspireSavingScreen.route());
-              },
-            ),
-          ],)),
+          showInvest ?Expanded(child: SingleChildScrollView(
+            child: Column(children: [
+              ActionBoxWidget(title: "Zimvest High Yield", desc: "This savings plan assists you save in a "
+                  "disciplined manner.",
+                onTap: (){
+                  Navigator.push(context, InvestmentHighYieldScreen.route());
+                },
+                color: AppColors.kHighYield,img: 'high',),
+              ActionBoxWidget(desc: "Invest in fixed income vehicles"
+                "such as Treasury Bills, FGN Bonds"
+                "Corporate Bonds, and Eurobonds",title: "Zimvest Fixed Income",
+                color: AppColors.kFixed,img: 'fixed',
+                onTap: (){
+                  Navigator.push(context, FixedIncomeHome.route());
+                },
+              ),
+              YMargin(140),
+            ],),
+          )):Expanded(child: SingleChildScrollView(
+            child: Column(children: [
+              ActionBoxWidget(title: "Zimvest wealth box", desc: "This savings plan assists you save in a "
+                  "disciplined manner.", color: AppColors.kWealth,
+                onTap: (){
+                  if(savingViewModel.savingPlanModel == null ){
+                    Navigator.push(context, WealthBoxScreen.route());
+                  }
+                  else if( savingViewModel.savingPlanModel.where((element) => element.productId == 1).isEmpty){
+                    Navigator.push(context, WealthBoxScreen.route());
+                  }else{
+                    Navigator.push(context, WealthBoxDetailsScreen.route(savingViewModel.savingPlanModel
+                        .where((element) => element.productId == 1).first));
+                  }
+                },
+              ),
+              ActionBoxWidget(title: "Zimvest Aspire", desc: "This savings plan assists you save in a "
+                  "disciplined manner.", color: AppColors.kAspire, img: 'aspire',
+                onTap: (){
+                  Navigator.push(context, AspireSavingScreen.route());
+                },
+              ),
+              YMargin(140),
+            ],),
+          )),
 
         ],),
       ),

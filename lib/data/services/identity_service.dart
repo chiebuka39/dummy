@@ -31,9 +31,14 @@ abstract class ABSIdentityService{
   Future<Result<void>> changePassword({String currentPassword, String newPassword, String token});
   Future<Result<bool>> phoneAvailability(String phone);
   Future<Result<void>> setUpPin({String pin, String token});
+  Future<Result<void>> resetPin({String pin, String token,String trackingId});
   Future<Result<Map<String,dynamic>>> sendEmailOTP(String email);
+  Future<Result<Map<String,dynamic>>> initiatePinReset(String token);
   Future<Result<Map<String,dynamic>>> resendEmailOTP({String trackingId, int verificationId});
+  Future<Result<Map<String,dynamic>>> resendPinResetCode({String trackingId, int verificationId,
+    String token});
   Future<Result<void>> confirmEmailOTP({String trackingId, int verificationId, String code});
+  Future<Result<void>> verifyPinResetCode({String trackingId, int verificationId, String code, String token});
   Future<Result<void>> confirmEmail({String token, int userId});
 
 
@@ -313,6 +318,43 @@ class IdentityService extends ABSIdentityService {
   }
 
   @override
+  Future<Result<void>> verifyPinResetCode({String trackingId, int verificationId, String code, String token}) async{
+    Result<bool> result = Result(error: false);
+
+
+    var url = "${AppStrings.baseUrl}zimvest.services.identity/api/Account/verify-pin-reset-code";
+    var body = {
+      'trackingId': trackingId,
+      'verificationId':verificationId,
+      'code':code,
+
+    };
+    var headers = {"Authorization": "Bearer $token"};
+
+    print("lll $url");
+    print("lll $body");
+    try{
+      var response = await dio.post(url,data: body,options: Options(headers: headers));
+      final int statusCode = response.statusCode;
+      var response1 = response.data;
+      print("iii ${response1}");
+
+      if (statusCode != 200) {
+        result.errorMessage = response1['message'];
+        result.error = true;
+      }else {
+        result.error = false;
+      }
+
+    }on DioError catch(e){
+      print("error ${e.response.data}");
+      result.error = true;
+    }
+
+    return result;
+  }
+
+  @override
   Future<Result<Map<String,dynamic>>> resendEmailOTP({String trackingId, int verificationId}) async{
     Result<Map<String,dynamic>> result = Result(error: false);
 
@@ -326,6 +368,42 @@ class IdentityService extends ABSIdentityService {
     print("lll $url");
     try{
       var response = await dio.post(url,data: body);
+      final int statusCode = response.statusCode;
+      var response1 = response.data;
+      print("iii ${response1}");
+
+      if (statusCode != 200) {
+        result.errorMessage = response1['message'];
+        result.error = true;
+      }else {
+        result.error = false;
+        Map<String,dynamic> data = Map();
+        data['trackingId'] = response1['data']['trackingId'];
+        data['verificationId'] = response1['data']['verificationId'];
+        result.data = data;
+      }
+
+    }on DioError catch(e){
+      print("error ${e.response.data}");
+      result.error = true;
+    }
+
+    return result;
+  }
+  Future<Result<Map<String,dynamic>>> resendPinResetCode({String trackingId, int verificationId, String token}) async{
+    Result<Map<String,dynamic>> result = Result(error: false);
+    var headers = {"Authorization": "Bearer $token"};
+
+
+    var url = "${AppStrings.baseUrl}zimvest.services.identity/api/Account/resend-pin-reset-code";
+    var body = {
+      'trackingId': trackingId,
+      'verificationId':verificationId
+    };
+
+    print("lll $url");
+    try{
+      var response = await dio.post(url,data: body,options: Options(headers: headers));
       final int statusCode = response.statusCode;
       var response1 = response.data;
       print("iii ${response1}");
@@ -384,6 +462,38 @@ class IdentityService extends ABSIdentityService {
 
     return result;
   }
+  Future<Result<Map<String,dynamic>>> initiatePinReset(String token)async {
+    Result<Map<String,dynamic>> result = Result(error: false);
+
+
+    var url = "${AppStrings.baseUrl}zimvest.services.identity/api/Account/initiate-pin-reset";
+    var headers = {"Authorization": "Bearer $token"};
+
+    print("lll $url");
+    try{
+      var response = await dio.post(url,options: Options(headers: headers));
+      final int statusCode = response.statusCode;
+      var response1 = response.data;
+      print("iii ${response1}");
+
+      if (statusCode != 200) {
+        result.errorMessage = response1['message'];
+        result.error = true;
+      }else {
+        result.error = false;
+        Map<String,dynamic> data = Map();
+        data['trackingId'] = response1['data']['trackingId'];
+        data['verificationId'] = response1['data']['verificationId'];
+        result.data = data;
+      }
+
+    }on DioError catch(e){
+      print("error ${e.response.data}");
+      result.error = true;
+    }
+
+    return result;
+  }
 
   @override
   Future<Result<void>> setUpPin({String pin, String token})async {
@@ -393,6 +503,46 @@ class IdentityService extends ABSIdentityService {
     var url = "${AppStrings.baseUrl}zimvest.services.identity/api/Account/setup-pin";
     var body = {
       'pin': pin
+    };
+    var headers = {
+      HttpHeaders.authorizationHeader: "Bearer $token"
+    };
+
+    print("lll $url");
+    print("lll $body");
+    print("lll $headers");
+    try{
+      var response = await dio.post(url,data: body, options: Options(headers: headers));
+      final int statusCode = response.statusCode;
+      var response1 = response.data;
+      print("iii ${response1}");
+
+      if (statusCode != 200) {
+        result.errorMessage = response1['message'];
+        result.error = true;
+      }else {
+        result.error = false;
+        Map<String,dynamic> data = Map();
+
+      }
+
+    }on DioError catch(e){
+      print("error ${e.response.data}");
+      result.error = true;
+    }
+
+    return result;
+  }
+
+  @override
+  Future<Result<void>> resetPin({String pin, String token, String trackingId})async {
+    Result<void> result = Result(error: false);
+
+
+    var url = "${AppStrings.baseUrl}zimvest.services.identity/api/Account/reset-pin";
+    var body = {
+      'newPin': pin,
+      'trackingId': trackingId,
     };
     var headers = {
       HttpHeaders.authorizationHeader: "Bearer $token"
