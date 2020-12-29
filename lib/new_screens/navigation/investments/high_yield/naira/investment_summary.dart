@@ -234,35 +234,52 @@ class _InvestmentSummaryScreenNairaState
                                             ),
                                           ),
                                           YMargin(40),
-                                          ItemFader(
-                                            offset: 10,
-                                            curve: Curves.easeIn,
-                                            key: keys[0],
-                                            child: Text(
-                                              "Your investment was not successful",
-                                              textAlign: TextAlign.center,
-                                              style: TextStyle(
-                                                  color: Colors.white),
+                                          Transform.scale(
+                                            scale: value.get(AniProps.scale),
+                                            child: Transform.translate(
+                                              offset:
+                                                  value.get(AniProps.offset1),
+                                              child: Opacity(
+                                                opacity: slideUp
+                                                    ? value
+                                                        .get(AniProps.opacity1)
+                                                    : 0.0,
+                                                child: Text(
+                                                  "Your investment was not successful",
+                                                  textAlign: TextAlign.center,
+                                                  style: TextStyle(
+                                                      color: Colors.white),
+                                                ),
+                                              ),
                                             ),
                                           ),
                                           Spacer(),
-                                          ItemFader(
-                                            offset: 10,
-                                            curve: Curves.easeIn,
-                                            key: keys[1],
-                                            child: PrimaryButtonNew(
-                                              onTap: () {
-                                                model.buyNairaInstrument(
-                                                    amount: widget.amount,
-                                                    productId: widget.productId,
-                                                    uniqueName:
-                                                        widget.uniqueName,
-                                                    fundingChannel:
-                                                        widget.channelId);
-                                              },
-                                              textColor: Colors.white,
-                                              title: "Retry",
-                                              bg: AppColors.kPrimaryColor,
+                                          Transform.scale(
+                                            scale: value.get(AniProps.scale),
+                                            child: Transform.translate(
+                                              offset:
+                                                  value.get(AniProps.offset1),
+                                              child: Opacity(
+                                                opacity: slideUp
+                                                    ? value
+                                                        .get(AniProps.opacity1)
+                                                    : 0.0,
+                                                child: PrimaryButtonNew(
+                                                  onTap: () {
+                                                    model.buyDollarInstrument(
+                                                        amount: widget.amount,
+                                                        productId:
+                                                            widget.productId,
+                                                        uniqueName:
+                                                            widget.uniqueName,
+                                                        fundingChannel:
+                                                            widget.channelId);
+                                                  },
+                                                  textColor: Colors.white,
+                                                  title: "Retry",
+                                                  bg: AppColors.kPrimaryColor,
+                                                ),
+                                              ),
                                             ),
                                           ),
                                           YMargin(50)
@@ -590,6 +607,3 @@ Route _createRoute() {
     },
   );
 }
-
-
-
