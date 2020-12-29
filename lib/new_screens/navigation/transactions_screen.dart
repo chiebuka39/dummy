@@ -352,7 +352,7 @@ class _PortfolioInvestmentWidgetState extends State<PortfolioInvestmentWidget> {
             ],
           ),
           topUp
-              ? EmptyInvstmentWidget()
+              ? EmptyInvstmentWidget(investment: true,)
               : Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
@@ -370,8 +370,10 @@ class _PortfolioInvestmentWidgetState extends State<PortfolioInvestmentWidget> {
 
 class EmptyInvstmentWidget extends StatelessWidget {
   const EmptyInvstmentWidget({
-    Key key,
+    Key key, this.investment = false,
   }) : super(key: key);
+
+  final bool investment;
 
   @override
   Widget build(BuildContext context) {
@@ -384,7 +386,7 @@ class EmptyInvstmentWidget extends StatelessWidget {
             SizedBox(
                 width: 200,
                 child: Text(
-                  "You currently don’t have a Investment transactions",
+                  "You do not have any ${investment ? 'investment':'Savings'} transaction",
                   textAlign: TextAlign.center,
                   style: TextStyle(
                       fontFamily: AppStrings.fontNormal,

@@ -6,6 +6,7 @@ import 'package:zimvest/styles/colors.dart';
 import 'package:zimvest/utils/margin.dart';
 import 'package:zimvest/utils/strings.dart';
 import 'package:zimvest/widgets/buttons.dart';
+import 'package:zimvest/widgets/new/new_widgets.dart';
 
 class TempLoginScreen extends StatefulWidget {
   static Route<dynamic> route() {
@@ -116,77 +117,4 @@ class _TempLoginScreenState extends State<TempLoginScreen> {
   }
 }
 
-class EnableFaceIdWidget extends StatelessWidget {
-  const EnableFaceIdWidget({
-    Key key,
-  }) : super(key: key);
 
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      decoration: BoxDecoration(
-        color: Colors.transparent,
-      ),
-      child: Column(children: [
-        YMargin(10),
-        Center(child: Container(
-          width: 30,
-          height: 5,
-          decoration: BoxDecoration(
-            color: Colors.white,
-            borderRadius: BorderRadius.circular(5)
-          ),
-        ),),
-        YMargin(20),
-        Expanded(child: Container(
-          width: double.infinity,
-          decoration: BoxDecoration(
-              color:Colors.white,
-            borderRadius: BorderRadius.only(
-              topLeft: Radius.circular(25),
-              topRight: Radius.circular(25)
-            )
-          ),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-            YMargin(40),
-            Container(
-              height: 65,
-              width: 63,
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(17),
-                color: AppColors.kGrey
-              ),
-              child: Center(child: SvgPicture.asset("images/icon_face.svg"),),
-            ),
-              YMargin(27),
-              Text("Enable Face ID", style: TextStyle(
-                fontFamily: AppStrings.fontMedium
-              ),),
-              YMargin(26),
-              SizedBox(
-                width: 250,
-                child: Text("Enable Face ID for easier authentication,"
-                    "you can turn this off in the setting ", style: TextStyle(
-                  fontFamily: AppStrings.fontNormal,
-                  height: 1.7,
-                  fontSize: 11,color: AppColors.kGreyText
-                ),textAlign: TextAlign.center,),
-              ),
-              Spacer(),
-              PrimaryButtonNew(
-                onTap: (){},
-                title: "Yes",
-                width: 200,
-              ),
-              YMargin(10),
-              FlatButton(onPressed: (){}, child: Text("No",
-                style: TextStyle(fontFamily: AppStrings.fontNormal),)),
-              Spacer(),
-          ],),
-        ))
-      ],),
-    );
-  }
-}

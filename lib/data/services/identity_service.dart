@@ -28,13 +28,14 @@ abstract class ABSIdentityService{
   Future<Result<Profile>> getProfileDetail({String token});
   Future<Result<bool>> emailAvailability(String email);
   Future<Result<void>> resetPassword(String email);
+  Future<Result<void>> changePassword({String currentPassword, String newPassword, String token});
   Future<Result<bool>> phoneAvailability(String phone);
   Future<Result<void>> setUpPin({String pin, String token});
   Future<Result<Map<String,dynamic>>> sendEmailOTP(String email);
   Future<Result<Map<String,dynamic>>> resendEmailOTP({String trackingId, int verificationId});
   Future<Result<void>> confirmEmailOTP({String trackingId, int verificationId, String code});
   Future<Result<void>> confirmEmail({String token, int userId});
-  Future<Result<void>> changePassword({String currentPassword, String newPassword, String confirmPassword});
+
 
 }
 
@@ -100,11 +101,7 @@ class IdentityService extends ABSIdentityService {
     throw UnimplementedError();
   }
 
-  @override
-  Future<Result<void>> changePassword({String currentPassword, String newPassword, String confirmPassword}) {
-    // TODO: implement changePassword
-    throw UnimplementedError();
-  }
+
 
   @override
   Future<Result<void>> registerIndividual({String email, String password,
@@ -456,6 +453,50 @@ class IdentityService extends ABSIdentityService {
     }on DioError catch(e){
       print("error ${e.response.data}");
       result.error = true;
+    }
+
+    return result;
+  }
+
+  @override
+  Future<Result<void>> changePassword({String currentPassword,
+    String newPassword, String token}) async{
+    Result<void> result = Result(error: false);
+
+
+    var url = "${AppStrings.baseUrl}zimvest.services.identity/api/Account/changepassword";
+    var body = {
+      'currentPassword': currentPassword,
+      'newPassword':newPassword,
+      'confirmNewPassword':newPassword
+    };
+
+    var headers = {
+      "Authorization":"Bearer $token"
+    };
+
+    print("lll $url");
+    print("lll $body");
+    print("lll $token");
+    try{
+      var response = await dio.post(url,data: body,options: Options(headers: headers));
+      final int statusCode = response.statusCode;
+      var response1 = response.data;
+      print("iii ${response1}");
+
+      if (statusCode != 200) {
+        result.errorMessage = response1['message'];
+        result.error = true;
+      }else {
+        result.error = false;
+
+      }
+
+    }on DioError catch(e){
+      print("error ${e.response.data}");
+      result.error = true;
+
+      result.errorMessage = e?.response?.data['message'] ?? "An error occured";
     }
 
     return result;

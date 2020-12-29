@@ -41,7 +41,7 @@ class _LoginScreenState extends State<LoginScreen> {
     return Scaffold(
       appBar: ZimAppBar(callback: (){
         Navigator.pop(context);
-      },),
+      },text: "Log In",),
       body: Container(
         padding: const EdgeInsets.symmetric(horizontal: 20),
         child: SingleChildScrollView(

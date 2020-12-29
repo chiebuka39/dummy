@@ -50,7 +50,7 @@ class PieChart2State extends State<PieChartSample2> {
               Transform.translate(
                 offset:Offset(0,-4),
                 child: Text(".${widget.value.split(".").last}",
-                  style: TextStyle(fontSize: 14, fontFamily: AppStrings.fontMedium, color: AppColors.kSecondaryBoldText,)),
+                    style: TextStyle(fontSize: 14, fontFamily: AppStrings.fontMedium, color: AppColors.kSecondaryBoldText,)),
               ),
             ],),
             YMargin(16),

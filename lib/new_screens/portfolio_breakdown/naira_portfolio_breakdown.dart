@@ -30,6 +30,7 @@ class _NairaPortfolioBreakdownScreenState extends State<NairaPortfolioBreakdownS
   Widget build(BuildContext context) {
     dashboardViewModel = Provider.of(context);
     identityViewModel = Provider.of(context);
+    print("lll;;; ${dashboardViewModel.dashboardModel.nairaPortfolio}");
     return Scaffold(
       appBar: AppBar(
         elevation: 0,
@@ -48,13 +49,13 @@ class _NairaPortfolioBreakdownScreenState extends State<NairaPortfolioBreakdownS
         padding: const EdgeInsets.symmetric(horizontal: 20),
         child: Column(children: [
           PieChartSample2(
-            value: dashboardViewModel.dashboardModel.nairaPortfolio,
-            savingsValue: dashboardViewModel.portfolioDistribution.where((element)
+            value: dashboardViewModel.dashboardModel.nairaPortfolio == "0.01"? "N50,000.00":dashboardViewModel.dashboardModel.nairaPortfolio ,
+            savingsValue: dashboardViewModel.portfolioDistribution == null ?40.0: dashboardViewModel.portfolioDistribution.where((element)
             => element.portfolioName == "Savings").isNotEmpty ? dashboardViewModel.portfolioDistribution.where((element)
-            => element.portfolioName == "Savings").first.percentageShare : 0.0,
-            investmentValue: dashboardViewModel.portfolioDistribution.where((element)
+            => element.portfolioName == "Savings").first.percentageShare : 20.0,
+            investmentValue: dashboardViewModel.portfolioDistribution == null ? 20.0: dashboardViewModel.portfolioDistribution.where((element)
             => element.portfolioName == "Investment").isNotEmpty ? dashboardViewModel.portfolioDistribution.where((element)
-            => element.portfolioName == "Investment").first.percentageShare : 0.0,
+            => element.portfolioName == "Investment").first.percentageShare : 20.0,
             walletValue: 0.0,
           ),
           YMargin(20),

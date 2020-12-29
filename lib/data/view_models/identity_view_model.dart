@@ -24,6 +24,7 @@ abstract class ABSIdentityViewModel extends ChangeNotifier{
   Future<Result<void>> login(String email, String password);
   Future<Result<bool>> emailAvailability(String email);
   Future<Result<void>> resetPassword(String email);
+  Future<Result<void>> changePassword({String currentPassword, String newPassword});
   Future<Result<bool>> phoneAvailability(String phone);
   Future<Result<void>> sendEmailOTP(String email);
   Future<Result<void>> resendEmailOTP({String trackingId, int verificationId});
@@ -170,6 +171,12 @@ class IdentityViewModel extends ABSIdentityViewModel{
     return _identityService.resetPassword(
        email
     );
+  }
+
+  @override
+  Future<Result<void>> changePassword({String currentPassword, String newPassword}) {
+    return _identityService.changePassword(currentPassword: currentPassword,newPassword: newPassword,
+        token: user.token);
   }
 
 

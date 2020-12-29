@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:zimvest/styles/colors.dart';
 import 'package:zimvest/utils/margin.dart';
+import 'package:zimvest/utils/strings.dart';
 
 class ProfileWidget extends StatelessWidget {
   const ProfileWidget({
@@ -28,7 +29,7 @@ class ProfileWidget extends StatelessWidget {
             child: SvgPicture.asset("images/new/$icon.svg"),
           ),
 
-          Text(title, style: TextStyle(fontSize: 13),),
+          Text(title, style: TextStyle(fontSize: 13, fontFamily: AppStrings.fontNormal),),
           Spacer(),
           emergency ? SvgPicture.asset("images/new/emergency.svg"): SizedBox(),
           XMargin(5),

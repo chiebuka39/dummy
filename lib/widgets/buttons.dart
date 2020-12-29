@@ -16,8 +16,7 @@ class ZimSelectedButton extends StatelessWidget {
     this.onTap,
     this.title,
     this.type,
-    this.selectedType,
-    this.leftMargin = 10,
+    this.selectedType, this.leftMargin = 10,
   }) : super(key: key);
 
   @override
@@ -26,7 +25,7 @@ class ZimSelectedButton extends StatelessWidget {
       onTap: onTap,
       child: AnimatedContainer(
         margin: EdgeInsets.only(left: leftMargin),
-        padding: EdgeInsets.only(left: 10, right: 10),
+        padding: EdgeInsets.only(left: 10,right: 10),
         duration: Duration(milliseconds: 200),
         height: 35,
         decoration: BoxDecoration(
@@ -49,7 +48,6 @@ class ZimSelectedButton extends StatelessWidget {
     );
   }
 }
-
 class ZimSelectedButton2 extends StatelessWidget {
   final VoidCallback onTap;
   final int type;
@@ -61,8 +59,7 @@ class ZimSelectedButton2 extends StatelessWidget {
     this.onTap,
     this.title,
     this.type,
-    this.selectedType,
-    this.leftMargin = 10,
+    this.selectedType, this.leftMargin = 10,
   }) : super(key: key);
 
   @override
@@ -70,9 +67,8 @@ class ZimSelectedButton2 extends StatelessWidget {
     return InkWell(
       onTap: onTap,
       child: AnimatedContainer(
-        margin: EdgeInsets.only(
-            left: type == selectedType ? leftMargin + 10 : leftMargin),
-        padding: EdgeInsets.only(left: 10, right: 10),
+        margin: EdgeInsets.only(left:type == selectedType ? leftMargin+10:leftMargin),
+        padding: EdgeInsets.only(left: 10,right: 10),
         duration: Duration(milliseconds: 200),
         height: 35,
         decoration: BoxDecoration(
@@ -95,7 +91,6 @@ class ZimSelectedButton2 extends StatelessWidget {
     );
   }
 }
-
 class ZimInVestSelectedButton extends StatelessWidget {
   final VoidCallback onTap;
   final ZimInvestmentType type;
@@ -115,7 +110,7 @@ class ZimInVestSelectedButton extends StatelessWidget {
       onTap: onTap,
       child: AnimatedContainer(
         margin: EdgeInsets.only(left: 10),
-        padding: EdgeInsets.only(left: 10, right: 10),
+        padding: EdgeInsets.only(left: 10,right: 10),
         duration: Duration(milliseconds: 200),
         height: 35,
         decoration: BoxDecoration(
@@ -149,12 +144,10 @@ class PrimaryButton extends StatelessWidget {
 
   const PrimaryButton(
       {Key key,
-      @required this.onPressed,
-      @required this.title,
-      this.color = AppColors.kAccentColor,
-      this.loading = false,
-      this.horizontalMargin = 0,
-      this.textColor = AppColors.kWhite})
+        @required this.onPressed,
+        @required this.title,
+        this.color = AppColors.kAccentColor,
+        this.loading = false, this.horizontalMargin = 0, this.textColor = AppColors.kWhite})
       : super(key: key);
   @override
   Widget build(BuildContext context) {
@@ -165,29 +158,28 @@ class PrimaryButton extends StatelessWidget {
           buttonColor: color,
           height: 55,
           child: RaisedButton(
-            shape:
-                RoundedRectangleBorder(borderRadius: BorderRadius.circular(5)),
+            shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(5)
+            ),
             onPressed: onPressed,
             child: loading == true
                 ? SizedBox(
-                    width: 35,
-                    height: 35,
-                    child: CircularProgressIndicator(
-                      valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
-                    ),
-                  )
+              width: 35,
+              height: 35,
+              child: CircularProgressIndicator(
+                valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
+              ),
+            )
                 : Text(
-                    title,
-                    style: TextStyle(
-                        fontSize: 14,
-                        color: textColor,
-                        fontFamily: "Caros-Bold"),
-                  ),
+              title,
+              style: TextStyle(
+                fontSize: 14,
+                  color: textColor, fontFamily: "Caros-Bold"),
+            ),
           )),
     );
   }
 }
-
 class OutlinePrimaryButton extends StatelessWidget {
   final Function onPressed;
   final String title;
@@ -199,13 +191,13 @@ class OutlinePrimaryButton extends StatelessWidget {
 
   const OutlinePrimaryButton(
       {Key key,
-      @required this.onPressed,
-      @required this.title,
-      this.color = AppColors.kWhite,
-      this.loading = false,
-      this.horizontalMargin = 0,
-      this.textColor = AppColors.kAccentColor,
-      this.borderColor = AppColors.kAccentColor})
+        @required this.onPressed,
+        @required this.title,
+        this.color = AppColors.kWhite,
+        this.loading = false,
+        this.horizontalMargin = 0,
+        this.textColor = AppColors.kAccentColor,
+        this.borderColor = AppColors.kAccentColor})
       : super(key: key);
   @override
   Widget build(BuildContext context) {
@@ -219,23 +211,23 @@ class OutlinePrimaryButton extends StatelessWidget {
             elevation: 1,
             shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(5),
-                side: BorderSide(color: borderColor, width: .8)),
+              side: BorderSide(color: borderColor,width: .8)
+            ),
             onPressed: onPressed,
             child: loading == true
                 ? SizedBox(
-                    width: 35,
-                    height: 35,
-                    child: CircularProgressIndicator(
-                      valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
-                    ),
-                  )
+              width: 35,
+              height: 35,
+              child: CircularProgressIndicator(
+                valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
+              ),
+            )
                 : Text(
-                    title,
-                    style: TextStyle(
-                        fontSize: 14,
-                        color: textColor,
-                        fontFamily: "Caros-Bold"),
-                  ),
+              title,
+              style: TextStyle(
+                fontSize: 14,
+                  color: textColor, fontFamily: "Caros-Bold"),
+            ),
           )),
     );
   }
@@ -243,14 +235,8 @@ class OutlinePrimaryButton extends StatelessWidget {
 
 class PrimaryButtonNew extends StatelessWidget {
   const PrimaryButtonNew({
-    Key key,
-    this.onTap,
-    this.width = 200,
-    this.height = 55,
-    this.title,
-    this.bg = AppColors.kPrimaryColor,
-    this.textColor = Colors.white,
-    this.loading = false,
+    Key key, this.onTap, this.width = 200, this.height = 55, this.title,
+    this.bg = AppColors.kPrimaryColor, this.textColor = Colors.white, this.loading = false,
   }) : super(key: key);
 
   final VoidCallback onTap;
@@ -268,31 +254,12 @@ class PrimaryButtonNew extends StatelessWidget {
       child: Container(
         height: height,
         width: width,
-        decoration:
-            BoxDecoration(color: bg, borderRadius: BorderRadius.circular(15)),
-        child: Center(
-          //   child: Text(
-          //     title,
-          //     style: TextStyle(
-          //         color: textColor,
-          //         fontSize: 13,
-          //         fontFamily: AppStrings.fontNormal),
-          //   ),
-          // ),
-          child: Center(
-            child: loading
-                ? CircularProgressIndicator(
-                    valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
-                  )
-                : Text(
-                    title,
-                    style: TextStyle(
-                        color: textColor,
-                        fontSize: 13,
-                        fontFamily: AppStrings.fontNormal),
-                  ),
-          ),
+        decoration: BoxDecoration(
+            color: onTap == null ? AppColors.kLightTitleText: bg,
+            borderRadius: BorderRadius.circular(15)
         ),
+        child: Center(child: loading ? CircularProgressIndicator(valueColor: AlwaysStoppedAnimation<Color>(Colors.white),): Text(title,
+          style: TextStyle(color: textColor,fontSize: 13,fontFamily: AppStrings.fontNormal),),),
       ),
     );
   }
@@ -303,8 +270,10 @@ class RoundedNextButton extends StatelessWidget {
     Key key, this.onTap,
     this.loading = false,
   }) : super(key: key);
+
   final VoidCallback onTap;
   final bool loading;
+
   @override
   Widget build(BuildContext context) {
     return Center(
@@ -322,11 +291,13 @@ class RoundedNextButton extends StatelessWidget {
                     shape: BoxShape.circle,
                     color: AppColors.kPrimaryColorLight
                 ),
+
               ),
               Positioned(
                 left: 0,
                 right: 0,
                 top: 7,
+
                 child: Container(
                   width: 60,
                   height: 60,
@@ -355,11 +326,10 @@ class PaymentSourceButton extends StatefulWidget {
 
   const PaymentSourceButton(
       {Key key,
-      @required this.onTap,
-      @required this.image,
-      @required this.paymentsource,
-      this.amount = "",
-      this.color = AppColors.kPrimaryColor})
+        @required this.onTap,
+        @required this.image,
+        @required this.paymentsource,
+        this.amount = "", this.color = AppColors.kPrimaryColor})
       : super(key: key);
 
   @override
@@ -375,7 +345,7 @@ class _PaymentSourceButtonState extends State<PaymentSourceButton> {
         padding: const EdgeInsets.symmetric(horizontal: 20.0),
         child: Container(
           padding: EdgeInsets.only(left: 19.0, right: 15),
-          height: screenHeight(context) / 14,
+          height: screenHeight(context) / 13,
           width: screenWidth(context),
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(15),
@@ -426,7 +396,6 @@ class _PaymentSourceButtonState extends State<PaymentSourceButton> {
     );
   }
 }
-
 class PaymentSourceButtonSpecial extends StatefulWidget {
   final Function onTap;
   final String image;
@@ -438,11 +407,11 @@ class PaymentSourceButtonSpecial extends StatefulWidget {
 
   const PaymentSourceButtonSpecial(
       {Key key,
-      @required this.onTap,
-      this.image,
-      @required this.paymentsource,
-      this.amount = "",
-      this.color = AppColors.kPrimaryColor, this.textColor = AppColors.kWhite, this.iconColor = AppColors.kWhite})
+        @required this.onTap,
+        this.image,
+        @required this.paymentsource,
+        this.amount = "",
+        this.color = AppColors.kPrimaryColor, this.textColor = AppColors.kWhite, this.iconColor = AppColors.kWhite})
       : super(key: key);
 
   @override
@@ -460,7 +429,7 @@ class _PaymentSourceButtonSpecialState
         padding: const EdgeInsets.symmetric(horizontal: 20.0),
         child: Container(
           padding: EdgeInsets.only(left: 19.0, right: 15),
-          height: screenHeight(context) / 14,
+          height: screenHeight(context) / 13,
           width: screenWidth(context),
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(15),
