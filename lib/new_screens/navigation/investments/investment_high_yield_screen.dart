@@ -31,16 +31,17 @@ class _InvestmentHighYieldScreenState extends State<InvestmentHighYieldScreen> {
       viewModelBuilder: () => InvestmentHighYieldViewModel(),
       onModelReady: (model) => model.getNairaTermInstruments(),
       builder: (context, model, _) => Scaffold(
-        
-        appBar: AppBar(leading: IconButton(
-                icon: ImageIcon(
-                  AssetImage("images/cancel.png"),
-                  color: AppColors.kAccentColor,
-                ),
-                onPressed: () {
-                  Navigator.pop(context);
-                },
-              ), elevation: 0, backgroundColor: Colors.transparent,),
+        appBar: AppBar(
+          leading: IconButton(
+            icon: Icon(Icons.clear),
+            color: AppColors.kAccentColor,
+            onPressed: () {
+              Navigator.pop(context);
+            },
+          ),
+          elevation: 0,
+          backgroundColor: Colors.transparent,
+        ),
         body: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -137,24 +138,28 @@ class _InvestmentHighYieldScreenState extends State<InvestmentHighYieldScreen> {
             YMargin(30),
             showInvest
                 ? Container(
-                    child: model.busy == true 
+                    child: model.busy == true
                         ? Center(
-                          child: CircularProgressIndicator(
-                              valueColor:
-                                  AlwaysStoppedAnimation(AppColors.kPrimaryColor),
+                            child: CircularProgressIndicator(
+                              valueColor: AlwaysStoppedAnimation(
+                                  AppColors.kPrimaryColor),
                             ),
-                        )
-                        : HighYieldDollarScreen(instrument: model.dollarInstrument.data,),
+                          )
+                        : HighYieldDollarScreen(
+                            instrument: model.dollarInstrument.data,
+                          ),
                   )
                 : Container(
-                    child: model.busy == true 
+                    child: model.busy == true
                         ? Center(
-                          child: CircularProgressIndicator(
-                              valueColor:
-                                  AlwaysStoppedAnimation(AppColors.kPrimaryColor),
+                            child: CircularProgressIndicator(
+                              valueColor: AlwaysStoppedAnimation(
+                                  AppColors.kPrimaryColor),
                             ),
-                        )
-                        : HighYieldNairaScreen(instrument: model.nairaInstrument.data,),
+                          )
+                        : HighYieldNairaScreen(
+                            instrument: model.nairaInstrument.data,
+                          ),
                   )
           ],
         ),

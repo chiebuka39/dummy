@@ -47,13 +47,15 @@ class _FixedIncomeHomeState extends State<FixedIncomeHome> {
     return Scaffold(
       backgroundColor: AppColors.kWhite,
       appBar: AppBar(
-        leading: InkWell(
-          onTap: () => Navigator.pop(context),
-          child: ImageIcon(AssetImage("images/cancel.png"),
-              color: AppColors.kPrimaryColor),
+        leading: IconButton(
+          icon: Icon(Icons.clear),
+          color: AppColors.kAccentColor,
+          onPressed: () {
+            Navigator.pop(context);
+          },
         ),
         elevation: 0,
-        backgroundColor: AppColors.kWhite,
+        backgroundColor: Colors.transparent,
       ),
       body: Stack(
         children: [
@@ -90,7 +92,7 @@ class _FixedIncomeHomeState extends State<FixedIncomeHome> {
                           Text(
                             "Treasury Bill",
                             style: TextStyle(
-                              fontWeight: FontWeight.w400,
+                                fontWeight: FontWeight.w400,
                                 fontSize: 10,
                                 fontFamily: AppStrings.fontNormal,
                                 color: currentIndex == 0
@@ -123,7 +125,7 @@ class _FixedIncomeHomeState extends State<FixedIncomeHome> {
                           Text(
                             "FBN Bond",
                             style: TextStyle(
-                              fontWeight: FontWeight.w400,
+                                fontWeight: FontWeight.w400,
                                 fontSize: 10,
                                 fontFamily: AppStrings.fontNormal,
                                 color: currentIndex == 1
@@ -155,7 +157,7 @@ class _FixedIncomeHomeState extends State<FixedIncomeHome> {
                           Text(
                             "Corporate Bond",
                             style: TextStyle(
-                              fontWeight: FontWeight.w400,
+                                fontWeight: FontWeight.w400,
                                 fontSize: 10,
                                 fontFamily: AppStrings.fontNormal,
                                 color: currentIndex == 2
@@ -187,7 +189,7 @@ class _FixedIncomeHomeState extends State<FixedIncomeHome> {
                           Text(
                             "Euro Bond",
                             style: TextStyle(
-                              fontWeight: FontWeight.w400,
+                                fontWeight: FontWeight.w400,
                                 fontSize: 10,
                                 fontFamily: AppStrings.fontNormal,
                                 color: currentIndex == 3
@@ -219,7 +221,7 @@ class _FixedIncomeHomeState extends State<FixedIncomeHome> {
                           Text(
                             "Promissory Note",
                             style: TextStyle(
-                              fontWeight: FontWeight.w400,
+                                fontWeight: FontWeight.w400,
                                 fontSize: 10,
                                 fontFamily: AppStrings.fontNormal,
                                 color: currentIndex == 4
@@ -251,7 +253,7 @@ class _FixedIncomeHomeState extends State<FixedIncomeHome> {
                           Text(
                             "Commercial Paper",
                             style: TextStyle(
-                              fontWeight: FontWeight.w400,
+                                fontWeight: FontWeight.w400,
                                 fontSize: 10,
                                 fontFamily: AppStrings.fontNormal,
                                 color: currentIndex == 5
