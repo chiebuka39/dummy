@@ -7,10 +7,11 @@ import 'package:zimvest/utils/strings.dart';
 class MoneyTitleWidget extends StatelessWidget {
   const MoneyTitleWidget({
     Key key,
-    this.amount, this.textColor = AppColors.kTextColor, this.amountt,
+    this.amount, this.textColor = AppColors.kTextColor, this.amountt, this.dollar = false,
   }) : super(key: key);
 
   final double amount;
+  final bool dollar;
   final String amountt;
   final Color textColor;
   @override
@@ -20,7 +21,7 @@ class MoneyTitleWidget extends StatelessWidget {
         Transform.translate(
             offset: Offset(0, -4),
             child: Text(
-              "\$",
+              "${dollar ? '\$':'${AppStrings.nairaSymbol}'}",
               style: TextStyle(fontSize: 14, color: textColor),
             )),
         XMargin(2),

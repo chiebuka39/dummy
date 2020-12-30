@@ -565,6 +565,7 @@ class _PortfolioInvestmentWidgetState extends State<PortfolioInvestmentWidget> {
                     YMargin(12),
                     MoneyTitleWidget(
                       amount: 820000,
+                      dollar: true,
                     ),
                     ...List.generate(4, (index) => InvestmentItemWidget()),
                     YMargin(104),

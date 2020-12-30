@@ -132,7 +132,10 @@ class _CurrentPinScreenState extends State<CurrentPinScreen> {
 
               KeyboardWidget(
                 confirmCode: (){
-                  Navigator.push(context, NewPinScreen.route());
+                  Navigator.push(context, NewPinScreen.route(
+                      pin: "${pinViewModel.pin1}"
+                          "${pinViewModel.pin2}${pinViewModel.pin3}"
+                          "${pinViewModel.pin4}"));
                   pinViewModel.resetPins();
                 },
                 flex: 4,
