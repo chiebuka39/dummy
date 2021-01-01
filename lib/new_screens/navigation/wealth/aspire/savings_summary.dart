@@ -49,6 +49,7 @@ class _SavingsSummaryScreenState extends State<SavingsSummaryScreen> {
   bool slideUp = false;
 
   bool error = false;
+  String errorMessage = "";
 
   @override
   void initState() {
@@ -67,7 +68,7 @@ class _SavingsSummaryScreenState extends State<SavingsSummaryScreen> {
       maturityDate: savingViewModel.endDate,
       autoSave: savingViewModel.autoSave,
       targetAmount: savingViewModel.amountToSave,
-      planName: savingViewModel.goalName,
+      planName: savingViewModel.goalName + "ppo",
       productId: 2,
       cardId:paymentViewModel.selectedCard?.id ?? null,
       token: identityViewModel.user.token,
@@ -76,7 +77,7 @@ class _SavingsSummaryScreenState extends State<SavingsSummaryScreen> {
       fundingChannel: paymentViewModel.selectedCard == null ?
           savingViewModel.fundingChannels.firstWhere((element) => element.name == "Wallet").id:
       savingViewModel.fundingChannels.firstWhere((element) => element.name == "Card").id,
-      savingsAmount: savingViewModel.amountToSave.toInt()
+      savingsAmount: getSavingsAmount()
     );
     print("ooooo ${result.error}");
     print("4444 ${result.errorMessage}");
@@ -84,13 +85,25 @@ class _SavingsSummaryScreenState extends State<SavingsSummaryScreen> {
       setState(() {
         loading = false;
         confirmed = true;
+
+        if(result.errorMessage != null){
+
+          errorMessage = result.errorMessage;
+
+        }
+
       });
-      Future.delayed(1000.milliseconds).then((value) => onInit());
+
+        Future.delayed(1000.milliseconds).then((value) => onInit());
+
+
     }else{
       setState(() {
         loading= false;
         error = true;
+        errorMessage = result.errorMessage;
       });
+      print(";;;;;;;; ${result.errorMessage}");
     }
 
 
@@ -141,7 +154,7 @@ class _SavingsSummaryScreenState extends State<SavingsSummaryScreen> {
                             offset: 10,
                             curve: Curves.easeIn,
                             key: keys[0],
-                            child: Text("Your Target creation was succesful", style: TextStyle(color: Colors.white),)),
+                            child: Text(errorMessage.isEmpty ? "Your Target creation was succesful":errorMessage, style: TextStyle(color: Colors.white),)),
                         Spacer(),
                         ItemFader(
                           offset: 10,
@@ -364,7 +377,10 @@ class _SavingsSummaryScreenState extends State<SavingsSummaryScreen> {
             width: size.width,
             child: Center(child:Column(children: [
               Spacer(),
-              Text("Error Occured", style: TextStyle(color: AppColors.kWhite),),
+              SizedBox(
+                width: 270,
+                  child: Text(errorMessage == null ? "Error Occured": errorMessage.isEmpty ? "Error Occured": errorMessage, style: TextStyle(color: AppColors.kWhite, fontFamily: AppStrings.fontNormal,height: 1.7),
+                    textAlign: TextAlign.center,)),
               YMargin(20),
               PrimaryButtonNew(
                 title: "Back to Home",
@@ -392,7 +408,25 @@ class _SavingsSummaryScreenState extends State<SavingsSummaryScreen> {
       return "${AppStrings.nairaSymbol}${getAmount(savingViewModel.amountToSave ~/
           (savingViewModel.endDate.difference(savingViewModel.startDate).inDays) * 7 ) }";
     }
+    else if(savingViewModel.selectedFrequency.id == 4){
+      return "${AppStrings.nairaSymbol}${getAmount(savingViewModel.amountToSave ~/
+          (savingViewModel.endDate.difference(savingViewModel.startDate).inDays) * 30 ) }";
+    }
     return "${AppStrings.nairaSymbol}${getAmount(savingViewModel.amountToSave.toInt())}";
+  }
+
+  int getSavingsAmount(){
+    if(savingViewModel.selectedFrequency.id == 2){
+      return savingViewModel.amountToSave ~/
+          (savingViewModel.endDate.difference(savingViewModel.startDate).inDays) ;
+    }else if(savingViewModel.selectedFrequency.id == 3){
+      return savingViewModel.amountToSave ~/
+          (savingViewModel.endDate.difference(savingViewModel.startDate).inDays) * 7  ;
+    }else if(savingViewModel.selectedFrequency.id == 4){
+      return savingViewModel.amountToSave ~/
+          (savingViewModel.endDate.difference(savingViewModel.startDate).inDays) * 30  ;
+    }
+    return savingViewModel.amountToSave.toInt();
   }
 
   String getAmount(int amount) {

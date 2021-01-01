@@ -11,6 +11,8 @@ import 'package:zimvest/utils/result.dart';
 
 abstract class ABSIdentityViewModel extends ChangeNotifier{
   User _user;
+  Profile _profile;
+  Profile get profile => _profile;
   bool _isValidPassword = false;
   bool _loading = false;
   bool get loading => _loading;
@@ -22,6 +24,7 @@ abstract class ABSIdentityViewModel extends ChangeNotifier{
   User get user => _user;
   bool get isValidPassword => _isValidPassword;
   set user(User value);
+  set profile(Profile value);
   set isValidPassword(bool value);
   set loading(bool value);
   Future<Result<void>> login(String email, String password);
@@ -47,6 +50,7 @@ abstract class ABSIdentityViewModel extends ChangeNotifier{
     String referralCode, String dob
   });
   Future<Result<Profile>> getProfileDetail();
+
 }
 
 class IdentityViewModel extends ABSIdentityViewModel{
@@ -63,6 +67,12 @@ class IdentityViewModel extends ABSIdentityViewModel{
   @override
   set isValidPassword(bool value) {
     _isValidPassword = value;
+    notifyListeners();
+  }
+
+  @override
+  set profile(Profile value) {
+    _profile = value;
     notifyListeners();
   }
 
@@ -116,10 +126,15 @@ class IdentityViewModel extends ABSIdentityViewModel{
   }
 
   @override
-  Future<Result<Profile>> getProfileDetail() {
-    return _identityService.getProfileDetail(
+  Future<Result<Profile>> getProfileDetail()async {
+    var result = await _identityService.getProfileDetail(
         token: user.token
     );
+    if(result.error == false){
+      profile = result.data;
+    }
+
+    return result;
   }
 
   @override

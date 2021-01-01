@@ -1,5 +1,9 @@
+import 'package:after_layout/after_layout.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:provider/provider.dart';
+import 'package:zimvest/data/view_models/identity_view_model.dart';
+import 'package:zimvest/data/view_models/settings_view_model.dart';
 import 'package:zimvest/new_screens/profile/next_of_kin.dart';
 import 'package:zimvest/new_screens/profile/verification_details_screen.dart';
 import 'package:zimvest/new_screens/profile/widgets/profile_widgets.dart';
@@ -19,12 +23,33 @@ class AccountScreen extends StatefulWidget {
   _AccountScreenState createState() => _AccountScreenState();
 }
 
-class _AccountScreenState extends State<AccountScreen> {
+class _AccountScreenState extends State<AccountScreen> with AfterLayoutMixin<AccountScreen> {
   String _selectedGender;
   DateTime _dob;
 
+  ABSIdentityViewModel identityViewModel;
+  ABSSettingsViewModel settingsViewModel;
+
+  @override
+  void afterFirstLayout(BuildContext context) {
+    if(settingsViewModel.profile.gender == 1){
+        _selectedGender ="Male";
+    }else if(settingsViewModel.profile.gender == 2){
+        _selectedGender ="Female";
+    }
+
+    _dob = settingsViewModel.profile.dob;
+
+    setState(() {
+
+    });
+  }
+
+
   @override
   Widget build(BuildContext context) {
+    identityViewModel = Provider.of(context);
+    settingsViewModel = Provider.of(context);
     return Scaffold(
       appBar: AppBar(
         elevation: 0,
@@ -73,7 +98,8 @@ class _AccountScreenState extends State<AccountScreen> {
               ),
               child: Transform.translate(
                 offset: Offset(0,5),
-                child: TextField(
+                child: TextFormField(
+                  initialValue: "${settingsViewModel.profile.lastName} ${settingsViewModel.profile.firstName}",
                   decoration: InputDecoration(
                       border: InputBorder.none,
                       hintText: "Full Name",
@@ -97,7 +123,8 @@ class _AccountScreenState extends State<AccountScreen> {
                 ),
                 child: Transform.translate(
                   offset: Offset(0,5),
-                  child: TextField(
+                  child: TextFormField(
+                    initialValue: settingsViewModel.profile.email,
                     decoration: InputDecoration(
                         border: InputBorder.none,
                         hintText: "Email Address",
@@ -121,7 +148,8 @@ class _AccountScreenState extends State<AccountScreen> {
                 ),
                 child: Transform.translate(
                   offset: Offset(0,5),
-                  child: TextField(
+                  child: TextFormField(
+                    initialValue: settingsViewModel.profile.phoneNumber,
                     decoration: InputDecoration(
                         border: InputBorder.none,
                         hintText: "Phone Number",
@@ -165,7 +193,7 @@ class _AccountScreenState extends State<AccountScreen> {
                 ),
               ),
               YMargin(25),
-              Text("Date of births".toUpperCase(), style: TextStyle(fontSize: 11),),
+              Text("Date of birth".toUpperCase(), style: TextStyle(fontSize: 11),),
               YMargin(15),
               InkWell(
                 onTap: ()async{

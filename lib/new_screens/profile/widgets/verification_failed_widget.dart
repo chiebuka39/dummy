@@ -66,6 +66,7 @@ class NextOfKinStatus extends StatelessWidget {
               PrimaryButtonNew(
                 onTap: (){
                   Navigator.pop(context);
+                  Navigator.pop(context);
                 },
                 title: "Done",
                 width: 200,
