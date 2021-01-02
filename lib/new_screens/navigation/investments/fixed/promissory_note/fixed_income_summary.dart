@@ -130,27 +130,6 @@ class _SavingsSummaryScreenState extends State<SavingsSummaryScreen> {
       slideUp = true;
       loading = true;
     });
-    // var result = await savingViewModel.topUp(
-    //     cardId: paymentViewModel.selectedCard?.id ?? null,
-    //     token: identityViewModel.user.token,
-    //     custSavingId: savingViewModel.selectedPlan.id,
-    //     fundingChannel: paymentViewModel.selectedCard == null
-    //         ? savingViewModel.fundingChannels
-    //             .firstWhere((element) => element.name == "Wallet")
-    //             .id
-    //         : savingViewModel.fundingChannels
-    //             .firstWhere((element) => element.name == "Card")
-    //             .id,
-    //     savingsAmount: savingViewModel.amountToSave);
-    // print("ooooo ${result.error}");
-    // print("4444 ${result.errorMessage}");
-    // if (result.error == false) {
-    //   setState(() {
-    //     loading = false;
-    //     confirmed = true;
-    //   });
-    //   Future.delayed(1000.milliseconds).then((value) => onInit());
-    // }
   }
 
   void onInit() async {
@@ -163,8 +142,8 @@ class _SavingsSummaryScreenState extends State<SavingsSummaryScreen> {
   @override
   Widget build(BuildContext context) {
     var size = MediaQuery.of(context).size;
-    return ViewModelProvider<InvestmentHighYieldViewModel>.withConsumer(
-      viewModelBuilder: () => InvestmentHighYieldViewModel(),
+    return ViewModelProvider<FixedIncomeViewModel>.withConsumer(
+      viewModelBuilder: () => FixedIncomeViewModel(),
       builder: (context, model, _) => Scaffold(
         backgroundColor: AppColors.kSecondaryColor,
         body: Container(
@@ -196,33 +175,46 @@ class _SavingsSummaryScreenState extends State<SavingsSummaryScreen> {
                                     ),
                                   ),
                                   YMargin(40),
-                                  ItemFader(
-                                    offset: 10,
-                                    curve: Curves.easeIn,
-                                    key: keys[0],
-                                    child: Text(
-                                      "You Have Successfully Invested In ${widget.bondName}",
-                                      textAlign: TextAlign.center,
-                                      style: TextStyle(color: Colors.white),
+                                  Transform.scale(
+                                    scale: value.get(AniProps.scale),
+                                    child: Transform.translate(
+                                      offset: value.get(AniProps.offset1),
+                                      child: Opacity(
+                                        opacity: slideUp
+                                            ? value.get(AniProps.opacity1)
+                                            : 0.0,
+                                        child: Text(
+                                          "You Have Successfully Invested In ${widget.bondName}",
+                                          textAlign: TextAlign.center,
+                                          style: TextStyle(color: Colors.white),
+                                        ),
+                                      ),
                                     ),
                                   ),
                                   Spacer(),
-                                  ItemFader(
-                                    offset: 10,
-                                    curve: Curves.easeIn,
-                                    key: keys[1],
-                                    child: PrimaryButtonNew(
-                                      onTap: () {
-                                        Navigator.pushAndRemoveUntil(
-                                            context,
-                                            MaterialPageRoute(
-                                                builder: (context) =>
-                                                    TabsContainer()),
-                                            (Route<dynamic> route) => false);
-                                      },
-                                      textColor: Colors.white,
-                                      title: "Done",
-                                      bg: AppColors.kPrimaryColor,
+                                  Transform.scale(
+                                    scale: value.get(AniProps.scale),
+                                    child: Transform.translate(
+                                      offset: value.get(AniProps.offset1),
+                                      child: Opacity(
+                                        opacity: slideUp
+                                            ? value.get(AniProps.opacity1)
+                                            : 0.0,
+                                        child: PrimaryButtonNew(
+                                          onTap: () {
+                                            Navigator.pushAndRemoveUntil(
+                                                context,
+                                                MaterialPageRoute(
+                                                    builder: (context) =>
+                                                        TabsContainer()),
+                                                (Route<dynamic> route) =>
+                                                    false);
+                                          },
+                                          textColor: Colors.white,
+                                          title: "Done",
+                                          bg: AppColors.kPrimaryColor,
+                                        ),
+                                      ),
                                     ),
                                   ),
                                   YMargin(50)
@@ -266,47 +258,63 @@ class _SavingsSummaryScreenState extends State<SavingsSummaryScreen> {
                                             ),
                                           ),
                                           YMargin(40),
-                                          ItemFader(
-                                            offset: 10,
-                                            curve: Curves.easeIn,
-                                            key: keys[0],
-                                            child: Text(
-                                              "Your investment was not successful",
-                                              textAlign: TextAlign.center,
-                                              style: TextStyle(
-                                                  color: Colors.white),
+                                          Transform.scale(
+                                            scale: value.get(AniProps.scale),
+                                            child: Transform.translate(
+                                              offset:
+                                                  value.get(AniProps.offset1),
+                                              child: Opacity(
+                                                opacity: slideUp
+                                                    ? value
+                                                        .get(AniProps.opacity1)
+                                                    : 0.0,
+                                                child: Text(
+                                                  "${model.message}",
+                                                  textAlign: TextAlign.center,
+                                                  style: TextStyle(
+                                                      color: Colors.white),
+                                                ),
+                                              ),
                                             ),
                                           ),
                                           Spacer(),
-                                          ItemFader(
-                                            offset: 10,
-                                            curve: Curves.easeIn,
-                                            key: keys[1],
-                                            child: PrimaryButtonNew(
-                                              onTap: () {
-                                                model.buyPromissoryNote(
-                                                    productId: widget
-                                                        .investmentId,
-                                                    instrumentId: widget
-                                                        .instrumentId,
-                                                    fundingChannel: widget
-                                                        .channelId,
-                                                    investmentAmount: widget
-                                                        .amount,
-                                                    maturityDate:
-                                                        DateTime.tryParse(widget
-                                                            .maturityDate),
-                                                    rate: widget.rate,
-                                                    instrumentName:
-                                                        widget.bondName,
-                                                    uniqueName:
-                                                        widget.uniqueName,
-                                                    instrumentType:
-                                                        widget.investmentType);
-                                              },
-                                              textColor: Colors.white,
-                                              title: "Retry",
-                                              bg: AppColors.kPrimaryColor,
+                                          Transform.scale(
+                                            scale: value.get(AniProps.scale),
+                                            child: Transform.translate(
+                                              offset:
+                                                  value.get(AniProps.offset1),
+                                              child: Opacity(
+                                                opacity: slideUp
+                                                    ? value
+                                                        .get(AniProps.opacity1)
+                                                    : 0.0,
+                                                child: PrimaryButtonNew(
+                                                  onTap: () {
+                                                    model.buyPromissoryNote(
+                                                        productId:
+                                                            widget.investmentId,
+                                                        instrumentId:
+                                                            widget.instrumentId,
+                                                        fundingChannel:
+                                                            widget.channelId,
+                                                        investmentAmount:
+                                                            widget.amount,
+                                                        maturityDate:
+                                                            DateTime.tryParse(
+                                                                widget
+                                                                    .maturityDate),
+                                                        rate: widget.rate,
+                                                        instrumentName:
+                                                            widget.bondName,
+                                                        uniqueName:
+                                                            widget.uniqueName,
+                                                        instrumentType: 7);
+                                                  },
+                                                  textColor: Colors.white,
+                                                  title: "Retry",
+                                                  bg: AppColors.kPrimaryColor,
+                                                ),
+                                              ),
                                             ),
                                           ),
                                           YMargin(50)
@@ -319,9 +327,9 @@ class _SavingsSummaryScreenState extends State<SavingsSummaryScreen> {
               ),
               AnimatedPositioned(
                 duration: Duration(milliseconds: 500),
-                //top: -(MediaQuery.of(context).size.height - 200),
                 top: slideUp ? -(MediaQuery.of(context).size.height - 200) : 0,
-                left: 0, right: 0,
+                left: 0,
+                right: 0,
                 child: Container(
                   width: double.infinity,
                   height: MediaQuery.of(context).size.height - 200,
@@ -361,7 +369,6 @@ class _SavingsSummaryScreenState extends State<SavingsSummaryScreen> {
                             height: screenHeight(context) / 2.2,
                             width: screenWidth(context),
                             child: Column(
-                              // mainAxisAlignment: MainAxisAlignment.center,
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 YMargin(27),
@@ -577,13 +584,9 @@ class _SavingsSummaryScreenState extends State<SavingsSummaryScreen> {
                           rate: widget.rate,
                           instrumentName: widget.bondName,
                           uniqueName: widget.uniqueName,
-                          instrumentType: widget.investmentType);
+                          instrumentType: 7);
                     }
                   },
-                  // onVerticalDragStart: (details) {
-                  //   print("dff ${details.toString()}");
-                  //   //
-                  // },
                   child: Container(
                     height: 60,
                     child: Column(

@@ -666,9 +666,11 @@ class _VerifCodeWidgetState extends State<VerifCodeWidget> with AfterLayoutMixin
   void confirmCode() async{
 
     EasyLoading.show(status: 'Creating account');
+    identityViewModel.loading = true;
     var result = await identityViewModel.confirmEmailOTP(code: "$pin1$pin2$pin3$pin4$pin5${pin6}");
 
     if(result.error == true) {
+      identityViewModel.loading = false;
       EasyLoading.showError('Error occurred');
     }else{
 
@@ -686,10 +688,12 @@ class _VerifCodeWidgetState extends State<VerifCodeWidget> with AfterLayoutMixin
           identityViewModel.email, identityViewModel.password,
         );
         if(result.error == false){
+          identityViewModel.loading = false;
           EasyLoading.showSuccess("Mail Confirmed");
           Future.delayed(Duration(milliseconds: 700)).then((value) =>
               widget.onNext());
         }else{
+          identityViewModel.loading = false;
           EasyLoading.showError('You could not be logged in');
           Navigator.pushAndRemoveUntil(
               context,
@@ -697,6 +701,7 @@ class _VerifCodeWidgetState extends State<VerifCodeWidget> with AfterLayoutMixin
                   (Route<dynamic> route) => false);
         }
       }else{
+        identityViewModel.loading = false;
         EasyLoading.showError('Account could not be created');
         setState(() {
           pin1 = "";

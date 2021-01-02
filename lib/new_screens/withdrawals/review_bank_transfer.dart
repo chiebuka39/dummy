@@ -218,6 +218,7 @@ class _ReviewBankTransferState extends State<ReviewBankTransfer> {
                       width: double.infinity,
                       decoration: BoxDecoration(
                           color: AppColors.kWhite,
+                          borderRadius: BorderRadius.circular(13),
                           boxShadow: AppUtils.getBoxShaddow3
                       ),
                       child: Column(

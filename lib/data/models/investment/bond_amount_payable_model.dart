@@ -14,8 +14,8 @@ class AmountPayableResponse{
   int faceValue;
   int instrumentType;
   int productId;
-  int investmentAmount;
-  int rateValue;
+  num investmentAmount;
+  num rateValue;
   bool upFront;
   String transactionFee;
   String annualCustodyFee;

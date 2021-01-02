@@ -7,6 +7,7 @@ import 'package:zimvest/utils/margin.dart';
 import 'package:zimvest/utils/margins.dart';
 import 'package:zimvest/utils/strings.dart';
 import 'package:zimvest/widgets/buttons.dart';
+import 'package:zimvest/widgets/new/new_widgets.dart';
 
 class FixedIncomePurchaseSource extends StatefulWidget {
   final double amount;
@@ -78,7 +79,7 @@ class _FixedIncomePurchaseSourceState extends State<FixedIncomePurchaseSource> {
       viewModelBuilder: () => InvestmentHighYieldViewModel(),
       builder: (context, model, _) => Scaffold(
         appBar: AppBar(
-          backgroundColor: AppColors.kWhite,
+          backgroundColor: Colors.transparent,
           title: Text(
             "Invest",
             style: TextStyle(
@@ -135,9 +136,8 @@ class _FixedIncomePurchaseSourceState extends State<FixedIncomePurchaseSource> {
                 image: "card",
               ),
               YMargin(25),
-              PaymentSourceButton(
-                onTap: () {
-                  // print(widget.uniqueName);
+              SelectWallet(
+                onPressed: () {
                   Navigator.push(
                     context,
                     SavingsSummaryScreen.route(
@@ -150,14 +150,9 @@ class _FixedIncomePurchaseSourceState extends State<FixedIncomePurchaseSource> {
                       bondName: widget.duration,
                       uniqueName: widget.uniqueName,
                       channelId: 5,
-                      // intermediaryBankType: 1,
                     ),
                   );
                 },
-                paymentsource: "Wallet",
-                image: "wallet",
-                amount: "${AppStrings.nairaSymbol}30,000,000",
-                color: AppColors.kTextColor,
               ),
               YMargin(12),
               Padding(

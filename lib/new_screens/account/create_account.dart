@@ -51,7 +51,9 @@ class _CreateAccountScreenState extends State<CreateAccountScreen>
     return WillPopScope(
 
       onWillPop: () async{
-        if(index != 0){
+        if(identityViewModel.loading == true){
+          return false;
+        } else if(index != 0){
           return goBack();
         }else{
           return true;

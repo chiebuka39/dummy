@@ -212,7 +212,7 @@ class _SavingsSummaryScreenState extends State<SavingsSummaryScreen> {
                                 Text("amount".toUpperCase(), style: TextStyle(fontSize: 12,
                                   color: AppColors.kSecondaryText,fontFamily: AppStrings.fontNormal,),),
                                 YMargin(15),
-                                Text("${AppStrings.nairaSymbol}${savingViewModel.amountToSave}", style: TextStyle(
+                                Text("${AppStrings.nairaSymbol}${savingViewModel.amountToSave.toInt().toString().convertWithComma()}", style: TextStyle(
                                     fontFamily: AppStrings.fontMedium,
                                     fontSize: 13,color: AppColors.kGreyText
                                 ),),

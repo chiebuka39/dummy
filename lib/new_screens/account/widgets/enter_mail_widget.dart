@@ -79,6 +79,7 @@ class _EnterMailWidgetState extends State<EnterMailWidget> {
                 offset: Offset(0,5),
                 child: TextField(
                   focusNode: _nodeText1,
+                  keyboardType: TextInputType.emailAddress,
                   onChanged: (value){
                     if (EmailValidator.validate(value)) {
                       _emailError = false;

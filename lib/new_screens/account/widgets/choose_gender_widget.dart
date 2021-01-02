@@ -41,7 +41,7 @@ class _ChooseGenderWidgetState extends State<ChooseGenderWidget> {
                   gender = 'female';
                 });
               },
-              child:SelectGenderWidget(emoji:"👩🏽‍💼",title: "Female",gender: gender,),
+              child:SelectGenderWidget(emoji:"👩🏽‍",title: "Female",gender: gender,),
             ),
           ],),
           Spacer(),

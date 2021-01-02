@@ -5,9 +5,7 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 import 'package:zimvest/new_screens/funding/wallet/exchange/exchange_to_dollars.dart';
 import 'package:zimvest/new_screens/funding/wallet/fund_with_dollar_wallet.dart';
-import 'package:zimvest/new_screens/funding/wallet/verification_needed_screen.dart';
 import 'package:zimvest/new_screens/funding/wallet/wallet_withdraw_to.dart';
-import 'package:zimvest/new_screens/funding/withdraw_screen.dart';
 import 'package:zimvest/new_screens/navigation/widgets/money_title_widget.dart';
 import 'package:zimvest/new_screens/navigation/widgets/transaction_item_widget.dart';
 import 'package:zimvest/styles/colors.dart';
@@ -88,8 +86,6 @@ class _WalletScreenState extends State<WalletScreen> {
                                     child: Center(
                                       child: GestureDetector(
                                         onTap: () {
-                                          // Navigator.of(context).push(
-                                          //     WithdrawWealthScreen.route());
                                           showModalBottomSheet(
                                             context: context,
                                             builder: (context) => Container(

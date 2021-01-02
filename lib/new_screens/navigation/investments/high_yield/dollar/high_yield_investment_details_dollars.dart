@@ -64,8 +64,8 @@ class _HighYieldDetailsDollarState extends State<HighYieldDetailsDollar> {
             // top: 24,
             // left: 20,
             child: IconButton(
-              icon: ImageIcon(
-                AssetImage("images/cancel.png"),
+              icon: Icon(
+                Icons.clear,
                 color: AppColors.kWhite,
               ),
               onPressed: () {

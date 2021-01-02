@@ -94,7 +94,7 @@ class _TreasuryBillPageState extends State<TreasuryBillPage> {
                                   ),
                                 ),
                                 Container(
-                                  height: screenHeight(context) / 4,
+                                  height: screenHeight(context) / 4.5,
                                   width: screenWidth(context),
                                   child: Row(
                                     children: [

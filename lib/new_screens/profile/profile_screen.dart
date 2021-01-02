@@ -11,6 +11,7 @@ import 'package:zimvest/data/view_models/investment_view_model.dart';
 import 'package:zimvest/new_screens/account/login_screen.dart';
 import 'package:zimvest/new_screens/profile/account_screen.dart';
 import 'package:zimvest/new_screens/profile/add_bank_cards.dart';
+import 'package:zimvest/new_screens/profile/security_screen.dart';
 import 'package:zimvest/new_screens/profile/widgets/profile_widgets.dart';
 import 'package:zimvest/styles/colors.dart';
 import 'package:zimvest/utils/margin.dart';
@@ -57,7 +58,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
               children: [
                 SvgPicture.asset("images/new/account.svg", width: 57,),
                 XMargin(20),
-                Text("Emmanuel West", style: TextStyle(fontFamily: AppStrings.fontMedium),)
+                Text(_identityViewModel.user.fullname, style: TextStyle(fontFamily: AppStrings.fontMedium),)
               ],
             ),
           ),
@@ -71,7 +72,11 @@ class _ProfileScreenState extends State<ProfileScreen> {
             Navigator.push(context, AddBankAndCards.route());
             },
           ),
-          ProfileWidget(title: "Security",icon: 'security',),
+          ProfileWidget(title: "Security",icon: 'security',
+            onClick: (){
+            Navigator.push(context, SecurityScreen.route());
+            },
+          ),
           ProfileWidget(title: "Investment Persona Analysis",icon: 'ips',),
           ProfileWidget(title: "Earn Free Cash",icon: 'earn',),
           ProfileWidget(title: "Rate App",icon: 'rate',),

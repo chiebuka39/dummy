@@ -23,7 +23,7 @@ class AppColors {
   static const kAccountTextColor = Color(0xFF324d53);
   static const kLightText3 = Color(0xFF708a8f);
   static const kLightText5 = Color.fromRGBO(5, 8, 38, 0.4);
-  static const kLightTitleText = Color(0xff7e9195);
+  static const kLightTitleText = Color(0xffC9C6D3);
   static const kSecondaryText = Color(0xFF7B8CB6);
   static const kSecondaryBoldText = Color(0xFF000D60);
   static const kLightBG = Color(0xfff8fbfb);

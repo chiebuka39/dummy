@@ -4,10 +4,12 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:zimvest/new_screens/funding/confirm_withdrawal.dart';
 import 'package:zimvest/new_screens/funding/savings_summary.dart';
 import 'package:zimvest/new_screens/funding/select_bank_account.dart';
+import 'package:zimvest/new_screens/withdrawals/review_wallet_transfer.dart';
 import 'package:zimvest/payment/input_formaters.dart';
 import 'package:zimvest/styles/colors.dart';
 import 'package:zimvest/utils/margin.dart';
 import 'package:zimvest/utils/strings.dart';
+import 'package:zimvest/widgets/new/new_widgets.dart';
 
 class ChooseWealthWithdrawScreen extends StatefulWidget {
   const ChooseWealthWithdrawScreen({
@@ -36,20 +38,12 @@ class _ChooseWealthWithdrawScreenState extends State<ChooseWealthWithdrawScreen>
         FocusScope.of(context).requestFocus(new FocusNode());
       },
       child: Scaffold(
-        appBar: AppBar(
-          elevation: 0,
-          iconTheme: IconThemeData(color: AppColors.kPrimaryColor),
-          leading: IconButton(
-            icon: Icon(Icons.arrow_back_ios_outlined,size: 20,),
-            onPressed: (){
-              Navigator.pop(context);
-            },
-          ),
-          backgroundColor: Colors.transparent,
-          title: Text("Withdraw",
-            style: TextStyle(color: Colors.black87,
-                fontSize: 13,
-                fontFamily: AppStrings.fontMedium),),
+        appBar: ZimAppBar(
+          icon: Icons.arrow_back_ios_outlined,
+          callback: (){
+            Navigator.pop(context);
+          },
+          text: "Withdraw",
         ),
         body: GestureDetector(
           onTap: (){
@@ -88,30 +82,10 @@ class _ChooseWealthWithdrawScreenState extends State<ChooseWealthWithdrawScreen>
                   ),
                 ),
                 YMargin(25),
-                GestureDetector(
-                  onTap: (){
-                    Navigator.of(context).push(SavingsSummaryScreen.route());
-                  },
-                  child: Container(
-                    padding: EdgeInsets.symmetric(horizontal: 20),
-                    width: double.infinity,
-                    height: 55,
-                    decoration: BoxDecoration(
-                      color: AppColors.kSecondaryColor,
-                      borderRadius: BorderRadius.circular(15)
-                    ),
-                    child: Row(children: [
-                      SvgPicture.asset("images/new/wallet1.svg"),
-                      XMargin(10),
-                      Text("Wallet", style: TextStyle(color: AppColors.kWhite,
-                          fontSize: 13,fontFamily: AppStrings.fontNormal),),
-                      Spacer(),
-                      Text("${AppStrings.nairaSymbol} 300,000", style: TextStyle(color: AppColors.kWhite,
-                          fontSize: 13,fontFamily: AppStrings.fontNormal),),
-                      XMargin(5),
-                      Icon(Icons.navigate_next_rounded,color: AppColors.kWhite,)
-                    ],),
-                  ),
+                SelectWallet(onPressed: () {
+                  Navigator.of(context).push(ReviewWalletTransfer.route());
+                },
+
                 ),
                 YMargin(5),
 

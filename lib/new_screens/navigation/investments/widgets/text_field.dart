@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:zimvest/styles/colors.dart';
 import 'package:zimvest/utils/margins.dart';
 import 'package:zimvest/utils/strings.dart';
@@ -9,11 +10,12 @@ class InvestmentTextField extends StatefulWidget {
   final String initalValue;
   final bool readOnly;
   final bool showCursor;
+  final List<TextInputFormatter> formatters;
   const InvestmentTextField(
       {Key key,
       @required this.controller,
       @required this.hintText,
-      this.initalValue, this.readOnly = true, this.showCursor = true})
+      this.initalValue, this.readOnly = true, this.showCursor = true, this.formatters})
       : super(key: key);
   @override
   _InvestmentTextFieldState createState() => _InvestmentTextFieldState();
@@ -33,6 +35,7 @@ class _InvestmentTextFieldState extends State<InvestmentTextField> {
         height: screenHeight(context) / 12.5,
         child: Center(
           child: TextFormField(
+            inputFormatters: widget.formatters,
             showCursor: widget.showCursor,
             readOnly: widget.readOnly,
             initialValue: widget.initalValue,

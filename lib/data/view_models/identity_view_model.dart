@@ -12,6 +12,8 @@ import 'package:zimvest/utils/result.dart';
 abstract class ABSIdentityViewModel extends ChangeNotifier{
   User _user;
   bool _isValidPassword = false;
+  bool _loading = false;
+  bool get loading => _loading;
 
   String email, password,firstName,lastName,phoneNumber,gender, verificationCode,pin;
   DateTime dob;
@@ -21,12 +23,18 @@ abstract class ABSIdentityViewModel extends ChangeNotifier{
   bool get isValidPassword => _isValidPassword;
   set user(User value);
   set isValidPassword(bool value);
+  set loading(bool value);
   Future<Result<void>> login(String email, String password);
   Future<Result<bool>> emailAvailability(String email);
   Future<Result<void>> resetPassword(String email);
+  Future<Result<void>> changePassword({String currentPassword, String newPassword});
   Future<Result<bool>> phoneAvailability(String phone);
   Future<Result<void>> sendEmailOTP(String email);
+  Future<Result<void>> initiatePinReset();
   Future<Result<void>> resendEmailOTP({String trackingId, int verificationId});
+  Future<Result<void>> resendPinResetCode();
+  Future<Result<void>> verifyPinResetCode({String code});
+  Future<Result<void>> resetCode({String code});
   Future<Result<void>> confirmEmailOTP({String code});
   Future<Result<void>> setUpPin({String pin});
   Future<Result<CompletedSections>> checkCompletedSections({String token});
@@ -54,6 +62,12 @@ class IdentityViewModel extends ABSIdentityViewModel{
   @override
   set isValidPassword(bool value) {
     _isValidPassword = value;
+    notifyListeners();
+  }
+
+  @override
+  set loading(bool value) {
+    _loading = value;
     notifyListeners();
   }
 
@@ -169,6 +183,58 @@ class IdentityViewModel extends ABSIdentityViewModel{
   Future<Result<void>> resetPassword(String email) {
     return _identityService.resetPassword(
        email
+    );
+  }
+
+  @override
+  Future<Result<void>> changePassword({String currentPassword, String newPassword}) {
+    return _identityService.changePassword(currentPassword: currentPassword,newPassword: newPassword,
+        token: user.token);
+  }
+
+  @override
+  Future<Result<void>> initiatePinReset() async{
+    var result = await _identityService.initiatePinReset(
+        user.token
+    );
+
+    if(result.error == false){
+      verificationId = result.data['verificationId'];
+      trackingId = result.data['trackingId'];
+    }
+
+    return result;
+  }
+
+  @override
+  Future<Result<void>> resendPinResetCode() async{
+    var result = await _identityService.resendPinResetCode(
+        verificationId: verificationId,
+        trackingId: trackingId,
+      token: user.token
+    );
+
+    if(result.error == false){
+      verificationId = result.data['verificationId'];
+      trackingId = result.data['trackingId'];
+    }
+    return result;
+  }
+
+  @override
+  Future<Result<void>> resetCode({String code}) {
+    return _identityService.resetPin(
+        pin: code,token: user.token, trackingId: trackingId
+    );
+  }
+
+  @override
+  Future<Result<void>> verifyPinResetCode({String code}) {
+    return _identityService.verifyPinResetCode(
+        code: code,
+        verificationId: verificationId,
+        trackingId: trackingId,
+        token: user.token
     );
   }
 

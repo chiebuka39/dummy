@@ -1,5 +1,6 @@
 import 'package:flushbar/flushbar.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_masked_text/flutter_masked_text.dart';
 import 'package:provider_architecture/provider_architecture.dart';
 import 'package:zimvest/data/view_models/investment_view_model.dart';
 import 'package:zimvest/new_screens/navigation/investments/fixed/euro_bond/fixed_income_purchase.dart';
@@ -68,14 +69,15 @@ class FixedIncomeAmountInput extends StatefulWidget {
 
 class _FixedIncomeAmountInputState extends State<FixedIncomeAmountInput> {
   // static String amountController.text;
-  TextEditingController amountController = TextEditingController();
+  var amountController =
+      MoneyMaskedTextController(decimalSeparator: ".", thousandSeparator: ",");
   @override
   Widget build(BuildContext context) {
     return ViewModelProvider<InvestmentHighYieldViewModel>.withConsumer(
       viewModelBuilder: () => InvestmentHighYieldViewModel(),
       builder: (context, model, _) => Scaffold(
         appBar: AppBar(
-          backgroundColor: AppColors.kWhite,
+          backgroundColor: Colors.transparent,
           title: Text(
             "Invest",
             style: TextStyle(
@@ -127,7 +129,8 @@ class _FixedIncomeAmountInputState extends State<FixedIncomeAmountInput> {
               YMargin(91),
               RoundedNextButton(
                 onTap: () {
-                  double amount = double.tryParse(amountController.text);
+                  double amount =
+                      double.tryParse(amountController.text.split(',').join());
                   if (amount < widget.minimumAmount) {
                     Flushbar(
                       icon: ImageIcon(
@@ -161,17 +164,16 @@ class _FixedIncomeAmountInputState extends State<FixedIncomeAmountInput> {
                     Navigator.push(
                       context,
                       FixedIncomePurchaseSource.route(
-                        amount: amount,
-                        productId: widget.investmentId,
-                        uniqueName: widget.uniqueName,
-                        maturityDate: widget.maturityDate,
-                        rate: widget.rate,
-                        investmentType: widget.investmentType,
-                        instrumentId: widget.instrumentId,
-                        minimumAmount: widget.minimumAmount,
-                        investmentMaturityDate: widget.investmentMaturityDate,
-                        duration: widget.bondName
-                      ),
+                          amount: amount,
+                          productId: widget.investmentId,
+                          uniqueName: widget.uniqueName,
+                          maturityDate: widget.maturityDate,
+                          rate: widget.rate,
+                          investmentType: widget.investmentType,
+                          instrumentId: widget.instrumentId,
+                          minimumAmount: widget.minimumAmount,
+                          investmentMaturityDate: widget.investmentMaturityDate,
+                          duration: widget.bondName),
                     );
                   }
                 },

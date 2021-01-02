@@ -12,6 +12,7 @@ import 'package:zimvest/data/models/investment/money_market_fund.dart';
 import 'package:zimvest/data/models/investment/mutual_item_detail.dart';
 import 'package:zimvest/data/models/investment/term_instruments.dart';
 import 'package:zimvest/data/models/product_transaction.dart';
+import 'package:zimvest/data/services/fixed_income_investment_service.dart';
 import 'package:zimvest/data/services/investment_service.dart';
 
 import 'package:zimvest/locator.dart';
@@ -497,13 +498,33 @@ class InvestmentHighYieldViewModel extends ChangeNotifier {
     this.gotRate = gotRate;
     notifyListeners();
   }
+}
+
+class FixedIncomeViewModel extends ChangeNotifier {
+  ABSFixedIncomeInvestmentService _investmentService =
+      locator<ABSFixedIncomeInvestmentService>();
+  final ABSStateLocalStorage _localStorage = locator<ABSStateLocalStorage>();
+  AmountPayableResponse amountPayableResponse = AmountPayableResponse();
+  bool _busy = false;
+  bool get busy => _busy;
+
+  bool _status = false;
+  bool get status => _status;
+
+  String _message = "";
+  String get message => _message;
+
+  void setBusy(bool value) {
+    _busy = value;
+    notifyListeners();
+  }
 
   Future<void> buyCommercialPaper(
       {int productId,
       int fundingChannel,
       int intermediaryBankType,
       int instrumentId,
-      // double amount,
+      double amount,
       double rate,
       String uniqueName,
       int instrumentType,
@@ -524,26 +545,28 @@ class InvestmentHighYieldViewModel extends ChangeNotifier {
       productId: productId,
       upFront: upFront,
     );
-    setBusy(false);
-    if (amountPayableRes == null) {
-      setBusy(false);
-      _status = false;
-    } else {
-      _status = true;
-      this.amountPayableResponse = amountPayableRes;
-      await _investmentService.buyCommercialPaper(
+    if (amountPayableRes != null) {
+      var buyCommercialPaper = await _investmentService.buyCommercialPaper(
         token: token,
         productId: productId,
         fundingChannel: fundingChannel,
         intermediaryBankType: intermediaryBankType,
-        // amount: amount,
+        amount: amountPayableRes.investmentAmount,
         rate: rate,
         uniqueName: uniqueName,
-        upFront: upFront,
-        faceValue: this.amountPayableResponse.faceValue,
-        investmentAmount: this.amountPayableResponse.investmentAmount,
+        upFront: amountPayableRes.upFront,
+        faceValue: amountPayableRes.faceValue,
+        investmentAmount: amountPayableRes.investmentAmount,
       );
-      setBusy(false);
+      if (buyCommercialPaper != "Transaction initiated successfully") {
+        setBusy(false);
+        _message = buyEuroBond.toString();
+        _status = false;
+      } else {
+        setBusy(false);
+        _message = buyEuroBond.toString();
+        _status = true;
+      }
     }
   }
 
@@ -573,14 +596,8 @@ class InvestmentHighYieldViewModel extends ChangeNotifier {
       productId: productId,
       upFront: upFront,
     );
-    setBusy(false);
-    if (amountPayableRes == null) {
-      setBusy(false);
-      _status = false;
-    } else {
-      _status = true;
-      this.amountPayableResponse = amountPayableRes;
-      await _investmentService.buyCorporateBond(
+    if (amountPayableRes != null) {
+      var buyCorporateBond = await _investmentService.buyCorporateBond(
         token: token,
         productId: productId,
         fundingChannel: fundingChannel,
@@ -590,7 +607,15 @@ class InvestmentHighYieldViewModel extends ChangeNotifier {
         uniqueName: uniqueName,
         faceValue: this.amountPayableResponse.faceValue,
       );
-      setBusy(false);
+      if (buyCorporateBond != "Transaction initiated successfully") {
+        setBusy(false);
+        _message = buyEuroBond.toString();
+        _status = false;
+      } else {
+        setBusy(false);
+        _message = buyEuroBond.toString();
+        _status = true;
+      }
     }
 
     setBusy(false);
@@ -623,14 +648,8 @@ class InvestmentHighYieldViewModel extends ChangeNotifier {
       productId: productId,
       upFront: upFront,
     );
-    setBusy(false);
-    if (amountPayableRes == null) {
-      setBusy(false);
-      _status = false;
-    } else {
-      _status = true;
-      this.amountPayableResponse = amountPayableRes;
-      await _investmentService.buyFGNBond(
+    if (amountPayableRes != null) {
+      var buyFGNBond = await _investmentService.buyFGNBond(
         productId: productId,
         token: token,
         fundingChannel: fundingChannel,
@@ -640,6 +659,15 @@ class InvestmentHighYieldViewModel extends ChangeNotifier {
         faceValue: this.amountPayableResponse.faceValue,
         investmentAmount: this.amountPayableResponse.investmentAmount,
       );
+      if (buyFGNBond != "Transaction initiated successfully") {
+        setBusy(false);
+        _message = buyEuroBond.toString();
+        _status = false;
+      } else {
+        setBusy(false);
+        _message = buyEuroBond.toString();
+        _status = true;
+      }
       setBusy(false);
     }
 
@@ -673,23 +701,26 @@ class InvestmentHighYieldViewModel extends ChangeNotifier {
       productId: productId,
       upFront: upFront,
     );
-    setBusy(false);
-    if (amountPayableRes == null) {
-      setBusy(false);
-      _status = false;
-    } else {
-      _status = true;
-      this.amountPayableResponse = amountPayableRes;
-      await _investmentService.buyPromissoryNote(
+    if (amountPayableRes != null) {
+      var buyPromissoryNote = await _investmentService.buyPromissoryNote(
         productId: productId,
         token: token,
         fundingChannel: fundingChannel,
-        amount: this.amountPayableResponse.investmentAmount,
-        rate: this.amountPayableResponse.rateValue,
+        amount: amountPayableRes.investmentAmount,
+        rate: amountPayableRes.rateValue,
         uniqueName: uniqueName,
-        faceValue: this.amountPayableResponse.faceValue,
-        investmentAmount: this.amountPayableResponse.investmentAmount,
+        faceValue: amountPayableRes.faceValue,
+        investmentAmount: amountPayableRes.investmentAmount,
       );
+      if (buyPromissoryNote != "Transaction initiated successfully") {
+        setBusy(false);
+        _message = buyEuroBond.toString();
+        _status = false;
+      } else {
+        setBusy(false);
+        _message = buyEuroBond.toString();
+        _status = true;
+      }
       setBusy(false);
     }
 
@@ -706,7 +737,7 @@ class InvestmentHighYieldViewModel extends ChangeNotifier {
       double rate,
       String uniqueName,
       int instrumentType,
-      bool upFront,
+      bool upFront = true,
       DateTime maturityDate,
       String instrumentName,
       double investmentAmount}) async {
@@ -723,27 +754,27 @@ class InvestmentHighYieldViewModel extends ChangeNotifier {
       productId: productId,
       upFront: upFront,
     );
-    print(amountPayableRes);
-    setBusy(false);
-    if (amountPayableRes == null) {
-      setBusy(false);
-      _status = false;
-    } else {
-      _status = true;
-      this.amountPayableResponse = amountPayableRes;
-      await _investmentService.buyTreasuryBill(
-        productId: productId,
-        token: token,
-        fundingChannel: fundingChannel,
-        amount: this.amountPayableResponse.investmentAmount,
-        rate: this.amountPayableResponse.rateValue,
-        uniqueName: uniqueName,
-        faceValue: this.amountPayableResponse.faceValue,
-        investmentAmount: this.amountPayableResponse.investmentAmount,
-      );
-      setBusy(false);
+    if (amountPayableRes != null) {
+      var buyTBill = await _investmentService.buyTreasuryBill(
+          productId: productId,
+          token: token,
+          fundingChannel: fundingChannel,
+          amount: amountPayableRes.investmentAmount,
+          rate: amountPayableRes.rateValue,
+          uniqueName: uniqueName,
+          faceValue: amountPayableRes.faceValue,
+          investmentAmount: amountPayableRes.investmentAmount,
+          upFront: amountPayableRes.upFront);
+      if (buyTBill != "Transaction initiated successfully") {
+        setBusy(false);
+        _message = buyTBill.toString();
+        _status = false;
+      } else {
+        setBusy(false);
+        _message = buyTBill.toString();
+        _status = true;
+      }
     }
-
     setBusy(false);
     notifyListeners();
   }
@@ -774,28 +805,28 @@ class InvestmentHighYieldViewModel extends ChangeNotifier {
       productId: productId,
       upFront: upFront,
     );
-    setBusy(false);
-    if (amountPayableRes == null) {
-      setBusy(false);
-      _status = false;
-    } else {
-      _status = true;
-      this.amountPayableResponse = amountPayableRes;
-      await _investmentService.buyEuroBond(
+    if (amountPayableRes != null) {
+      var buyEuroBond = await _investmentService.buyEuroBond(
         productId: productId,
         token: token,
         fundingChannel: fundingChannel,
-        amount: this.amountPayableResponse.investmentAmount,
-        rate: this.amountPayableResponse.rateValue,
+        amount: amountPayableRes.investmentAmount,
+        rate: amountPayableRes.rateValue,
         uniqueName: uniqueName,
-        faceValue: this.amountPayableResponse.faceValue,
-        investmentAmount: this.amountPayableResponse.investmentAmount,
+        faceValue: amountPayableRes.faceValue,
+        investmentAmount: amountPayableRes.investmentAmount,
       );
-      setBusy(false);
+      if (buyEuroBond != "Transaction initiated successfully") {
+        setBusy(false);
+        _message = buyEuroBond.toString();
+        _status = false;
+      } else {
+        setBusy(false);
+        _message = buyEuroBond.toString();
+        _status = true;
+      }
     }
     setBusy(false);
     notifyListeners();
   }
 }
-
-class FixedIncomeViewModel extends ChangeNotifier {}

@@ -3,6 +3,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:zimvest/styles/colors.dart';
 import 'package:zimvest/utils/margin.dart';
 import 'package:zimvest/widgets/buttons.dart';
+import 'package:zimvest/widgets/new/new_widgets.dart';
 
 class EnterPasswordWidget extends StatefulWidget {
   const EnterPasswordWidget({
@@ -118,57 +119,4 @@ class _EnterPasswordWidgetState extends State<EnterPasswordWidget> {
   }
 }
 
-class PasswordCheck extends StatelessWidget {
-  const PasswordCheck({
-    Key key, this.title, this.flex = 2,
-  }) : super(key: key);
-  final String title;
-  final int flex;
 
-  @override
-  Widget build(BuildContext context) {
-    return Expanded(
-      flex: flex,
-      child: Container(
-          height: 22,
-          decoration: BoxDecoration(
-            color: AppColors.kFixed.withOpacity(0.2),
-            borderRadius: BorderRadius.circular(12)
-          ),
-          child: Row(
-            children: [
-              SvgPicture.asset("images/new/p_check.svg"),
-              XMargin(5),
-              Text(title, style: TextStyle(fontSize: 9),),
-            ],
-          )),
-    );
-  }
-}
-class PasswordError extends StatelessWidget {
-  const PasswordError({
-    Key key, this.title, this.flex = 2,
-  }) : super(key: key);
-  final String title;
-  final int flex;
-
-  @override
-  Widget build(BuildContext context) {
-    return Expanded(
-      flex: flex,
-      child: Container(
-          height: 22,
-          decoration: BoxDecoration(
-            color: AppColors.kWealth.withOpacity(0.2),
-            borderRadius: BorderRadius.circular(12)
-          ),
-          child: Row(
-            children: [
-              SvgPicture.asset("images/new/p_error.svg"),
-              XMargin(5),
-              Text(title, style: TextStyle(fontSize: 9),),
-            ],
-          )),
-    );
-  }
-}

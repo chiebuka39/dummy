@@ -103,7 +103,7 @@ class _NumericKeyboardState extends State<NumericKeyboard> {
           style: TextStyle(
               fontSize: 20,
               fontWeight: FontWeight.w400,
-              fontFamily: AppStrings.fontNormal,
+              fontFamily: AppStrings.fontMedium,
               color: widget.textColor),
         ),
       ),

@@ -676,6 +676,7 @@ class EmptyInvstmentWidget extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           PrimaryButtonNew(
+            onTap: (){},
             title: "Start Investing",
           ),
         ],

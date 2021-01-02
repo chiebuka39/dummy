@@ -103,7 +103,7 @@ class _CorporateBondPageState extends State<CorporateBondPage> {
                                         ),
                                       ),
                                       Container(
-                                        height: screenHeight(context) / 4,
+                                        height: screenHeight(context) / 4.5,
                                         width: screenWidth(context),
                                         child: Row(
                                           children: [

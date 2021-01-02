@@ -7,6 +7,7 @@ import 'package:zimvest/utils/margin.dart';
 import 'package:zimvest/utils/margins.dart';
 import 'package:zimvest/utils/strings.dart';
 import 'package:zimvest/widgets/buttons.dart';
+import 'package:zimvest/widgets/new/new_widgets.dart';
 
 class FixedIncomePurchaseSource extends StatefulWidget {
   final double amount;
@@ -46,7 +47,6 @@ class FixedIncomePurchaseSource extends StatefulWidget {
     int instrumentId,
     String investmentMaturityDate,
   }) {
-    // print("Duration Purchase Screen $uniqueName");
     return MaterialPageRoute(
       builder: (_) => FixedIncomePurchaseSource(
         amount: amount,
@@ -78,7 +78,7 @@ class _FixedIncomePurchaseSourceState extends State<FixedIncomePurchaseSource> {
       viewModelBuilder: () => InvestmentHighYieldViewModel(),
       builder: (context, model, _) => Scaffold(
         appBar: AppBar(
-          backgroundColor: AppColors.kWhite,
+          backgroundColor: Colors.transparent,
           title: Text(
             "Invest",
             style: TextStyle(
@@ -135,29 +135,28 @@ class _FixedIncomePurchaseSourceState extends State<FixedIncomePurchaseSource> {
                 image: "card",
               ),
               YMargin(25),
-              PaymentSourceButton(
-                onTap: () {
-                  // print(widget.uniqueName);
-                  Navigator.push(
-                    context,
-                    SavingsSummaryScreen.route(
-                      amount: widget.amount,
-                      investmentId: widget.productId,
-                      instrumentId: widget.instrumentId,
-                      maturityDate: widget.investmentMaturityDate,
-                      rate: widget.rate,
-                      investmentType: widget.investmentType,
-                      bondName: widget.duration,
-                      uniqueName: widget.uniqueName,
-                      channelId: 5,
-                      // intermediaryBankType: 1,
-                    ),
-                  );
-                },
-                paymentsource: "Wallet",
-                image: "wallet",
-                amount: "${AppStrings.nairaSymbol}30,000,000",
-                color: AppColors.kTextColor,
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 20.0),
+                child: SelectWallet(
+                  onPressed: () {
+                    // print(widget.uniqueName);
+                    Navigator.push(
+                      context,
+                      SavingsSummaryScreen.route(
+                        amount: widget.amount,
+                        investmentId: widget.productId,
+                        instrumentId: widget.instrumentId,
+                        maturityDate: widget.investmentMaturityDate,
+                        rate: widget.rate,
+                        investmentType: widget.investmentType,
+                        bondName: widget.duration,
+                        uniqueName: widget.uniqueName,
+                        channelId: 5,
+                        // intermediaryBankType: 1,
+                      ),
+                    );
+                  },
+                ),
               ),
               YMargin(12),
               Padding(

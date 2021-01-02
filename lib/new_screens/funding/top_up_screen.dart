@@ -4,6 +4,7 @@ import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 import 'package:zimvest/data/view_models/identity_view_model.dart';
 import 'package:zimvest/data/view_models/payment_view_model.dart';
+import 'package:zimvest/data/view_models/pin_view_model.dart';
 import 'package:zimvest/data/view_models/savings_view_model.dart';
 import 'package:zimvest/new_screens/account/login_screen.dart';
 import 'package:zimvest/new_screens/funding/choose_funding_source.dart';
@@ -12,6 +13,7 @@ import 'package:zimvest/styles/colors.dart';
 import 'package:zimvest/utils/margin.dart';
 import 'package:zimvest/utils/strings.dart';
 import 'package:zimvest/widgets/buttons.dart';
+import 'package:zimvest/widgets/new/keyboard_widget.dart';
 import 'package:zimvest/widgets/new/new_widgets.dart';
 
 class TopUpScreen extends StatefulWidget {
@@ -30,8 +32,7 @@ class TopUpScreen extends StatefulWidget {
 }
 
 class _TopUpScreenState extends State<TopUpScreen> with AfterLayoutMixin<TopUpScreen> {
-
-  String amount = "";
+  
   ABSSavingViewModel savingViewModel;
   ABSPaymentViewModel paymentViewModel;
   ABSIdentityViewModel identityViewModel;
@@ -47,6 +48,7 @@ class _TopUpScreenState extends State<TopUpScreen> with AfterLayoutMixin<TopUpSc
     savingViewModel = Provider.of(context);
     paymentViewModel = Provider.of(context);
     identityViewModel = Provider.of(context);
+    ABSPinViewModel pinViewModel = Provider.of(context);
     return GestureDetector(
       onTap: (){
         FocusScope.of(context).requestFocus(new FocusNode());
@@ -80,7 +82,7 @@ class _TopUpScreenState extends State<TopUpScreen> with AfterLayoutMixin<TopUpSc
                   ),
                   child: Align(
                       alignment: Alignment.centerLeft,
-                      child: Text(convertWithComma(amount), style: TextStyle(fontSize: 15),)),
+                      child: Text(convertWithComma(pinViewModel.amount), style: TextStyle(fontSize: 15),)),
                 ),
                 YMargin(10),
                 SizedBox(
@@ -99,247 +101,14 @@ class _TopUpScreenState extends State<TopUpScreen> with AfterLayoutMixin<TopUpSc
 
 
                 RoundedNextButton(
-                  onTap: amount.isEmpty? null : double.parse(amount) < 1000 ? null: (){
-                    savingViewModel.amountToSave = double.parse(amount);
+                  onTap: pinViewModel.amount.isEmpty? null : double.parse(pinViewModel.amount) < 1000 ? null: (){
+                    savingViewModel.amountToSave = double.parse(pinViewModel.amount);
                     Navigator.push(context, ChooseFundingScreen.route());
+                    pinViewModel.resetAmount();
                   },
                 ),
                 YMargin(65),
-                Expanded(
-                  child: Row(children: [
-                    Expanded(
-                      child: InkWell(
-                        onTap: (){
-                          if(amount.length > 11){
-                            return;
-                          }
-                          setState(() {
-                            amount = amount + "1";
-                          });
-                        },
-                        child: Container(
-                          height: 50,
-                          color: Colors.transparent,
-                          child: Center(
-                            child: Text("1", style: TextStyle(fontSize: 20),),
-                          ),
-                        ),
-                      ),
-                    ),
-                    Expanded(
-                      child: InkWell(
-                        onTap: (){
-                          if(amount.length > 11){
-                            return;
-                          }
-                          setState(() {
-                            amount = amount + "2";
-                          });
-                        },
-                        child: Container(
-                          height: 50,
-                          color: Colors.transparent,
-                          child: Center(
-                            child: Text("2", style: TextStyle(fontSize: 20),),
-                          ),
-                        ),
-                      ),
-                    ),
-                    Expanded(
-                      child: InkWell(
-                        onTap: (){
-                          if(amount.length > 11){
-                            return;
-                          }
-                          setState(() {
-                            amount = amount + "3";
-                          });
-                        },
-                        child: Container(
-                          height: 50,
-                          color: Colors.transparent,
-                          child: Center(
-                            child: Text("3", style: TextStyle(fontSize: 20),),
-                          ),
-                        ),
-                      ),
-                    ),
-                  ],),
-                ),
-                Expanded(
-                  child: Row(children: [
-                    Expanded(
-                      child: InkWell(
-                        onTap:(){
-                          if(amount.length > 11){
-                            return;
-                          }
-                          setState(() {
-                            amount = amount + "4";
-                          });
-                        },
-                        child: Container(
-                          height: 50,
-                          color: Colors.transparent,
-                          child: Center(
-                            child: Text("4", style: TextStyle(fontSize: 20),),
-                          ),
-                        ),
-                      ),
-                    ),
-                    Expanded(
-                      child: InkWell(
-                        onTap: (){
-                          if(amount.length > 11){
-                            return;
-                          }
-                          setState(() {
-                            amount = amount + "5";
-                          });
-                        },
-                        child: Container(
-                          height: 50,
-                          color: Colors.transparent,
-                          child: Center(
-                            child: Text("5", style: TextStyle(fontSize: 20),),
-                          ),
-                        ),
-                      ),
-                    ),
-                    Expanded(
-                      child: InkWell(
-                        onTap: (){
-                          if(amount.length > 11){
-                            return;
-                          }
-                          setState(() {
-                            amount = amount + "6";
-                          });
-                        },
-                        child: Container(
-                          height: 50,
-                          color: Colors.transparent,
-                          child: Center(
-                            child: Text("6", style: TextStyle(fontSize: 20),),
-                          ),
-                        ),
-                      ),
-                    ),
-                  ],),
-                ),
-
-                Expanded(
-                  child: Row(children: [
-                    Expanded(
-                      child: InkWell(
-                        onTap: (){
-                          if(amount.length > 11){
-                            return;
-                          }
-                          setState(() {
-                            amount = amount + "7";
-                          });
-                        },
-                        child: Container(
-                          height: 50,
-                          color: Colors.transparent,
-                          child: Center(
-                            child: Text("7", style: TextStyle(fontSize: 20),),
-                          ),
-                        ),
-                      ),
-                    ),
-                    Expanded(
-                      child: InkWell(
-                        onTap: (){
-                          if(amount.length > 11){
-                            return;
-                          }
-                          setState(() {
-                            amount = amount + "8";
-                          });
-                        },
-                        child: Container(
-                          height: 50,
-                          color: Colors.transparent,
-                          child: Center(
-                            child: Text("8", style: TextStyle(fontSize: 20),),
-                          ),
-                        ),
-                      ),
-                    ),
-                    Expanded(
-                      child: InkWell(
-
-                        onTap: (){
-                          if(amount.length > 11){
-                            return;
-                          }
-                          setState(() {
-                            amount = amount + "9";
-                          });
-                        },
-                        child: Container(
-                          height: 50,
-                          color: Colors.transparent,
-                          child: Center(
-                            child: Text("9", style: TextStyle(fontSize: 20),),
-                          ),
-                        ),
-                      ),
-                    ),
-                  ],),
-                ),
-                Expanded(
-                  child: Row(children: [
-                    Expanded(
-                      child: Container(
-                        height: 50,
-                        child: Center(
-                          child: Text("", style: TextStyle(fontSize: 20),),
-                        ),
-                      ),
-                    ),
-                    Expanded(
-                      child: InkWell(
-                        onTap: (){
-                          if(amount.length > 11){
-                            return;
-                          }
-                          setState(() {
-                            amount = amount + "0";
-                          });
-                        },
-                        child: Container(
-                          height: 50,
-                          color: Colors.transparent,
-                          child: Center(
-                            child: Text("0", style: TextStyle(fontSize: 20),),
-                          ),
-                        ),
-                      ),
-                    ),
-                    Expanded(
-                      child: InkWell(
-                        onTap: (){
-                          if(amount.length < 1){
-                            return;
-                          }
-                          setState(() {
-                            amount = amount.substring(0,amount.length -1);
-                          });
-                        },
-                        child: Container(
-                          height: 50,
-                          color: Colors.transparent,
-                          child: Center(
-                            child: Icon(Icons.arrow_back_ios,size: 18,color: AppColors.kPrimaryColor,),
-                          ),
-                        ),
-                      ),
-                    ),
-                  ],),
-                )
+                NumKeyboardWidget()
 
 
 

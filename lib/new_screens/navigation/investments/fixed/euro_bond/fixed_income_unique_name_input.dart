@@ -1,3 +1,4 @@
+import 'package:flushbar/flushbar.dart';
 import 'package:flutter/material.dart';
 import 'package:zimvest/new_screens/navigation/investments/fixed/euro_bond/fixed_income_amount_input.dart';
 import 'package:zimvest/new_screens/navigation/investments/widgets/text_field.dart';
@@ -26,21 +27,20 @@ class FixedIncomeUniqueName extends StatefulWidget {
     this.investmentType,
     this.instrumentId,
     this.minimumAmount,
-    this.investmentMaturityDate, this.uniqueName,
+    this.investmentMaturityDate,
+    this.uniqueName,
   }) : super(key: key);
 
-  static Route<dynamic> route({
-    int investmentId,
-    String bondName,
-    String maturityDate,
-    double rate,
-    int investmentType,
-    int instrumentId,
-    num minimumAmount,
-    String investmentMaturityDate,
-    String uniqueName
-  }) {
-    // print("Duration $bondName");
+  static Route<dynamic> route(
+      {int investmentId,
+      String bondName,
+      String maturityDate,
+      double rate,
+      int investmentType,
+      int instrumentId,
+      num minimumAmount,
+      String investmentMaturityDate,
+      String uniqueName}) {
     return MaterialPageRoute(
       builder: (_) => FixedIncomeUniqueName(
         investmentId: investmentId,
@@ -69,7 +69,7 @@ class _FixedIncomeUniqueNameState extends State<FixedIncomeUniqueName> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: AppColors.kWhite,
+        backgroundColor: Colors.transparent,
         title: Text(
           "Invest",
           style: TextStyle(
@@ -90,7 +90,7 @@ class _FixedIncomeUniqueNameState extends State<FixedIncomeUniqueName> {
       body: SingleChildScrollView(
         child: Column(
           children: [
-            YMargin(72),
+            Spacer(),
             Padding(
               padding: const EdgeInsets.only(left: 20.0, right: 76),
               child: Text(
@@ -102,27 +102,60 @@ class _FixedIncomeUniqueNameState extends State<FixedIncomeUniqueName> {
                 ),
               ),
             ),
-            YMargin(36),
+            Spacer(),
             InvestmentTextField(
                 readOnly: false,
                 controller: investmentName,
                 hintText: "Enter a unique name"),
-            YMargin(252),
+            Spacer(),
             RoundedNextButton(
-              onTap: () => Navigator.push(
-                context,
-                FixedIncomeAmountInput.route(
-                  uniqueName: investmentName.text,
-                  investmentId: widget.investmentId,
-                  bondName: widget.bondName,
-                  maturityDate: widget.maturityDate,
-                  rate: widget.rate,
-                  investmentType: widget.investmentType,
-                  instrumentId: widget.instrumentId,
-                  minimumAmount: widget.minimumAmount,
-                  investmentMaturityDate: widget.investmentMaturityDate,
-                ),
-              ),
+              onTap: () {
+                if (investmentName.text == "") {
+                  Flushbar(
+                    icon: ImageIcon(
+                      AssetImage("images/failed.png"),
+                      color: AppColors.kRed,
+                      size: 70,
+                    ),
+                    margin: EdgeInsets.all(12),
+                    borderRadius: 20,
+                    flushbarPosition: FlushbarPosition.TOP,
+                    titleText: Text(
+                      "Error !",
+                      style: TextStyle(
+                        fontSize: 13,
+                        fontFamily: AppStrings.fontBold,
+                        color: AppColors.kRed4,
+                      ),
+                    ),
+                    backgroundColor: AppColors.kRed3,
+                    messageText: Text(
+                      "Field Cannot be left empty",
+                      style: TextStyle(
+                        fontSize: 11,
+                        fontFamily: AppStrings.fontLight,
+                        color: AppColors.kRed4,
+                      ),
+                    ),
+                    duration: Duration(seconds: 3),
+                  ).show(context);
+                } else {
+                  Navigator.push(
+                    context,
+                    FixedIncomeAmountInput.route(
+                      uniqueName: investmentName.text,
+                      investmentId: widget.investmentId,
+                      bondName: widget.bondName,
+                      maturityDate: widget.maturityDate,
+                      rate: widget.rate,
+                      investmentType: widget.investmentType,
+                      instrumentId: widget.instrumentId,
+                      minimumAmount: widget.minimumAmount,
+                      investmentMaturityDate: widget.investmentMaturityDate,
+                    ),
+                  );
+                }
+              },
             ),
           ],
         ),

@@ -224,7 +224,7 @@ class FixedIncomeCard extends StatelessWidget {
       child: Container(
         padding: EdgeInsets.all(11),
         margin: EdgeInsets.only(top: 20),
-        height: screenHeight(context) / 5,
+        height: screenHeight(context) / 4,
         width: screenWidth(context) / 1.5,
         decoration: BoxDecoration(
           color: AppColors.kWhite,

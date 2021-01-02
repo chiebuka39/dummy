@@ -242,8 +242,10 @@ class _InvestmentSummaryScreenDollarState
                                               offset:
                                                   value.get(AniProps.offset1),
                                               child: Opacity(
-                                                opacity: slideUp ? value
-                                                    .get(AniProps.opacity1) : 0.0,
+                                                opacity: slideUp
+                                                    ? value
+                                                        .get(AniProps.opacity1)
+                                                    : 0.0,
                                                 child: Text(
                                                   "Your investment was not successful",
                                                   textAlign: TextAlign.center,
@@ -260,8 +262,10 @@ class _InvestmentSummaryScreenDollarState
                                               offset:
                                                   value.get(AniProps.offset1),
                                               child: Opacity(
-                                                opacity: slideUp ? value
-                                                    .get(AniProps.opacity1) : 0.0,
+                                                opacity: slideUp
+                                                    ? value
+                                                        .get(AniProps.opacity1)
+                                                    : 0.0,
                                                 child: PrimaryButtonNew(
                                                   onTap: () {
                                                     model.buyDollarInstrument(
@@ -290,7 +294,6 @@ class _InvestmentSummaryScreenDollarState
               ),
               AnimatedPositioned(
                 duration: Duration(milliseconds: 500),
-                //top: -(MediaQuery.of(context).size.height - 200),
                 top: slideUp ? -(MediaQuery.of(context).size.height - 200) : 0,
                 left: 0, right: 0,
                 child: Container(
