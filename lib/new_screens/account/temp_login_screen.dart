@@ -2,9 +2,17 @@ import 'package:flushbar/flushbar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
+import 'package:provider/provider.dart';
+import 'package:zimvest/data/local/user_local.dart';
+import 'package:zimvest/data/view_models/identity_view_model.dart';
+import 'package:zimvest/locator.dart';
+import 'package:zimvest/new_screens/account/create_pin_screen.dart';
+import 'package:zimvest/new_screens/tabs.dart';
 import 'package:zimvest/styles/colors.dart';
+import 'package:zimvest/utils/app_utils.dart';
 import 'package:zimvest/utils/margin.dart';
 import 'package:zimvest/utils/strings.dart';
+import 'package:zimvest/utils/validator.dart';
 import 'package:zimvest/widgets/buttons.dart';
 import 'package:zimvest/widgets/new/new_widgets.dart';
 
@@ -21,9 +29,16 @@ class TempLoginScreen extends StatefulWidget {
 
 class _TempLoginScreenState extends State<TempLoginScreen> {
   bool obscureText = false;
+  ABSIdentityViewModel identityViewModel;
+  final ABSStateLocalStorage _localStorage = locator<ABSStateLocalStorage>();
+
+  bool loading = false;
+
+  String password = "";
 
   @override
   Widget build(BuildContext context) {
+    identityViewModel = Provider.of(context);
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.transparent,
@@ -34,7 +49,7 @@ class _TempLoginScreenState extends State<TempLoginScreen> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text("Good morning, Emmanuel"),
+              Text("Good morning, ${identityViewModel.user.fullname.split(" ").first}"),
               YMargin(30),
               Container(
                 padding: EdgeInsets.symmetric(horizontal: 15),
@@ -50,6 +65,11 @@ class _TempLoginScreenState extends State<TempLoginScreen> {
                       child: Transform.translate(
                         offset:  Offset(0,-2),
                         child: TextField(
+                          onChanged: (value){
+                            setState(() {
+                              password = value;
+                            });
+                          },
                           obscureText: obscureText,
                           decoration: InputDecoration(
                               border: InputBorder.none,
@@ -61,8 +81,39 @@ class _TempLoginScreenState extends State<TempLoginScreen> {
                         ),
                       ),
                     ),
-                    IconButton(icon: Icon(Icons.visibility_off,size: 20,), onPressed: (){})
+                    IconButton(icon: Icon(Icons.visibility_off,size: 20,), onPressed: (){
+
+                    })
                   ],
+                ),
+              ),
+              YMargin(40),
+              Center(
+                child: PrimaryButtonNew(
+                  loading: loading,
+                  title: "Login",
+                  onTap:password.length  >=8  ? ()async{
+
+                    setState(() {
+                      loading = true;
+                    });
+                    var result = await identityViewModel.login(_localStorage.getSecondaryState().email, password);
+                    setState(() {
+                      loading = false;
+                    });
+                    if(result.error == true){
+
+                      AppUtils.showError(context);
+                      print("login failed");
+                    }else{
+                      if(identityViewModel.user.isPinSetUp == false){
+                        Navigator.of(context).pushReplacement(CreatePinScreen.route());
+                      }else{
+                        Navigator.of(context).pushReplacement(TabsContainer.route());
+                      }
+
+                    }
+                  }:null,
                 ),
               ),
               YMargin(40),

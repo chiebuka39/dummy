@@ -6,10 +6,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:hive/hive.dart';
 import 'package:provider/provider.dart';
+import 'package:zimvest/data/local/user_local.dart';
 import 'package:zimvest/data/models/secondary_state.dart';
 import 'package:zimvest/data/view_models/identity_view_model.dart';
 import 'package:zimvest/data/view_models/investment_view_model.dart';
 import 'package:zimvest/data/view_models/settings_view_model.dart';
+import 'package:zimvest/locator.dart';
 import 'package:zimvest/new_screens/account/login_screen.dart';
 import 'package:zimvest/new_screens/investor_profile/investor_profile_screen.dart';
 import 'package:zimvest/new_screens/profile/account_screen.dart';
@@ -158,8 +160,10 @@ class _ProfileScreenState extends State<ProfileScreen> with AfterLayoutMixin<Pro
   void _logout(BuildContext context) {
 
     final box = Hive.box(AppStrings.state);
+    final ABSStateLocalStorage _localStorage = locator<ABSStateLocalStorage>();
     box.put("user", null);
-    box.put("state", SecondaryState(false));
+    SecondaryState state = SecondaryState(false, email: _localStorage.getSecondaryState().email, password: _localStorage.getSecondaryState().password);
+    box.put("state", state);
     // _investmentViewModel.reset();
     Navigator.of(context, rootNavigator: true).pop();
     Navigator.pushAndRemoveUntil(
