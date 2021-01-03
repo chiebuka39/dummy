@@ -1,7 +1,12 @@
+import 'dart:io';
+
 import 'package:after_layout/after_layout.dart';
+import 'package:circular_profile_avatar/circular_profile_avatar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
+import 'package:zimvest/data/models/individual/profile.dart';
 import 'package:zimvest/data/view_models/identity_view_model.dart';
 import 'package:zimvest/data/view_models/settings_view_model.dart';
 import 'package:zimvest/new_screens/profile/next_of_kin.dart';
@@ -11,11 +16,16 @@ import 'package:zimvest/styles/colors.dart';
 import 'package:zimvest/utils/app_utils.dart';
 import 'package:zimvest/utils/margin.dart';
 import 'package:zimvest/utils/strings.dart';
+import 'package:zimvest/widgets/buttons.dart';
+import 'package:zimvest/widgets/new/new_widgets.dart';
 
 class AccountScreen extends StatefulWidget {
-  static Route<dynamic> route() {
+  final Profile profile;
+
+  const AccountScreen({Key key, this.profile}) : super(key: key);
+  static Route<dynamic> route({Profile profile}) {
     return MaterialPageRoute(
-        builder: (_) => AccountScreen(),
+        builder: (_) => AccountScreen(profile: profile,),
         settings:
         RouteSettings(name: AccountScreen().toStringShort()));
   }
@@ -26,9 +36,28 @@ class AccountScreen extends StatefulWidget {
 class _AccountScreenState extends State<AccountScreen> with AfterLayoutMixin<AccountScreen> {
   String _selectedGender;
   DateTime _dob;
+  File _image;
+  String _fullName;
+  String _email;
+  String _phone;
+  final picker = ImagePicker();
 
   ABSIdentityViewModel identityViewModel;
   ABSSettingsViewModel settingsViewModel;
+
+  int gender = 1;
+
+  bool loading = false;
+
+  @override
+  void initState() {
+    _dob = widget.profile.dob;
+    _phone = widget.profile.phoneNumber.substring(4);
+    _email = widget.profile.email;
+    _fullName = widget.profile.firstName + " " + widget.profile.lastName;
+
+    super.initState();
+  }
 
   @override
   void afterFirstLayout(BuildContext context) {
@@ -38,12 +67,25 @@ class _AccountScreenState extends State<AccountScreen> with AfterLayoutMixin<Acc
         _selectedGender ="Female";
     }
 
-    _dob = settingsViewModel.profile.dob;
 
     setState(() {
 
     });
   }
+
+  Future getImage() async {
+    final pickedFile = await picker.getImage(source: ImageSource.gallery);
+
+    setState(() {
+      if (pickedFile != null) {
+        _image = File(pickedFile.path);
+      } else {
+        print('No image selected.');
+      }
+    });
+  }
+
+
 
 
   @override
@@ -72,14 +114,24 @@ class _AccountScreenState extends State<AccountScreen> with AfterLayoutMixin<Acc
             children: [
             Center(
               child: InkWell(
-                onTap: (){},
-                child: Container(
+                onTap: getImage,
+                child: _image == null ? Container(
                   height: 75,
                   width: 75,
                   decoration: BoxDecoration(
                     shape: BoxShape.circle,
                     color: AppColors.kPrimaryColorLight
                   ),child: Center(child: SvgPicture.asset("images/new/camera.svg"),),
+                ):Container(
+                  width: 75,
+                  height: 75,
+                  decoration: BoxDecoration(
+                    shape: BoxShape.circle,
+                    image: DecorationImage(
+                        image: FileImage(_image),
+                        fit: BoxFit.fill
+                    ),
+                  ),
                 ),
               ),
             ),
@@ -99,7 +151,7 @@ class _AccountScreenState extends State<AccountScreen> with AfterLayoutMixin<Acc
               child: Transform.translate(
                 offset: Offset(0,5),
                 child: TextFormField(
-                  initialValue: "${settingsViewModel.profile.lastName} ${settingsViewModel.profile.firstName}",
+                  initialValue: _fullName,
                   decoration: InputDecoration(
                       border: InputBorder.none,
                       hintText: "Full Name",
@@ -107,6 +159,11 @@ class _AccountScreenState extends State<AccountScreen> with AfterLayoutMixin<Acc
                           fontSize: 14
                       )
                   ),
+                  onChanged: (value){
+                    setState(() {
+                      _fullName = value;
+                    });
+                  },
                 ),
               ),
             ),
@@ -124,7 +181,12 @@ class _AccountScreenState extends State<AccountScreen> with AfterLayoutMixin<Acc
                 child: Transform.translate(
                   offset: Offset(0,5),
                   child: TextFormField(
-                    initialValue: settingsViewModel.profile.email,
+                    initialValue:_email,
+                    onChanged: (value){
+                      setState(() {
+                        _email = value;
+                      });
+                    },
                     decoration: InputDecoration(
                         border: InputBorder.none,
                         hintText: "Email Address",
@@ -149,7 +211,12 @@ class _AccountScreenState extends State<AccountScreen> with AfterLayoutMixin<Acc
                 child: Transform.translate(
                   offset: Offset(0,5),
                   child: TextFormField(
-                    initialValue: settingsViewModel.profile.phoneNumber,
+                    onChanged: (value){
+                      setState(() {
+                        _phone = value;
+                      });
+                    },
+                    initialValue: _phone,
                     decoration: InputDecoration(
                         border: InputBorder.none,
                         hintText: "Phone Number",
@@ -177,7 +244,15 @@ class _AccountScreenState extends State<AccountScreen> with AfterLayoutMixin<Acc
                     isDense: true,
     hint: Text('Please choose a Gender'),
                     onChanged: (String newValue) {
-                      setState(() => _selectedGender = newValue);
+                      setState(() {
+
+                        _selectedGender = newValue;
+                        if(_selectedGender == "Male"){
+                          gender = 1;
+                        }else{
+                          gender = 2;
+                        }
+                      });
 
                     },
                     items: ['Male',"Female"]
@@ -239,6 +314,52 @@ class _AccountScreenState extends State<AccountScreen> with AfterLayoutMixin<Acc
                 title: "Verification details",
                 emergency: true,
                 padding: 0,
+              ),
+              YMargin(20),
+              Center(
+                child: PrimaryButtonNew(
+                  title: 'Save',
+                  loading: loading,
+                  onTap:_fullName.isNotEmpty && _email.isNotEmpty
+                      && _phone.isNotEmpty && _dob != null && _image != null ?  ()async{
+                    setState(() {
+                      loading = true;
+                    });
+                    var result = await settingsViewModel.updateProfile(
+                      profile1: _image,
+                      dOB: _dob.toIso8601String(),
+                      phoneNumber: "+234"+_phone,
+                      firstName: _fullName.split(" ").last,
+                      lastName: _fullName.split(" ").first,
+                      gender: gender,
+                      email: _email
+                    );
+                    setState(() {
+                      loading = false;
+                    });
+                    if(result.error == false){
+                      showModalBottomSheet < Null > (context: context, builder: (BuildContext context) {
+                        return PasswordSuccessWidget(
+                          message: "Profile was updated successful",
+                          onDone: (){
+                            Navigator.pop(context);
+
+                          },
+                        );
+                      },isDismissible: false);
+                    }else{
+                      showModalBottomSheet < Null > (context: context, builder: (BuildContext context) {
+                        return PasswordSuccessWidget(
+                          message: "Profile was not updated succesfully",
+                          onDone: (){
+                            Navigator.pop(context);
+
+                          },
+                        );
+                      },isDismissible: false);
+                    }
+                  }:null,
+                ),
               ),
               YMargin(50),
           ],),

@@ -64,20 +64,29 @@ class _SavingsSummaryScreenState extends State<SavingsSummaryScreen> {
       slideUp = true;
       loading = true;
     });
-    var result = await savingViewModel.createTargetSavings(
-      maturityDate: savingViewModel.endDate,
-      autoSave: savingViewModel.autoSave,
-      targetAmount: savingViewModel.amountToSave,
-      planName: savingViewModel.goalName + "ppo",
-      productId: 2,
-      cardId:paymentViewModel.selectedCard?.id ?? null,
-      token: identityViewModel.user.token,
-      frequency: savingViewModel.selectedFrequency.id,
-      startDate: savingViewModel.startDate,
-      fundingChannel: paymentViewModel.selectedCard == null ?
-          savingViewModel.fundingChannels.firstWhere((element) => element.name == "Wallet").id:
-      savingViewModel.fundingChannels.firstWhere((element) => element.name == "Card").id,
-      savingsAmount: getSavingsAmount()
+    // var result = await savingViewModel.createTargetSavings(
+    //   maturityDate: savingViewModel.endDate,
+    //   autoSave: savingViewModel.autoSave,
+    //   targetAmount: savingViewModel.amountToSave,
+    //   planName: savingViewModel.goalName ,
+    //   productId: 2,
+    //   cardId:paymentViewModel.selectedCard?.id ?? null,
+    //   token: identityViewModel.user.token,
+    //   frequency: savingViewModel.selectedFrequency.id,
+    //   startDate: savingViewModel.startDate,
+    //   fundingChannel: paymentViewModel.selectedCard == null ?
+    //       savingViewModel.fundingChannels.firstWhere((element) => element.name == "Wallet").id:
+    //   savingViewModel.fundingChannels.firstWhere((element) => element.name == "Card").id,
+    //   savingsAmount: getSavingsAmount()
+    // );
+    var result = await savingViewModel.createTargetSavings2(
+
+        cardId:paymentViewModel.selectedCard?.id ?? null,
+        token: identityViewModel.user.token,
+        fundingChannel: paymentViewModel.selectedCard == null ?
+        savingViewModel.fundingChannels.firstWhere((element) => element.name == "Wallet").id:
+        savingViewModel.fundingChannels.firstWhere((element) => element.name == "Card").id,
+        savingsAmount: getSavingsAmount()
     );
     print("ooooo ${result.error}");
     print("4444 ${result.errorMessage}");

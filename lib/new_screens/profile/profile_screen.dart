@@ -79,7 +79,7 @@ class _ProfileScreenState extends State<ProfileScreen> with AfterLayoutMixin<Pro
           ),
           YMargin(29),
           ProfileWidget(emergency: true,title: "Account",onClick: (){
-            Navigator.push(context, AccountScreen.route());
+            Navigator.push(context, AccountScreen.route(profile: settingsViewModel.profile));
           },icon: 'account',),
           ProfileWidget(title: "Notifications",icon: 'notif',),
           ProfileWidget(title: "Banks & Cards",icon: 'cards',

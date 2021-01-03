@@ -10,6 +10,7 @@ import 'package:zimvest/data/models/payment/card_payload.dart';
 import 'package:zimvest/data/view_models/identity_view_model.dart';
 import 'package:zimvest/data/view_models/payment_view_model.dart';
 import 'package:zimvest/data/view_models/savings_view_model.dart';
+import 'package:zimvest/data/view_models/settings_view_model.dart';
 import 'package:zimvest/new_screens/navigation/wealth/create/savings_summary.dart';
 import 'package:zimvest/styles/colors.dart';
 import 'package:zimvest/utils/margin.dart';
@@ -67,6 +68,113 @@ class NextOfKinStatus extends StatelessWidget {
                 onTap: (){
                   Navigator.pop(context);
                   Navigator.pop(context);
+                },
+                title: "Done",
+                width: 200,
+              ),
+
+              Spacer(),
+            ],),
+        ))
+      ],),
+    );
+  }
+}
+class EnterBVNWidget extends StatefulWidget {
+  const EnterBVNWidget({
+    Key key, this.success = true,
+  }) : super(key: key);
+
+  final bool success;
+
+  @override
+  _EnterBVNWidgetState createState() => _EnterBVNWidgetState();
+}
+
+class _EnterBVNWidgetState extends State<EnterBVNWidget> {
+  String bvn;
+
+  bool autoValidate  = false;
+
+  ABSSettingsViewModel settingsViewModel;
+  ABSIdentityViewModel identityViewModel;
+
+  @override
+  Widget build(BuildContext context) {
+    settingsViewModel = Provider.of(context);
+    identityViewModel = Provider.of(context);
+    return Container(
+      decoration: BoxDecoration(
+        color: Colors.transparent,
+      ),
+      child: Column(children: [
+        YMargin(10),
+        Center(child: Container(
+          width: 30,
+          height: 5,
+          decoration: BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.circular(5)
+          ),
+        ),),
+        YMargin(20),
+        Expanded(child: Container(
+          width: double.infinity,
+          decoration: BoxDecoration(
+              color:Colors.white,
+              borderRadius: BorderRadius.only(
+                  topLeft: Radius.circular(25),
+                  topRight: Radius.circular(25)
+              )
+          ),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              YMargin(40),
+              Text("Enter your BVN", style: TextStyle(fontSize: 15,
+                  fontFamily: AppStrings.fontBold),),
+              YMargin(27),
+              Container(
+                padding: EdgeInsets.symmetric(horizontal: 15),
+                height: 60,
+                width: double.infinity,
+                decoration: BoxDecoration(
+                    color: AppColors.kGreyBg,
+                    borderRadius: BorderRadius.circular(12)
+                ),
+                child: Transform.translate(
+                  offset: Offset(0,5),
+                  child: TextField(
+                    onChanged: (value){
+                      setState(() {
+                        bvn = value;
+                      });
+                      print("ooo ${bvn.length}");
+                    },
+                    keyboardType: TextInputType.phone,
+                    decoration: InputDecoration(
+                        border: InputBorder.none,
+                        hintText: "Enter BVN Number",
+                        hintStyle: TextStyle(
+                            fontSize: 14
+                        )
+                    ),
+                  ),
+                ),
+              ),
+              if (autoValidate == false ? false :
+              (bvn.length != 10)) Padding(
+                padding: const EdgeInsets.only(left: 5,top: 5),
+                child: Text("BVN is incomplete", style: TextStyle(fontSize: 11,color: AppColors.kRed),),
+              ) else SizedBox(),
+
+              Spacer(),
+              PrimaryButtonNew(
+                onTap: ()async{
+                  var result = await settingsViewModel.updateBvn(
+                      token: identityViewModel.user.token,
+                  bvn: bvn
+                  );
                 },
                 title: "Done",
                 width: 200,

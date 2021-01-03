@@ -133,8 +133,9 @@ class _NameYourGoalScreenState extends State<NameYourGoalScreen> {
             ),
             YMargin(35),
             RoundedNextButton(
-              onTap: (goalName?.length ?? 0) >1 ?  (){
+              onTap: ((goalName?.length ?? 0) >1 && _image != null) ?  (){
                 savingViewModel.goalName = goalName;
+                savingViewModel.image = _image;
                 Navigator.push(context, SavingsTargetScreen.route());
               }:null,
             )

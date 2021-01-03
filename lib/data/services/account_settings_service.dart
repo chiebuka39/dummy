@@ -31,6 +31,12 @@ abstract class ABSSettingsService{
     String email,
     String phoneNumber,
   });
+  Future<Result<void>> profileInvestor({String token, String firstName,
+    int investmentKnowledge, int mostConernedDuringInvestment,
+    int instrumentCurrentlyOwned, int marketAndParticularStockDrops,
+    int hypotheticalInvestmentPlan, int investmentDurationBeforeWithdrawal,
+    int durationToCompletelyWithdraw,
+    bool ethicalConsideration, String email, String lastName});
   Future<Result<void>> updateProfile({
     String token,
     String firstName,
@@ -40,7 +46,7 @@ abstract class ABSSettingsService{
     String dOB,
     int gender,
     int maritalStatus,
-    String profile
+    File profile
   });
 
 }
@@ -446,7 +452,7 @@ class SettingsService extends ABSSettingsService{
   @override
   Future<Result<void>> updateProfile({String token, String firstName,
     String lastName, String email, String phoneNumber,
-    String dOB, int gender, int maritalStatus, String profile}) async{
+    String dOB, int gender, int maritalStatus, File profile}) async{
     Result<void> result = Result(error: false);
     Uint8List base64Decode(String source) => base64.decode(source);
 
@@ -463,10 +469,11 @@ class SettingsService extends ABSSettingsService{
       "Gender":gender,
       "DOB":dOB,
       "MaritalStatus":maritalStatus,
-      "Form":MultipartFile.fromBytes(base64Decode(profile))
+      "Form": await MultipartFile.fromFile(profile.path),
     });
 
     print("lll $url");
+    print("lll ${body.fields}");
     try{
       var response = await dio.patch(url, options: Options(headers: headers),data: body);
       final int statusCode = response.statusCode;
@@ -504,6 +511,63 @@ class SettingsService extends ABSSettingsService{
       "relationship":relationship,
       "email":email,
       "phoneNumber":phoneNumber,
+
+    };
+
+
+    print("lll $url");
+    print("lll $body");
+    try{
+      var response = await dio.post(url, options: Options(headers: headers),data: body);
+      final int statusCode = response.statusCode;
+      var response1 = response.data;
+      print("iii ${response1}");
+
+      if (statusCode != 200) {
+        result.errorMessage = response1['message'];
+        result.error = true;
+      }else {
+        result.error = false;
+      }
+
+    }on DioError catch(e){
+      print("error ${e.response.data}");
+      print("error22 $e");
+      result.error = true;
+    }
+
+    return result;
+  }
+
+  @override
+  Future<Result<void>> profileInvestor({String token,
+    String firstName, int investmentKnowledge,
+    int mostConernedDuringInvestment, int instrumentCurrentlyOwned,
+    int marketAndParticularStockDrops, int hypotheticalInvestmentPlan,
+    int investmentDurationBeforeWithdrawal, int durationToCompletelyWithdraw,
+    bool ethicalConsideration, String email, String lastName}) async{
+    Result<void> result = Result(error: false);
+
+
+    var headers = {
+      HttpHeaders.authorizationHeader: "Bearer $token"
+    };
+    var url = "${AppStrings.baseUrl}zimvest.onboarding.individual/api/NextOfKins";
+
+    var body = {
+      "investmentKnowledge":investmentKnowledge,
+      "lastName":lastName,
+      "emailAddress":email,
+      "firstName":firstName,
+      "mostConernedDuringInvestment":mostConernedDuringInvestment,
+      "instrumentCurrentlyOwned":instrumentCurrentlyOwned,
+      "marketAndParticularStockDrops":marketAndParticularStockDrops,
+      "hypotheticalInvestmentPlan":hypotheticalInvestmentPlan,
+      "investmentDurationBeforeWithdrawal":investmentDurationBeforeWithdrawal,
+      "durationToCompletelyWithdraw":durationToCompletelyWithdraw,
+      "ethicalConsideration":ethicalConsideration,
+
+
 
     };
 
