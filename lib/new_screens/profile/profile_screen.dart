@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:after_layout/after_layout.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -8,7 +9,9 @@ import 'package:provider/provider.dart';
 import 'package:zimvest/data/models/secondary_state.dart';
 import 'package:zimvest/data/view_models/identity_view_model.dart';
 import 'package:zimvest/data/view_models/investment_view_model.dart';
+import 'package:zimvest/data/view_models/settings_view_model.dart';
 import 'package:zimvest/new_screens/account/login_screen.dart';
+import 'package:zimvest/new_screens/investor_profile/investor_profile_screen.dart';
 import 'package:zimvest/new_screens/profile/account_screen.dart';
 import 'package:zimvest/new_screens/profile/add_bank_cards.dart';
 import 'package:zimvest/new_screens/profile/security_screen.dart';
@@ -28,12 +31,24 @@ class ProfileScreen extends StatefulWidget {
   _ProfileScreenState createState() => _ProfileScreenState();
 }
 
-class _ProfileScreenState extends State<ProfileScreen> {
+class _ProfileScreenState extends State<ProfileScreen> with AfterLayoutMixin<ProfileScreen> {
   // ABSInvestmentViewModel _investmentViewModel;
   ABSIdentityViewModel _identityViewModel;
+  ABSSettingsViewModel settingsViewModel;
+
+  @override
+  void afterFirstLayout(BuildContext context) {
+
+    settingsViewModel.getProfileDetail(token: _identityViewModel.user.token);
+    settingsViewModel.getNextOfKin(token: _identityViewModel.user.token);
+
+  }
+
   @override
   Widget build(BuildContext context) {
     _identityViewModel = Provider.of(context);
+    settingsViewModel = Provider.of(context);
+
     // _investmentViewModel = Provider.of(context);
     return Scaffold(
       appBar: AppBar(
@@ -64,7 +79,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
           ),
           YMargin(29),
           ProfileWidget(emergency: true,title: "Account",onClick: (){
-            Navigator.push(context, AccountScreen.route());
+            Navigator.push(context, AccountScreen.route(profile: settingsViewModel.profile));
           },icon: 'account',),
           ProfileWidget(title: "Notifications",icon: 'notif',),
           ProfileWidget(title: "Banks & Cards",icon: 'cards',
@@ -77,7 +92,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
             Navigator.push(context, SecurityScreen.route());
             },
           ),
-          ProfileWidget(title: "Investment Persona Analysis",icon: 'ips',),
+          ProfileWidget(title: "Investment Persona Analysis",icon: 'ips',
+          onClick: (){
+            Navigator.push(context, InvestorProfileScreen.route());
+          },),
           ProfileWidget(title: "Earn Free Cash",icon: 'earn',),
           ProfileWidget(title: "Rate App",icon: 'rate',),
           ProfileWidget(title: "About Zimvest",icon: 'about',),

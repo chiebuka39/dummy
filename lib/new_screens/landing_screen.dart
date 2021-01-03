@@ -1,5 +1,6 @@
 import 'package:dots_indicator/dots_indicator.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 import 'package:zimvest/new_screens/account/create_account.dart';
@@ -116,6 +117,7 @@ class _LandingScreenState extends State<LandingScreen> {
           ),
           YMargin(15),
           FlatButton(onPressed: (){
+            //EasyLoading.showInfo("",duration: Duration(seconds: 5));
             Navigator.of(context).push(LoginScreen.route());
             // MaterialPageRoute(builder: )
           }, child: Text("Log In",style: TextStyle(fontFamily: "Caros-Medium"),)),

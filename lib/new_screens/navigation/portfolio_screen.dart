@@ -7,6 +7,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 import 'package:percent_indicator/percent_indicator.dart';
 import 'package:provider/provider.dart';
+import 'package:shimmer/shimmer.dart';
 import 'package:zimvest/data/models/saving_plan.dart';
 import 'package:zimvest/data/view_models/identity_view_model.dart';
 import 'package:zimvest/data/view_models/savings_view_model.dart';
@@ -277,8 +278,51 @@ class SavingsInvestmentLoadingWidget extends StatelessWidget {
     return SliverPadding(
       sliver: SliverList(
           delegate: SliverChildListDelegate([
-        YMargin(MediaQuery.of(context).size.height > 700 ? 250 : 150),
-        CupertinoActivityIndicator(),
+            Container(
+              height: 400,
+              child: Shimmer.fromColors(
+                baseColor: Colors.grey[300],
+                highlightColor: Colors.grey[100],
+                child: ListView.builder(itemBuilder: (BuildContext context, int index) {
+                  if(index == 0){
+                    return  Row(
+                      children: [
+                        SizedBox(
+                          width: 200.0,
+                          height: 50.0,
+                          child: Shimmer.fromColors(
+                            baseColor: Colors.red,
+                            highlightColor: Colors.yellow,
+                            child: Container(
+                              margin: EdgeInsets.only(top: 10),
+                              width: 40.0,
+                              height: 8.0,
+                              color: Colors.white,
+                            ),
+                          ),
+                        ),
+                      ],
+                    );
+                  }
+                  return  SizedBox(
+                    width: 200.0,
+                    height: 100.0,
+                    child: Shimmer.fromColors(
+                      baseColor: Colors.red,
+                      highlightColor: Colors.yellow,
+                      child: Container(
+                        margin: EdgeInsets.only(top: 10),
+                        width: 40.0,
+                        height: 8.0,
+                        color: Colors.white,
+                      ),
+                    ),
+                  );
+                },itemCount: 4,
+
+                ),
+              ),
+            )
       ])),
       padding: EdgeInsets.symmetric(horizontal: 20),
     );
@@ -565,6 +609,7 @@ class _PortfolioInvestmentWidgetState extends State<PortfolioInvestmentWidget> {
                     YMargin(12),
                     MoneyTitleWidget(
                       amount: 820000,
+                      dollar: true,
                     ),
                     ...List.generate(4, (index) => InvestmentItemWidget()),
                     YMargin(104),

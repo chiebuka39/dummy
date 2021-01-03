@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:provider/provider.dart';
 import 'package:zimvest/data/view_models/identity_view_model.dart';
 import 'package:zimvest/new_screens/account/create_account.dart';

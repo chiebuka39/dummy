@@ -11,6 +11,8 @@ import 'package:zimvest/utils/result.dart';
 
 abstract class ABSIdentityViewModel extends ChangeNotifier{
   User _user;
+  Profile _profile;
+  Profile get profile => _profile;
   bool _isValidPassword = false;
   bool _loading = false;
   bool get loading => _loading;
@@ -22,12 +24,14 @@ abstract class ABSIdentityViewModel extends ChangeNotifier{
   User get user => _user;
   bool get isValidPassword => _isValidPassword;
   set user(User value);
+  set profile(Profile value);
   set isValidPassword(bool value);
   set loading(bool value);
   Future<Result<void>> login(String email, String password);
   Future<Result<bool>> emailAvailability(String email);
   Future<Result<void>> resetPassword(String email);
   Future<Result<void>> changePassword({String currentPassword, String newPassword});
+  Future<Result<void>> changePin({String currentPin, String newPin});
   Future<Result<bool>> phoneAvailability(String phone);
   Future<Result<void>> sendEmailOTP(String email);
   Future<Result<void>> initiatePinReset();
@@ -46,6 +50,7 @@ abstract class ABSIdentityViewModel extends ChangeNotifier{
     String referralCode, String dob
   });
   Future<Result<Profile>> getProfileDetail();
+
 }
 
 class IdentityViewModel extends ABSIdentityViewModel{
@@ -62,6 +67,12 @@ class IdentityViewModel extends ABSIdentityViewModel{
   @override
   set isValidPassword(bool value) {
     _isValidPassword = value;
+    notifyListeners();
+  }
+
+  @override
+  set profile(Profile value) {
+    _profile = value;
     notifyListeners();
   }
 
@@ -115,10 +126,15 @@ class IdentityViewModel extends ABSIdentityViewModel{
   }
 
   @override
-  Future<Result<Profile>> getProfileDetail() {
-    return _identityService.getProfileDetail(
+  Future<Result<Profile>> getProfileDetail()async {
+    var result = await _identityService.getProfileDetail(
         token: user.token
     );
+    if(result.error == false){
+      profile = result.data;
+    }
+
+    return result;
   }
 
   @override
@@ -235,6 +251,15 @@ class IdentityViewModel extends ABSIdentityViewModel{
         verificationId: verificationId,
         trackingId: trackingId,
         token: user.token
+    );
+  }
+
+  @override
+  Future<Result<void>> changePin({String currentPin, String newPin}) {
+    return _identityService.changePin(
+      currentPin: currentPin,
+      newPin: newPin,
+      token: user.token
     );
   }
 
