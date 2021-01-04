@@ -127,7 +127,7 @@ class PieChart2State extends State<PieChartSample2> {
           return PieChartSectionData(
             color: AppColors.kSavingsP,
             value: widget.savingsValue,
-            title: '${widget.savingsValue}%',
+            title: '${widget.savingsValue == null ? "0.0%" : widget.savingsValue.toStringAsFixed(2)}%',
             radius: radius,
             titleStyle: TextStyle(
                 fontSize: fontSize, fontWeight: FontWeight.bold, color: const Color(0xffffffff)),
@@ -136,7 +136,7 @@ class PieChart2State extends State<PieChartSample2> {
           return PieChartSectionData(
             color: AppColors.kInvestmentP,
             value: widget.investmentValue,
-            title: '${widget.investmentValue}%',
+            title: '${widget.investmentValue == null ? "0.0%" : widget.investmentValue.toStringAsFixed(2)}%',
             radius: radius,
             titleStyle: TextStyle(
                 fontSize: fontSize, fontWeight: FontWeight.bold, color: const Color(0xffffffff)),
@@ -145,7 +145,7 @@ class PieChart2State extends State<PieChartSample2> {
           return PieChartSectionData(
             color: AppColors.kYellow,
             value: widget.walletValue,
-            title: '${widget.walletValue}%',
+            title: '${widget.walletValue == null ? "0.0%" : widget.walletValue.toStringAsFixed(2)}%',
             radius: radius,
             titleStyle: TextStyle(
                 fontSize: fontSize, fontWeight: FontWeight.bold, color: const Color(0xffffffff)),

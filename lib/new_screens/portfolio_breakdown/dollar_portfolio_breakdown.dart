@@ -1,9 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_money_formatter/flutter_money_formatter.dart';
+import 'package:provider/provider.dart';
+import 'package:zimvest/data/view_models/dashboard_view_model.dart';
+import 'package:zimvest/data/view_models/identity_view_model.dart';
 import 'package:zimvest/styles/colors.dart';
 import 'package:zimvest/utils/margin.dart';
 import 'package:zimvest/utils/strings.dart';
 import 'package:zimvest/widgets/charts/pie2.dart';
+import 'package:zimvest/widgets/new/new_widgets.dart';
 
 class DollarPortfolioBreakdownScreen extends StatefulWidget {
 
@@ -19,26 +23,34 @@ class DollarPortfolioBreakdownScreen extends StatefulWidget {
 }
 
 class _DollarPortfolioBreakdownScreenState extends State<DollarPortfolioBreakdownScreen> {
+  ABSDashboardViewModel dashboardViewModel;
+  ABSIdentityViewModel identityViewModel;
   @override
   Widget build(BuildContext context) {
+    dashboardViewModel = Provider.of(context);
+    identityViewModel = Provider.of(context);
     return Scaffold(
-      appBar: AppBar(
-        elevation: 0,
-        iconTheme: IconThemeData(color: Colors.black87),
-        leading: IconButton(
-          icon: Icon(Icons.arrow_back_ios_rounded,size: 20,),
-          onPressed: (){
-            Navigator.pop(context);
-          },
-        ),
-        backgroundColor: Colors.transparent,
-        title: Text("Portfolio Breakdown",
-          style: TextStyle(color: Colors.black87,fontSize: 14),),
+
+      appBar: ZimAppBar(
+        text: 'Portfolio Breakdown',
+        icon:Icons.arrow_back_ios_rounded,
+        callback: (){
+          Navigator.pop(context);
+        },
       ),
       body: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 20),
         child: Column(children: [
-          PieChartSample2(dollar: true,),
+          PieChartSample2(
+            dollar: true,
+
+            value: dashboardViewModel.dashboardModel.dollarPortfolio == "\$0.01"? "\$50,000.00":getDoubleValue(dashboardViewModel.dashboardModel.dollarPortfolio) ,
+            savingsValue: 0.0,
+            // investmentValue:100.0,
+            investmentValue: dashboardViewModel.dashboardModel.dollarInvestmentPercent.isNaN ? 100.0 : dashboardViewModel.dashboardModel.dollarInvestmentPercent,
+            // walletValue: 100.0,
+            walletValue: dashboardViewModel.dashboardModel.dollarWalletPercent.isNaN ? 100.0:dashboardViewModel.dashboardModel.dollarWalletPercent,
+          ),
           YMargin(20),
           Divider(),
           Container(
@@ -46,9 +58,7 @@ class _DollarPortfolioBreakdownScreenState extends State<DollarPortfolioBreakdow
             child: Row(children: [
               Text("Portfolio Value", style: TextStyle(color: AppColors.kGreyText),),
               Spacer(),
-              Text("\$${FlutterMoneyFormatter(
-                amount: 31700
-              ).output.nonSymbol}", style: TextStyle(
+              Text(getDoubleValue(dashboardViewModel.dashboardModel.dollarPortfolio), style: TextStyle(
                   color: AppColors.kGreyText, fontFamily: AppStrings.fontMedium),),
             ],),
           ),
@@ -56,11 +66,17 @@ class _DollarPortfolioBreakdownScreenState extends State<DollarPortfolioBreakdow
           Container(
             height: 70,
             child: Row(children: [
+              Container(
+                height: 6,
+                width: 6,
+                decoration: BoxDecoration(
+                    color: AppColors.kYellow
+                ),
+              ),
+              XMargin(10),
               Text("Wallet balance", style: TextStyle(color: AppColors.kGreyText),),
               Spacer(),
-              Text("\$${FlutterMoneyFormatter(
-                  amount: 31700
-              ).output.nonSymbol}", style: TextStyle(
+              Text(getDoubleValue(dashboardViewModel.dashboardModel.dollarWallet), style: TextStyle(
                   color: AppColors.kGreyText, fontFamily: AppStrings.fontMedium),),
             ],),
           ),
@@ -68,11 +84,17 @@ class _DollarPortfolioBreakdownScreenState extends State<DollarPortfolioBreakdow
           Container(
             height: 70,
             child: Row(children: [
+              Container(
+                height: 6,
+                width: 6,
+                decoration: BoxDecoration(
+                    color: AppColors.kInvestmentP
+                ),
+              ),
+              XMargin(10),
               Text("Investment Balance", style: TextStyle(color: AppColors.kGreyText),),
               Spacer(),
-              Text("\$${FlutterMoneyFormatter(
-                  amount: 31700
-              ).output.nonSymbol}", style: TextStyle(
+              Text(getDoubleValue(dashboardViewModel.dashboardModel.dollarInvestment), style: TextStyle(
                   color: AppColors.kGreyText, fontFamily: AppStrings.fontMedium),),
             ],),
           ),
@@ -82,5 +104,14 @@ class _DollarPortfolioBreakdownScreenState extends State<DollarPortfolioBreakdow
         ],),
       ),
     );
+  }
+
+  String getDoubleValue(String value){
+    if(value == "0.00"){
+      return "\$0.00";
+    }else{
+      return value;
+    }
+
   }
 }
