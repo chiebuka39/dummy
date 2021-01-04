@@ -154,8 +154,8 @@ class _AddBankAccScreenState extends State<AddBankAccScreen2> {
                     });
                     if(result.error == true){
 
-                      AppUtils.showError(context,title: 'Phone Number unavailable',
-                          message: "The Phone Number you entered has already been taken, try another one");
+                      AppUtils.showError(context,title: 'We could not add your bank',
+                          message: result.errorMessage);
                       print("login failed");
                       //widget.onNext(phoneNumber);
                     }else{
