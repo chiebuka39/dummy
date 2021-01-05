@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
 import 'package:zimvest/data/view_models/settings_view_model.dart';
+import 'package:zimvest/new_screens/profile/identity_upload_screens.dart';
 import 'package:zimvest/new_screens/profile/preview_screen.dart';
 import 'package:zimvest/new_screens/profile/residential_screen.dart';
 import 'package:zimvest/new_screens/profile/widgets/profile_widgets.dart';
@@ -90,7 +91,7 @@ class _VerificationDetailsScreenState extends State<VerificationDetailsScreen> {
           ),
           ProfileWidget(
             onClick: (){
-              //Navigator.push(context, IdentityVerificationScreen.route());
+              Navigator.push(context, IdentityUploadScreen.route());
             },
             title: "Identity document",
             rejected: settingsViewModel.completedSections
