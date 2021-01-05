@@ -8,5 +8,14 @@ class SecondaryState extends HiveObject{
   @HiveField(0)
   bool isLoggedIn = false;
 
-  SecondaryState(this.isLoggedIn);
+  @HiveField(1)
+  DateTime lastMinimized;
+
+  @HiveField(2)
+  String password;
+
+  @HiveField(3)
+  String email;
+
+  SecondaryState(this.isLoggedIn,{this.lastMinimized, this.password, this.email});
 }

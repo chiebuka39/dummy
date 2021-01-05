@@ -58,6 +58,7 @@ class IdentityService extends ABSIdentityService {
     };
 
     var url = "${AppStrings.baseUrl}zimvest.services.identity/api/Account/login";
+    var url1 = "${AppStrings.baseUrl}api/Account/login";
     print("lll $body");
     print("lll $url");
     try{

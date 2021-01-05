@@ -53,21 +53,8 @@ class MyApp extends StatefulWidget {
   _MyAppState createState() => _MyAppState();
 }
 
-class _MyAppState extends State<MyApp> {
-  final ABSStateLocalStorage _localStorage = locator<ABSStateLocalStorage>();
+class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
 
-  @override
-  void initState() {
-    User user = _localStorage.getUser();
-    if(user != null){
-      if(user.expires.difference(DateTime.now()).inSeconds < 0){
-        _localStorage.saveSecondaryState(SecondaryState(false));
-      }
-    }
-
-
-    super.initState();
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -93,11 +80,81 @@ class _MyAppState extends State<MyApp> {
           visualDensity: VisualDensity.adaptivePlatformDensity,
         ),
         builder: EasyLoading.init(),
-        home:_localStorage.getSecondaryState().isLoggedIn == false ?  LandingScreen(): TabsContainer(),
+        home:HomeApp(),
       ),
     );
   }
 }
+
+class HomeApp extends StatefulWidget  {
+  @override
+  _HomeAppState createState() => _HomeAppState();
+}
+
+class _HomeAppState extends State<HomeApp> with WidgetsBindingObserver {
+  final ABSStateLocalStorage _localStorage = locator<ABSStateLocalStorage>();
+  @override
+  void initState() {
+    User user = _localStorage.getUser();
+    print("llll ${_localStorage.getSecondaryState().password}");
+    print("llll ${_localStorage.getSecondaryState().email}");
+    if(user != null){
+      if(user.expires.difference(DateTime.now()).inSeconds < 0){
+        SecondaryState state = SecondaryState(false, email: _localStorage.getSecondaryState().email, password: _localStorage.getSecondaryState().password);
+        _localStorage.saveSecondaryState(state);
+      }
+    }
+
+    WidgetsBinding.instance.addObserver(this);
+    super.initState();
+  }
+
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    print("stateee $state");
+    if (state == AppLifecycleState.resumed) {
+      print("App Resumed");
+      if(_localStorage.getSecondaryState().lastMinimized == null){
+        return;
+      }
+      print("App Resumed 2 ${DateTime.now().difference(_localStorage.getSecondaryState().lastMinimized).inSeconds}");
+      print("App Resumed 211 ${_localStorage.getSecondaryState().lastMinimized.toIso8601String()}");
+      print("App Resumed 2ww ${DateTime.now().toIso8601String()}");
+      if(DateTime.now().difference(_localStorage.getSecondaryState().lastMinimized).inSeconds > 150){
+        print("App should stop");
+        SecondaryState state = SecondaryState(false, email: _localStorage.getSecondaryState().email, password: _localStorage.getSecondaryState().password);
+        _localStorage.saveSecondaryState(state);
+        Navigator.pushAndRemoveUntil(
+            context,
+            MaterialPageRoute(builder: (context) => TempLoginScreen(show: true,)),
+                (Route<dynamic> route) => false);
+      }
+    } else if (state == AppLifecycleState.inactive) {
+      print("App inactive");
+    } else if (state == AppLifecycleState.paused) {
+
+      DateTime time = DateTime.now();
+      SecondaryState secondaryState = _localStorage.getSecondaryState();
+      secondaryState.lastMinimized = time;
+      print("kkkk ${secondaryState.lastMinimized.toIso8601String()}");
+
+      _localStorage.saveSecondaryState(secondaryState);
+    }
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    WidgetsBinding.instance.removeObserver(this);
+  }
+  @override
+  Widget build(BuildContext context) {
+    SecondaryState state = _localStorage.getSecondaryState();
+    User user = _localStorage.getUser();
+    return state.isLoggedIn == false ? user == null ?  LandingScreen(): TempLoginScreen(show: true,) :TabsContainer();
+  }
+}
+
 
 void configLoading() {
   EasyLoading.instance

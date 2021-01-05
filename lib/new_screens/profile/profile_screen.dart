@@ -6,14 +6,17 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:hive/hive.dart';
 import 'package:provider/provider.dart';
+import 'package:zimvest/data/local/user_local.dart';
 import 'package:zimvest/data/models/secondary_state.dart';
 import 'package:zimvest/data/view_models/identity_view_model.dart';
 import 'package:zimvest/data/view_models/investment_view_model.dart';
 import 'package:zimvest/data/view_models/settings_view_model.dart';
+import 'package:zimvest/locator.dart';
 import 'package:zimvest/new_screens/account/login_screen.dart';
 import 'package:zimvest/new_screens/investor_profile/investor_profile_screen.dart';
 import 'package:zimvest/new_screens/profile/account_screen.dart';
 import 'package:zimvest/new_screens/profile/add_bank_cards.dart';
+import 'package:zimvest/new_screens/profile/earn_free_cash_screen.dart';
 import 'package:zimvest/new_screens/profile/security_screen.dart';
 import 'package:zimvest/new_screens/profile/widgets/profile_widgets.dart';
 import 'package:zimvest/styles/colors.dart';
@@ -41,6 +44,7 @@ class _ProfileScreenState extends State<ProfileScreen> with AfterLayoutMixin<Pro
 
     settingsViewModel.getProfileDetail(token: _identityViewModel.user.token);
     settingsViewModel.getNextOfKin(token: _identityViewModel.user.token);
+    settingsViewModel.getCompletedSections(token: _identityViewModel.user.token);
 
   }
 
@@ -96,7 +100,10 @@ class _ProfileScreenState extends State<ProfileScreen> with AfterLayoutMixin<Pro
           onClick: (){
             Navigator.push(context, InvestorProfileScreen.route());
           },),
-          ProfileWidget(title: "Earn Free Cash",icon: 'earn',),
+          ProfileWidget(title: "Earn Free Cash",
+            icon: 'earn',onClick: (){
+              Navigator.push(context, EarnFreeCashScreen.route());
+            },),
           ProfileWidget(title: "Rate App",icon: 'rate',),
           ProfileWidget(title: "About Zimvest",icon: 'about',),
           ProfileWidget(title: "Log Out",icon: 'log-out',onClick: (){
@@ -158,8 +165,10 @@ class _ProfileScreenState extends State<ProfileScreen> with AfterLayoutMixin<Pro
   void _logout(BuildContext context) {
 
     final box = Hive.box(AppStrings.state);
+    final ABSStateLocalStorage _localStorage = locator<ABSStateLocalStorage>();
     box.put("user", null);
-    box.put("state", SecondaryState(false));
+    SecondaryState state = SecondaryState(false, email: _localStorage.getSecondaryState().email, password: _localStorage.getSecondaryState().password);
+    box.put("state", state);
     // _investmentViewModel.reset();
     Navigator.of(context, rootNavigator: true).pop();
     Navigator.pushAndRemoveUntil(
