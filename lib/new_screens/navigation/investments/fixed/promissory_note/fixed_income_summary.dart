@@ -132,6 +132,13 @@ class _SavingsSummaryScreenState extends State<SavingsSummaryScreen> {
     });
   }
 
+  void stopAnim() async {
+    setState(() {
+      slideUp = false;
+      loading = false;
+    });
+  }
+
   void onInit() async {
     for (var key in keys) {
       //await Future.delayed(Duration(seconds: 1));
@@ -573,7 +580,7 @@ class _SavingsSummaryScreenState extends State<SavingsSummaryScreen> {
                 right: 0,
                 child: GestureDetector(
                   onPanUpdate: (details) {
-                    if (details.delta.dy < 0) {
+                    if (details.delta.dy == -0.5 || details.delta.dy == -1.0 || details.delta.dy == -1.5 || details.delta.dy == -2.0){
                       startAnim();
                       model.buyPromissoryNote(
                           productId: widget.investmentId,
@@ -585,6 +592,7 @@ class _SavingsSummaryScreenState extends State<SavingsSummaryScreen> {
                           instrumentName: widget.bondName,
                           uniqueName: widget.uniqueName,
                           instrumentType: 7);
+                      // stopAnim();
                     }
                   },
                   child: Container(
