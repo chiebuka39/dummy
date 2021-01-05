@@ -7,10 +7,14 @@ import 'package:zimvest/utils/strings.dart';
 
 class TransactionItemWidget extends StatelessWidget {
   const TransactionItemWidget({
-    Key key, this.onTap,
+    Key key, this.onTap, this.narration, this.date, this.amount, this.symbol,
   }) : super(key: key);
 
   final VoidCallback onTap;
+  final String narration;
+  final String date;
+  final num amount;
+  final String symbol;
 
   @override
   Widget build(BuildContext context) {
@@ -39,13 +43,18 @@ class TransactionItemWidget extends StatelessWidget {
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(
-                  "Rent",
-                  style: TextStyle(fontSize: 13, fontFamily: AppStrings.fontMedium),
+                Container(
+                  width: 130,
+                  child: Text(
+                    narration,
+                    overflow: TextOverflow.ellipsis,
+                    softWrap: true,
+                    style: TextStyle(fontSize: 13, fontFamily: AppStrings.fontMedium),
+                  ),
                 ),
                 YMargin(8),
                 Text(
-                  "2nd May, 2020",
+                  date,
                   style: TextStyle(
                       fontSize: 11,
                       color: AppColors.kTextColor,
@@ -55,7 +64,75 @@ class TransactionItemWidget extends StatelessWidget {
               ],
             ),
             Spacer(),
-            Text("${AppStrings.nairaSymbol}25,000", style: TextStyle(fontSize: 12),)
+            Text("$symbol $amount", style: TextStyle(fontSize: 12),)
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+
+class TransactionItemWidgetWithdrawal extends StatelessWidget {
+  const TransactionItemWidgetWithdrawal({
+    Key key, this.onTap, this.narration, this.date, this.amount, this.symbol,
+  }) : super(key: key);
+
+  final VoidCallback onTap;
+  final String narration;
+  final String date;
+  final num amount;
+  final String symbol;
+
+  @override
+  Widget build(BuildContext context) {
+    return GestureDetector(
+      onTap: () {
+        Navigator.push(context, InvestmentDetailsScreen.route());
+      },
+      child: Container(
+        margin: EdgeInsets.only(top: 25),
+        padding: EdgeInsets.symmetric(horizontal: 1,vertical: 7),
+
+        width: double.infinity,
+        decoration: BoxDecoration(
+        ),
+        child: Row(
+          children: [
+            Container(
+              height: 35,
+              width: 35,
+              decoration: BoxDecoration(
+                  color: AppColors.kPrimaryColorLight,
+                  shape: BoxShape.circle),
+              child: Center(child: SvgPicture.asset("images/new/withdraw.svg",color: AppColors.kPrimaryColor,),),
+            ),
+            XMargin(15),
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Container(
+                  width: 130,
+                  child: Text(
+                    narration,
+                    overflow: TextOverflow.ellipsis,
+                    softWrap: true,
+                    style: TextStyle(fontSize: 13, fontFamily: AppStrings.fontMedium),
+                  ),
+                ),
+                YMargin(8),
+                Text(
+                  date,
+                  style: TextStyle(
+                      fontSize: 11,
+                      color: AppColors.kTextColor,
+                      fontFamily: AppStrings.fontLight),
+                ),
+
+              ],
+            ),
+            Spacer(),
+            Text("$symbol $amount", style: TextStyle(fontSize: 12),)
           ],
         ),
       ),

@@ -132,6 +132,13 @@ class _SavingsSummaryScreenState extends State<SavingsSummaryScreen> {
     });
   }
 
+  void stopAnim() async {
+    setState(() {
+      slideUp = false;
+      loading = false;
+    });
+  }
+
   void onInit() async {
     for (var key in keys) {
       key.currentState.show();
@@ -326,9 +333,9 @@ class _SavingsSummaryScreenState extends State<SavingsSummaryScreen> {
               ),
               AnimatedPositioned(
                 duration: Duration(milliseconds: 500),
-                //top: -(MediaQuery.of(context).size.height - 200),
                 top: slideUp ? -(MediaQuery.of(context).size.height - 200) : 0,
-                left: 0, right: 0,
+                left: 0,
+                right: 0,
                 child: Container(
                   width: double.infinity,
                   height: MediaQuery.of(context).size.height - 200,
@@ -565,7 +572,6 @@ class _SavingsSummaryScreenState extends State<SavingsSummaryScreen> {
               ),
               AnimatedPositioned(
                 duration: Duration(milliseconds: 500),
-                //top: MediaQuery.of(context).size.height - 100,
                 top: slideUp == true
                     ? -60
                     : (MediaQuery.of(context).size.height - 100),
@@ -573,7 +579,7 @@ class _SavingsSummaryScreenState extends State<SavingsSummaryScreen> {
                 right: 0,
                 child: GestureDetector(
                   onPanUpdate: (details) {
-                    if (details.delta.dy < 0) {
+                    if (details.delta.dy == -0.5 || details.delta.dy == -1.0 || details.delta.dy == -1.5 || details.delta.dy == -2.0){
                       startAnim();
                       model.buyCommercialPaper(
                           productId: widget.investmentId,
@@ -585,12 +591,9 @@ class _SavingsSummaryScreenState extends State<SavingsSummaryScreen> {
                           instrumentName: widget.bondName,
                           uniqueName: widget.uniqueName,
                           instrumentType: 6);
+                      // stopAnim();
                     }
                   },
-                  // onVerticalDragStart: (details) {
-                  //   print("dff ${details.toString()}");
-                  //   //
-                  // },
                   child: Container(
                     height: 60,
                     child: Column(

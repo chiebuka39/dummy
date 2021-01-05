@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:provider_architecture/_viewmodel_provider.dart';
 import 'package:zimvest/data/view_models/investment_view_model.dart';
 import 'package:zimvest/new_screens/navigation/investments/fixed/fbn_bonds/fixed_income_summary.dart';
+import 'package:zimvest/new_screens/profile/widgets/verification_failed_widget.dart';
 import 'package:zimvest/styles/colors.dart';
 import 'package:zimvest/utils/margin.dart';
 import 'package:zimvest/utils/margins.dart';
@@ -114,26 +116,61 @@ class _FixedIncomePurchaseSourceState extends State<FixedIncomePurchaseSource> {
                 ),
               ),
               verticalSpace(52),
-              PaymentSourceButton(
-                onTap: () {
-                  Navigator.push(
-                    context,
-                    SavingsSummaryScreen.route(
-                      amount: widget.amount,
-                      investmentId: widget.productId,
-                      instrumentId: widget.instrumentId,
-                      maturityDate: widget.investmentMaturityDate,
-                      rate: widget.rate,
-                      investmentType: widget.investmentType,
-                      bondName: widget.duration,
-                      uniqueName: widget.uniqueName,
-                      channelId: 1,
-                      // intermediaryBankType: 1,
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 20.0),
+                child: GestureDetector(
+                  onTap: () {
+                    showModalBottomSheet<Null>(
+                      context: context,
+                      builder: (BuildContext context) {
+                        return SelectCardWidget(
+                          success: false,
+                          navigate: () {
+                            Navigator.of(context).push(
+                              SavingsSummaryScreen.route(
+                                amount: widget.amount,
+                                investmentId: widget.productId,
+                                instrumentId: widget.instrumentId,
+                                maturityDate: widget.investmentMaturityDate,
+                                rate: widget.rate,
+                                investmentType: widget.investmentType,
+                                bondName: widget.duration,
+                                uniqueName: widget.uniqueName,
+                                channelId: 1,
+                              ),
+                            );
+                          },
+                        );
+                      },
+                    );
+                  },
+                  child: Container(
+                    padding: EdgeInsets.symmetric(horizontal: 20),
+                    width: double.infinity,
+                    height: 55,
+                    decoration: BoxDecoration(
+                        color: AppColors.kPrimaryColor,
+                        borderRadius: BorderRadius.circular(15)),
+                    child: Row(
+                      children: [
+                        SvgPicture.asset("images/new/card.svg"),
+                        XMargin(10),
+                        Text(
+                          "Debit Card",
+                          style: TextStyle(
+                              color: AppColors.kWhite,
+                              fontSize: 13,
+                              fontFamily: AppStrings.fontNormal),
+                        ),
+                        Spacer(),
+                        Icon(
+                          Icons.navigate_next_rounded,
+                          color: AppColors.kWhite,
+                        ),
+                      ],
                     ),
-                  );
-                },
-                paymentsource: "Debit Card",
-                image: "card",
+                  ),
+                ),
               ),
               YMargin(25),
               Padding(

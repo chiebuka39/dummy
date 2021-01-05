@@ -72,7 +72,7 @@ class FixedIncomeAmountInput extends StatefulWidget {
 class _FixedIncomeAmountInputState extends State<FixedIncomeAmountInput> {
   // static String amountController.text;
   // TextEditingController amountController = TextEditingController();
-  var amountController = MoneyMaskedTextController(decimalSeparator: ".", thousandSeparator: ",");
+  var amountController = MoneyMaskedTextController(thousandSeparator: ",", decimalSeparator: ".");
   @override
   Widget build(BuildContext context) {
     return ViewModelProvider<InvestmentHighYieldViewModel>.withConsumer(
@@ -120,7 +120,7 @@ class _FixedIncomeAmountInputState extends State<FixedIncomeAmountInput> {
               Padding(
                 padding: const EdgeInsets.only(left: 20.0, right: 76),
                 child: Text(
-                  "Minimum of ${AppStrings.nairaSymbol}${widget.minimumAmount}",
+                  "Minimum of ${AppStrings.nairaSymbol}${StringUtils(widget.minimumAmount.toString()).convertWithComma()}",
                   style: TextStyle(
                     fontSize: 12,
                     fontFamily: AppStrings.fontNormal,
@@ -152,7 +152,7 @@ class _FixedIncomeAmountInputState extends State<FixedIncomeAmountInput> {
                       ),
                       backgroundColor: AppColors.kRed3,
                       messageText: Text(
-                        "Minimum purchase amount is ₦${widget.minimumAmount}",
+                        "Minimum purchase amount is ₦${StringUtils(widget.minimumAmount.toString()).convertWithComma()}",
                         style: TextStyle(
                           fontSize: 11,
                           fontFamily: AppStrings.fontLight,
@@ -179,6 +179,7 @@ class _FixedIncomeAmountInputState extends State<FixedIncomeAmountInput> {
                   }
                 },
               ),
+              //  YMargin(40),
               NumericKeyboard(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 onKeyboardTap: _onKeyboardTap,

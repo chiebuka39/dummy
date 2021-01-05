@@ -33,7 +33,7 @@ class WalletTransaction {
     this.dateFilter,
   });
 
-  int amount;
+  num amount;
   String currency;
   String movementType;
   String transactionReference;

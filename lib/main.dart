@@ -1,3 +1,5 @@
+import 'package:device_preview/device_preview.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:hive/hive.dart';
@@ -26,8 +28,7 @@ import 'data/models/secondary_state.dart';
 import 'data/models/user.dart';
 import 'new_screens/landing_screen.dart';
 
-
-void main()async {
+void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
   //init hive flutter
@@ -41,7 +42,13 @@ void main()async {
 
   //initialize service locator
   setUpLocator();
-  runApp(MyApp());
+  runApp(
+    // DevicePreview(
+    // builder: (context) =>
+    MyApp(),
+    // enabled: !kReleaseMode,
+    // )
+  );
   configLoading();
 }
 
@@ -57,12 +64,11 @@ class _MyAppState extends State<MyApp> {
   @override
   void initState() {
     User user = _localStorage.getUser();
-    if(user != null){
-      if(user.expires.difference(DateTime.now()).inSeconds < 0){
+    if (user != null) {
+      if (user.expires.difference(DateTime.now()).inSeconds < 0) {
         _localStorage.saveSecondaryState(SecondaryState(false));
       }
     }
-
 
     super.initState();
   }
@@ -71,14 +77,30 @@ class _MyAppState extends State<MyApp> {
   Widget build(BuildContext context) {
     return MultiProvider(
       providers: [
-        ChangeNotifierProvider<ABSIdentityViewModel>(create: (_) => IdentityViewModel(),),
-        ChangeNotifierProvider<ABSDashboardViewModel>(create: (_) => DashboardViewModel(),),
-        ChangeNotifierProvider<ABSPaymentViewModel>(create: (_) => PaymentViewModel(),),
-        ChangeNotifierProvider<ABSSavingViewModel>(create: (_) => SavingViewModel(),),
-        ChangeNotifierProvider<ABSPinViewModel>(create: (_) => PinViewModel(),),
-        ChangeNotifierProvider<ABSInvestmentViewModel>(create: (_) => InvestmentViewModel(),),
-        ChangeNotifierProvider<ABSSettingsViewModel>(create: (_) => SettingsViewModel(),),
-        ChangeNotifierProvider<ABSOthersViewModel>(create: (_) => OthersViewModel(),)
+        ChangeNotifierProvider<ABSIdentityViewModel>(
+          create: (_) => IdentityViewModel(),
+        ),
+        ChangeNotifierProvider<ABSDashboardViewModel>(
+          create: (_) => DashboardViewModel(),
+        ),
+        ChangeNotifierProvider<ABSPaymentViewModel>(
+          create: (_) => PaymentViewModel(),
+        ),
+        ChangeNotifierProvider<ABSSavingViewModel>(
+          create: (_) => SavingViewModel(),
+        ),
+        ChangeNotifierProvider<ABSPinViewModel>(
+          create: (_) => PinViewModel(),
+        ),
+        ChangeNotifierProvider<ABSInvestmentViewModel>(
+          create: (_) => InvestmentViewModel(),
+        ),
+        ChangeNotifierProvider<ABSSettingsViewModel>(
+          create: (_) => SettingsViewModel(),
+        ),
+        ChangeNotifierProvider<ABSOthersViewModel>(
+          create: (_) => OthersViewModel(),
+        )
       ],
       child: MaterialApp(
         title: 'Zimvest',
@@ -86,12 +108,14 @@ class _MyAppState extends State<MyApp> {
         theme: ThemeData(
           fontFamily: "Caros",
           primarySwatch: Colors.blue,
-          bottomSheetTheme: BottomSheetThemeData(backgroundColor: Colors.transparent),
-
+          bottomSheetTheme:
+              BottomSheetThemeData(backgroundColor: Colors.transparent),
           visualDensity: VisualDensity.adaptivePlatformDensity,
         ),
         builder: EasyLoading.init(),
-        home:_localStorage.getSecondaryState().isLoggedIn == false ?  LandingScreen(): TabsContainer(),
+        home: _localStorage.getSecondaryState().isLoggedIn == false
+            ? LandingScreen()
+            : TabsContainer(),
       ),
     );
   }
@@ -112,5 +136,3 @@ void configLoading() {
     ..maskColor = Colors.blue.withOpacity(0.5)
     ..userInteractions = false;
 }
-
-

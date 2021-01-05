@@ -14,6 +14,7 @@ import 'package:zimvest/data/models/investment/term_instruments.dart';
 import 'package:zimvest/data/models/product_transaction.dart';
 import 'package:zimvest/data/services/fixed_income_investment_service.dart';
 import 'package:zimvest/data/services/investment_service.dart';
+import 'package:zimvest/data/view_models/base_model.dart';
 
 import 'package:zimvest/locator.dart';
 import 'package:zimvest/screens/tabs/invstment/invest_term.dart';
@@ -500,24 +501,17 @@ class InvestmentHighYieldViewModel extends ChangeNotifier {
   }
 }
 
-class FixedIncomeViewModel extends ChangeNotifier {
+class FixedIncomeViewModel extends BaseViewModel {
   ABSFixedIncomeInvestmentService _investmentService =
       locator<ABSFixedIncomeInvestmentService>();
   final ABSStateLocalStorage _localStorage = locator<ABSStateLocalStorage>();
   AmountPayableResponse amountPayableResponse = AmountPayableResponse();
-  bool _busy = false;
-  bool get busy => _busy;
 
   bool _status = false;
   bool get status => _status;
 
   String _message = "";
   String get message => _message;
-
-  void setBusy(bool value) {
-    _busy = value;
-    notifyListeners();
-  }
 
   Future<void> buyCommercialPaper(
       {int productId,

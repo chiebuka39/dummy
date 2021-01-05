@@ -32,58 +32,69 @@ class NumericKeyboard extends StatefulWidget {
 class _NumericKeyboardState extends State<NumericKeyboard> {
   @override
   Widget build(BuildContext context) {
-    return Container(
-      padding: const EdgeInsets.only(left: 20, right: 20, top: 20, bottom: 20),
-      alignment: Alignment.center,
-      child: Column(
-        children: <Widget>[
-          ButtonBar(
-            alignment: widget.mainAxisAlignment,
-            children: <Widget>[
-              _calcButton('1'),
-              _calcButton('2'),
-              _calcButton('3'),
-            ],
-          ),
-          ButtonBar(
-            alignment: widget.mainAxisAlignment,
-            children: <Widget>[
-              _calcButton('4'),
-              _calcButton('5'),
-              _calcButton('6'),
-            ],
-          ),
-          ButtonBar(
-            alignment: widget.mainAxisAlignment,
-            children: <Widget>[
-              _calcButton('7'),
-              _calcButton('8'),
-              _calcButton('9'),
-            ],
-          ),
-          ButtonBar(
-            alignment: widget.mainAxisAlignment,
-            children: <Widget>[
-              InkWell(
-                  borderRadius: BorderRadius.circular(45),
-                  onTap: widget.leftButtonFn,
-                  child: Container(
-                      alignment: Alignment.center,
-                      width: 50,
-                      height: 50,
-                      child: widget.leftIcon)),
-              _calcButton('0'),
-              InkWell(
-                  borderRadius: BorderRadius.circular(45),
-                  onTap: widget.rightButtonFn,
-                  child: Container(
-                      alignment: Alignment.center,
-                      width: 50,
-                      height: 50,
-                      child: widget.rightIcon))
-            ],
-          ),
-        ],
+    return Expanded(
+      flex: 4,
+      child: Container(
+        padding: const EdgeInsets.only(left: 20, right: 20),
+        alignment: Alignment.center,
+        child: Column(
+          children: <Widget>[
+            Expanded(
+              child: ButtonBar(
+                alignment: widget.mainAxisAlignment,
+                children: <Widget>[
+                  _calcButton('1'),
+                  _calcButton('2'),
+                  _calcButton('3'),
+                ],
+              ),
+            ),
+            Expanded(
+              child: ButtonBar(
+                alignment: widget.mainAxisAlignment,
+                children: <Widget>[
+                  _calcButton('4'),
+                  _calcButton('5'),
+                  _calcButton('6'),
+                ],
+              ),
+            ),
+            Expanded(
+              child: ButtonBar(
+                alignment: widget.mainAxisAlignment,
+                children: <Widget>[
+                  _calcButton('7'),
+                  _calcButton('8'),
+                  _calcButton('9'),
+                ],
+              ),
+            ),
+            Expanded(
+              child: ButtonBar(
+                alignment: widget.mainAxisAlignment,
+                children: <Widget>[
+                  InkWell(
+                      borderRadius: BorderRadius.circular(45),
+                      onTap: widget.leftButtonFn,
+                      child: Container(
+                          alignment: Alignment.center,
+                          width: 50,
+                          height: 50,
+                          child: widget.leftIcon)),
+                  _calcButton('0'),
+                  InkWell(
+                      borderRadius: BorderRadius.circular(45),
+                      onTap: widget.rightButtonFn,
+                      child: Container(
+                          alignment: Alignment.center,
+                          width: 50,
+                          height: 50,
+                          child: widget.rightIcon))
+                ],
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }
@@ -97,7 +108,7 @@ class _NumericKeyboardState extends State<NumericKeyboard> {
       child: Container(
         alignment: Alignment.center,
         width: 50,
-        height: 50,
+        height: 70,
         child: Text(
           value,
           style: TextStyle(

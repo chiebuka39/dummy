@@ -134,7 +134,6 @@ class _SavingsSummaryScreenState extends State<SavingsSummaryScreen> {
 
   void onInit() async {
     for (var key in keys) {
-      //await Future.delayed(Duration(seconds: 1));
       key.currentState.show();
     }
   }
@@ -584,18 +583,20 @@ class _SavingsSummaryScreenState extends State<SavingsSummaryScreen> {
                 right: 0,
                 child: GestureDetector(
                   onPanUpdate: (details) {
-                    if (details.delta.dy < 0) {
+                    // print(details.delta.dy);
+                    if (details.delta.dy == -0.5 || details.delta.dy == -1.0 || details.delta.dy == -1.5 || details.delta.dy == -2.0){
                       startAnim();
                       model.buyTreasuryBills(
-                          productId: widget.investmentId,
-                          instrumentId: widget.instrumentId,
-                          fundingChannel: widget.channelId,
-                          investmentAmount: widget.amount,
-                          maturityDate: DateTime.tryParse(widget.maturityDate),
-                          rate: widget.rate,
-                          instrumentName: widget.bondName,
-                          uniqueName: widget.uniqueName,
-                          instrumentType: 3);
+                        productId: widget.investmentId,
+                        instrumentId: widget.instrumentId,
+                        fundingChannel: widget.channelId,
+                        investmentAmount: widget.amount,
+                        maturityDate: DateTime.tryParse(widget.maturityDate),
+                        rate: widget.rate,
+                        instrumentName: widget.bondName,
+                        uniqueName: widget.uniqueName,
+                        instrumentType: 3,
+                      );
                     }
                   },
                   child: Container(

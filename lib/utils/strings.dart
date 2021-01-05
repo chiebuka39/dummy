@@ -3,8 +3,8 @@ class AppStrings{
   static String baseUrl = 'https://dev.moneypal.ng/';
 
   static String state = "state";
-  static String nairaSymbol = "\u20A6";
-  static String dollarSymbol = "\u0024";
+  static const String nairaSymbol = "\u20A6";
+  static const String dollarSymbol = "\u0024";
   static String fontBold = "Airbnb-Bold";
   static String fontMedium = "Airbnb-Medium";
   static String fontLight = "Airbnb-Light";

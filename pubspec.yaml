@@ -67,6 +67,7 @@ dependencies:
   image_picker: ^0.6.7+17
   flutter_switch: ^0.2.0
   intl: ^0.16.1
+  sliding_up_panel: ^1.0.2
 
 
 
