@@ -44,6 +44,7 @@ class _ProfileScreenState extends State<ProfileScreen> with AfterLayoutMixin<Pro
 
     settingsViewModel.getProfileDetail(token: _identityViewModel.user.token);
     settingsViewModel.getNextOfKin(token: _identityViewModel.user.token);
+    settingsViewModel.getCompletedSections(token: _identityViewModel.user.token);
 
   }
 

@@ -2,6 +2,8 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:provider/provider.dart';
+import 'package:zimvest/data/view_models/settings_view_model.dart';
 import 'package:zimvest/new_screens/profile/preview_screen.dart';
 import 'package:zimvest/new_screens/profile/residential_screen.dart';
 import 'package:zimvest/new_screens/profile/widgets/profile_widgets.dart';
@@ -50,6 +52,9 @@ class _VerificationDetailsScreenState extends State<VerificationDetailsScreen> {
 
   @override
   Widget build(BuildContext context) {
+    ABSSettingsViewModel settingsViewModel = Provider.of(context);
+    print("llll11 ${settingsViewModel.completedSections
+        .kycValidationCheck.identificationStatus}");
     return Scaffold(
       appBar: AppBar(
         elevation: 0,
@@ -80,7 +85,7 @@ class _VerificationDetailsScreenState extends State<VerificationDetailsScreen> {
               Navigator.push(context, ResidentialScreen.route());
             },
             title: "Residential Address",
-            emergency: true,
+
             padding: 0,
           ),
           ProfileWidget(
@@ -88,7 +93,14 @@ class _VerificationDetailsScreenState extends State<VerificationDetailsScreen> {
               //Navigator.push(context, IdentityVerificationScreen.route());
             },
             title: "Identity document",
-            emergency: true,
+            rejected: settingsViewModel.completedSections
+                .kycValidationCheck.identificationStatus == 2 ,
+            approved: settingsViewModel.completedSections
+                .kycValidationCheck.identificationStatus == 1,
+            pending: settingsViewModel.completedSections
+                .kycValidationCheck.identificationStatus == 0,
+            showNext: settingsViewModel.completedSections
+                .kycValidationCheck.identificationStatus == 1 ? false:true,
             padding: 0,
           ),
           ProfileWidget(
@@ -99,7 +111,14 @@ class _VerificationDetailsScreenState extends State<VerificationDetailsScreen> {
               //Navigator.push(context, IdentityVerificationScreen.route());
             },
             title: "Utility Bill",
-            emergency: true,
+            rejected: settingsViewModel.completedSections
+                .kycValidationCheck.utilityBillStatus == 2,
+            approved: settingsViewModel.completedSections
+                .kycValidationCheck.utilityBillStatus == 1,
+            pending: settingsViewModel.completedSections
+                .kycValidationCheck.utilityBillStatus == 0,
+            showNext: settingsViewModel.completedSections
+                .kycValidationCheck.utilityBillStatus == 1 ? false:true,
             padding: 0,
           ),
         ],),

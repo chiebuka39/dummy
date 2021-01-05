@@ -39,6 +39,9 @@ class AppColors {
   static const kRed3 = Color(0xffFBCBCB);
   static const kRed4 = Color(0xffF53232);
   static var kGreen = Color(0xFF2ab750);
+  static var kGreen1 = Color(0xFF11D400);
+  static var kPending = Color(0xFFFF7519);
+  static var kRejected = Color(0xFFE02020);
   static const knewBlue = Color(0xff010D57);
   static const khighyieldCard = Color.fromRGBO(82,170,255,1);
 
