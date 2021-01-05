@@ -126,7 +126,7 @@ class _HomeAppState extends State<HomeApp> with WidgetsBindingObserver {
         _localStorage.saveSecondaryState(state);
         Navigator.pushAndRemoveUntil(
             context,
-            MaterialPageRoute(builder: (context) => TempLoginScreen()),
+            MaterialPageRoute(builder: (context) => TempLoginScreen(show: true,)),
                 (Route<dynamic> route) => false);
       }
     } else if (state == AppLifecycleState.inactive) {
@@ -149,7 +149,9 @@ class _HomeAppState extends State<HomeApp> with WidgetsBindingObserver {
   }
   @override
   Widget build(BuildContext context) {
-    return _localStorage.getSecondaryState().isLoggedIn == false ?  LandingScreen(): TabsContainer();
+    SecondaryState state = _localStorage.getSecondaryState();
+    User user = _localStorage.getUser();
+    return state.isLoggedIn == false ? user == null ?  LandingScreen(): TempLoginScreen(show: true,) :TabsContainer();
   }
 }
 

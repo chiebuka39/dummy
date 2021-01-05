@@ -310,7 +310,8 @@ class ResetPinWidget extends StatelessWidget {
       ],),
     );
   }
-}class PasswordSuccessWidget extends StatelessWidget {
+}
+class PasswordSuccessWidget extends StatelessWidget {
   const PasswordSuccessWidget({
     Key key, this.message ="Your password was changed succesfully ", this.onDone,
   }) : super(key: key);
@@ -366,6 +367,86 @@ class ResetPinWidget extends StatelessWidget {
               ),
               Spacer(),
             ],),
+        ))
+      ],),
+    );
+  }
+}
+
+class ImageUploadWidget extends StatelessWidget {
+  const ImageUploadWidget({
+    Key key, this.title ="Upload Utility bill", this.onCamera,
+    this.onGallery,
+  }) : super(key: key);
+
+  final String title;
+  final VoidCallback onCamera;
+  final VoidCallback onGallery;
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      height: 300,
+      decoration: BoxDecoration(
+        color: Colors.transparent,
+      ),
+      child: Column(children: [
+        YMargin(10),
+        Center(child: Container(
+          width: 30,
+          height: 5,
+          decoration: BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.circular(5)
+          ),
+        ),),
+        YMargin(20),
+        Expanded(child: Container(
+          width: double.infinity,
+          decoration: BoxDecoration(
+              color:Colors.white,
+              borderRadius: BorderRadius.only(
+                  topLeft: Radius.circular(25),
+                  topRight: Radius.circular(25)
+              )
+          ),
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 20),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                YMargin(40),
+                Text("Upload Utility Bill", style: TextStyle(fontSize: 15,
+                    fontFamily: AppStrings.fontBold),),
+                YMargin(37),
+                InkWell(
+                  onTap: onCamera,
+                  child: Container(
+                    height: 60,
+                    child: Row(children: [
+                      SvgPicture.asset("images/new/photo1.svg"),
+                      XMargin(10),
+                      Text("Take Photo"),
+                      Spacer(),
+                      Icon(Icons.navigate_next,color: AppColors.kPrimaryColor,)
+                    ],),
+                  ),
+                ),
+                InkWell(
+                  onTap: onGallery,
+                  child: Container(
+                    height: 60,
+                    child: Row(children: [
+                      SvgPicture.asset("images/new/library.svg"),
+                      XMargin(10),
+                      Text("Choose from Library"),
+                      Spacer(),
+                      Icon(Icons.navigate_next,color: AppColors.kPrimaryColor,)
+                    ],),
+                  ),
+                ),
+              ],),
+          ),
         ))
       ],),
     );
