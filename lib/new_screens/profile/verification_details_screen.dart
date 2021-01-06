@@ -84,6 +84,12 @@ class _VerificationDetailsScreenState extends State<VerificationDetailsScreen> {
               }, isScrollControlled: false);
             },
             title: "BVN Verification",
+            approved: settingsViewModel.completedSections
+                .kycValidationCheck.isBvnValid ,
+            pending: settingsViewModel.completedSections
+                .isBvnProvided ,
+            showNext: settingsViewModel.completedSections
+                .kycValidationCheck.isBvnValid ==  false,
           ),
           ProfileWidget(
             onClick: (){

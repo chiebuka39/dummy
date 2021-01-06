@@ -73,7 +73,7 @@ class _ReviewBankTransferState extends State<ReviewWalletTransfer> {
       return UsePinWidget(
         onNext: startAnim2,
       );
-    });
+    },isDismissible: false);
   }
 
   void startAnim2()async{

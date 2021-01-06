@@ -3,6 +3,7 @@ import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:flutterwave/flutterwave.dart';
 import 'package:flutterwave/models/responses/charge_response.dart';
+import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 import 'package:provider/provider.dart';
 import 'package:rave_flutter/rave_flutter.dart';
 import 'package:zimvest/data/models/payment/card.dart';
@@ -12,11 +13,13 @@ import 'package:zimvest/data/view_models/payment_view_model.dart';
 import 'package:zimvest/data/view_models/savings_view_model.dart';
 import 'package:zimvest/data/view_models/settings_view_model.dart';
 import 'package:zimvest/new_screens/navigation/wealth/create/savings_summary.dart';
+import 'package:zimvest/new_screens/withdrawals/use_pin_widget.dart';
 import 'package:zimvest/styles/colors.dart';
 import 'package:zimvest/utils/app_utils.dart';
 import 'package:zimvest/utils/margin.dart';
 import 'package:zimvest/utils/strings.dart';
 import 'package:zimvest/widgets/buttons.dart';
+import 'package:zimvest/widgets/new/new_widgets.dart';
 
 class NextOfKinStatus extends StatelessWidget {
   const NextOfKinStatus({
@@ -176,6 +179,7 @@ class _EnterBVNWidgetState extends State<EnterBVNWidget> {
                 Spacer(),
                 Center(
                   child: PrimaryButtonNew(
+                    loading: loading,
                     onTap: ()async{
                       setState(() {
                         loading = true;
@@ -188,7 +192,22 @@ class _EnterBVNWidgetState extends State<EnterBVNWidget> {
                         loading = false;
                       });
                       if(result.error == false){
+                        Navigator.pop(context);
+                        showCupertinoModalBottomSheet(context: context, builder: (context){
+                          return UseOTPWidget(
+                            onNext: (){
+                              showModalBottomSheet < Null > (context: context, builder: (BuildContext context) {
+                                return PasswordSuccessWidget(
+                                  message: "Bvn Was updated Succesfully",
+                                  onDone: (){
+                                    Navigator.pop(context);
 
+                                  },
+                                );
+                              },isDismissible: false);
+                            },
+                          );
+                        },isDismissible: false);
                       }else{
                         AppUtils.showError(context, message: result.errorMessage);
                       }
