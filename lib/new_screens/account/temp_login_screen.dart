@@ -36,7 +36,7 @@ class TempLoginScreen extends StatefulWidget {
 }
 
 class _TempLoginScreenState extends State<TempLoginScreen> with AfterLayoutMixin<TempLoginScreen> {
-  bool obscureText = false;
+  bool obscureText = true;
   ABSIdentityViewModel identityViewModel;
   final ABSStateLocalStorage _localStorage = locator<ABSStateLocalStorage>();
 
@@ -158,7 +158,7 @@ class _TempLoginScreenState extends State<TempLoginScreen> with AfterLayoutMixin
                 height: 60,
                 width: double.infinity,
                 decoration: BoxDecoration(
-                    color: AppColors.kLightText,
+                    color: AppColors.kGreyBg,
                     borderRadius: BorderRadius.circular(12)
                 ),
                 child: Row(
@@ -183,8 +183,11 @@ class _TempLoginScreenState extends State<TempLoginScreen> with AfterLayoutMixin
                         ),
                       ),
                     ),
-                    IconButton(icon: Icon(Icons.visibility_off,size: 20,), onPressed: (){
-
+                    IconButton(icon: Icon(
+                      obscureText == true ? Icons.visibility_off:Icons.visibility,size: 20,), onPressed: (){
+                        setState(() {
+                          obscureText = !obscureText;
+                        });
                     })
                   ],
                 ),

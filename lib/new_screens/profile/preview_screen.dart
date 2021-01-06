@@ -99,31 +99,15 @@ class _PreviewScreenState extends State<PreviewScreen> {
                   title: "Upload Photo",
                   loading:  loading,
                   onTap: () async{
-                    setState(() {
-                      loading = true;
-                    });
-                    var result = await settingsViewModel.uploadUtilityBill(
-                      token: identityViewModel.user.token,
-                      file: widget.image
-                    );
-                    setState(() {
-                      loading = false;
-                    });
-                    if(result.error == false){
-                      showModalBottomSheet < Null > (context: context, builder: (BuildContext context) {
-                        return PasswordSuccessWidget(onDone: (){
-                          Navigator.pop(context);
-                          Navigator.pop(context);
-                        },message: "Your Upload was successfully",);
-                      });
+                    print("lll ${settingsViewModel.selectedIdentity}");
+                    if(settingsViewModel.selectedIdentity == null){
+                      print("pPPPPPPPPPPPPPPP");
+                      await uploadUtility(context);
                     }else{
-                      showModalBottomSheet < Null > (context: context, builder: (BuildContext context) {
-                        return PasswordSuccessWidget(onDone: (){
-
-                          Navigator.pop(context);
-                        },message: result.errorMessage == null ? "We could not upload your document": result.errorMessage,);
-                      });
+                      print("oooooooooooooo");
+                      await uploadIdentity(context);
                     }
+
                   },
                 ),
                 YMargin(20),
@@ -140,5 +124,63 @@ class _PreviewScreenState extends State<PreviewScreen> {
         )
       ],),
     );
+  }
+
+  Future uploadUtility(BuildContext context) async {
+    setState(() {
+      loading = true;
+    });
+    var result = await settingsViewModel.uploadUtilityBill(
+      token: identityViewModel.user.token,
+      file: image
+    );
+    setState(() {
+      loading = false;
+    });
+    if(result.error == false){
+      showModalBottomSheet < Null > (context: context, builder: (BuildContext context) {
+        return PasswordSuccessWidget(onDone: (){
+          Navigator.pop(context);
+          Navigator.pop(context);
+        },message: "Your Upload was successfully",);
+      });
+    }else{
+      showModalBottomSheet < Null > (context: context, builder: (BuildContext context) {
+        return PasswordSuccessWidget(onDone: (){
+    
+          Navigator.pop(context);
+        },message: result.errorMessage == null ? "We could not upload your document": result.errorMessage,);
+      });
+    }
+  }
+  Future uploadIdentity(BuildContext context) async {
+    setState(() {
+      loading = true;
+    });
+    var result = await settingsViewModel.uploadIdentification(
+      token: identityViewModel.user.token,
+      file: image,
+      id: "ppp",
+    );
+    setState(() {
+      loading = false;
+    });
+    if(result.error == false){
+      settingsViewModel.selectedIdentity = null;
+      showModalBottomSheet < Null > (context: context, builder: (BuildContext context) {
+        return PasswordSuccessWidget(onDone: (){
+          Navigator.pop(context);
+          Navigator.pop(context);
+        },message: "Your Upload was successfully",);
+      });
+    }else{
+
+      showModalBottomSheet < Null > (context: context, builder: (BuildContext context) {
+        return PasswordSuccessWidget(onDone: (){
+
+          Navigator.pop(context);
+        },message: result.errorMessage == null ? "We could not upload your document": result.errorMessage,);
+      });
+    }
   }
 }

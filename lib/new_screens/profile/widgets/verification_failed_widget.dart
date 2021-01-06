@@ -13,6 +13,7 @@ import 'package:zimvest/data/view_models/savings_view_model.dart';
 import 'package:zimvest/data/view_models/settings_view_model.dart';
 import 'package:zimvest/new_screens/navigation/wealth/create/savings_summary.dart';
 import 'package:zimvest/styles/colors.dart';
+import 'package:zimvest/utils/app_utils.dart';
 import 'package:zimvest/utils/margin.dart';
 import 'package:zimvest/utils/strings.dart';
 import 'package:zimvest/widgets/buttons.dart';
@@ -99,6 +100,8 @@ class _EnterBVNWidgetState extends State<EnterBVNWidget> {
   ABSSettingsViewModel settingsViewModel;
   ABSIdentityViewModel identityViewModel;
 
+  bool loading = false;
+
   @override
   Widget build(BuildContext context) {
     settingsViewModel = Provider.of(context);
@@ -127,61 +130,77 @@ class _EnterBVNWidgetState extends State<EnterBVNWidget> {
                   topRight: Radius.circular(25)
               )
           ),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              YMargin(40),
-              Text("Enter your BVN", style: TextStyle(fontSize: 15,
-                  fontFamily: AppStrings.fontBold),),
-              YMargin(27),
-              Container(
-                padding: EdgeInsets.symmetric(horizontal: 15),
-                height: 60,
-                width: double.infinity,
-                decoration: BoxDecoration(
-                    color: AppColors.kGreyBg,
-                    borderRadius: BorderRadius.circular(12)
-                ),
-                child: Transform.translate(
-                  offset: Offset(0,5),
-                  child: TextField(
-                    onChanged: (value){
-                      setState(() {
-                        bvn = value;
-                      });
-                      print("ooo ${bvn.length}");
-                    },
-                    keyboardType: TextInputType.phone,
-                    decoration: InputDecoration(
-                        border: InputBorder.none,
-                        hintText: "Enter BVN Number",
-                        hintStyle: TextStyle(
-                            fontSize: 14
-                        )
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 20),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                YMargin(40),
+                Text("Enter your BVN", style: TextStyle(fontSize: 15,
+                    fontFamily: AppStrings.fontBold),),
+                YMargin(27),
+                Container(
+                  padding: EdgeInsets.symmetric(horizontal: 15),
+                  height: 60,
+                  width: double.infinity,
+                  decoration: BoxDecoration(
+                      color: AppColors.kGreyBg,
+                      borderRadius: BorderRadius.circular(12)
+                  ),
+                  child: Transform.translate(
+                    offset: Offset(0,5),
+                    child: TextField(
+                      onChanged: (value){
+                        setState(() {
+                          bvn = value;
+                        });
+                        print("ooo ${bvn.length}");
+                      },
+                      keyboardType: TextInputType.phone,
+                      decoration: InputDecoration(
+                          border: InputBorder.none,
+                          hintText: "Enter BVN Number",
+                          hintStyle: TextStyle(
+                              fontSize: 14
+                          )
+                      ),
                     ),
                   ),
                 ),
-              ),
-              if (autoValidate == false ? false :
-              (bvn.length != 10)) Padding(
-                padding: const EdgeInsets.only(left: 5,top: 5),
-                child: Text("BVN is incomplete", style: TextStyle(fontSize: 11,color: AppColors.kRed),),
-              ) else SizedBox(),
+                if (autoValidate == false ? false :
+                (bvn.length != 10)) Padding(
+                  padding: const EdgeInsets.only(left: 5,top: 5),
+                  child: Text("BVN is incomplete", style: TextStyle(fontSize: 11,color: AppColors.kRed),),
+                ) else SizedBox(),
 
-              Spacer(),
-              PrimaryButtonNew(
-                onTap: ()async{
-                  var result = await settingsViewModel.updateBvn(
-                      token: identityViewModel.user.token,
-                  bvn: bvn
-                  );
-                },
-                title: "Done",
-                width: 200,
-              ),
+                Spacer(),
+                Center(
+                  child: PrimaryButtonNew(
+                    onTap: ()async{
+                      setState(() {
+                        loading = true;
+                      });
+                      var result = await settingsViewModel.updateBvn(
+                          token: identityViewModel.user.token,
+                      bvn: bvn
+                      );
+                      setState(() {
+                        loading = false;
+                      });
+                      if(result.error == false){
 
-              Spacer(),
-            ],),
+                      }else{
+                        AppUtils.showError(context, message: result.errorMessage);
+                      }
+                    },
+                    title: "Done",
+                    width: 200,
+                  ),
+                ),
+
+                Spacer(),
+              ],),
+          ),
         ))
       ],),
     );

@@ -1,4 +1,10 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
+import 'package:provider/provider.dart';
+import 'package:zimvest/data/view_models/settings_view_model.dart';
+import 'package:zimvest/new_screens/profile/preview_screen.dart';
 import 'package:zimvest/styles/colors.dart';
 import 'package:zimvest/utils/margin.dart';
 import 'package:zimvest/utils/strings.dart';
@@ -16,8 +22,34 @@ class IdentityUploadScreen extends StatefulWidget {
 }
 
 class _IdentityUploadScreenState extends State<IdentityUploadScreen> {
+  ABSSettingsViewModel settingsViewModel;
+
+  final picker = ImagePicker();
+
+  Future getImageFromGallery() async {
+    final pickedFile = await picker.getImage(source: ImageSource.gallery);
+
+    if (pickedFile != null) {
+      Navigator.pushReplacement(context, PreviewScreen.route(File(pickedFile.path)));
+    } else {
+      print('No image selected.');
+    }
+  }
+  Future getImageFromCam() async {
+    final pickedFile = await picker.getImage(source: ImageSource.gallery);
+
+
+    if (pickedFile != null) {
+      Navigator.pushReplacement(context, PreviewScreen.route(File(pickedFile.path)));
+    } else {
+      print('No image selected.');
+    }
+
+  }
+
   @override
   Widget build(BuildContext context) {
+    settingsViewModel = Provider.of(context);
     return Scaffold(
       appBar: ZimAppBar(
         text: "Identity Document",
@@ -36,10 +68,41 @@ class _IdentityUploadScreenState extends State<IdentityUploadScreen> {
             fontSize: 13,fontFamily: AppStrings.fontMedium
           ),),
 
-          IdentityWidget(),
-          IdentityWidget(title: 'National identity card',),
-          IdentityWidget(title: 'International passport',),
-          IdentityWidget(title: 'Driver’s license',),
+          IdentityWidget(
+            onTap: (){
+              settingsViewModel.selectedIdentity = 1;
+              showModalBottomSheet < Null > (context: context, builder: (BuildContext context) {
+                return ImageUploadWidget(onCamera: getImageFromCam,onGallery: getImageFromGallery,);
+              }, isScrollControlled: true);
+            },
+          ),
+          IdentityWidget(
+            title: 'National identity card',
+            onTap: (){
+              settingsViewModel.selectedIdentity = 2;
+              showModalBottomSheet < Null > (context: context, builder: (BuildContext context) {
+                return ImageUploadWidget(onCamera: getImageFromCam,onGallery: getImageFromGallery,);
+              }, isScrollControlled: true);
+            },
+          ),
+          IdentityWidget(
+            title: 'International passport',
+            onTap: (){
+              settingsViewModel.selectedIdentity = 3;
+              showModalBottomSheet < Null > (context: context, builder: (BuildContext context) {
+                return ImageUploadWidget(onCamera: getImageFromCam,onGallery: getImageFromGallery,);
+              }, isScrollControlled: true);
+            },
+          ),
+          IdentityWidget(
+            title: 'Driver’s license',
+            onTap: (){
+              settingsViewModel.selectedIdentity = 4;
+              showModalBottomSheet < Null > (context: context, builder: (BuildContext context) {
+                return ImageUploadWidget(onCamera: getImageFromCam,onGallery: getImageFromGallery,);
+              }, isScrollControlled: true);
+            },
+          ),
         ],),
       ),
     );

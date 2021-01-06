@@ -8,6 +8,7 @@ import 'package:zimvest/new_screens/profile/identity_upload_screens.dart';
 import 'package:zimvest/new_screens/profile/preview_screen.dart';
 import 'package:zimvest/new_screens/profile/residential_screen.dart';
 import 'package:zimvest/new_screens/profile/widgets/profile_widgets.dart';
+import 'package:zimvest/new_screens/profile/widgets/verification_failed_widget.dart';
 import 'package:zimvest/styles/colors.dart';
 import 'package:zimvest/utils/margin.dart';
 import 'package:zimvest/utils/strings.dart';
@@ -78,6 +79,9 @@ class _VerificationDetailsScreenState extends State<VerificationDetailsScreen> {
             padding: 0,
             onClick: (){
               //Navigator.push(context, NextOfKinScreen.route());
+              showModalBottomSheet < Null > (context: context, builder: (BuildContext context) {
+                return EnterBVNWidget();
+              }, isScrollControlled: false);
             },
             title: "BVN Verification",
           ),
@@ -106,6 +110,7 @@ class _VerificationDetailsScreenState extends State<VerificationDetailsScreen> {
           ),
           ProfileWidget(
             onClick: (){
+              settingsViewModel.selectedIdentity = null;
               showModalBottomSheet < Null > (context: context, builder: (BuildContext context) {
                 return ImageUploadWidget(onCamera: getImageFromCam,onGallery: getImageFromGallery,);
               }, isScrollControlled: true);

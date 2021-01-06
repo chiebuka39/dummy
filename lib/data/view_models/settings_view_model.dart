@@ -14,6 +14,8 @@ abstract class ABSSettingsViewModel extends ChangeNotifier{
   Notification _notification;
   String _bvn;
   CompletedSections _completedSections;
+  int _selectedIdentity;
+  int get selectedIdentity => _selectedIdentity;
 
 
   Profile get profile => _profile;
@@ -26,6 +28,7 @@ abstract class ABSSettingsViewModel extends ChangeNotifier{
 
   set profile(Profile value);
   set bvn(String value);
+  set selectedIdentity(int value);
   set kin(Kin value);
   set notification(Notification value);
   set address(Address value);
@@ -73,6 +76,12 @@ class SettingsViewModel extends ABSSettingsViewModel{
   @override
   set profile(Profile value) {
     _profile = value;
+    notifyListeners();
+  }
+
+  @override
+  set selectedIdentity(int value) {
+    _selectedIdentity = value;
     notifyListeners();
   }
 
