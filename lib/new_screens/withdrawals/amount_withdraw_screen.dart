@@ -49,7 +49,8 @@ class _SavingDailyScreenState extends State<AmountWithdrawScreen> with AfterLayo
     identityViewModel = Provider.of(context);
     paymentViewModel =  Provider.of(context);
     ABSPinViewModel pinViewModel = Provider.of(context);
-
+    double height = MediaQuery.of(context).size.height;
+    print(height);
     return GestureDetector(
       onTap: (){
         FocusScope.of(context).requestFocus(new FocusNode());
@@ -88,7 +89,7 @@ class _SavingDailyScreenState extends State<AmountWithdrawScreen> with AfterLayo
                     alignment: Alignment.centerLeft,
                       child: Text(convertWithComma(pinViewModel.amount), style: TextStyle(fontSize: 15),)),
                 ),
-                YMargin(70),
+                YMargin(height > 750 ? 65:30),
 
 
                 RoundedNextButton(
@@ -98,7 +99,7 @@ class _SavingDailyScreenState extends State<AmountWithdrawScreen> with AfterLayo
                     pinViewModel.resetAmount();
                   },
                 ),
-                YMargin(65),
+                YMargin(height > 750 ? 65:30),
                 NumKeyboardWidget()
 
 

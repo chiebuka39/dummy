@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:flutter_switch/flutter_switch.dart';
 import 'package:provider/provider.dart';
 import 'package:zimvest/data/view_models/payment_view_model.dart';
 import 'package:zimvest/new_screens/profile/verif_code_screen.dart';
@@ -313,10 +314,12 @@ class ResetPinWidget extends StatelessWidget {
 }
 class PasswordSuccessWidget extends StatelessWidget {
   const PasswordSuccessWidget({
-    Key key, this.message ="Your password was changed succesfully ", this.onDone,
+    Key key, this.message ="Your password was changed succesfully ",
+    this.onDone, this.success = true,
   }) : super(key: key);
 
   final String message;
+  final bool success;
   final VoidCallback onDone;
 
   @override
@@ -349,7 +352,7 @@ class PasswordSuccessWidget extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               YMargin(40),
-              Center(child: SvgPicture.asset("images/new/success.svg"),),
+              success == true ? Center(child: SvgPicture.asset(  "images/new/success.svg"),):Center(child: SvgPicture.asset(  "images/fail.svg", color: AppColors.kRejected,),),
               YMargin(27),
               SizedBox(
                 width: 250,
@@ -449,6 +452,68 @@ class ImageUploadWidget extends StatelessWidget {
           ),
         ))
       ],),
+    );
+  }
+}
+
+class SecuritySwitchWidget extends StatelessWidget {
+
+  final bool status;
+  final String title;
+
+  final Function toggle;
+
+  const SecuritySwitchWidget({Key key, this.status,
+    this.toggle, this.title}) : super(key: key);
+  @override
+  Widget build(BuildContext context) {
+    return GestureDetector(
+      onTap: (){
+        toggle(!status);
+      },
+      child: Container(height: 60,
+        color: Colors.transparent,
+        padding: EdgeInsets.symmetric(horizontal: 20),
+        child: Row(
+          children: [
+            Text(title, style: TextStyle(fontSize: 13,
+                fontFamily: AppStrings.fontNormal),),
+            Spacer(),
+            FlutterSwitch(
+              width: 50.0,
+              height: 30.0,
+              toggleSize: 20.0,
+              value: status,
+              borderRadius: 30.0,
+              padding: 2.0,
+              activeToggleColor: AppColors.kWhite,
+              inactiveToggleColor: AppColors.kWhite,
+              activeSwitchBorder: Border.all(
+                color: Color(0xFF3C1E70),
+                width: 0.0,
+              ),
+              inactiveSwitchBorder: Border.all(
+                color: Color(0xFFD1D5DA),
+                width: 0.0,
+              ),
+              activeColor: AppColors.kPrimaryColor,
+              inactiveColor: AppColors.kGrey,
+              activeIcon: Icon(
+                Icons.check,
+                color: AppColors.kPrimaryColor,
+                size: 15,
+              ),
+              inactiveIcon: Icon(
+                Icons.wb_sunny,
+                color: Colors.transparent,
+              ),
+              onToggle: (val) {
+                toggle(val);
+              },
+            ),
+          ],
+        ),
+      ),
     );
   }
 }

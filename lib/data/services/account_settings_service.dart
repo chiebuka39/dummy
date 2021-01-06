@@ -228,7 +228,7 @@ class SettingsService extends ABSSettingsService{
       }
 
     }on DioError catch(e){
-      print("error ${e.response.data}");
+      print("error ${e.response?.data}");
       result.error = true;
     }
 

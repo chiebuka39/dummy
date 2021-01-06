@@ -350,6 +350,7 @@ class _AccountScreenState extends State<AccountScreen> with AfterLayoutMixin<Acc
                     }else{
                       showModalBottomSheet < Null > (context: context, builder: (BuildContext context) {
                         return PasswordSuccessWidget(
+                          success: false,
                           message: "Profile was not updated succesfully",
                           onDone: (){
                             Navigator.pop(context);

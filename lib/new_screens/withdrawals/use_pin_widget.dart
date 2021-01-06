@@ -48,6 +48,7 @@ class _UsePinWidgetState extends State<UsePinWidget> {
                 icon:  Icon(Icons.navigate_before_outlined, color: AppColors.kPrimaryColor,),
                 onPressed: (){
                   Navigator.pop(context);
+                  Navigator.pop(context);
                 },
               ),
             ),

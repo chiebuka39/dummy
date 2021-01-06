@@ -98,7 +98,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                 offset:Offset(0,-4),
                                 child: Text(AppStrings.nairaSymbol, style: TextStyle(fontSize: 14,color: AppColors.kSecondaryBoldText),)),
                             XMargin(2),
-                            Text(dashboardViewModel.dashboardModel.nairaPortfolio.split(".").first,
+                            Text(dashboardViewModel.dashboardModel.nairaPortfolio.substring(1).split(".").first,
                               style: TextStyle(fontSize: 25, fontFamily: AppStrings.fontMedium,
                                   color: AppColors.kSecondaryBoldText),),
                             XMargin(3),
