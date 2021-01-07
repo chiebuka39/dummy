@@ -45,24 +45,8 @@ class _TempLoginScreenState extends State<TempLoginScreen> with AfterLayoutMixin
   String password = "";
 
   final LocalAuthentication auth = LocalAuthentication();
-  bool _canCheckBiometrics;
   List<BiometricType> _availableBiometrics;
-  String _authorized = 'Not Authorized';
-  bool _isAuthenticating = false;
 
-  Future<void> _checkBiometrics() async {
-    bool canCheckBiometrics;
-    try {
-      canCheckBiometrics = await auth.canCheckBiometrics;
-    } on PlatformException catch (e) {
-      print(e);
-    }
-    if (!mounted) return;
-
-    setState(() {
-      _canCheckBiometrics = canCheckBiometrics;
-    });
-  }
 
   Future<void> _getAvailableBiometrics() async {
     List<BiometricType> availableBiometrics;
@@ -81,18 +65,13 @@ class _TempLoginScreenState extends State<TempLoginScreen> with AfterLayoutMixin
   Future<void> _authenticate(BuildContext context1) async {
     bool authenticated = false;
     try {
-      setState(() {
-        _isAuthenticating = true;
-        _authorized = 'Authenticating';
-      });
+
       authenticated = await auth.authenticateWithBiometrics(
           localizedReason: 'Scan your fingerprint to authenticate',
           useErrorDialogs: true,
           stickyAuth: true);
       setState(() {
         password = _localStorage.getSecondaryState().password;
-        _isAuthenticating = false;
-        _authorized = 'Authenticating';
       });
       print("<<<<<<<aaaaaaaa<<<<<");
       if(authenticated == true){
@@ -103,10 +82,7 @@ class _TempLoginScreenState extends State<TempLoginScreen> with AfterLayoutMixin
     }
     if (!mounted) return;
 
-    final String message = authenticated ? 'Authorized' : 'Not Authorized';
-    setState(() {
-      _authorized = message;
-    });
+
   }
 
   void _cancelAuthentication() {
@@ -115,26 +91,29 @@ class _TempLoginScreenState extends State<TempLoginScreen> with AfterLayoutMixin
 
   @override
   void afterFirstLayout(BuildContext context) {
-    _getAvailableBiometrics().then((value) {
-      if (Platform.isIOS) {
-        if (_availableBiometrics.contains(BiometricType.face)) {
-          print("ios face");
+    if(_localStorage.getSecondaryState().biometricsEnabled == true){
+      _getAvailableBiometrics().then((value) {
+        if (Platform.isIOS) {
+          if (_availableBiometrics.contains(BiometricType.face)) {
+            print("ios face");
+            if(widget.show == true){
+              _authenticate(context);
+            }
+          } else if (_availableBiometrics.contains(BiometricType.fingerprint)) {
+            if(widget.show == true){
+              _authenticate(context);
+            }
+            print("ios finger");
+          }
+        }else{
+          print("android devices");
           if(widget.show == true){
             _authenticate(context);
           }
-        } else if (_availableBiometrics.contains(BiometricType.fingerprint)) {
-          if(widget.show == true){
-            _authenticate(context);
-          }
-          print("ios finger");
         }
-      }else{
-        print("android devices");
-        if(widget.show == true){
-          _authenticate(context);
-        }
-      }
-    });
+      });
+    }
+
 
   }
 
@@ -206,14 +185,14 @@ class _TempLoginScreenState extends State<TempLoginScreen> with AfterLayoutMixin
                   ),
                 ),
                 YMargin(40),
-                Center(
+                _localStorage.getSecondaryState().biometricsEnabled == true ?Center(
                   child: GestureDetector(
                     onTap: (){
                       _authenticate(context);
                     },
                     child: SvgPicture.asset("images/new/face_id.svg",),
                   ),
-                ),
+                ):SizedBox(),
                 YMargin(40),
                 Center(
                   child: FlatButton(onPressed: (){
