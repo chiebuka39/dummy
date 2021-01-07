@@ -18,19 +18,22 @@ class SecondaryStateAdapter extends TypeAdapter<SecondaryState> {
       lastMinimized: fields[1] as DateTime,
       password: fields[2] as String,
       email: fields[3] as String,
+      biometricsEnabled: fields[4] as bool,
     );
   }
 
   @override
   void write(BinaryWriter writer, SecondaryState obj) {
     writer
-      ..writeByte(4)
+      ..writeByte(5)
       ..writeByte(0)
       ..write(obj.isLoggedIn)
       ..writeByte(2)
       ..write(obj.password)
       ..writeByte(3)
       ..write(obj.email)
+      ..writeByte(4)
+      ..write(obj.biometricsEnabled)
       ..writeByte(1)
       ..write(obj.lastMinimized);
   }

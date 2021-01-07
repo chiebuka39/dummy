@@ -1,9 +1,14 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:flutter_switch/flutter_switch.dart';
 import 'package:provider/provider.dart';
+import 'package:zimvest/data/local/user_local.dart';
+import 'package:zimvest/data/models/secondary_state.dart';
 import 'package:zimvest/data/view_models/payment_view_model.dart';
+import 'package:zimvest/locator.dart';
 import 'package:zimvest/new_screens/profile/verif_code_screen.dart';
+import 'package:zimvest/new_screens/tabs.dart';
 import 'package:zimvest/styles/colors.dart';
 import 'package:zimvest/utils/margin.dart';
 import 'package:zimvest/utils/strings.dart';
@@ -228,12 +233,28 @@ class EnableFaceIdWidget extends StatelessWidget {
               ),
               Spacer(),
               PrimaryButtonNew(
-                onTap: (){},
+                onTap: (){
+                  locator<ABSStateLocalStorage>().saveSecondaryState(SecondaryState.updateBiometrics(true,
+                      locator<ABSStateLocalStorage>().getSecondaryState()));
+                  EasyLoading.showSuccess('Pin Created');
+                  Navigator.pushAndRemoveUntil(
+                      context,
+                      MaterialPageRoute(builder: (context) => TabsContainer()),
+                          (Route<dynamic> route) => false);
+                },
                 title: "Yes",
                 width: 200,
               ),
               YMargin(10),
-              FlatButton(onPressed: (){}, child: Text("No",
+              FlatButton(onPressed: (){
+                locator<ABSStateLocalStorage>().saveSecondaryState(SecondaryState.updateBiometrics(false,
+                    locator<ABSStateLocalStorage>().getSecondaryState()));
+                EasyLoading.showSuccess('Pin Created');
+                Navigator.pushAndRemoveUntil(
+                    context,
+                    MaterialPageRoute(builder: (context) => TabsContainer()),
+                        (Route<dynamic> route) => false);
+              }, child: Text("No",
                 style: TextStyle(fontFamily: AppStrings.fontNormal),)),
               Spacer(),
             ],),
@@ -352,7 +373,7 @@ class PasswordSuccessWidget extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               YMargin(40),
-              success == true ? Center(child: SvgPicture.asset(  "images/new/success.svg"),):Center(child: SvgPicture.asset(  "images/fail.svg", color: AppColors.kRejected,),),
+           Center(child: SvgPicture.asset(  "images/new/${success == true ? 'success':'not_success'}.svg"),),
               YMargin(27),
               SizedBox(
                 width: 250,

@@ -17,5 +17,16 @@ class SecondaryState extends HiveObject{
   @HiveField(3)
   String email;
 
-  SecondaryState(this.isLoggedIn,{this.lastMinimized, this.password, this.email});
+  @HiveField(4)
+  bool biometricsEnabled;
+
+  SecondaryState(this.isLoggedIn,{this.lastMinimized, this.password,
+    this.email,
+    this.biometricsEnabled = false});
+
+  static SecondaryState updateBiometrics(bool value, SecondaryState state){
+    SecondaryState s = state;
+    s.biometricsEnabled = value;
+    return s;
+  }
 }

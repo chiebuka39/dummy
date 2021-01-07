@@ -185,11 +185,11 @@ class _TempLoginScreenState extends State<TempLoginScreen> with AfterLayoutMixin
                         ),
                       ),
                       IconButton(icon: Icon(
-                        obscureText == true ? Icons.visibility_off:Icons.visibility,size: 20,), onPressed: (){
+                        obscureText == true ? Icons.visibility_off:Icons.visibility,size: 20,color: AppColors.kPrimaryColor,), onPressed: (){
                           setState(() {
                             obscureText = !obscureText;
                           });
-                          print(";;;;;; $obscureText}");
+
                       })
                     ],
                   ),
@@ -211,17 +211,7 @@ class _TempLoginScreenState extends State<TempLoginScreen> with AfterLayoutMixin
                     onTap: (){
                       _authenticate(context);
                     },
-                    child: Container(
-                      alignment: Alignment.center,
-                      width: 43,
-                      height: 45,
-                      child: SvgPicture.asset("images/icon_face.svg",height: 20,),
-                      decoration: BoxDecoration(
-                          color: AppColors.kGrey,
-                        borderRadius: BorderRadius.circular(14)
-                      ),
-
-                    ),
+                    child: SvgPicture.asset("images/new/face_id.svg",),
                   ),
                 ),
                 YMargin(40),

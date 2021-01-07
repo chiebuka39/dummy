@@ -7,6 +7,7 @@ import 'package:timelines/timelines.dart';
 import 'package:zimvest/data/view_models/dashboard_view_model.dart';
 import 'package:zimvest/data/view_models/identity_view_model.dart';
 import 'package:zimvest/data/view_models/savings_view_model.dart';
+import 'package:zimvest/data/view_models/settings_view_model.dart';
 import 'package:zimvest/new_screens/navigation/investments/fixed/fixed_income_screen.dart';
 import 'package:zimvest/new_screens/navigation/investments/investment_high_yield_screen.dart';
 import 'package:zimvest/new_screens/navigation/wealth/aspire/aspire_box_screen.dart';
@@ -17,6 +18,8 @@ import 'package:zimvest/new_screens/navigation/widgets/earn_free_cash.dart';
 import 'package:zimvest/new_screens/portfolio_breakdown/dollar_portfolio_breakdown.dart';
 import 'package:zimvest/new_screens/portfolio_breakdown/naira_portfolio_breakdown.dart';
 import 'package:zimvest/new_screens/profile/profile_screen.dart';
+import 'package:zimvest/new_screens/profile/verification_details_screen.dart';
+import 'package:zimvest/screens/wallet/fund_wallet.dart';
 import 'package:zimvest/styles/colors.dart';
 import 'package:zimvest/utils/margin.dart';
 import 'package:zimvest/utils/strings.dart';
@@ -34,6 +37,7 @@ class _HomeScreenState extends State<HomeScreen> {
   ABSIdentityViewModel identityViewModel;
   ABSDashboardViewModel dashboardViewModel;
   ABSSavingViewModel savingViewModel;
+  ABSSettingsViewModel settingsViewModel;
 
 
   @override
@@ -46,6 +50,7 @@ class _HomeScreenState extends State<HomeScreen> {
     identityViewModel = Provider.of(context);
     dashboardViewModel = Provider.of(context);
     savingViewModel = Provider.of(context);
+    settingsViewModel = Provider.of(context);
     return Scaffold(
       body: SafeArea(
         child: SingleChildScrollView(
@@ -218,10 +223,28 @@ class _HomeScreenState extends State<HomeScreen> {
                   ],
                 ),
               ),
-              Container(
-                margin: EdgeInsets.symmetric(horizontal: 20),
-                height: 120,
-                  child: Timeline1(actions: ['Verify Identity','Fund Wallet'],)),
+              AnimatedOpacity(
+                opacity: settingsViewModel.completedSections == null ? 0:1,
+                duration: Duration(milliseconds: 500),
+                child: settingsViewModel.completedSections == null ? SizedBox(height: 120,): Container(
+                  margin: EdgeInsets.symmetric(horizontal: 20),
+                  height: 120,
+                    child: Timeline1(
+                      actions: settingsViewModel
+                          .completedSections.kycValidationCheck
+                          .isKycValidated == false ? ['Verify Identity','Fund Wallet']:
+                      ['Fund Wallet'],
+                      callbacks: settingsViewModel
+                          .completedSections.kycValidationCheck
+                          .isKycValidated == false ? [(){
+                        Navigator.push(context, VerificationDetailsScreen.route());
+                      },(){
+                        Navigator.push(context, FundWallet.route());
+                      }]:[(){
+                        Navigator.push(context, FundWallet.route());
+                      }],
+                    )),
+              ),
               ActionBoxWidget(title: "Save with Zimvest wealth box", desc: "This savings plan assists you save in a "
                   "disciplined manner.",color: AppColors.kWealth,onTap: (){
                 if(savingViewModel.savingPlanModel == null ){
@@ -279,8 +302,9 @@ class _HomeScreenState extends State<HomeScreen> {
 
 class Timeline1 extends StatelessWidget {
   final List<String> actions;
+  final List<VoidCallback> callbacks;
 
-  const Timeline1({Key key, this.actions}) : super(key: key);
+  const Timeline1({Key key, this.actions, this.callbacks}) : super(key: key);
   @override
   Widget build(BuildContext context) {
     return Timeline.tileBuilder(
@@ -296,7 +320,7 @@ class Timeline1 extends StatelessWidget {
       ),
       padding: EdgeInsets.symmetric(vertical: 20.0),
       builder: TimelineTileBuilder.connected(
-        contentsBuilder: (_, index) => _EmptyContents(title: actions[index],),
+        contentsBuilder: (_, index) => _EmptyContents(title: actions[index],onTap: callbacks[index],),
         connectorBuilder: (_, index, __) {
           if (index == 0) {
             return SolidLineConnector(color: Color(0xffE9E9E9),thickness: 1,);
@@ -331,6 +355,7 @@ class Timeline1 extends StatelessWidget {
   }
 }
 
+
 const kTileHeight = 50.0;
 class _EmptyContents extends StatelessWidget {
   final String title;
@@ -339,14 +364,17 @@ class _EmptyContents extends StatelessWidget {
   const _EmptyContents({Key key, this.title, this.onTap}) : super(key: key);
   @override
   Widget build(BuildContext context) {
-    return Container(
-      margin: EdgeInsets.only(left: 10.0),
-      height: 30.0,
-      child: Row(children: [
-        Text(title, style: TextStyle(fontSize: 12, fontFamily: AppStrings.fontNormal),),
-        Spacer(),
-        Icon(Icons.arrow_forward_ios_rounded,size: 16,color: AppColors.kPrimaryColor,)
-      ],),
+    return GestureDetector(
+      onTap: onTap,
+      child: Container(
+        margin: EdgeInsets.only(left: 10.0),
+        height: 30.0,
+        child: Row(children: [
+          Text(title, style: TextStyle(fontSize: 12, fontFamily: AppStrings.fontNormal),),
+          Spacer(),
+          Icon(Icons.arrow_forward_ios_rounded,size: 16,color: AppColors.kPrimaryColor,)
+        ],),
+      ),
     );
   }
 }

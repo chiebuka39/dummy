@@ -177,14 +177,16 @@ class _PreviewScreenState extends State<PreviewScreen> {
       });
     }else{
 
-      showModalBottomSheet < Null > (context: context, builder: (BuildContext context) {
+      showModalBottomSheet < Null > (context: context,
+        builder: (BuildContext context) {
         return PasswordSuccessWidget(
 
           onDone: (){
 
           Navigator.pop(context);
-        },success:false,message: result.errorMessage == null ? "We could not upload your document": result.errorMessage,);
-      });
+        },success:false,
+          message: result.errorMessage == null ? "We could not upload your document": result.errorMessage,);
+      },isDismissible: false);
     }
   }
 }

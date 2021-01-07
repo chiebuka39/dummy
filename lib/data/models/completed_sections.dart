@@ -50,7 +50,7 @@ class KycValidationCheck {
   bool isBirthDayAndGenderProvided;
 
   factory KycValidationCheck.fromJson(Map<String, dynamic> json) => KycValidationCheck(
-    isKycValidated: json["isKYCValidated"],
+    isKycValidated: json["isKYCApproved"],
     isBvnValid: json["isBVNValid"],
     isBirthDayAndGenderProvided: json["isBirthDayAndGenderProvided"],
     utilityBillStatus: json["utilityBillStatus"],

@@ -6,6 +6,7 @@ import 'package:zimvest/styles/colors.dart';
 import 'package:zimvest/utils/margin.dart';
 import 'package:zimvest/utils/strings.dart';
 import 'package:zimvest/widgets/buttons.dart';
+import 'package:zimvest/widgets/new/new_widgets.dart';
 
 import '../../../data/view_models/identity_view_model.dart';
 
@@ -486,11 +487,10 @@ class _CreatePinWidgetState extends State<CreatePinWidget> {
     if(result.error == true) {
       EasyLoading.showError('Error occurred');
     }else{
-      EasyLoading.showSuccess('Pin Created');
-      Navigator.pushAndRemoveUntil(
-          context,
-          MaterialPageRoute(builder: (context) => TabsContainer()),
-              (Route<dynamic> route) => false);
+      showModalBottomSheet < Null > (context: context, builder: (BuildContext context) {
+        return EnableFaceIdWidget();
+      });
+
 
     }
   }

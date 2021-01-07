@@ -1,6 +1,9 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_switch/flutter_switch.dart';
+import 'package:zimvest/data/local/user_local.dart';
+import 'package:zimvest/data/models/secondary_state.dart';
+import 'package:zimvest/locator.dart';
 import 'package:zimvest/new_screens/profile/change_password_screen.dart';
 import 'package:zimvest/new_screens/profile/current_pin_screen.dart';
 import 'package:zimvest/new_screens/profile/widgets/profile_widgets.dart';
@@ -22,9 +25,17 @@ class SecurityScreen extends StatefulWidget {
 }
 
 class _SecurityScreenState extends State<SecurityScreen> {
+  final ABSStateLocalStorage _localStorage = locator<ABSStateLocalStorage>();
+
   var status7 = false;
   var faceId = false;
   var hide = false;
+
+  @override
+  void initState() {
+    faceId = _localStorage.getSecondaryState().biometricsEnabled == null ? false:_localStorage.getSecondaryState().biometricsEnabled;
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -44,6 +55,8 @@ class _SecurityScreenState extends State<SecurityScreen> {
             setState(() {
               faceId = value;
             });
+            _localStorage.saveSecondaryState(SecondaryState
+                .updateBiometrics(value, _localStorage.getSecondaryState()));
           },
           status: faceId,
         ),
