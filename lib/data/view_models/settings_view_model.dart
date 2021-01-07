@@ -14,6 +14,8 @@ abstract class ABSSettingsViewModel extends ChangeNotifier{
   Notification _notification;
   String _bvn;
   CompletedSections _completedSections;
+  int _selectedIdentity;
+  int get selectedIdentity => _selectedIdentity;
 
 
   Profile get profile => _profile;
@@ -26,6 +28,7 @@ abstract class ABSSettingsViewModel extends ChangeNotifier{
 
   set profile(Profile value);
   set bvn(String value);
+  set selectedIdentity(int value);
   set kin(Kin value);
   set notification(Notification value);
   set address(Address value);
@@ -49,9 +52,21 @@ abstract class ABSSettingsViewModel extends ChangeNotifier{
   Future<Result<void>> updateBvn({String token, String bvn});
   Future<Result<void>> updateProfile({String token, String firstName,
     String lastName, String email, String phoneNumber,
-    String dOB, int gender, int maritalStatus, String profile1});
+    String dOB, int gender, int maritalStatus, File profile1});
   Future<Result<void>> updateKin({String token, String fullName,
     int relationship, String email, String phoneNumber});
+
+  Future<Result<void>> profileInvestor({String token,
+    String firstName,
+    int investmentKnowledge,
+    int mostConernedDuringInvestment,
+    int instrumentCurrentlyOwned,
+    int marketAndParticularStockDrops,
+    int hypotheticalInvestmentPlan,
+    int investmentDurationBeforeWithdrawal,
+    int durationToCompletelyWithdraw,
+    bool ethicalConsideration,
+    String email, String lastName});
 }
 
 class SettingsViewModel extends ABSSettingsViewModel{
@@ -61,6 +76,12 @@ class SettingsViewModel extends ABSSettingsViewModel{
   @override
   set profile(Profile value) {
     _profile = value;
+    notifyListeners();
+  }
+
+  @override
+  set selectedIdentity(int value) {
+    _selectedIdentity = value;
     notifyListeners();
   }
 
@@ -202,7 +223,7 @@ class SettingsViewModel extends ABSSettingsViewModel{
 
   @override
   Future<Result<void>> updateProfile({String token, String firstName, String lastName, String email,
-    String phoneNumber, String dOB, int gender, int maritalStatus, String profile1}) async{
+    String phoneNumber, String dOB, int gender, int maritalStatus, File profile1}) async{
 
 
     return _settingsService.updateProfile(
@@ -214,7 +235,7 @@ class SettingsViewModel extends ABSSettingsViewModel{
       maritalStatus: maritalStatus,
       gender: gender,
       dOB: dOB,
-        profile:profile.photoFile
+        profile:profile1
     );
   }
 
@@ -228,6 +249,28 @@ class SettingsViewModel extends ABSSettingsViewModel{
      email: email,
      phoneNumber: phoneNumber
    );
+  }
+
+  @override
+  Future<Result<void>> profileInvestor({String token, String firstName,
+    int investmentKnowledge, int mostConernedDuringInvestment,
+    int instrumentCurrentlyOwned, int marketAndParticularStockDrops,
+    int hypotheticalInvestmentPlan, int investmentDurationBeforeWithdrawal,
+    int durationToCompletelyWithdraw,
+    bool ethicalConsideration, String email, String lastName}) {
+    return _settingsService.profileInvestor(
+      firstName: firstName,
+      lastName: lastName,
+      email: email,
+      ethicalConsideration: ethicalConsideration,
+      marketAndParticularStockDrops: marketAndParticularStockDrops,
+      mostConernedDuringInvestment: mostConernedDuringInvestment,
+      durationToCompletelyWithdraw: durationToCompletelyWithdraw,
+      instrumentCurrentlyOwned: instrumentCurrentlyOwned,
+      investmentDurationBeforeWithdrawal: investmentDurationBeforeWithdrawal,
+      investmentKnowledge: investmentKnowledge,
+      hypotheticalInvestmentPlan: hypotheticalInvestmentPlan
+    );
   }
 
 

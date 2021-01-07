@@ -111,7 +111,6 @@ class _KinFormWidgetState extends State<KinFormWidget> with AfterLayoutMixin<Kin
       email: kinEmail.text,
       phoneNumber: kinNumber.text,
       fullName: kinName.text,
-      relationship: relationship+1
     );
     if (i1.error == false ) {
       EasyLoading.showSuccess("Success");

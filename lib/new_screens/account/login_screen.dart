@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:provider/provider.dart';
+import 'package:zimvest/data/services/connectivity_service.dart';
 import 'package:zimvest/data/view_models/identity_view_model.dart';
 import 'package:zimvest/new_screens/account/create_account.dart';
 import 'package:zimvest/new_screens/account/create_pin_screen.dart';
@@ -27,6 +29,7 @@ class _LoginScreenState extends State<LoginScreen> {
   bool loading = false;
 
   ABSIdentityViewModel _identityViewModel;
+  ConnectionProvider connectionProvider;
   bool obscureText2 = true;
   bool autoValidate = false;
   String _email = "";
@@ -36,6 +39,7 @@ class _LoginScreenState extends State<LoginScreen> {
   @override
   Widget build(BuildContext context) {
     _identityViewModel = Provider.of(context);
+    connectionProvider = Provider.of(context);
     //Password@1
     //testex.testex@mailinator.com
     return Scaffold(

@@ -6,6 +6,7 @@ import 'package:zimvest/data/view_models/dashboard_view_model.dart';
 import 'package:zimvest/data/view_models/identity_view_model.dart';
 import 'package:zimvest/data/view_models/payment_view_model.dart';
 import 'package:zimvest/data/view_models/savings_view_model.dart';
+import 'package:zimvest/data/view_models/settings_view_model.dart';
 import 'package:zimvest/new_screens/navigation/WalletScreen.dart';
 import 'package:zimvest/new_screens/navigation/home_screen.dart';
 import 'package:zimvest/new_screens/navigation/portfolio_screen.dart';
@@ -37,6 +38,7 @@ class _TabsContainerState extends State<TabsContainer>
     with AfterLayoutMixin<TabsContainer> {
   ABSDashboardViewModel dashboardViewModel;
   ABSIdentityViewModel identityViewModel;
+  ABSSettingsViewModel settingsViewModel;
   ABSSavingViewModel savingViewModel;
   ABSPaymentViewModel paymentViewModel;
 
@@ -53,11 +55,11 @@ class _TabsContainerState extends State<TabsContainer>
 
   @override
   void afterFirstLayout(BuildContext context) async{
+
     dashboardViewModel.getPortfolioValue(identityViewModel.user.token);
     savingViewModel.getSavingPlans(token: identityViewModel.user.token);
     paymentViewModel.getWallet(identityViewModel.user.token);
-    dashboardViewModel.getAssetDistribution(identityViewModel.user.token);
-    dashboardViewModel.getPortfolioDistribution(identityViewModel.user.token);
+    settingsViewModel.getCompletedSections(token: identityViewModel.user.token);
 
   }
 
@@ -72,6 +74,7 @@ class _TabsContainerState extends State<TabsContainer>
     dashboardViewModel = Provider.of(context);
     savingViewModel = Provider.of(context);
     paymentViewModel = Provider.of(context);
+    settingsViewModel = Provider.of(context);
     return Container(
         decoration: BoxDecoration(borderRadius: BorderRadius.circular(20)),
         child: Stack(

@@ -39,16 +39,22 @@ class KycValidationCheck {
     this.isKycValidated,
     this.isBvnValid,
     this.isBirthDayAndGenderProvided,
+    this.identificationStatus,
+    this.utilityBillStatus
   });
 
   bool isKycValidated;
   bool isBvnValid;
+  int utilityBillStatus;
+  int identificationStatus;
   bool isBirthDayAndGenderProvided;
 
   factory KycValidationCheck.fromJson(Map<String, dynamic> json) => KycValidationCheck(
-    isKycValidated: json["isKYCValidated"],
+    isKycValidated: json["isKYCApproved"],
     isBvnValid: json["isBVNValid"],
     isBirthDayAndGenderProvided: json["isBirthDayAndGenderProvided"],
+    utilityBillStatus: json["utilityBillStatus"],
+    identificationStatus: json["identificationStatus"],
   );
 
   Map<String, dynamic> toJson() => {

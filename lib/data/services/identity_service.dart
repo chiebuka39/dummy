@@ -30,6 +30,8 @@ abstract class ABSIdentityService{
   Future<Result<void>> resetPassword(String email);
   Future<Result<void>> changePassword({String currentPassword, String newPassword, String token});
   Future<Result<bool>> phoneAvailability(String phone);
+  Future<Result<void>> changePin({String currentPin,
+    String newPin, String token});
   Future<Result<void>> setUpPin({String pin, String token});
   Future<Result<void>> resetPin({String pin, String token,String trackingId});
   Future<Result<Map<String,dynamic>>> sendEmailOTP(String email);
@@ -56,6 +58,7 @@ class IdentityService extends ABSIdentityService {
     };
 
     var url = "${AppStrings.baseUrl}zimvest.services.identity/api/Account/login";
+    var url1 = "${AppStrings.baseUrl}api/Account/login";
     print("lll $body");
     print("lll $url");
     try{
@@ -647,6 +650,56 @@ class IdentityService extends ABSIdentityService {
       result.error = true;
 
       result.errorMessage = e?.response?.data['message'] ?? "An error occured";
+    }
+
+    return result;
+  }
+
+  @override
+  Future<Result<void>> changePin({String currentPin,
+    String newPin, String token}) async{
+    Result<void> result = Result(error: false);
+
+
+    var url = "${AppStrings.baseUrl}zimvest.services.identity/api/Account/change-pin";
+    var body = {
+      'currentPin': currentPin,
+      'newPin':newPin,
+    };
+
+    var headers = {
+      "Authorization":"Bearer $token"
+    };
+
+    print("lll $url");
+    print("lll $body");
+    print("lll $token");
+    try{
+      var response = await dio.post(url,data: body,options: Options(headers: headers));
+      final int statusCode = response.statusCode;
+      var response1 = response.data;
+      print("iii ${response1}");
+
+      if (statusCode != 200) {
+        result.errorMessage = response1['message'];
+        result.error = true;
+      }else {
+        result.error = false;
+
+      }
+
+    }on DioError catch(e){
+      print("error ${e.response.data}");
+      result.error = true;
+
+        if(e.response.data is Map){
+          result.errorMessage = e.response.data['message'];
+
+        }else{
+          result.errorMessage = "An error occured";
+        }
+
+      print("lllll ${e.response.data is Map}");
     }
 
     return result;

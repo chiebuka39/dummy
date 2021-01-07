@@ -255,7 +255,12 @@ class _SavingTransactionsWidgetState extends State<SavingTransactionsWidget> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
 
-              ...List.generate(6, (index) => TransactionItemWidget()),
+              ...List.generate(6, (index) => TransactionItemWidget(
+                narration: "Paid money in",
+                date: "2 march",
+                amount: 2000,
+                symbol: AppStrings.nairaSymbol,
+              )),
               YMargin(50)
 
             ],

@@ -81,6 +81,9 @@ class FixedIncomePurchaseSource extends StatefulWidget {
 }
 
 class _FixedIncomePurchaseSourceState extends State<FixedIncomePurchaseSource> {
+
+
+
   @override
   Widget build(BuildContext context) {
     return ViewModelProvider<InvestmentHighYieldViewModel>.withConsumer(

@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/foundation.dart';
 import 'package:zimvest/data/models/product_transaction.dart';
 import 'package:zimvest/data/models/product_type.dart';
@@ -18,6 +20,8 @@ abstract class ABSSavingViewModel extends ChangeNotifier{
   SavingPlanModel get selectedPlan => _selectedPlan;
   double _amountToSave;
   String _goalName;
+  File _image;
+  File get image => _image;
   String get goalName => _goalName;
   double get amountToSave => _amountToSave;
   DateTime _startDate;
@@ -48,6 +52,7 @@ abstract class ABSSavingViewModel extends ChangeNotifier{
   set startDate(DateTime time);
   set endDate(DateTime time);
   set goalName(String name);
+  set image(File value);
   set amountToSave(double value);
   set selectedFrequency(SavingsFrequency value);
   set autoSave(bool value);
@@ -82,6 +87,9 @@ abstract class ABSSavingViewModel extends ChangeNotifier{
     int fundingChannel, int frequency, String planName, DateTime maturityDate,
     DateTime startDate, int productId, double targetAmount,
     int savingsAmount, String token, bool autoSave});
+
+  Future<Result<SavingPlanModel>> createTargetSavings2({int cardId,
+    int savingsAmount, String token, int fundingChannel,});
 
   Future<Result<void>> topUp({String token,
     int cardId, int custSavingId, int fundingChannel,
@@ -131,6 +139,10 @@ class SavingViewModel extends ABSSavingViewModel{
 
   set fundingChannels(List<FundingChannel> value){
     _fundingChannels = value;
+    notifyListeners();
+  }
+  set image(File value){
+    _image = value;
     notifyListeners();
   }
 
@@ -323,6 +335,31 @@ class SavingViewModel extends ABSSavingViewModel{
       customerSavingId: customerSavingId,
       password: password
     );
+  }
+
+  @override
+  Future<Result<SavingPlanModel>> createTargetSavings2({int cardId, int savingsAmount,int fundingChannel, String token})async {
+    print("ppppp 11111111");
+    var result = await _savingService.createTargetSavings2(
+      token: token,
+      savingsAmount: savingsAmount,
+      frequency: selectedFrequency.id,
+      maturityDate: endDate,
+      targetAmount: amountToSave,
+      startDate: startDate,
+      productId: 2,
+      autoSave: autoSave,
+      fundingChannel: fundingChannel,
+      planName: goalName,
+      cardId: cardId,
+      image: image
+    );
+    if(result.data != null){
+      var s = savingPlanModel;
+      s.add(result.data);
+      savingPlanModel = s;
+    }
+    return result;
   }
 
 }

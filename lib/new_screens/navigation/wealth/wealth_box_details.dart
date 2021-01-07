@@ -13,6 +13,7 @@ import 'package:zimvest/new_screens/funding/top_up_screen.dart';
 import 'package:zimvest/new_screens/funding/withdraw_screen.dart';
 import 'package:zimvest/new_screens/navigation/portfolio_screen.dart';
 import 'package:zimvest/new_screens/navigation/widgets/money_title_widget.dart';
+import 'package:zimvest/new_screens/withdrawals/amount_withdraw_screen.dart';
 import 'package:zimvest/styles/colors.dart';
 import 'package:zimvest/utils/app_utils.dart';
 import 'package:zimvest/utils/margin.dart';
@@ -195,7 +196,9 @@ class _WealthBoxDetailsScreenState extends State<WealthBoxDetailsScreen> with Af
                           child: Center(
                             child: GestureDetector(
                               onTap: (){
-                                Navigator.of(context).push(WithdrawWealthScreen.route());
+                                savingViewModel.selectedPlan = savingsPlanModel;
+                                Navigator.of(context).push(AmountWithdrawScreen.route());
+
                               },
                               child: Container(child: Column(children: [
                                 Container(

@@ -5,6 +5,7 @@ import 'package:zimvest/data/view_models/identity_view_model.dart';
 import 'package:zimvest/data/view_models/pin_view_model.dart';
 import 'package:zimvest/new_screens/tabs.dart';
 import 'package:zimvest/styles/colors.dart';
+import 'package:zimvest/utils/app_utils.dart';
 import 'package:zimvest/utils/margin.dart';
 import 'package:zimvest/utils/strings.dart';
 import 'package:zimvest/widgets/buttons.dart';
@@ -14,14 +15,15 @@ import 'package:zimvest/widgets/new/new_widgets.dart';
 
 class NewPinScreen extends StatefulWidget {
   final bool reset;
-  static Route<dynamic> route({bool reset = false}) {
+  final String currentPin;
+  static Route<dynamic> route({bool reset = false, String pin}) {
     return MaterialPageRoute(
-        builder: (_) => NewPinScreen(reset: reset,),
+        builder: (_) => NewPinScreen(reset: reset,currentPin: pin,),
         settings:
         RouteSettings(name: NewPinScreen().toStringShort()));
   }
   const NewPinScreen({
-    Key key,  this.reset,
+    Key key,  this.reset, this.currentPin,
   }) : super(key: key);
 
 
@@ -138,16 +140,9 @@ class _NewPinScreenState extends State<NewPinScreen> {
                 loading: loading,
                 onTap:completed ?  (){
                   if(widget.reset){
-                      resetPin();
+                    resetPin();
                   }else{
-                    showModalBottomSheet < Null > (context: context, builder: (BuildContext context) {
-                      return PasswordSuccessWidget(
-                        message: "Pin Reset was successful",
-                        onDone: (){
-                          Navigator.pop(context);
-                        },
-                      );
-                    });
+                    changePin();
                   }
 
                 }:null,
@@ -189,6 +184,38 @@ class _NewPinScreenState extends State<NewPinScreen> {
       Navigator.pop(context);
       Navigator.pop(context);
       Navigator.pop(context);
+
+    }
+  }
+  void changePin() async{
+
+    setState(() {
+      loading = true;
+    });
+    identityViewModel.loading = true;
+    var result = await identityViewModel.changePin(newPin: "${pinViewModel.pin1}"
+        "${pinViewModel.pin2}${pinViewModel.pin3}${pinViewModel.pin4}",
+        currentPin: widget.currentPin);
+    setState(() {
+      loading = false;
+    });
+    if(result.error == true) {
+      identityViewModel.loading = false;
+      AppUtils.showError(context,message: result.errorMessage,title: 'Pin could not be changed');
+    }else{
+      showModalBottomSheet < Null > (context: context, builder: (BuildContext context) {
+        return PasswordSuccessWidget(
+          message: "Pin Reset was successful",
+          onDone: (){
+            Navigator.pop(context);
+            Navigator.pop(context);
+            Navigator.pop(context);
+            Navigator.pop(context);
+            Navigator.pop(context);
+          },
+        );
+      },isDismissible: false);
+
 
     }
   }

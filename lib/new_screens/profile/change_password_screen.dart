@@ -167,6 +167,7 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
                     print("error occured");
                     showModalBottomSheet < Null > (context: context, builder: (BuildContext context) {
                       return PasswordSuccessWidget(
+                        success: false,
                         message: result.errorMessage,
                         onDone: (){
                           Navigator.pop(context);

@@ -137,7 +137,7 @@ class _WealthBoxBreakDownWidgetState extends State<WealthBoxBreakDownWidget>
         ),
         items: 1,
         period: Duration(seconds: 2),
-        highlightColor: AppColors.kPrimaryColor2.withOpacity(0.1),
+        //highlightColor: AppColors.kPrimaryColor2.withOpacity(0.1),
         direction: SkeletonDirection.ltr,
       ),
     );
@@ -232,7 +232,7 @@ class _AspireBreakDownWidgetState extends State<AspireBreakDownWidget>
         ),
         items: 1,
         period: Duration(seconds: 2),
-        highlightColor: AppColors.kPrimaryColor2.withOpacity(0.1),
+        //highlightColor: AppColors.kPrimaryColor2.withOpacity(0.1),
         direction: SkeletonDirection.ltr,
       ),
     );

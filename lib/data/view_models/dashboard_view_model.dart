@@ -45,11 +45,29 @@ class DashboardViewModel extends ABSDashboardViewModel{
   @override
   Future<Result<void>> getPortfolioValue(String token)async {
      var result =await _dashboardService.getPortfolioValue(token);
-
      if(result.error == false){
        dashboardModel = result.data;
      }
-     print(",,, ${result.data}");
+     var result1 =await _dashboardService.getNairaPortfolio(token);
+     if(result1.error == false){
+       DashboardModel dashboardModel1 = dashboardModel;
+       dashboardModel1.nairaInvestment = result1.data.nairaInvestment;
+       dashboardModel1.nairaWallet = result1.data.nairaWallet;
+       dashboardModel1.nairaSavings = result1.data.nairaSavings;
+       dashboardModel = dashboardModel1;
+     }
+     var result2 =await _dashboardService.getDollarPortfolio(token);
+     if(result2.error == false){
+       DashboardModel dashboardModel1 = dashboardModel;
+       dashboardModel1.dollarInvestment = result2.data.dollarInvestment;
+       dashboardModel1.dollarWallet = result2.data.dollarWallet;
+       dashboardModel = dashboardModel1;
+     }
+
+     dashboardModel = DashboardModel.calculateNairaPercent(dashboardModel);
+     dashboardModel = DashboardModel.calculateDollarPercent(dashboardModel);
+
+
      return result;
   }
 

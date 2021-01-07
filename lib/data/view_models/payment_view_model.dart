@@ -17,7 +17,7 @@ abstract class ABSPaymentViewModel extends ChangeNotifier{
   Bank get selectedBank => _selectedBank;
   List<Bank> _userBanks;
   List<WalletTransaction> _walletTransactions = [];
-  List<PaymentCard> _userCards;
+  List<PaymentCard> _userCards = [];
   List<Bank> get userBanks => _userBanks;
   List<PaymentCard> get userCards => _userCards;
 

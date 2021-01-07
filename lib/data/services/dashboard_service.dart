@@ -7,6 +7,8 @@ import 'package:zimvest/utils/strings.dart';
 
 abstract class ABSDashboardService{
   Future<Result<DashboardModel>> getPortfolioValue(String token);
+  Future<Result<DashboardModel>> getNairaPortfolio(String token);
+  Future<Result<DashboardModel>> getDollarPortfolio(String token);
   Future<Result<AssetDistribution>> getAssetDistribution(String token);
   Future<Result<List<PortfolioDistribution>>> getPortfolioDistribution(String token);
 
@@ -36,6 +38,85 @@ class DashboardService extends ABSDashboardService{
       }else {
         result.error = false;
         var dashboardPortfolio = DashboardModel.fromJson(response1['data']);
+        result.data = dashboardPortfolio;
+      }
+
+    }on DioError catch(e){
+      print("error $e");
+      print("error ${e.response.data}");
+      result.error = true;
+    }
+
+    return result;
+  }
+
+  @override
+  Future<Result<DashboardModel>> getNairaPortfolio(String token) async{
+    Result<DashboardModel> result = Result(error: false);
+
+    var headers = {
+      "Authorization":"Bearer $token"
+    };
+
+    var url = "${AppStrings.baseUrl}zimvest.services.investment/api/Dashboards/nairaportfolio";
+
+    print("lll $url");
+    try{
+      var response = await dio.get(url, options: Options(headers: headers));
+      final int statusCode = response.statusCode;
+      var response1 = response.data;
+      print("iii ${response1}");
+
+      if (statusCode != 200) {
+        result.errorMessage = response1['message'];
+        result.error = true;
+      }else {
+        result.error = false;
+
+        var dashboardPortfolio = DashboardModel(
+          nairaSavings: response1['data']['savingsValue'],
+          nairaWallet: response1['data']['walletValue'],
+          nairaInvestment: response1['data']['investmentValue']
+        );
+        result.data = dashboardPortfolio;
+      }
+
+    }on DioError catch(e){
+      print("error $e");
+      print("error ${e.response.data}");
+      result.error = true;
+    }
+
+    return result;
+  }
+
+  @override
+  Future<Result<DashboardModel>> getDollarPortfolio(String token) async{
+    Result<DashboardModel> result = Result(error: false);
+
+    var headers = {
+      "Authorization":"Bearer $token"
+    };
+
+    var url = "${AppStrings.baseUrl}zimvest.services.investment/api/Dashboards/dollarportfolio";
+
+    print("lll $url");
+    try{
+      var response = await dio.get(url, options: Options(headers: headers));
+      final int statusCode = response.statusCode;
+      var response1 = response.data;
+      print("iii ${response1}");
+
+      if (statusCode != 200) {
+        result.errorMessage = response1['message'];
+        result.error = true;
+      }else {
+        result.error = false;
+
+        var dashboardPortfolio = DashboardModel(
+            dollarWallet: response1['data']['walletValue'],
+            dollarInvestment: response1['data']['investmentValue']
+        );
         result.data = dashboardPortfolio;
       }
 

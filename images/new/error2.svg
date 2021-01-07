@@ -1,0 +1,5 @@
+<svg id="Confetti" xmlns="http://www.w3.org/2000/svg" width="138" height="138" viewBox="0 0 138 138">
+  <circle id="Oval" cx="69" cy="69" r="69" fill="#030c42" opacity="0.797"/>
+  <circle id="Oval-2" data-name="Oval" cx="43.5" cy="43.5" r="43.5" transform="translate(26 25)" fill="#f53232" opacity="0.348"/>
+  <path id="Shape" d="M18.456,20.563,10.5,12.607,2.543,20.563A1.49,1.49,0,0,1,.437,18.456L8.393,10.5.437,2.543A1.49,1.49,0,0,1,2.543.437L10.5,8.393,18.456.437a1.49,1.49,0,0,1,2.107,2.107L12.607,10.5l7.956,7.956a1.49,1.49,0,1,1-2.107,2.107Z" transform="translate(59 58)" fill="#f53232"/>
+</svg>

@@ -1,8 +1,14 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:flutter_switch/flutter_switch.dart';
 import 'package:provider/provider.dart';
+import 'package:zimvest/data/local/user_local.dart';
+import 'package:zimvest/data/models/secondary_state.dart';
 import 'package:zimvest/data/view_models/payment_view_model.dart';
+import 'package:zimvest/locator.dart';
 import 'package:zimvest/new_screens/profile/verif_code_screen.dart';
+import 'package:zimvest/new_screens/tabs.dart';
 import 'package:zimvest/styles/colors.dart';
 import 'package:zimvest/utils/margin.dart';
 import 'package:zimvest/utils/strings.dart';
@@ -227,12 +233,28 @@ class EnableFaceIdWidget extends StatelessWidget {
               ),
               Spacer(),
               PrimaryButtonNew(
-                onTap: (){},
+                onTap: (){
+                  locator<ABSStateLocalStorage>().saveSecondaryState(SecondaryState.updateBiometrics(true,
+                      locator<ABSStateLocalStorage>().getSecondaryState()));
+                  EasyLoading.showSuccess('Pin Created');
+                  Navigator.pushAndRemoveUntil(
+                      context,
+                      MaterialPageRoute(builder: (context) => TabsContainer()),
+                          (Route<dynamic> route) => false);
+                },
                 title: "Yes",
                 width: 200,
               ),
               YMargin(10),
-              FlatButton(onPressed: (){}, child: Text("No",
+              FlatButton(onPressed: (){
+                locator<ABSStateLocalStorage>().saveSecondaryState(SecondaryState.updateBiometrics(false,
+                    locator<ABSStateLocalStorage>().getSecondaryState()));
+                EasyLoading.showSuccess('Pin Created');
+                Navigator.pushAndRemoveUntil(
+                    context,
+                    MaterialPageRoute(builder: (context) => TabsContainer()),
+                        (Route<dynamic> route) => false);
+              }, child: Text("No",
                 style: TextStyle(fontFamily: AppStrings.fontNormal),)),
               Spacer(),
             ],),
@@ -310,12 +332,15 @@ class ResetPinWidget extends StatelessWidget {
       ],),
     );
   }
-}class PasswordSuccessWidget extends StatelessWidget {
+}
+class PasswordSuccessWidget extends StatelessWidget {
   const PasswordSuccessWidget({
-    Key key, this.message ="Your password was changed succesfully ", this.onDone,
+    Key key, this.message ="Your password was changed succesfully ",
+    this.onDone, this.success = true,
   }) : super(key: key);
 
   final String message;
+  final bool success;
   final VoidCallback onDone;
 
   @override
@@ -348,7 +373,7 @@ class ResetPinWidget extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               YMargin(40),
-              Center(child: SvgPicture.asset("images/new/success.svg"),),
+           Center(child: SvgPicture.asset(  "images/new/${success == true ? 'success':'not_success'}.svg"),),
               YMargin(27),
               SizedBox(
                 width: 250,
@@ -368,6 +393,148 @@ class ResetPinWidget extends StatelessWidget {
             ],),
         ))
       ],),
+    );
+  }
+}
+
+class ImageUploadWidget extends StatelessWidget {
+  const ImageUploadWidget({
+    Key key, this.title ="Upload Utility bill", this.onCamera,
+    this.onGallery,
+  }) : super(key: key);
+
+  final String title;
+  final VoidCallback onCamera;
+  final VoidCallback onGallery;
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      height: 300,
+      decoration: BoxDecoration(
+        color: Colors.transparent,
+      ),
+      child: Column(children: [
+        YMargin(10),
+        Center(child: Container(
+          width: 30,
+          height: 5,
+          decoration: BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.circular(5)
+          ),
+        ),),
+        YMargin(20),
+        Expanded(child: Container(
+          width: double.infinity,
+          decoration: BoxDecoration(
+              color:Colors.white,
+              borderRadius: BorderRadius.only(
+                  topLeft: Radius.circular(25),
+                  topRight: Radius.circular(25)
+              )
+          ),
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 20),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                YMargin(40),
+                Text("Upload Utility Bill", style: TextStyle(fontSize: 15,
+                    fontFamily: AppStrings.fontBold),),
+                YMargin(37),
+                InkWell(
+                  onTap: onCamera,
+                  child: Container(
+                    height: 60,
+                    child: Row(children: [
+                      SvgPicture.asset("images/new/photo1.svg"),
+                      XMargin(10),
+                      Text("Take Photo"),
+                      Spacer(),
+                      Icon(Icons.navigate_next,color: AppColors.kPrimaryColor,)
+                    ],),
+                  ),
+                ),
+                InkWell(
+                  onTap: onGallery,
+                  child: Container(
+                    height: 60,
+                    child: Row(children: [
+                      SvgPicture.asset("images/new/library.svg"),
+                      XMargin(10),
+                      Text("Choose from Library"),
+                      Spacer(),
+                      Icon(Icons.navigate_next,color: AppColors.kPrimaryColor,)
+                    ],),
+                  ),
+                ),
+              ],),
+          ),
+        ))
+      ],),
+    );
+  }
+}
+
+class SecuritySwitchWidget extends StatelessWidget {
+
+  final bool status;
+  final String title;
+
+  final Function toggle;
+
+  const SecuritySwitchWidget({Key key, this.status,
+    this.toggle, this.title}) : super(key: key);
+  @override
+  Widget build(BuildContext context) {
+    return GestureDetector(
+      onTap: (){
+        toggle(!status);
+      },
+      child: Container(height: 60,
+        color: Colors.transparent,
+        padding: EdgeInsets.symmetric(horizontal: 20),
+        child: Row(
+          children: [
+            Text(title, style: TextStyle(fontSize: 13,
+                fontFamily: AppStrings.fontNormal),),
+            Spacer(),
+            FlutterSwitch(
+              width: 50.0,
+              height: 30.0,
+              toggleSize: 20.0,
+              value: status,
+              borderRadius: 30.0,
+              padding: 2.0,
+              activeToggleColor: AppColors.kWhite,
+              inactiveToggleColor: AppColors.kWhite,
+              activeSwitchBorder: Border.all(
+                color: Color(0xFF3C1E70),
+                width: 0.0,
+              ),
+              inactiveSwitchBorder: Border.all(
+                color: Color(0xFFD1D5DA),
+                width: 0.0,
+              ),
+              activeColor: AppColors.kPrimaryColor,
+              inactiveColor: AppColors.kGrey,
+              activeIcon: Icon(
+                Icons.check,
+                color: AppColors.kPrimaryColor,
+                size: 15,
+              ),
+              inactiveIcon: Icon(
+                Icons.wb_sunny,
+                color: Colors.transparent,
+              ),
+              onToggle: (val) {
+                toggle(val);
+              },
+            ),
+          ],
+        ),
+      ),
     );
   }
 }

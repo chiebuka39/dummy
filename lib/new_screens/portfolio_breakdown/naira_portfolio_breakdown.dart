@@ -7,6 +7,7 @@ import 'package:zimvest/styles/colors.dart';
 import 'package:zimvest/utils/margin.dart';
 import 'package:zimvest/utils/strings.dart';
 import 'package:zimvest/widgets/charts/pie2.dart';
+import 'package:zimvest/widgets/new/new_widgets.dart';
 
 class NairaPortfolioBreakdownScreen extends StatefulWidget {
 
@@ -32,18 +33,12 @@ class _NairaPortfolioBreakdownScreenState extends State<NairaPortfolioBreakdownS
     identityViewModel = Provider.of(context);
     print("lll;;; ${dashboardViewModel.dashboardModel.nairaPortfolio}");
     return Scaffold(
-      appBar: AppBar(
-        elevation: 0,
-        iconTheme: IconThemeData(color: Colors.black87),
-        leading: IconButton(
-          icon: Icon(Icons.arrow_back_ios_rounded,size: 17,color: AppColors.kPrimaryColor,),
-          onPressed: (){
-            Navigator.pop(context);
-          },
-        ),
-        backgroundColor: Colors.transparent,
-        title: Text("Portfolio Breakdown",
-          style: TextStyle(color: Colors.black87,fontSize: 14, fontFamily: AppStrings.fontMedium),),
+      appBar: ZimAppBar(
+        text: 'Portfolio Breakdown',
+        icon:Icons.arrow_back_ios_rounded,
+        callback: (){
+          Navigator.pop(context);
+        },
       ),
       body: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 20),
@@ -51,13 +46,9 @@ class _NairaPortfolioBreakdownScreenState extends State<NairaPortfolioBreakdownS
           child: Column(children: [
             PieChartSample2(
               value: dashboardViewModel.dashboardModel.nairaPortfolio == "0.01"? "N50,000.00":dashboardViewModel.dashboardModel.nairaPortfolio ,
-              savingsValue: dashboardViewModel.portfolioDistribution == null ?40.0: dashboardViewModel.portfolioDistribution.where((element)
-              => element.portfolioName == "Savings").isNotEmpty ? dashboardViewModel.portfolioDistribution.where((element)
-              => element.portfolioName == "Savings").first.percentageShare : 20.0,
-              investmentValue: dashboardViewModel.portfolioDistribution == null ? 20.0: dashboardViewModel.portfolioDistribution.where((element)
-              => element.portfolioName == "Investment").isNotEmpty ? dashboardViewModel.portfolioDistribution.where((element)
-              => element.portfolioName == "Investment").first.percentageShare : 20.0,
-              walletValue: 0.0,
+              savingsValue: dashboardViewModel.dashboardModel.nairaSavingPercent ,
+              investmentValue: dashboardViewModel.dashboardModel.nairaInvestmentPercent,
+              walletValue: dashboardViewModel.dashboardModel.nairaWalletPercent,
             ),
             YMargin(20),
             Divider(),
@@ -74,7 +65,6 @@ class _NairaPortfolioBreakdownScreenState extends State<NairaPortfolioBreakdownS
             Container(
               height: 70,
               child: Row(children: [
-
                 Container(
                   height: 6,
                   width: 6,
@@ -85,9 +75,7 @@ class _NairaPortfolioBreakdownScreenState extends State<NairaPortfolioBreakdownS
                 XMargin(10),
                 Text("Wallet balance", style: TextStyle(color: AppColors.kSecondaryText),),
                 Spacer(),
-                Text("${AppStrings.nairaSymbol}${FlutterMoneyFormatter(
-                    amount: 31700
-                ).output.nonSymbol}", style: TextStyle(
+                Text(getDoubleValue(dashboardViewModel.dashboardModel.nairaWallet), style: TextStyle(
                     color: AppColors.kSecondaryBoldText, fontFamily: AppStrings.fontMedium),),
               ],),
             ),
@@ -105,9 +93,7 @@ class _NairaPortfolioBreakdownScreenState extends State<NairaPortfolioBreakdownS
                 XMargin(10),
                 Text("Investment Balance", style: TextStyle(color: AppColors.kSecondaryText),),
                 Spacer(),
-                Text("${AppStrings.nairaSymbol}${FlutterMoneyFormatter(
-                    amount: 31700
-                ).output.nonSymbol}", style: TextStyle(
+                Text(getDoubleValue(dashboardViewModel.dashboardModel.nairaInvestment), style: TextStyle(
                     color: AppColors.kSecondaryBoldText, fontFamily: AppStrings.fontMedium),),
               ],),
             ),
@@ -125,9 +111,7 @@ class _NairaPortfolioBreakdownScreenState extends State<NairaPortfolioBreakdownS
                 XMargin(10),
                 Text("Savings Balance", style: TextStyle(color: AppColors.kSecondaryText),),
                 Spacer(),
-                Text("${AppStrings.nairaSymbol}${FlutterMoneyFormatter(
-                    amount: 31700
-                ).output.nonSymbol}", style: TextStyle(
+                Text(getDoubleValue(dashboardViewModel.dashboardModel.nairaSavings), style: TextStyle(
                     color: AppColors.kSecondaryBoldText, fontFamily: AppStrings.fontMedium),),
               ],),
             ),
@@ -137,5 +121,13 @@ class _NairaPortfolioBreakdownScreenState extends State<NairaPortfolioBreakdownS
         ),
       ),
     );
+  }
+  String getDoubleValue(String value){
+    if(value == "0.00"){
+      return "${AppStrings.nairaSymbol}0.00";
+    }else{
+      return value;
+    }
+
   }
 }

@@ -21,7 +21,7 @@ class WealthBoxActivity extends StatelessWidget {
         Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text(productTransaction.transactionDescription, style: TextStyle(
+            Text(productTransaction.transactionDescription.length > 50 ? productTransaction.transactionDescription.substring(0,50):productTransaction.transactionDescription, style: TextStyle(
                 fontSize: 12,
                 fontFamily: AppStrings.fontNormal,
                 color: AppColors.kGreyText
