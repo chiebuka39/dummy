@@ -1102,6 +1102,7 @@ class InvestmentService extends ABSInvestmentService {
     Result<GottenRate> result = Result(error: false);
     try {
       var response = await dio.get(url, options: Options(headers: headers));
+      print(response.data);
       final int statusCode = response.statusCode;
       var response1 = response.data;
       if (statusCode != 200) {

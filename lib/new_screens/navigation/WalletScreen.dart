@@ -7,9 +7,11 @@ import 'package:provider_architecture/provider_architecture.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 import 'package:zimvest/data/models/payment/wallet.dart';
 import 'package:zimvest/data/view_models/identity_view_model.dart';
+import 'package:zimvest/data/view_models/investment_view_model.dart';
 import 'package:zimvest/data/view_models/wallets_view_model.dart';
+import 'package:zimvest/new_screens/funding/wallet/dollar/fund_dollar_wallet.dart';
 import 'package:zimvest/new_screens/funding/wallet/exchange/exchange_to_dollars.dart';
-import 'package:zimvest/new_screens/funding/wallet/fund_with_dollar_wallet.dart';
+import 'package:zimvest/new_screens/funding/wallet/naira/fund_with_dollar_wallet.dart';
 import 'package:zimvest/new_screens/funding/wallet/wallet_withdraw_to.dart';
 import 'package:zimvest/new_screens/navigation/widgets/money_title_widget.dart';
 import 'package:zimvest/new_screens/navigation/widgets/transaction_item_widget.dart';
@@ -228,6 +230,7 @@ Widget _walletCards(BuildContext context, String name) {
     onModelReady: (model) => model.getWallets(),
     builder: (context, model, _) {
       // int index = model.wallets.map((e) => e).toList().length;
+      List<Wallet> wallet = model.wallets;
       return model.busy
           ? Center(
               child: CircularProgressIndicator(
@@ -377,81 +380,91 @@ Widget _walletCards(BuildContext context, String name) {
                             fontFamily: AppStrings.fontNormal),
                       ),
                       YMargin(30),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Center(
-                            child: GestureDetector(
-                              onTap: () {
-                                Navigator.of(context)
-                                    .push(WalletWithdrawToScreen.route());
-                              },
-                              child: Container(
-                                child: Column(
-                                  children: [
-                                    Container(
-                                      height: 35,
-                                      width: 35,
-                                      decoration: BoxDecoration(
-                                          color: AppColors.knewBlue,
-                                          shape: BoxShape.circle),
-                                      child: Center(
-                                        child: SvgPicture.asset(
-                                          "images/new/top_up.svg",
-                                          color: AppColors.kWhite,
+                      ViewModelProvider<
+                          InvestmentHighYieldViewModel>.withConsumer(
+                        viewModelBuilder: () => InvestmentHighYieldViewModel(),
+                        onModelReady: (model) => model.getRate(),
+                        builder: (context, model, _) => Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Center(
+                              child: GestureDetector(
+                                onTap: () {
+                                  print("Some ${model.gotRate.data}");
+                                  // Navigator.of(context).push(
+                                  //   FundDollarWallet.route(
+                                  //     wallet: wallet,
+                                  //     rate: model.gotRate.data.rate,
+                                  //   ),
+                                  // );
+                                },
+                                child: Container(
+                                  child: Column(
+                                    children: [
+                                      Container(
+                                        height: 35,
+                                        width: 35,
+                                        decoration: BoxDecoration(
+                                            color: AppColors.knewBlue,
+                                            shape: BoxShape.circle),
+                                        child: Center(
+                                          child: SvgPicture.asset(
+                                            "images/new/top_up.svg",
+                                            color: AppColors.kWhite,
+                                          ),
                                         ),
                                       ),
-                                    ),
-                                    YMargin(12),
-                                    Text(
-                                      "Fund Wallet",
-                                      style: TextStyle(
-                                          fontSize: 12,
-                                          color: AppColors.kWhite,
-                                          fontFamily: AppStrings.fontNormal),
-                                    )
-                                  ],
+                                      YMargin(12),
+                                      Text(
+                                        "Fund Wallet",
+                                        style: TextStyle(
+                                            fontSize: 12,
+                                            color: AppColors.kWhite,
+                                            fontFamily: AppStrings.fontNormal),
+                                      )
+                                    ],
+                                  ),
                                 ),
                               ),
                             ),
-                          ),
-                          XMargin(110),
-                          Center(
-                            child: GestureDetector(
-                              onTap: () {
-                                Navigator.push(context,
-                                    ExchangeToDollarsScreen.route(false));
-                              },
-                              child: Container(
-                                child: Column(
-                                  children: [
-                                    Container(
-                                      height: 35,
-                                      width: 35,
-                                      decoration: BoxDecoration(
-                                          color: AppColors.knewBlue,
-                                          shape: BoxShape.circle),
-                                      child: Center(
-                                        child: SvgPicture.asset(
-                                          "images/new/withdraw1.svg",
-                                          color: AppColors.kWhite,
+                            XMargin(110),
+                            Center(
+                              child: GestureDetector(
+                                onTap: () {
+                                  Navigator.push(context,
+                                      ExchangeToDollarsScreen.route(false));
+                                },
+                                child: Container(
+                                  child: Column(
+                                    children: [
+                                      Container(
+                                        height: 35,
+                                        width: 35,
+                                        decoration: BoxDecoration(
+                                            color: AppColors.knewBlue,
+                                            shape: BoxShape.circle),
+                                        child: Center(
+                                          child: SvgPicture.asset(
+                                            "images/new/withdraw1.svg",
+                                            color: AppColors.kWhite,
+                                          ),
                                         ),
                                       ),
-                                    ),
-                                    YMargin(12),
-                                    Text(
-                                      "Withdraw",
-                                      style: TextStyle(
-                                          fontSize: 12,
-                                          color: AppColors.kWhite,
-                                          fontFamily: AppStrings.fontNormal),
-                                    )
-                                  ],
+                                      YMargin(12),
+                                      Text(
+                                        "Withdraw",
+                                        style: TextStyle(
+                                            fontSize: 12,
+                                            color: AppColors.kWhite,
+                                            fontFamily: AppStrings.fontNormal),
+                                      )
+                                    ],
+                                  ),
                                 ),
                               ),
                             ),
-                          ),
-                        ],
+                          ],
+                        ),
                       ),
                     ],
                   ),
@@ -640,16 +653,21 @@ void bottomSheet(BuildContext context, List<Wallet> wallets, String name) {
                     ),
                   ),
                   YMargin(24),
-                  PaymentSourceButtonSpecial(
-                    onTap: () {
-                      Navigator.of(context).push(
-                        FundNairaWalletWithDollar.route(wallet: wallets),
-                      );
-                    },
-                    paymentsource: "Fund With Dollar Wallet",
-                    color: AppColors.kPrimaryColorLight,
-                    textColor: AppColors.kPrimaryColor,
-                    iconColor: AppColors.kPrimaryColor,
+                  ViewModelProvider<InvestmentHighYieldViewModel>.withConsumer(
+                    viewModelBuilder: () => InvestmentHighYieldViewModel(),
+                    onModelReady: (model) => model.getRate(),
+                    builder: (context, model, _) => PaymentSourceButtonSpecial(
+                      onTap: () {
+                        Navigator.of(context).push(
+                          FundNairaWalletWithDollar.route(
+                              wallet: wallets, rate: model.gotRate.data.rate),
+                        );
+                      },
+                      paymentsource: "Fund With Dollar Wallet",
+                      color: AppColors.kPrimaryColorLight,
+                      textColor: AppColors.kPrimaryColor,
+                      iconColor: AppColors.kPrimaryColor,
+                    ),
                   ),
                   YMargin(30),
                 ],

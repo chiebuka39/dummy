@@ -11,7 +11,7 @@ abstract class ABSWalletService {
   Future<List<Wallet>> getWallets(String token);
   Future<List<WalletTransaction>> getWalletsTransactions(String token);
   Future<dynamic> fundWallet(
-      {String token, String amountUSD, String amountNGN});
+      {String token, num amountUSD, num amountNGN});
 }
 
 class WalletService implements ABSWalletService {
@@ -62,7 +62,7 @@ class WalletService implements ABSWalletService {
   }
 
   @override
-  Future fundWallet({String token, String amountUSD, String amountNGN}) async {
+  Future fundWallet({String token, num amountUSD, num amountNGN}) async {
     final url = "${AppStrings.baseUrl}$microService/api/Wallet/fundwallet";
     var headers = {HttpHeaders.authorizationHeader: "Bearer $token"};
     try {
@@ -80,5 +80,6 @@ class WalletService implements ABSWalletService {
       print(e.message.toString());
       throw Exception(e.response.toString());
     }
+    return null;
   }
 }

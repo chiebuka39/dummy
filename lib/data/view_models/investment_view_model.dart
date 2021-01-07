@@ -497,6 +497,7 @@ class InvestmentHighYieldViewModel extends ChangeNotifier {
     String token = _localStorage.getUser().token;
     var gotRate = await _investmentService.getRate(token);
     this.gotRate = gotRate;
+    // print(this.gotRate);
     notifyListeners();
   }
 }

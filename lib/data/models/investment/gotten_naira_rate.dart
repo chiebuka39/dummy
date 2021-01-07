@@ -1,6 +1,6 @@
 class GottenRate {
   String currency;
-  int rate;
+  num rate;
 
   GottenRate({this.currency, this.rate});
 

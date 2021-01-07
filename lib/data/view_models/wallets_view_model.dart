@@ -12,6 +12,12 @@ class WalletViewModel extends BaseViewModel {
   List<Wallet> wallets = List<Wallet>();
   List<WalletTransaction> walletTransaction = List<WalletTransaction>();
 
+  bool _status = false;
+  bool get status => _status;
+
+  String _message = "";
+  String get message => _message;
+
   Future<void> getWallets() async {
     setBusy(true);
     String token = _localStorage.getUser().token;
@@ -26,6 +32,29 @@ class WalletViewModel extends BaseViewModel {
     String token = _localStorage.getUser().token;
     var walletTransactions = await _walletService.getWalletsTransactions(token);
     this.walletTransaction = walletTransactions;
+    print(walletTransactions[0].narration);
+    setBusy(false);
+    notifyListeners();
+  }
+
+  Future<void> fundWallet(num dollarAmount, num nairaAmount) async {
+    setBusy(true);
+    String token = _localStorage.getUser().token;
+    var fundWallet = await _walletService.fundWallet(
+        amountUSD: dollarAmount, token: token, amountNGN: nairaAmount);
+    print(fundWallet);
+    if (fundWallet == "Successfully Processed Payment") {
+      setBusy(false);
+      _status = true;
+    } else if (fundWallet == null) {
+      setBusy(false);
+      _message = "Oops! Something went wrong try again later";
+      _status = false;
+    } else {
+      setBusy(false);
+      _message = fundWallet.toString();
+      _status = false;
+    }
     setBusy(false);
     notifyListeners();
   }

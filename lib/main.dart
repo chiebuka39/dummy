@@ -100,7 +100,8 @@ class _MyAppState extends State<MyApp> {
         ),
         ChangeNotifierProvider<ABSOthersViewModel>(
           create: (_) => OthersViewModel(),
-        )
+        ),
+        ChangeNotifierProvider(create: (_) => InvestmentHighYieldViewModel())
       ],
       child: MaterialApp(
         title: 'Zimvest',
