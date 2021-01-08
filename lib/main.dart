@@ -198,6 +198,7 @@ void configLoading() {
     ..indicatorSize = 45.0
     ..radius = 10.0
     ..infoWidget = LoadingWIdget()
+    ..indicatorWidget = LoadingWIdget()
     ..progressColor = Colors.yellow
     ..backgroundColor = AppColors.kSecondaryColor
     ..indicatorColor = Colors.yellow

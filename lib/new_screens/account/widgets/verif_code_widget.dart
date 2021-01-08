@@ -665,7 +665,7 @@ class _VerifCodeWidgetState extends State<VerifCodeWidget> with AfterLayoutMixin
 
   void confirmCode() async{
 
-    EasyLoading.show(status: 'Creating account');
+    EasyLoading.showInfo('');
     identityViewModel.loading = true;
     var result = await identityViewModel.confirmEmailOTP(code: "$pin1$pin2$pin3$pin4$pin5${pin6}");
 
@@ -702,7 +702,7 @@ class _VerifCodeWidgetState extends State<VerifCodeWidget> with AfterLayoutMixin
         }
       }else{
         identityViewModel.loading = false;
-        EasyLoading.showError('Account could not be created');
+        EasyLoading.showError('Account could not be created', duration: Duration(seconds: 1));
         setState(() {
           pin1 = "";
           pin2 = "";
