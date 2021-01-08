@@ -131,7 +131,7 @@ class _CreatePinWidgetState extends State<CreatePinScreen> {
             ],),
             YMargin(60),
             RoundedNextButton(
-              onTap:(){},
+              onTap: pin4.isNotEmpty ? confirmCode:null,
             ),
             YMargin(40),
 
@@ -156,7 +156,7 @@ class _CreatePinWidgetState extends State<CreatePinScreen> {
                         setState(() {
                           pin4 = "1";
                         });
-                        confirmCode();
+
                       }
                     },
                     child: Container(
@@ -186,7 +186,7 @@ class _CreatePinWidgetState extends State<CreatePinScreen> {
                           setState(() {
                             pin4 = "2";
                           });
-                          confirmCode();
+
                         }
                     },
                     child: Container(
@@ -216,7 +216,7 @@ class _CreatePinWidgetState extends State<CreatePinScreen> {
                         setState(() {
                           pin4 = "3";
                         });
-                        confirmCode();
+
                       }
                     },
                     child: Container(
@@ -251,7 +251,7 @@ class _CreatePinWidgetState extends State<CreatePinScreen> {
                           setState(() {
                             pin4 = "4";
                           });
-                          confirmCode();
+
                         }
                       },
                       child: Container(
@@ -281,7 +281,7 @@ class _CreatePinWidgetState extends State<CreatePinScreen> {
                           setState(() {
                             pin4 = "5";
                           });
-                          confirmCode();
+
                         }
                       },
                       child: Container(
@@ -311,7 +311,7 @@ class _CreatePinWidgetState extends State<CreatePinScreen> {
                           setState(() {
                             pin4 = "6";
                           });
-                          confirmCode();
+
                         }
                       },
                       child: Container(
@@ -347,7 +347,7 @@ class _CreatePinWidgetState extends State<CreatePinScreen> {
                         setState(() {
                           pin4 = "7";
                         });
-                        confirmCode();
+
                       }
                     },
                     child: Container(
@@ -377,7 +377,7 @@ class _CreatePinWidgetState extends State<CreatePinScreen> {
                         setState(() {
                           pin4 = "8";
                         });
-                        confirmCode();
+
                       }
                     },
                     child: Container(
@@ -407,7 +407,7 @@ class _CreatePinWidgetState extends State<CreatePinScreen> {
                         setState(() {
                           pin4 = "9";
                         });
-                        confirmCode();
+
                       }
                     },
                     child: Container(
@@ -449,7 +449,7 @@ class _CreatePinWidgetState extends State<CreatePinScreen> {
                         setState(() {
                           pin4 = "0";
                         });
-                        confirmCode();
+
                       }
                     },
                     child: Container(

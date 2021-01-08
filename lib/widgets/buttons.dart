@@ -255,7 +255,7 @@ class PrimaryButtonNew extends StatelessWidget {
         height: height,
         width: width,
         decoration: BoxDecoration(
-            color: onTap == null ? AppColors.kLightTitleText: bg,
+            color: onTap == null ? AppColors.kPrimaryColor.withOpacity(0.4): bg,
             borderRadius: BorderRadius.circular(15)
         ),
         child: Center(child: loading ? CircularProgressIndicator(valueColor: AlwaysStoppedAnimation<Color>(Colors.white),): Text(title,

@@ -12,6 +12,7 @@ import 'package:zimvest/data/models/saving_plan.dart';
 import 'package:zimvest/data/view_models/identity_view_model.dart';
 import 'package:zimvest/data/view_models/savings_view_model.dart';
 import 'package:zimvest/new_screens/navigation/portfolio/aspire_widgets.dart';
+import 'package:zimvest/new_screens/navigation/wealth/aspire/select_goals.dart';
 import 'package:zimvest/new_screens/navigation/wealth/aspire_box_details.dart';
 import 'package:zimvest/new_screens/navigation/wealth/investment_details.dart';
 import 'package:zimvest/new_screens/navigation/widgets/earn_free_cash.dart';
@@ -260,6 +261,9 @@ class SavingsInvestmentWidget extends StatelessWidget {
           children: [
             PrimaryButtonNew(
               title: "Start Saving",
+              onTap: (){
+                Navigator.of(context).push(SelectGoalScreen.route());
+              },
             ),
           ],
         ),
@@ -690,13 +694,29 @@ class InvestmentItemWidget extends StatelessWidget {
   }
 }
 
-class EmptyInvstmentWidget extends StatelessWidget {
+class EmptyInvstmentWidget extends StatefulWidget {
   const EmptyInvstmentWidget({
     Key key,
   }) : super(key: key);
 
   @override
+  _EmptyInvstmentWidgetState createState() => _EmptyInvstmentWidgetState();
+}
+
+class _EmptyInvstmentWidgetState extends State<EmptyInvstmentWidget> with AfterLayoutMixin<EmptyInvstmentWidget> {
+
+
+  @override
+  void afterFirstLayout(BuildContext context) {
+    print("1111111111");
+    setState(() {
+
+    });
+  }
+
+  @override
   Widget build(BuildContext context) {
+
     return Column(children: [
       YMargin(MediaQuery.of(context).size.height > 700 ? 100 : 50),
       SvgPicture.asset("images/new/empty3.svg",),

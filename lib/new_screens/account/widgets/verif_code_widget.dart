@@ -665,7 +665,7 @@ class _VerifCodeWidgetState extends State<VerifCodeWidget> with AfterLayoutMixin
 
   void confirmCode() async{
 
-    EasyLoading.showInfo('');
+    EasyLoading.show(status:"",);
     identityViewModel.loading = true;
     var result = await identityViewModel.confirmEmailOTP(code: "$pin1$pin2$pin3$pin4$pin5${pin6}");
 
