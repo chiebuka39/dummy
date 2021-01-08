@@ -26,6 +26,9 @@ import 'package:zimvest/utils/strings.dart';
 import 'package:zimvest/widgets/home/action_box_widgets.dart';
 
 class HomeScreen extends StatefulWidget {
+  final VoidCallback callback;
+
+  const HomeScreen({Key key, this.callback}) : super(key: key);
 
   @override
   _HomeScreenState createState() => _HomeScreenState();
@@ -239,9 +242,9 @@ class _HomeScreenState extends State<HomeScreen> {
                           .isKycValidated == false ? [(){
                         Navigator.push(context, VerificationDetailsScreen.route());
                       },(){
-                        Navigator.push(context, FundWallet.route());
+                        widget.callback();
                       }]:[(){
-                        Navigator.push(context, FundWallet.route());
+                        widget.callback();
                       }],
                     )),
               ),
