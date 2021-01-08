@@ -12,6 +12,8 @@ import 'package:zimvest/data/local/user_local.dart';
 import 'package:zimvest/data/view_models/identity_view_model.dart';
 import 'package:zimvest/locator.dart';
 import 'package:zimvest/new_screens/account/create_pin_screen.dart';
+import 'package:zimvest/new_screens/account/forgot_password_screen.dart';
+import 'package:zimvest/new_screens/account/login_screen.dart';
 import 'package:zimvest/new_screens/tabs.dart';
 import 'package:zimvest/styles/colors.dart';
 import 'package:zimvest/utils/app_utils.dart';
@@ -131,7 +133,9 @@ class _TempLoginScreenState extends State<TempLoginScreen> with AfterLayoutMixin
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text("Good morning, ${identityViewModel.user.fullname.split(" ").first}"),
+                YMargin(40),
+                Text("Good morning, ${identityViewModel.user.fullname.split(" ").first}",
+                  style: TextStyle(fontSize: 17, fontFamily: AppStrings.fontBold),),
                 YMargin(30),
                 Container(
                   padding: EdgeInsets.symmetric(horizontal: 15),
@@ -174,41 +178,19 @@ class _TempLoginScreenState extends State<TempLoginScreen> with AfterLayoutMixin
                   ),
                 ),
                 YMargin(40),
+                YMargin(40),
                 Center(
-                  child: PrimaryButtonNew(
-                    loading: loading,
-                    title: "Login",
-                    onTap:password.length  >=8  ? ()async{
-
-                      await login(context);
+                  child: GestureDetector(
+                    onTap:_localStorage.getSecondaryState().biometricsEnabled == true ? (){
+                      _authenticate(context);
                     }:null,
+                    child: SvgPicture.asset("images/new/face_id.svg",),
                   ),
                 ),
                 YMargin(40),
-                _localStorage.getSecondaryState().biometricsEnabled == true ?Center(
-                  child: GestureDetector(
-                    onTap: (){
-                      _authenticate(context);
-                    },
-                    child: SvgPicture.asset("images/new/face_id.svg",),
-                  ),
-                ):SizedBox(),
-                YMargin(40),
                 Center(
                   child: FlatButton(onPressed: (){
-                    Flushbar(
-                      backgroundColor: Colors.white,
-                      margin: EdgeInsets.symmetric(horizontal: 20),
-                      padding: EdgeInsets.all(12),
-                      borderRadius:14,
-                      icon: SvgPicture.asset("images/fail.svg"),
-                      flushbarPosition: FlushbarPosition.TOP,
-                      titleText: Text("Login Failed!",
-                        style: TextStyle(fontSize: 11,fontFamily: AppStrings.fontMedium),),
-                      messageText: Text("Error! The email address or password is incorrect",
-                        style: TextStyle(fontSize: 9,fontFamily: AppStrings.fontNormal),),
-                      duration:  Duration(seconds: 3),
-                    )..show(context);
+                    Navigator.push(context, ForgotPasswordScreen.route());
                   }, child: Text("Forgot your password", style: TextStyle(
                       fontSize: 12,
                       color: AppColors.kGreyText
@@ -216,14 +198,20 @@ class _TempLoginScreenState extends State<TempLoginScreen> with AfterLayoutMixin
                 ),
                 Center(
                   child: FlatButton(onPressed: (){
-                    showModalBottomSheet < Null > (context: context, builder: (BuildContext context) {
-                      return EnableFaceIdWidget();
-                    });
+                    Navigator.push(context, LoginScreen.route());
                   }, child: Text("Not You, Switch account", style: TextStyle(
                       fontSize: 12,
                       color: AppColors.kGreyText
                   ),)),
                 ),
+                YMargin(MediaQuery.of(context).size.height * 0.15),
+                RoundedNextButton(
+                  loading: loading,
+                  onTap: password.length  >=8  ? ()async{
+
+                    await login(context);
+                  }:null,
+                )
               ],
             ),
           ),

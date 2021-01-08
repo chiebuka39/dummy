@@ -2,7 +2,9 @@ import 'dart:async';
 
 import 'package:connectivity/connectivity.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
+import 'package:flutter_statusbar_manager/flutter_statusbar_manager.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:hive/hive.dart';
 import 'package:provider/provider.dart';
@@ -93,6 +95,16 @@ class HomeApp extends StatefulWidget  {
 class _HomeAppState extends State<HomeApp> with WidgetsBindingObserver {
   final ABSStateLocalStorage _localStorage = locator<ABSStateLocalStorage>();
   StreamSubscription<ConnectivityResult> _connectivitySubscription;
+
+
+  double _statusBarHeight = 0.0;
+  StatusBarAnimation _statusBarAnimation = StatusBarAnimation.SLIDE;
+
+
+  bool _navBarColorAnimated = false;
+  Color _navBarColor = Colors.black;
+  NavigationBarStyle _navBarStyle = NavigationBarStyle.DARK;
+
   @override
   void initState() {
     User user = _localStorage.getUser();
@@ -107,7 +119,7 @@ class _HomeAppState extends State<HomeApp> with WidgetsBindingObserver {
 
     WidgetsBinding.instance.addObserver(this);
 
-
+    initPlatformState();
     super.initState();
   }
 
@@ -148,6 +160,24 @@ class _HomeAppState extends State<HomeApp> with WidgetsBindingObserver {
   void dispose() {
     super.dispose();
     WidgetsBinding.instance.removeObserver(this);
+  }
+
+  Future<void> initPlatformState() async {
+    double statusBarHeight;
+    // Platform messages may fail, so we use a try/catch PlatformException.
+    try {
+      statusBarHeight = await FlutterStatusbarManager.getHeight;
+    } on PlatformException {
+      statusBarHeight = 0.0;
+    }
+    if (!mounted) return;
+
+    setState(() {
+      _statusBarHeight = statusBarHeight;
+      FlutterStatusbarManager.setHidden(false,
+          animation: _statusBarAnimation);
+      FlutterStatusbarManager.setStyle(StatusBarStyle.DARK_CONTENT);
+    });
   }
 
 

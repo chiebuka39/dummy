@@ -70,6 +70,7 @@ dependencies:
   shimmer: ^1.1.2
   sliding_up_panel: ^1.0.2
   connectivity: ^2.0.2
+  flutter_statusbar_manager: ^2.0.0
 
 
 
