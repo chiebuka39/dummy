@@ -357,6 +357,7 @@ class FixedIncomeInvestmentService implements ABSFixedIncomeInvestmentService {
       num faceValue,
       num investmentAmount}) async {
     var url = "${AppStrings.baseUrl}$microService/api/TreasuryBills";
+    print("url $url");
     FormData data = FormData.fromMap({
       "ProductId": productId,
       "RateValue": rate,
@@ -368,6 +369,7 @@ class FixedIncomeInvestmentService implements ABSFixedIncomeInvestmentService {
       "InvestmentAmount": investmentAmount,
       "UpFront": upFront
     });
+    print("ppp ${data.fields}");
     var headers = {HttpHeaders.authorizationHeader: "Bearer $token"};
     try {
       var buyTreasuryBill = await dio.post(
@@ -380,7 +382,7 @@ class FixedIncomeInvestmentService implements ABSFixedIncomeInvestmentService {
           },
         ),
       );
-      print(buyTreasuryBill.data);
+      print("pppse ${buyTreasuryBill.data}");
       if (buyTreasuryBill.statusCode == 200) {
         return buyTreasuryBill.data["message"];
       } else if (buyTreasuryBill.statusCode == 400) {
@@ -407,6 +409,7 @@ class FixedIncomeInvestmentService implements ABSFixedIncomeInvestmentService {
       bool upFront}) async {
     var url =
         "${AppStrings.baseUrl}$microService/api/Calculator/calculateamountpayable";
+   print("llll ${url}");
     FormData data = FormData.fromMap({
       "ProductId": productId,
       "Rate": rate,
@@ -417,6 +420,7 @@ class FixedIncomeInvestmentService implements ABSFixedIncomeInvestmentService {
       "UpFront": upFront,
       "InstrumentId": instrumentId
     });
+    print("3333 ${data.fields}");
     var headers = {HttpHeaders.authorizationHeader: "Bearer $token"};
     try {
       var calculateAmountPayable = await dio.post(
@@ -429,6 +433,7 @@ class FixedIncomeInvestmentService implements ABSFixedIncomeInvestmentService {
           },
         ),
       );
+      print("pppp ${calculateAmountPayable.data}");
 
       if (calculateAmountPayable.statusCode == 200) {
         return AmountPayableResponse.fromJson(
