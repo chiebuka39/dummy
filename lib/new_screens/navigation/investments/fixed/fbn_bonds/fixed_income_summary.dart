@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:provider/provider.dart';
 import 'package:provider_architecture/provider_architecture.dart';
 import 'package:simple_animations/simple_animations.dart';
 import 'package:zimvest/data/view_models/investment_view_model.dart';
+import 'package:zimvest/data/view_models/payment_view_model.dart';
 import 'package:zimvest/new_screens/funding/top_up_successful.dart';
 import 'package:zimvest/new_screens/tabs.dart';
 import 'package:zimvest/styles/colors.dart';
@@ -148,6 +150,7 @@ class _SavingsSummaryScreenState extends State<SavingsSummaryScreen> {
   @override
   Widget build(BuildContext context) {
     var size = MediaQuery.of(context).size;
+    ABSPaymentViewModel paymentViewModel = Provider.of(context);
     return ViewModelProvider<FixedIncomeViewModel>.withConsumer(
       viewModelBuilder: () => FixedIncomeViewModel(),
       builder: (ontext, model, _) => Scaffold(
@@ -297,6 +300,8 @@ class _SavingsSummaryScreenState extends State<SavingsSummaryScreen> {
                                                 child: PrimaryButtonNew(
                                                   onTap: () {
                                                     model.buyTreasuryBills(
+                                                        cardId: paymentViewModel
+                                                            .selectedCard.id,
                                                         productId:
                                                             widget.investmentId,
                                                         instrumentId:
@@ -578,10 +583,14 @@ class _SavingsSummaryScreenState extends State<SavingsSummaryScreen> {
                 right: 0,
                 child: GestureDetector(
                   onPanUpdate: (details) {
-                    if (details.delta.dy == -0.5 || details.delta.dy == -1.0 || details.delta.dy == -1.5 || details.delta.dy == -2.0){
+                    if (details.delta.dy == -0.5 ||
+                        details.delta.dy == -1.0 ||
+                        details.delta.dy == -1.5 ||
+                        details.delta.dy == -2.0) {
                       print(details.delta.dx);
                       startAnim();
                       model.buyCommercialPaper(
+                          cardId: paymentViewModel.selectedCard.id,
                           productId: widget.investmentId,
                           instrumentId: widget.instrumentId,
                           fundingChannel: widget.channelId,

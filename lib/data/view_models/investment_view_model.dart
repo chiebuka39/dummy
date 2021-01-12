@@ -514,6 +514,10 @@ class FixedIncomeViewModel extends BaseViewModel {
   String _message = "";
   String get message => _message;
 
+
+
+
+
   Future<void> buyCommercialPaper(
       {int productId,
       int fundingChannel,
@@ -523,6 +527,7 @@ class FixedIncomeViewModel extends BaseViewModel {
       double rate,
       String uniqueName,
       int instrumentType,
+      int cardId,
       bool upFront,
       DateTime maturityDate,
       String instrumentName,
@@ -575,6 +580,7 @@ class FixedIncomeViewModel extends BaseViewModel {
       String uniqueName,
       int instrumentType,
       bool upFront,
+      int cardId,
       DateTime maturityDate,
       String instrumentName,
       double investmentAmount}) async {
@@ -627,6 +633,7 @@ class FixedIncomeViewModel extends BaseViewModel {
       String uniqueName,
       int instrumentType,
       bool upFront,
+      int cardId,
       DateTime maturityDate,
       String instrumentName,
       double investmentAmount}) async {
@@ -680,6 +687,7 @@ class FixedIncomeViewModel extends BaseViewModel {
       String uniqueName,
       int instrumentType,
       bool upFront,
+      int cardId,
       DateTime maturityDate,
       String instrumentName,
       double investmentAmount}) async {
@@ -734,6 +742,7 @@ class FixedIncomeViewModel extends BaseViewModel {
       String uniqueName,
       int instrumentType,
       bool upFront = true,
+      int cardId,
       DateTime maturityDate,
       String instrumentName,
       double investmentAmount}) async {
@@ -786,6 +795,7 @@ class FixedIncomeViewModel extends BaseViewModel {
       String uniqueName,
       int instrumentType,
       bool upFront,
+      int cardId,
       DateTime maturityDate,
       String instrumentName,
       double investmentAmount}) async {

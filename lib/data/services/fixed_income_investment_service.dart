@@ -15,6 +15,7 @@ abstract class ABSFixedIncomeInvestmentService {
       int intermediaryBankType,
       num amount,
       num rate,
+      int cardId,
       String uniqueName,
       num faceValue,
       num investmentAmount});
@@ -24,6 +25,7 @@ abstract class ABSFixedIncomeInvestmentService {
       int fundingChannel,
       num amount,
       num rate,
+      int cardId,
       String uniqueName,
       num faceValue,
       num investmentAmount});
@@ -34,6 +36,7 @@ abstract class ABSFixedIncomeInvestmentService {
       int intermediaryBankType,
       num amount,
       num rate,
+      int cardId,
       String uniqueName,
       bool upFront,
       num faceValue,
@@ -45,6 +48,7 @@ abstract class ABSFixedIncomeInvestmentService {
       int intermediaryBankType,
       num amount,
       num rate,
+      int cardId,
       String uniqueName,
       bool upFront,
       num faceValue,
@@ -55,6 +59,7 @@ abstract class ABSFixedIncomeInvestmentService {
       int fundingChannel,
       int intermediaryBankType,
       num amount,
+      int cardId,
       num rate,
       String uniqueName,
       bool upFront,
@@ -95,6 +100,7 @@ class FixedIncomeInvestmentService implements ABSFixedIncomeInvestmentService {
       int intermediaryBankType,
       num amount,
       num rate,
+      int cardId,
       String uniqueName,
       bool upFront,
       num faceValue,
@@ -110,6 +116,7 @@ class FixedIncomeInvestmentService implements ABSFixedIncomeInvestmentService {
       "UniqueName": uniqueName,
       "FaceValue": faceValue,
       "InvestmentAmount": investmentAmount,
+      "CardId" : cardId,
       "UpFront": upFront
     });
 
@@ -131,7 +138,7 @@ class FixedIncomeInvestmentService implements ABSFixedIncomeInvestmentService {
       } else if (buyCommercialPaper.statusCode == 400) {
         return buyCommercialPaper.data["message"];
       } else if (buyCommercialPaper.statusCode == 500) {
-        return buyCommercialPaper.data["Message"];
+        return "Payment failed!";
       }
     } on DioError catch (e) {
       print(e.message.toString());
@@ -148,6 +155,7 @@ class FixedIncomeInvestmentService implements ABSFixedIncomeInvestmentService {
       int intermediaryBankType,
       num amount,
       num rate,
+      int cardId,
       String uniqueName,
       num faceValue,
       num investmentAmount}) async {
@@ -161,6 +169,7 @@ class FixedIncomeInvestmentService implements ABSFixedIncomeInvestmentService {
       "Amount": amount,
       "UniqueName": uniqueName,
       "FaceValue": faceValue,
+      "CardId" : cardId,
       "InvestmentAmount": investmentAmount
     });
 
@@ -182,7 +191,7 @@ class FixedIncomeInvestmentService implements ABSFixedIncomeInvestmentService {
       } else if (buyCorporateBond.statusCode == 400) {
         return buyCorporateBond.data["message"];
       } else if (buyCorporateBond.statusCode == 500) {
-        return buyCorporateBond.data["Message"];
+        return "Payment failed!";
       }
     } on DioError catch (e) {
       print(e.message.toString());
@@ -199,6 +208,7 @@ class FixedIncomeInvestmentService implements ABSFixedIncomeInvestmentService {
       int intermediaryBankType,
       num amount,
       num rate,
+      int cardId,
       String uniqueName,
       num faceValue,
       num investmentAmount}) async {
@@ -212,6 +222,7 @@ class FixedIncomeInvestmentService implements ABSFixedIncomeInvestmentService {
       "Amount": amount,
       "UniqueName": uniqueName,
       "FaceValue": faceValue,
+      "CardId" : cardId,
       "InvestmentAmount": investmentAmount
     });
 
@@ -233,7 +244,7 @@ class FixedIncomeInvestmentService implements ABSFixedIncomeInvestmentService {
       } else if (buyEuroBond.statusCode == 400) {
         return buyEuroBond.data["message"];
       } else if (buyEuroBond.statusCode == 500) {
-        return buyEuroBond.data["Message"];
+        return "Payment failed!";
       }
     } on DioError catch (e) {
       print(e.message.toString());
@@ -248,6 +259,7 @@ class FixedIncomeInvestmentService implements ABSFixedIncomeInvestmentService {
       String token,
       int fundingChannel,
       num amount,
+      int cardId,
       num rate,
       String uniqueName,
       num faceValue,
@@ -261,6 +273,7 @@ class FixedIncomeInvestmentService implements ABSFixedIncomeInvestmentService {
       "Amount": amount,
       "UniqueName": uniqueName,
       "FaceValue": faceValue,
+      "CardId" : cardId,
       "InvestmentAmount": investmentAmount
     });
 
@@ -282,7 +295,7 @@ class FixedIncomeInvestmentService implements ABSFixedIncomeInvestmentService {
       } else if (buyFGNBond.statusCode == 400) {
         return buyFGNBond.data["message"];
       } else if (buyFGNBond.statusCode == 500) {
-        return buyFGNBond.data["Message"];
+        return "Payment failed!";
       }
     } on DioError catch (e) {
       print(e.message.toString());
@@ -298,6 +311,7 @@ class FixedIncomeInvestmentService implements ABSFixedIncomeInvestmentService {
       int fundingChannel,
       int intermediaryBankType,
       num amount,
+      int cardId,
       num rate,
       String uniqueName,
       bool upFront,
@@ -314,7 +328,8 @@ class FixedIncomeInvestmentService implements ABSFixedIncomeInvestmentService {
       "UniqueName": uniqueName,
       "FaceValue": faceValue,
       "InvestmentAmount": investmentAmount,
-      "UpFront": upFront
+      "CardId" : cardId,
+      "UpFront": upFront,
     });
 
     var headers = {HttpHeaders.authorizationHeader: "Bearer $token"};
@@ -335,7 +350,7 @@ class FixedIncomeInvestmentService implements ABSFixedIncomeInvestmentService {
       } else if (buyPromissoryNote.statusCode == 400) {
         return buyPromissoryNote.data["message"];
       } else if (buyPromissoryNote.statusCode == 500) {
-        return buyPromissoryNote.data["Message"];
+        return "Payment failed!";
       }
     } on DioError catch (e) {
       print(e.message.toString());
@@ -354,6 +369,7 @@ class FixedIncomeInvestmentService implements ABSFixedIncomeInvestmentService {
       num rate,
       String uniqueName,
       bool upFront,
+      int cardId,
       num faceValue,
       num investmentAmount}) async {
     var url = "${AppStrings.baseUrl}$microService/api/TreasuryBills";
@@ -366,7 +382,8 @@ class FixedIncomeInvestmentService implements ABSFixedIncomeInvestmentService {
       "UniqueName": uniqueName,
       "FaceValue": faceValue,
       "InvestmentAmount": investmentAmount,
-      "UpFront": upFront
+      "UpFront": upFront,
+      "CardId" : cardId
     });
     var headers = {HttpHeaders.authorizationHeader: "Bearer $token"};
     try {
@@ -386,7 +403,7 @@ class FixedIncomeInvestmentService implements ABSFixedIncomeInvestmentService {
       } else if (buyTreasuryBill.statusCode == 400) {
         return buyTreasuryBill.data["message"];
       } else if (buyTreasuryBill.statusCode == 500) {
-        return buyTreasuryBill.data["Message"];
+        return "Payment failed!";
       }
     } on DioError catch (e) {
       throw Exception(e.response.toString());

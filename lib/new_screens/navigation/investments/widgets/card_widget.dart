@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:provider_architecture/provider_architecture.dart';
 import 'package:zimvest/data/models/payment/card.dart';
+import 'package:zimvest/data/view_models/investment_view_model.dart';
 import 'package:zimvest/data/view_models/wallets_view_model.dart';
 import 'package:zimvest/new_screens/profile/widgets/verification_failed_widget.dart';
 import 'package:zimvest/styles/colors.dart';
