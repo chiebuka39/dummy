@@ -1,6 +1,8 @@
 import 'dart:async';
+import 'dart:io';
 
 import 'package:connectivity/connectivity.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
@@ -95,6 +97,7 @@ class HomeApp extends StatefulWidget  {
 class _HomeAppState extends State<HomeApp> with WidgetsBindingObserver {
   final ABSStateLocalStorage _localStorage = locator<ABSStateLocalStorage>();
   StreamSubscription<ConnectivityResult> _connectivitySubscription;
+  FirebaseMessaging _firebaseMessaging = FirebaseMessaging();
 
 
   double _statusBarHeight = 0.0;
@@ -120,7 +123,28 @@ class _HomeAppState extends State<HomeApp> with WidgetsBindingObserver {
     WidgetsBinding.instance.addObserver(this);
 
     initPlatformState();
+    _setUPNotifications();
     super.initState();
+  }
+  Future<void> _setUPNotifications() async {
+    if (Platform.isIOS) {
+      _firebaseMessaging.requestNotificationPermissions(IosNotificationSettings());
+    }
+    _firebaseMessaging.configure(
+      onMessage: (Map<String, dynamic> message) async {
+        print("onMessage: $message");
+
+      },
+      onLaunch: (Map<String, dynamic> message) async {
+        print("onLaunch: $message");
+
+      },
+      onResume: (Map<String, dynamic> message) async {
+        print("onResume: $message");
+
+      },
+
+    );
   }
 
   @override

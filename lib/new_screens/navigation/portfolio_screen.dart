@@ -163,43 +163,56 @@ class _SavingsSectionState extends State<SavingsSection> with AfterLayoutMixin<S
 
   bool loading = false;
 
+  bool error = false;
+
   @override
   void afterFirstLayout(BuildContext context)async {
 
-      setState(() {
-        loading = true;
+      await getSavings();
+
+
+
+
+
+
+
+
+  }
+
+  Future getSavings() async {
+    setState(() {
+      loading = true;
+      error = false;
+    });
+    
+    
+    var r1 = await savingViewModel.getSavingPlans(token: identityViewModel.user.token);
+    var r2 = await savingViewModel.getProductTypes(token: identityViewModel.user.token);
+    if(r1.error == false && r2.error == false ){
+      totalBalance = 0;
+      wealthBox =  savingViewModel.savingPlanModel.where((element) => element.productId == 1).isNotEmpty ?
+      savingViewModel.savingPlanModel.where((element) => element.productId == 1).first : null;
+      aspirePlans = savingViewModel.savingPlanModel.where((element) => element.productId == 2).toList();
+      savingViewModel.savingPlanModel.forEach((element) {
+        totalBalance = totalBalance + element.amountSaved;
       });
-
-
-      var r1 = await savingViewModel.getSavingPlans(token: identityViewModel.user.token);
-      var r2 = await savingViewModel.getProductTypes(token: identityViewModel.user.token);
-      if(r1.error == false && r2.error == false ){
-
-        wealthBox =  savingViewModel.savingPlanModel.where((element) => element.productId == 1).isNotEmpty ?
-        savingViewModel.savingPlanModel.where((element) => element.productId == 1).first : null;
-        aspirePlans = savingViewModel.savingPlanModel.where((element) => element.productId == 2).toList();
-        savingViewModel.savingPlanModel.forEach((element) {
-          totalBalance = totalBalance + element.amountSaved;
-        });
-
-        setState(() {
-          loading = false;
-        });
-
-        if(savingViewModel.productTypes.isNotEmpty){
-          await fetchTransactions(savingViewModel.productTypes.first.id);
-        }
-
-        //getRequiredDetailsForForm();
+    
+      setState(() {
+        loading = false;
+        error = false;
+      });
+    
+      if(savingViewModel.productTypes.isNotEmpty){
+        await fetchTransactions(savingViewModel.productTypes.first.id);
       }
-
-
-
-
-
-
-
-
+    
+      //getRequiredDetailsForForm();
+    }else{
+      setState(() {
+        loading = false;
+        error = true;
+      });
+    }
   }
 
   Future<void> fetchTransactions(int productId,{bool showLoader = false}) async {
@@ -225,7 +238,7 @@ class _SavingsSectionState extends State<SavingsSection> with AfterLayoutMixin<S
   Widget build(BuildContext context) {
     savingViewModel = Provider.of(context);
     identityViewModel = Provider.of(context);
-    return loading == true
+    return error == true ? SavingsInvestmentErrorWidget(retry: getSavings,): loading == true
         ? SavingsInvestmentLoadingWidget()
         : wealthBox == null && aspirePlans.isEmpty
             ? SavingsInvestmentWidget()
@@ -334,6 +347,42 @@ class SavingsInvestmentLoadingWidget extends StatelessWidget {
                 },itemCount: 4,
 
                 ),
+              ),
+            )
+      ])),
+      padding: EdgeInsets.symmetric(horizontal: 20),
+    );
+  }
+}
+class SavingsInvestmentErrorWidget extends StatelessWidget {
+  const SavingsInvestmentErrorWidget({
+    Key key, this.retry,
+  }) : super(key: key);
+
+  final VoidCallback retry;
+
+  @override
+  Widget build(BuildContext context) {
+    return SliverPadding(
+      sliver: SliverList(
+          delegate: SliverChildListDelegate([
+            Container(
+              height: 400,
+              child: Column(
+                children: [
+                  YMargin(30),
+                  SvgPicture.asset("images/new/error3.svg"),
+                  YMargin(20),
+                  SizedBox(
+                    width: 300,
+                      child: Text("Failed to connect, "
+                          "please connect to the internet and try again",style:TextStyle(fontFamily: AppStrings.fontNormal,height: 1.7),textAlign: TextAlign.center,)),
+                  YMargin(30),
+                  PrimaryButtonNew(
+                    title: 'Retry',
+                    onTap: retry,
+                  )
+                ],
               ),
             )
       ])),
