@@ -10,8 +10,10 @@ import 'package:zimvest/data/services/investment_service.dart';
 import 'package:zimvest/data/services/payment_service.dart';
 import 'package:zimvest/data/services/savings_service.dart';
 import 'package:zimvest/data/services/temp_service.dart';
+import 'package:zimvest/data/services/transaction_services.dart';
 import 'package:zimvest/data/services/wallet_service.dart';
 
+import 'data/models/transactions_portfolio/naira_model.dart';
 import 'data/services/others_service.dart';
 
 GetIt locator = GetIt.instance;
@@ -31,4 +33,5 @@ void setUpLocator(){
   locator.registerLazySingleton<ABSStateLocalStorage>(() => StateBoxStorage());
   locator.registerLazySingleton<ABSFixedIncomeInvestmentService>(() => FixedIncomeInvestmentService());
   locator.registerLazySingleton<ABSWalletService>(() => WalletService());
+  locator.registerLazySingleton<ABSTransactionService>(() => TransactionService());
 }

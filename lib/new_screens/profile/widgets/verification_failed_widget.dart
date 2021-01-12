@@ -23,7 +23,8 @@ import 'package:zimvest/widgets/new/new_widgets.dart';
 
 class NextOfKinStatus extends StatelessWidget {
   const NextOfKinStatus({
-    Key key, this.success = true,
+    Key key,
+    this.success = true,
   }) : super(key: key);
 
   final bool success;
@@ -34,59 +35,67 @@ class NextOfKinStatus extends StatelessWidget {
       decoration: BoxDecoration(
         color: Colors.transparent,
       ),
-      child: Column(children: [
-        YMargin(10),
-        Center(child: Container(
-          width: 30,
-          height: 5,
-          decoration: BoxDecoration(
-              color: Colors.white,
-              borderRadius: BorderRadius.circular(5)
+      child: Column(
+        children: [
+          YMargin(10),
+          Center(
+            child: Container(
+              width: 30,
+              height: 5,
+              decoration: BoxDecoration(
+                  color: Colors.white, borderRadius: BorderRadius.circular(5)),
+            ),
           ),
-        ),),
-        YMargin(20),
-        Expanded(child: Container(
-          width: double.infinity,
-          decoration: BoxDecoration(
-              color:Colors.white,
-              borderRadius: BorderRadius.only(
-                  topLeft: Radius.circular(25),
-                  topRight: Radius.circular(25)
-              )
-          ),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              YMargin(40),
-              Center(child: SvgPicture.asset("images/new/${success ? 'success':'fail'}.svg"),),
-              YMargin(27),
-              SizedBox(
-                width: 230,
-                child: Text("${success ? 'Your Next of Kin Was Saved Successfully':'Your Next of Kin Was update failed'}", style: TextStyle(
-                    fontFamily: AppStrings.fontMedium,height: 1.7
-                ),textAlign: TextAlign.center,),
-              ),
-             
-              Spacer(),
-              PrimaryButtonNew(
-                onTap: (){
-                  Navigator.pop(context);
-                  Navigator.pop(context);
-                },
-                title: "Done",
-                width: 200,
-              ),
-
-              Spacer(),
-            ],),
-        ))
-      ],),
+          YMargin(20),
+          Expanded(
+              child: Container(
+            width: double.infinity,
+            decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.only(
+                    topLeft: Radius.circular(25),
+                    topRight: Radius.circular(25))),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                YMargin(40),
+                Center(
+                  child: SvgPicture.asset(
+                      "images/new/${success ? 'success' : 'fail'}.svg"),
+                ),
+                YMargin(27),
+                SizedBox(
+                  width: 230,
+                  child: Text(
+                    "${success ? 'Your Next of Kin Was Saved Successfully' : 'Your Next of Kin Was update failed'}",
+                    style: TextStyle(
+                        fontFamily: AppStrings.fontMedium, height: 1.7),
+                    textAlign: TextAlign.center,
+                  ),
+                ),
+                Spacer(),
+                PrimaryButtonNew(
+                  onTap: () {
+                    Navigator.pop(context);
+                    Navigator.pop(context);
+                  },
+                  title: "Done",
+                  width: 200,
+                ),
+                Spacer(),
+              ],
+            ),
+          ))
+        ],
+      ),
     );
   }
 }
+
 class EnterBVNWidget extends StatefulWidget {
   const EnterBVNWidget({
-    Key key, this.success = true,
+    Key key,
+    this.success = true,
   }) : super(key: key);
 
   final bool success;
@@ -98,7 +107,7 @@ class EnterBVNWidget extends StatefulWidget {
 class _EnterBVNWidgetState extends State<EnterBVNWidget> {
   String bvn;
 
-  bool autoValidate  = false;
+  bool autoValidate = false;
 
   ABSSettingsViewModel settingsViewModel;
   ABSIdentityViewModel identityViewModel;
@@ -113,122 +122,133 @@ class _EnterBVNWidgetState extends State<EnterBVNWidget> {
       decoration: BoxDecoration(
         color: Colors.transparent,
       ),
-      child: Column(children: [
-        YMargin(10),
-        Center(child: Container(
-          width: 30,
-          height: 5,
-          decoration: BoxDecoration(
-              color: Colors.white,
-              borderRadius: BorderRadius.circular(5)
+      child: Column(
+        children: [
+          YMargin(10),
+          Center(
+            child: Container(
+              width: 30,
+              height: 5,
+              decoration: BoxDecoration(
+                  color: Colors.white, borderRadius: BorderRadius.circular(5)),
+            ),
           ),
-        ),),
-        YMargin(20),
-        Expanded(child: Container(
-          width: double.infinity,
-          decoration: BoxDecoration(
-              color:Colors.white,
-              borderRadius: BorderRadius.only(
-                  topLeft: Radius.circular(25),
-                  topRight: Radius.circular(25)
-              )
-          ),
-          child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 20),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                YMargin(40),
-                Text("Enter your BVN", style: TextStyle(fontSize: 15,
-                    fontFamily: AppStrings.fontBold),),
-                YMargin(27),
-                Container(
-                  padding: EdgeInsets.symmetric(horizontal: 15),
-                  height: 60,
-                  width: double.infinity,
-                  decoration: BoxDecoration(
-                      color: AppColors.kGreyBg,
-                      borderRadius: BorderRadius.circular(12)
+          YMargin(20),
+          Expanded(
+              child: Container(
+            width: double.infinity,
+            decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.only(
+                    topLeft: Radius.circular(25),
+                    topRight: Radius.circular(25))),
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 20),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  YMargin(40),
+                  Text(
+                    "Enter your BVN",
+                    style: TextStyle(
+                        fontSize: 15, fontFamily: AppStrings.fontBold),
                   ),
-                  child: Transform.translate(
-                    offset: Offset(0,5),
-                    child: TextField(
-                      onChanged: (value){
-                        setState(() {
-                          bvn = value;
-                        });
-                        print("ooo ${bvn.length}");
-                      },
-                      keyboardType: TextInputType.phone,
-                      decoration: InputDecoration(
-                          border: InputBorder.none,
-                          hintText: "Enter BVN Number",
-                          hintStyle: TextStyle(
-                              fontSize: 14
-                          )
+                  YMargin(27),
+                  Container(
+                    padding: EdgeInsets.symmetric(horizontal: 15),
+                    height: 60,
+                    width: double.infinity,
+                    decoration: BoxDecoration(
+                        color: AppColors.kGreyBg,
+                        borderRadius: BorderRadius.circular(12)),
+                    child: Transform.translate(
+                      offset: Offset(0, 5),
+                      child: TextField(
+                        onChanged: (value) {
+                          setState(() {
+                            bvn = value;
+                          });
+                          print("ooo ${bvn.length}");
+                        },
+                        keyboardType: TextInputType.phone,
+                        decoration: InputDecoration(
+                            border: InputBorder.none,
+                            hintText: "Enter BVN Number",
+                            hintStyle: TextStyle(fontSize: 14)),
                       ),
                     ),
                   ),
-                ),
-                if (autoValidate == false ? false :
-                (bvn.length != 10)) Padding(
-                  padding: const EdgeInsets.only(left: 5,top: 5),
-                  child: Text("BVN is incomplete", style: TextStyle(fontSize: 11,color: AppColors.kRed),),
-                ) else SizedBox(),
-
-                Spacer(),
-                Center(
-                  child: PrimaryButtonNew(
-                    loading: loading,
-                    onTap: ()async{
-                      setState(() {
-                        loading = true;
-                      });
-                      var result = await settingsViewModel.updateBvn(
-                          token: identityViewModel.user.token,
-                      bvn: bvn
-                      );
-                      setState(() {
-                        loading = false;
-                      });
-                      if(result.error == false){
-                        Navigator.pop(context);
-                        showCupertinoModalBottomSheet(context: context, builder: (context){
-                          return UseOTPWidget(
-                            onNext: (){
-                              showModalBottomSheet < Null > (context: context, builder: (BuildContext context) {
-                                return PasswordSuccessWidget(
-                                  message: "Bvn Was updated Succesfully",
-                                  onDone: (){
-                                    Navigator.pop(context);
-
+                  if (autoValidate == false ? false : (bvn.length != 10))
+                    Padding(
+                      padding: const EdgeInsets.only(left: 5, top: 5),
+                      child: Text(
+                        "BVN is incomplete",
+                        style: TextStyle(fontSize: 11, color: AppColors.kRed),
+                      ),
+                    )
+                  else
+                    SizedBox(),
+                  Spacer(),
+                  Center(
+                    child: PrimaryButtonNew(
+                      loading: loading,
+                      onTap: () async {
+                        setState(() {
+                          loading = true;
+                        });
+                        var result = await settingsViewModel.updateBvn(
+                            token: identityViewModel.user.token, bvn: bvn);
+                        setState(() {
+                          loading = false;
+                        });
+                        if (result.error == false) {
+                          Navigator.pop(context);
+                          showCupertinoModalBottomSheet(
+                              context: context,
+                              builder: (context) {
+                                return UseOTPWidget(
+                                  onNext: () {
+                                    showModalBottomSheet<Null>(
+                                        context: context,
+                                        builder: (BuildContext context) {
+                                          return PasswordSuccessWidget(
+                                            message:
+                                                "Bvn Was updated Succesfully",
+                                            onDone: () {
+                                              Navigator.pop(context);
+                                            },
+                                          );
+                                        },
+                                        isDismissible: false);
                                   },
                                 );
-                              },isDismissible: false);
-                            },
-                          );
-                        },isDismissible: false);
-                      }else{
-                        AppUtils.showError(context, message: result.errorMessage);
-                      }
-                    },
-                    title: "Done",
-                    width: 200,
+                              },
+                              isDismissible: false);
+                        } else {
+                          AppUtils.showError(context,
+                              message: result.errorMessage);
+                        }
+                      },
+                      title: "Done",
+                      width: 200,
+                    ),
                   ),
-                ),
-
-                Spacer(),
-              ],),
-          ),
-        ))
-      ],),
+                  Spacer(),
+                ],
+              ),
+            ),
+          ))
+        ],
+      ),
     );
   }
 }
 
 class SelectCardWidget extends StatefulWidget {
   const SelectCardWidget({
-    Key key, this.success = true, this.navigate,
+    Key key,
+    this.success = true,
+    this.navigate,
   }) : super(key: key);
 
   final bool success;
@@ -239,7 +259,6 @@ class SelectCardWidget extends StatefulWidget {
 }
 
 class _SelectCardWidgetState extends State<SelectCardWidget> {
-
   ABSPaymentViewModel paymentViewModel;
   ABSIdentityViewModel identityViewModel;
   ABSSavingViewModel savingViewModel;
@@ -255,62 +274,72 @@ class _SelectCardWidgetState extends State<SelectCardWidget> {
       decoration: BoxDecoration(
         color: Colors.transparent,
       ),
-      child: Column(children: [
-        YMargin(10),
-        Center(child: Container(
-          width: 30,
-          height: 5,
-          decoration: BoxDecoration(
-              color: Colors.white,
-              borderRadius: BorderRadius.circular(5)
+      child: Column(
+        children: [
+          YMargin(10),
+          Center(
+            child: Container(
+              width: 30,
+              height: 5,
+              decoration: BoxDecoration(
+                  color: Colors.white, borderRadius: BorderRadius.circular(5)),
+            ),
           ),
-        ),),
-        YMargin(20),
-        Expanded(child: Container(
-          width: double.infinity,
-          decoration: BoxDecoration(
-              color:Colors.white,
-              borderRadius: BorderRadius.only(
-                  topLeft: Radius.circular(25),
-                  topRight: Radius.circular(25)
-              )
-          ),
-          child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 20),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                YMargin(40),
-                Text("Select Card", style: TextStyle(fontSize: 15, fontFamily: AppStrings.fontBold),),
-                YMargin(27),
-                ...List.generate(paymentViewModel.userCards.length, (index) => CardItemWidget(
-                  card: paymentViewModel.userCards[index],navigate: widget.navigate,)),
-
-                Spacer(),
-                Center(
-                  child: PrimaryButtonNew(
-                    onTap: (){
-                      //Navigator.pop(context);
-                      processTransaction();
-                    },
-                    title: "Add New Card",
-                    width: 200,
+          YMargin(20),
+          Expanded(
+              child: Container(
+            width: double.infinity,
+            decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.only(
+                    topLeft: Radius.circular(25),
+                    topRight: Radius.circular(25))),
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 20),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  YMargin(40),
+                  Text(
+                    "Select Card",
+                    style: TextStyle(
+                        fontSize: 15, fontFamily: AppStrings.fontBold),
                   ),
-                ),
-
-                Spacer(),
-              ],),
-          ),
-        ))
-      ],),
+                  YMargin(27),
+                  ...List.generate(
+                    paymentViewModel.userCards.length,
+                    (index) => CardItemWidget(
+                      card: paymentViewModel.userCards[index],
+                      navigate: widget.navigate,
+                    ),
+                  ),
+                  Spacer(),
+                  Center(
+                    child: PrimaryButtonNew(
+                      onTap: () {
+                        //Navigator.pop(context);
+                        processTransaction();
+                      },
+                      title: "Add New Card",
+                      width: 200,
+                    ),
+                  ),
+                  Spacer(),
+                ],
+              ),
+            ),
+          ))
+        ],
+      ),
     );
   }
 
   processTransaction() async {
     EasyLoading.show(status: "Initializing transaction");
-    var result = await paymentViewModel.registerNewCard(identityViewModel.user.token);
+    var result =
+        await paymentViewModel.registerNewCard(identityViewModel.user.token);
 
-    if(result.error == false){
+    if (result.error == false) {
       EasyLoading.showSuccess("Success");
       setState(() {
         cardPayload = result.data;
@@ -337,23 +366,22 @@ class _SelectCardWidgetState extends State<SelectCardWidget> {
           acceptUgandaPayment: false,
           acceptZambiaPayment: false);
 
-
       // Initialize and get the transaction result
       try {
         print("ppppmmmm i want to");
-        final ChargeResponse response = await flutterwave.initializeForUiPayments();
+        final ChargeResponse response =
+            await flutterwave.initializeForUiPayments();
         if (response == null) {
           // user didn't complete the transaction. Payment wasn't successful.
         } else {
           final isSuccessful = checkPaymentIsSuccessful(response);
           if (isSuccessful) {
             EasyLoading.show(status: "Loading");
-            var result = await paymentViewModel.paymentConfirmation(identityViewModel.user.token,
-                cardPayload.txref
-            );
-            if(result.error == false){
+            var result = await paymentViewModel.paymentConfirmation(
+                identityViewModel.user.token, cardPayload.txref);
+            if (result.error == false) {
               EasyLoading.showSuccess("Card Added");
-            }else{
+            } else {
               EasyLoading.showError("Error occured");
             }
           } else {
@@ -374,29 +402,29 @@ class _SelectCardWidgetState extends State<SelectCardWidget> {
         print(error.toString());
       }
     }
-
-    }
+  }
 
   processTransaction2() async {
     EasyLoading.show(status: "Initializing transaction");
-    var result = await paymentViewModel.registerNewCard(identityViewModel.user.token);
+    var result =
+        await paymentViewModel.registerNewCard(identityViewModel.user.token);
 
-    if(result.error == false){
+    if (result.error == false) {
       EasyLoading.showSuccess("Success");
       setState(() {
         cardPayload = result.data;
       });
       var initializer = RavePayInitializer(
-          amount: 100, publicKey: cardPayload.pbfPubKey,
+          amount: 100,
+          publicKey: cardPayload.pbfPubKey,
           encryptionKey: cardPayload.encKey)
         ..country = "NG"
         ..currency = "NGN"
         ..email = cardPayload.customerEmail
         ..fName = cardPayload.customerFirstname
         ..lName = cardPayload.customerLastname
-        ..narration ="Add card"?? ''
+        ..narration = "Add card" ?? ''
         ..txRef = cardPayload.txref
-
         ..acceptCardPayments = true
         ..staging = true
         ..isPreAuth = false
@@ -406,27 +434,22 @@ class _SelectCardWidgetState extends State<SelectCardWidget> {
       RaveResult response = await RavePayManager()
           .prompt(context: context, initializer: initializer);
       print("response ${response.rawResponse}");
-      if(response.status == RaveStatus.success){
+      if (response.status == RaveStatus.success) {
         EasyLoading.show(status: "Loading");
-        var result = await paymentViewModel.paymentConfirmation(identityViewModel.user.token,
-            cardPayload.txref
-        );
-        if(result.error == false){
+        var result = await paymentViewModel.paymentConfirmation(
+            identityViewModel.user.token, cardPayload.txref);
+        if (result.error == false) {
           await paymentViewModel.getUserCards(identityViewModel.user.token);
           EasyLoading.showSuccess("Card Added");
           Navigator.pop(context);
-        }else{
+        } else {
           EasyLoading.showError("Error occured");
         }
-
-      }else{
+      } else {
         EasyLoading.showError("Error occured");
       }
     }
-
-
   }
-
 
   bool checkPaymentIsSuccessful(final ChargeResponse response) {
     return response.data.status == FlutterwaveConstants.SUCCESSFUL &&
@@ -438,7 +461,9 @@ class _SelectCardWidgetState extends State<SelectCardWidget> {
 
 class CardItemWidget extends StatelessWidget {
   const CardItemWidget({
-    Key key, this.card, this.navigate,
+    Key key,
+    this.card,
+    this.navigate,
   }) : super(key: key);
 
   final PaymentCard card;
@@ -449,32 +474,39 @@ class CardItemWidget extends StatelessWidget {
     ABSPaymentViewModel paymentViewModel = Provider.of(context);
     ABSSavingViewModel savingViewModel = Provider.of(context);
     return GestureDetector(
-      onTap: (){
+      onTap: () {
         // savingViewModel.selectedChannel = savingViewModel
         //     .fundingChannels.firstWhere((element) => element.name == "Wallet");
         paymentViewModel.selectedCard = card;
-        if(navigate == null){
+        if (navigate == null) {
           Navigator.of(context).pushReplacement(SavingsSummaryScreen.route());
-        }else{
+        } else {
           navigate();
         }
-
       },
       child: Container(
         margin: EdgeInsets.only(top: 10),
         height: 60,
-        child: Row(children: [
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text("Card ending with ${card.mp}", style: TextStyle(fontSize: 12),),
-              YMargin(14),
-              Text("Expires ${card.expiryDate}", style: TextStyle(fontSize: 10),),
-            ],
-          ),
-          Spacer(),
-          SvgPicture.asset('images/mastercard.svg')
-        ],),
+        child: Row(
+          children: [
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  "Card ending with ${card.mp}",
+                  style: TextStyle(fontSize: 12),
+                ),
+                YMargin(14),
+                Text(
+                  "Expires ${card.expiryDate}",
+                  style: TextStyle(fontSize: 10),
+                ),
+              ],
+            ),
+            Spacer(),
+            SvgPicture.asset('images/mastercard.svg')
+          ],
+        ),
       ),
     );
   }

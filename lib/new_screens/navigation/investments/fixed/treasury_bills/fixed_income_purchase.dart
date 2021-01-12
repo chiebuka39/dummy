@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:provider_architecture/_viewmodel_provider.dart';
+import 'package:zimvest/data/models/payment/card.dart';
 import 'package:zimvest/data/view_models/investment_view_model.dart';
 import 'package:zimvest/new_screens/navigation/investments/fixed/treasury_bills/fixed_income_summary.dart';
+import 'package:zimvest/new_screens/navigation/investments/widgets/card_widget.dart';
 import 'package:zimvest/new_screens/profile/widgets/verification_failed_widget.dart';
 import 'package:zimvest/styles/colors.dart';
 import 'package:zimvest/utils/margin.dart';
@@ -24,6 +26,7 @@ class FixedIncomePurchaseSource extends StatefulWidget {
   final String investmentMaturityDate;
   final int channelId;
   final int intermediaryBankType;
+  final List<PaymentCard> cards;
   const FixedIncomePurchaseSource(
       {Key key,
       this.amount,
@@ -37,7 +40,7 @@ class FixedIncomePurchaseSource extends StatefulWidget {
       this.minimumAmount,
       this.investmentMaturityDate,
       this.channelId,
-      this.intermediaryBankType})
+      this.intermediaryBankType, this.cards})
       : super(key: key);
   static Route<dynamic> route({
     double amount,
@@ -52,8 +55,8 @@ class FixedIncomePurchaseSource extends StatefulWidget {
     String investmentMaturityDate,
     int channelId,
     int intermediaryBankType,
+    List<PaymentCard> cards
   }) {
-    // print("Duration Purchase Screen $uniqueName");
     return MaterialPageRoute(
       builder: (_) => FixedIncomePurchaseSource(
         amount: amount,
@@ -68,6 +71,7 @@ class FixedIncomePurchaseSource extends StatefulWidget {
         duration: duration,
         channelId: channelId,
         intermediaryBankType: intermediaryBankType,
+        cards: cards,
       ),
       settings: RouteSettings(
         name: FixedIncomePurchaseSource().toStringShort(),
@@ -132,7 +136,8 @@ class _FixedIncomePurchaseSourceState extends State<FixedIncomePurchaseSource> {
                     showModalBottomSheet<Null>(
                       context: context,
                       builder: (BuildContext context) {
-                        return SelectCardWidget(
+                        return SelectPaymentCardWidget(
+                          cards: widget.cards,
                           success: false,
                           navigate: () {
                             Navigator.of(context).push(

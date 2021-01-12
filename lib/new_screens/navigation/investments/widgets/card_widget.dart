@@ -1,10 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:provider_architecture/provider_architecture.dart';
+import 'package:zimvest/data/models/payment/card.dart';
+import 'package:zimvest/data/view_models/wallets_view_model.dart';
+import 'package:zimvest/new_screens/profile/widgets/verification_failed_widget.dart';
 import 'package:zimvest/styles/colors.dart';
 import 'package:zimvest/utils/app_utils.dart';
 import 'package:zimvest/utils/margin.dart';
 import 'package:zimvest/utils/margins.dart';
 import 'package:zimvest/utils/strings.dart';
+import 'package:zimvest/widgets/buttons.dart';
 
 class InvestmentCardNaira extends StatelessWidget {
   final String investmentDuration;
@@ -274,7 +279,7 @@ class FixedIncomeCard extends StatelessWidget {
                       ),
                     ),
                     Text(
-                     "${AppStrings.nairaSymbol} ${minimumAmount.toString()}",
+                      "${AppStrings.nairaSymbol} ${minimumAmount.toString()}",
                       style: TextStyle(
                         fontSize: 11,
                         fontWeight: FontWeight.w400,
@@ -314,4 +319,214 @@ class FixedIncomeCard extends StatelessWidget {
       ),
     );
   }
+}
+
+class SelectPaymentCardWidget extends StatefulWidget {
+  const SelectPaymentCardWidget({
+    Key key,
+    this.success = true,
+    this.navigate,
+    this.cards,
+  }) : super(key: key);
+
+  final bool success;
+  final VoidCallback navigate;
+  final List<PaymentCard> cards;
+
+  @override
+  _SelectPaymentCardWidgetState createState() =>
+      _SelectPaymentCardWidgetState();
+}
+
+class _SelectPaymentCardWidgetState extends State<SelectPaymentCardWidget> {
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      decoration: BoxDecoration(
+        color: Colors.transparent,
+      ),
+      child: Column(
+        children: [
+          YMargin(10),
+          Center(
+            child: Container(
+              width: 30,
+              height: 5,
+              decoration: BoxDecoration(
+                  color: Colors.white, borderRadius: BorderRadius.circular(5)),
+            ),
+          ),
+          YMargin(20),
+          Expanded(
+            child: Container(
+              width: double.infinity,
+              decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.only(
+                      topLeft: Radius.circular(25),
+                      topRight: Radius.circular(25))),
+              child: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 20),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    YMargin(40),
+                    Text(
+                      "Select Card",
+                      style: TextStyle(
+                          fontSize: 15, fontFamily: AppStrings.fontBold),
+                    ),
+                    YMargin(27),
+                    ...List.generate(
+                      widget.cards.length,
+                      (index) => CardItemWidget(
+                        card: widget.cards[index],
+                        navigate: widget.navigate,
+                      ),
+                    ),
+                    Spacer(),
+                    Center(
+                      child: PrimaryButtonNew(
+                        onTap: () {
+                          //Navigator.pop(context);
+                          // processTransaction();
+                        },
+                        title: "Add New Card",
+                        width: 200,
+                      ),
+                    ),
+                    Spacer(),
+                  ],
+                ),
+              ),
+            ),
+          )
+        ],
+      ),
+    );
+  }
+
+  // processTransaction() async {
+  //   EasyLoading.show(status: "Initializing transaction");
+  //   var result =
+  //       await paymentViewModel.registerNewCard(identityViewModel.user.token);
+
+  //   if (result.error == false) {
+  //     EasyLoading.showSuccess("Success");
+  //     setState(() {
+  //       cardPayload = result.data;
+  //     });
+
+  //     Flutterwave flutterwave = Flutterwave.forUIPayment(
+  //         context: this.context,
+  //         encryptionKey: cardPayload.encKey,
+  //         publicKey: cardPayload.pbfPubKey,
+  //         currency: "NGN",
+  //         amount: "100",
+  //         email: cardPayload.customerEmail,
+  //         fullName: identityViewModel.user.fullname,
+  //         txRef: cardPayload.txref,
+  //         isDebugMode: false,
+  //         phoneNumber: cardPayload.customerPhone,
+  //         acceptCardPayment: true,
+  //         acceptUSSDPayment: true,
+  //         acceptAccountPayment: false,
+  //         acceptFrancophoneMobileMoney: false,
+  //         acceptGhanaPayment: false,
+  //         acceptMpesaPayment: false,
+  //         acceptRwandaMoneyPayment: true,
+  //         acceptUgandaPayment: false,
+  //         acceptZambiaPayment: false);
+
+  //     // Initialize and get the transaction result
+  //     try {
+  //       print("ppppmmmm i want to");
+  //       final ChargeResponse response =
+  //           await flutterwave.initializeForUiPayments();
+  //       if (response == null) {
+  //         // user didn't complete the transaction. Payment wasn't successful.
+  //       } else {
+  //         final isSuccessful = checkPaymentIsSuccessful(response);
+  //         if (isSuccessful) {
+  //           EasyLoading.show(status: "Loading");
+  //           var result = await paymentViewModel.paymentConfirmation(
+  //               identityViewModel.user.token, cardPayload.txref);
+  //           if (result.error == false) {
+  //             EasyLoading.showSuccess("Card Added");
+  //           } else {
+  //             EasyLoading.showError("Error occured");
+  //           }
+  //         } else {
+  //           // check message
+  //           print(response.message);
+  //           EasyLoading.showError("Error occured");
+
+  //           // check status
+  //           print(response.status);
+
+  //           // check processor error
+  //           print(response.data.processorResponse);
+  //         }
+  //       }
+  //     } catch (error, stacktrace) {
+  //       EasyLoading.showError("Error occured");
+  //       // handleError(error);
+  //       print(error.toString());
+  //     }
+  //   }
+  // }
+
+  // processTransaction2() async {
+  //   EasyLoading.show(status: "Initializing transaction");
+  //   var result =
+  //       await paymentViewModel.registerNewCard(identityViewModel.user.token);
+
+  //   if (result.error == false) {
+  //     EasyLoading.showSuccess("Success");
+  //     setState(() {
+  //       cardPayload = result.data;
+  //     });
+  //     var initializer = RavePayInitializer(
+  //         amount: 100,
+  //         publicKey: cardPayload.pbfPubKey,
+  //         encryptionKey: cardPayload.encKey)
+  //       ..country = "NG"
+  //       ..currency = "NGN"
+  //       ..email = cardPayload.customerEmail
+  //       ..fName = cardPayload.customerFirstname
+  //       ..lName = cardPayload.customerLastname
+  //       ..narration = "Add card" ?? ''
+  //       ..txRef = cardPayload.txref
+  //       ..acceptCardPayments = true
+  //       ..staging = true
+  //       ..isPreAuth = false
+  //       ..displayFee = true;
+
+  //     // Initialize and get the transaction result
+  //     RaveResult response = await RavePayManager()
+  //         .prompt(context: context, initializer: initializer);
+  //     print("response ${response.rawResponse}");
+  //     if (response.status == RaveStatus.success) {
+  //       EasyLoading.show(status: "Loading");
+  //       var result = await paymentViewModel.paymentConfirmation(
+  //           identityViewModel.user.token, cardPayload.txref);
+  //       if (result.error == false) {
+  //         await paymentViewModel.getUserCards(identityViewModel.user.token);
+  //         EasyLoading.showSuccess("Card Added");
+  //         Navigator.pop(context);
+  //       } else {
+  //         EasyLoading.showError("Error occured");
+  //       }
+  //     } else {
+  //       EasyLoading.showError("Error occured");
+  //     }
+  //   }
+  // }
+
+  // bool checkPaymentIsSuccessful(final ChargeResponse response) {
+  //   return response.data.status == FlutterwaveConstants.SUCCESSFUL &&
+  //       response.data.currency == "NGN" &&
+  //       response.data.amount == savingViewModel.amountToSave.toString() &&
+  //       response.data.txRef == cardPayload.txref;
+  // }
 }

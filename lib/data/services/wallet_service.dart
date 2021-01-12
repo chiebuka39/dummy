@@ -11,7 +11,7 @@ abstract class ABSWalletService {
   Future<List<Wallet>> getWallets(String token);
   Future<List<WalletTransaction>> getWalletsTransactions(String token);
   Future<dynamic> fundWallet(
-      {String token, String amountUSD, String amountNGN});
+      {String token, num amountUSD, num amountNGN});
 }
 
 class WalletService implements ABSWalletService {
@@ -22,6 +22,7 @@ class WalletService implements ABSWalletService {
   Future<List<Wallet>> getWallets(String token) async {
     final url = "${AppStrings.baseUrl}$microService/api/Wallet/wallets";
     var headers = {HttpHeaders.authorizationHeader: "Bearer $token"};
+    print(url);
     try {
       var getWallets = await dio.get(
         url,
@@ -37,6 +38,7 @@ class WalletService implements ABSWalletService {
       print(e.message.toString());
       throw Exception(e.response.toString());
     }
+    return null;
   }
 
   @override
@@ -44,11 +46,13 @@ class WalletService implements ABSWalletService {
     final url =
         "${AppStrings.baseUrl}$microService/api/Wallet/WalletTransaction";
     var headers = {HttpHeaders.authorizationHeader: "Bearer $token"};
+    print(url);
     try {
       var getWalletTransactions = await dio.get(
         url,
         options: Options(headers: headers),
       );
+      
       if (getWalletTransactions.statusCode == 200) {
         final Iterable result = getWalletTransactions.data["data"];
         return result.map((e) => WalletTransaction.fromJson(e)).toList();
@@ -59,10 +63,11 @@ class WalletService implements ABSWalletService {
       print(e.message.toString());
       throw Exception(e.response.toString());
     }
+    return null;
   }
 
   @override
-  Future fundWallet({String token, String amountUSD, String amountNGN}) async {
+  Future fundWallet({String token, num amountUSD, num amountNGN}) async {
     final url = "${AppStrings.baseUrl}$microService/api/Wallet/fundwallet";
     var headers = {HttpHeaders.authorizationHeader: "Bearer $token"};
     try {
@@ -80,5 +85,6 @@ class WalletService implements ABSWalletService {
       print(e.message.toString());
       throw Exception(e.response.toString());
     }
+    return null;
   }
 }

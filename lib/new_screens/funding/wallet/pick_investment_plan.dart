@@ -8,6 +8,7 @@ class PickInvestmentPlan extends StatefulWidget {
         builder: (_) => PickInvestmentPlan(),
         settings: RouteSettings(name: PickInvestmentPlan().toStringShort()));
   }
+
   @override
   _PickInvestmentPlanState createState() => _PickInvestmentPlanState();
 }
@@ -20,16 +21,23 @@ class _PickInvestmentPlanState extends State<PickInvestmentPlan> {
         backgroundColor: Colors.transparent,
         elevation: 0,
         leading: IconButton(
-          icon: Icon(Icons.navigate_before_rounded, color: AppColors.kPrimaryColor,),onPressed: (){
-          Navigator.pop(context);
-        },
+          icon: Icon(
+            Icons.navigate_before_rounded,
+            color: AppColors.kPrimaryColor,
+          ),
+          onPressed: () {
+            Navigator.pop(context);
+          },
         ),
       ),
       body: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 20),
-        child: ListView.builder(itemBuilder: (context, index){
-          return InvestmentItemWidget();
-        },itemCount: 5,),
+        child: ListView.builder(
+          itemBuilder: (context, index) {
+            return InvestmentItemWidget();
+          },
+          itemCount: 5,
+        ),
       ),
     );
   }

@@ -52,33 +52,7 @@ class _WalletWithdrawToScreenState extends State<WalletWithdrawToScreen> {
               onTap: () {
                 Navigator.push(
                   context,
-                  PickSavingsPlanSceen.route(
-                    aspirePlans: List.generate(
-                      5,
-                      (index) => SavingPlanModel(
-                        id: 2,
-                        productId: 45,
-                        productName: "Ijele",
-                        planName: "Palliative",
-                        savingsType: 3,
-                        savingsFrequency: 2,
-                        savingsFrequencyText: "Monthly",
-                        savingsAmount: 300000.00,
-                        targetAmount: 120000000.00,
-                        startDate: DateTime.now(),
-                        status: 1,
-                        statusText: "Active",
-                        isMatured: false,
-                        amountSaved: 90000000.00,
-                        accruedInterest: 30000.00,
-                        interestRate: 3.00,
-                        successRate: "80",
-                        dateCreated: DateTime.now(),
-                        dateUpdated: DateTime.now(),
-                        isPaused: false,
-                      ),
-                    ),
-                  ),
+                  PickSavingsPlanSceen.route(),
                 );
               },
             ),
