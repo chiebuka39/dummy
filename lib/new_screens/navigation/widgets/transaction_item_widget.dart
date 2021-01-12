@@ -7,7 +7,7 @@ import 'package:zimvest/utils/strings.dart';
 
 class TransactionItemWidget extends StatelessWidget {
   const TransactionItemWidget({
-    Key key, this.onTap, this.narration, this.date, this.amount, this.symbol,
+    Key key, this.onTap, this.narration, this.date, this.amount, this.symbol, this.topUp = true,
   }) : super(key: key);
 
   final VoidCallback onTap;
@@ -15,6 +15,7 @@ class TransactionItemWidget extends StatelessWidget {
   final String date;
   final num amount;
   final String symbol;
+  final bool topUp;
 
   @override
   Widget build(BuildContext context) {
@@ -37,14 +38,14 @@ class TransactionItemWidget extends StatelessWidget {
               decoration: BoxDecoration(
                   color: AppColors.kPrimaryColorLight,
                   shape: BoxShape.circle),
-              child: Center(child: SvgPicture.asset("images/new/top_up.svg",color: AppColors.kPrimaryColor,),),
+              child: Center(child: SvgPicture.asset("images/new/${topUp ? 'top_up':'withdraw'}.svg",color: AppColors.kPrimaryColor,),),
             ),
             XMargin(15),
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Container(
-                  width: 130,
+                  width: MediaQuery.of(context).size.width * 0.55,
                   child: Text(
                     narration,
                     overflow: TextOverflow.ellipsis,

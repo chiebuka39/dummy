@@ -50,7 +50,7 @@ class _SaveFrequencyScreenState extends State<SaveFrequencyScreen> {
             style: TextStyle(fontSize: 15,
                 fontFamily: AppStrings.fontBold),),
           YMargin(35),
-            ...List.generate(savingViewModel.savingFrequency.length, (index) {
+            ...List.generate(3, (index) {
               var freq = savingViewModel.savingFrequency[index];
               return InkWell(
                 onTap: (){

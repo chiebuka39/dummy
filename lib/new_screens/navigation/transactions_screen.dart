@@ -1,9 +1,14 @@
+import 'package:after_layout/after_layout.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_money_formatter/flutter_money_formatter.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 import 'package:percent_indicator/percent_indicator.dart';
+import 'package:provider/provider.dart';
+import 'package:zimvest/data/models/product_transaction.dart';
+import 'package:zimvest/data/view_models/identity_view_model.dart';
+import 'package:zimvest/data/view_models/savings_view_model.dart';
 import 'package:zimvest/new_screens/navigation/wealth/aspire_box_details.dart';
 import 'package:zimvest/new_screens/navigation/wealth/investment_details.dart';
 import 'package:zimvest/new_screens/navigation/widgets/money_title_widget.dart';
@@ -16,6 +21,7 @@ import 'package:zimvest/utils/strings.dart';
 import 'package:zimvest/widgets/buttons.dart';
 import 'package:zimvest/widgets/home/action_box_widgets.dart';
 import 'package:zimvest/widgets/navigation/wealthbox_detail_widget.dart';
+import 'package:zimvest/widgets/new/loading.dart';
 
 import 'widgets/earn_free_cash.dart';
 
@@ -178,12 +184,25 @@ class SavingTransactionsWidget extends StatefulWidget {
   _SavingTransactionsWidgetState createState() => _SavingTransactionsWidgetState();
 }
 
-class _SavingTransactionsWidgetState extends State<SavingTransactionsWidget> {
+class _SavingTransactionsWidgetState extends State<SavingTransactionsWidget>
+    with AfterLayoutMixin<SavingTransactionsWidget> {
   bool topUp = true;
+
+  ABSSavingViewModel savingViewModel;
+  ABSIdentityViewModel identityViewModel;
+
+  @override
+  void afterFirstLayout(BuildContext context) async{
+    savingViewModel.getTransactionForProductType(
+      token: identityViewModel.user.token,
+      productId: 1
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
-
+    savingViewModel = Provider.of(context);
+    identityViewModel = Provider.of(context);
     return SliverPadding(
       padding: EdgeInsets.symmetric(horizontal: 20),
       sliver: SliverList(
@@ -250,7 +269,26 @@ class _SavingTransactionsWidgetState extends State<SavingTransactionsWidget> {
             ],
           ),
           topUp
-              ? EmptyInvstmentWidget()
+              ? savingViewModel.savingsTransactions[1] == null ?
+          ShimmerLoading()
+              :savingViewModel
+              .savingsTransactions[1].isEmpty ? EmptyInvstmentWidget(): Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+
+              ...List.generate(savingViewModel.savingsTransactions[1].length, (index) {
+                ProductTransaction trans = savingViewModel.savingsTransactions[1][index];
+                return TransactionItemWidget(
+                  narration: trans.transactionDescription,
+                  date: AppUtils.getReadableDateShort(trans.dateUpdated),
+                  amount: trans.amount,
+                  symbol: AppStrings.nairaSymbol,
+                );
+              }),
+              YMargin(50)
+
+            ],
+          )
               : Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
@@ -260,6 +298,7 @@ class _SavingTransactionsWidgetState extends State<SavingTransactionsWidget> {
                 date: "2 march",
                 amount: 2000,
                 symbol: AppStrings.nairaSymbol,
+                topUp: false,
               )),
               YMargin(50)
 

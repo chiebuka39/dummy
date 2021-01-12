@@ -71,6 +71,8 @@ dependencies:
   sliding_up_panel: ^1.0.2
   connectivity: ^2.0.2
   flutter_statusbar_manager: ^2.0.0
+  firebase_analytics: ^6.3.0
+  firebase_messaging: ^7.0.3
 
 
 

@@ -14,6 +14,7 @@ import 'package:zimvest/data/view_models/settings_view_model.dart';
 import 'package:zimvest/locator.dart';
 import 'package:zimvest/new_screens/account/login_screen.dart';
 import 'package:zimvest/new_screens/investor_profile/investor_profile_screen.dart';
+import 'package:zimvest/new_screens/profile/about_zimvest_screen.dart';
 import 'package:zimvest/new_screens/profile/account_screen.dart';
 import 'package:zimvest/new_screens/profile/add_bank_cards.dart';
 import 'package:zimvest/new_screens/profile/earn_free_cash_screen.dart';
@@ -110,7 +111,12 @@ class _ProfileScreenState extends State<ProfileScreen> with AfterLayoutMixin<Pro
               Navigator.push(context, EarnFreeCashScreen.route());
             },),
           ProfileWidget(title: "Rate App",icon: 'rate',),
-          ProfileWidget(title: "About Zimvest",icon: 'about',),
+          ProfileWidget(title: "About Zimvest",
+            icon: 'about',
+            onClick: (){
+              Navigator.push(context, AboutZimvestScreen.route());
+            },
+          ),
           ProfileWidget(title: "Log Out",icon: 'log-out',onClick: (){
             _showConfirmLogoutDialog(context);
           },),

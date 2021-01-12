@@ -67,6 +67,7 @@ abstract class ABSSettingsViewModel extends ChangeNotifier{
     int durationToCompletelyWithdraw,
     bool ethicalConsideration,
     String email, String lastName});
+  Future<Result<void>> checkipsstatus({String token});
 }
 
 class SettingsViewModel extends ABSSettingsViewModel{
@@ -251,6 +252,7 @@ class SettingsViewModel extends ABSSettingsViewModel{
    );
   }
 
+
   @override
   Future<Result<void>> profileInvestor({String token, String firstName,
     int investmentKnowledge, int mostConernedDuringInvestment,
@@ -271,6 +273,11 @@ class SettingsViewModel extends ABSSettingsViewModel{
       investmentKnowledge: investmentKnowledge,
       hypotheticalInvestmentPlan: hypotheticalInvestmentPlan
     );
+  }
+
+  @override
+  Future<Result<void>> checkipsstatus({String token}) {
+    return _settingsService.checkipsstatus(token: token);
   }
 
 
