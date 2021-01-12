@@ -1,22 +1,8 @@
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_money_formatter/flutter_money_formatter.dart';
-import 'package:flutter_svg/flutter_svg.dart';
-import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
-import 'package:percent_indicator/percent_indicator.dart';
-import 'package:zimvest/new_screens/navigation/wealth/aspire_box_details.dart';
-import 'package:zimvest/new_screens/navigation/wealth/investment_details.dart';
-import 'package:zimvest/new_screens/navigation/widgets/money_title_widget.dart';
-import 'package:zimvest/new_screens/navigation/wealth/wealth_box_details.dart';
 import 'package:zimvest/new_screens/navigation/widgets/transaction_item_widget.dart';
 import 'package:zimvest/styles/colors.dart';
-import 'package:zimvest/utils/app_utils.dart';
 import 'package:zimvest/utils/margin.dart';
 import 'package:zimvest/utils/strings.dart';
-import 'package:zimvest/widgets/buttons.dart';
-import 'package:zimvest/widgets/home/action_box_widgets.dart';
-import 'package:zimvest/widgets/navigation/wealthbox_detail_widget.dart';
-
 import 'widgets/earn_free_cash.dart';
 
 class TransactionsScreen extends StatefulWidget {
@@ -133,8 +119,6 @@ class _TransactionsScreenState extends State<TransactionsScreen> {
   }
 }
 
-
-
 class SavingTransactionsEmptyWidget extends StatelessWidget {
   const SavingTransactionsEmptyWidget({
     Key key,
@@ -162,7 +146,6 @@ class SavingTransactionsEmptyWidget extends StatelessWidget {
           ],
         ),
         YMargin(40),
-        
       ])),
       padding: EdgeInsets.symmetric(horizontal: 20),
     );
@@ -175,7 +158,8 @@ class SavingTransactionsWidget extends StatefulWidget {
   }) : super(key: key);
 
   @override
-  _SavingTransactionsWidgetState createState() => _SavingTransactionsWidgetState();
+  _SavingTransactionsWidgetState createState() =>
+      _SavingTransactionsWidgetState();
 }
 
 class _SavingTransactionsWidgetState extends State<SavingTransactionsWidget> {
@@ -183,7 +167,6 @@ class _SavingTransactionsWidgetState extends State<SavingTransactionsWidget> {
 
   @override
   Widget build(BuildContext context) {
-
     return SliverPadding(
       padding: EdgeInsets.symmetric(horizontal: 20),
       sliver: SliverList(
@@ -241,7 +224,7 @@ class _SavingTransactionsWidgetState extends State<SavingTransactionsWidget> {
                           height: 3,
                           width: 40,
                           decoration:
-                          BoxDecoration(color: AppColors.kPrimaryColor),
+                              BoxDecoration(color: AppColors.kPrimaryColor),
                         ),
                         duration: Duration(milliseconds: 300))
                   ],
@@ -252,30 +235,24 @@ class _SavingTransactionsWidgetState extends State<SavingTransactionsWidget> {
           topUp
               ? EmptyInvstmentWidget()
               : Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-
-              ...List.generate(6, (index) => TransactionItemWidget(
-                narration: "Paid money in",
-                date: "2 march",
-                amount: 2000,
-                symbol: AppStrings.nairaSymbol,
-              )),
-              YMargin(50)
-
-            ],
-          ),
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    ...List.generate(
+                        6,
+                        (index) => TransactionItemWidget(
+                              narration: "Paid money in",
+                              date: "2 march",
+                              amount: 2000,
+                              symbol: AppStrings.nairaSymbol,
+                            )),
+                    YMargin(50)
+                  ],
+                ),
         ]),
       ),
     );
   }
-
-
 }
-
-
-
-
 
 class PortfolioInvestmentWidget extends StatefulWidget {
   const PortfolioInvestmentWidget({
@@ -325,20 +302,24 @@ class _PortfolioInvestmentWidgetState extends State<PortfolioInvestmentWidget> {
                             )),
                         Spacer(),
                         GestureDetector(
-                            onTap: () {
-                              setState(() {
-                                topUp = false;
-                              });
-                            },
-                            child: Text("Withdrawals",
-                                style: TextStyle(
-                                    color: topUp
-                                        ? AppColors.kTextColor
-                                        : AppColors.kPrimaryColor,
-                                    fontSize: 12,
-                                    fontFamily: topUp
-                                        ? AppStrings.fontNormal
-                                        : AppStrings.fontMedium))),
+                          onTap: () {
+                            setState(() {
+                              topUp = false;
+                            });
+                          },
+                          child: Text(
+                            "Withdrawals",
+                            style: TextStyle(
+                              color: topUp
+                                  ? AppColors.kTextColor
+                                  : AppColors.kPrimaryColor,
+                              fontSize: 12,
+                              fontFamily: topUp
+                                  ? AppStrings.fontNormal
+                                  : AppStrings.fontMedium,
+                            ),
+                          ),
+                        ),
                       ],
                     ),
                     AnimatedPositioned(
@@ -357,7 +338,9 @@ class _PortfolioInvestmentWidgetState extends State<PortfolioInvestmentWidget> {
             ],
           ),
           topUp
-              ? EmptyInvstmentWidget(investment: true,)
+              ? EmptyInvstmentWidget(
+                  investment: true,
+                )
               : Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
@@ -371,11 +354,10 @@ class _PortfolioInvestmentWidgetState extends State<PortfolioInvestmentWidget> {
   }
 }
 
-
-
 class EmptyInvstmentWidget extends StatelessWidget {
   const EmptyInvstmentWidget({
-    Key key, this.investment = false,
+    Key key,
+    this.investment = false,
   }) : super(key: key);
 
   final bool investment;
@@ -391,7 +373,7 @@ class EmptyInvstmentWidget extends StatelessWidget {
             SizedBox(
                 width: 200,
                 child: Text(
-                  "You do not have any ${investment ? 'investment':'Savings'} transaction",
+                  "You do not have any ${investment ? 'investment' : 'Savings'} transaction",
                   textAlign: TextAlign.center,
                   style: TextStyle(
                       fontFamily: AppStrings.fontNormal,
@@ -401,7 +383,6 @@ class EmptyInvstmentWidget extends StatelessWidget {
           ],
         ),
         YMargin(40),
-
       ],
     );
   }

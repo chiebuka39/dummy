@@ -4,6 +4,7 @@ import 'package:flutter_masked_text/flutter_masked_text.dart';
 import 'package:flutter_money_formatter/flutter_money_formatter.dart';
 import 'package:provider_architecture/provider_architecture.dart';
 import 'package:zimvest/data/view_models/investment_view_model.dart';
+import 'package:zimvest/data/view_models/wallets_view_model.dart';
 import 'package:zimvest/new_screens/navigation/investments/fixed/treasury_bills/fixed_income_purchase.dart';
 import 'package:zimvest/new_screens/navigation/investments/widgets/text_field.dart';
 import 'package:zimvest/styles/colors.dart';
@@ -75,8 +76,9 @@ class _FixedIncomeAmountInputState extends State<FixedIncomeAmountInput> {
   var amountController = MoneyMaskedTextController(thousandSeparator: ",", decimalSeparator: ".");
   @override
   Widget build(BuildContext context) {
-    return ViewModelProvider<InvestmentHighYieldViewModel>.withConsumer(
-      viewModelBuilder: () => InvestmentHighYieldViewModel(),
+    return ViewModelProvider<WalletViewModel>.withConsumer(
+      viewModelBuilder: () => WalletViewModel(),
+      onModelReady: (model) => model.getCards(),
       builder: (context, model, _) => Scaffold(
         appBar: AppBar(
           backgroundColor: Colors.transparent,
@@ -165,6 +167,7 @@ class _FixedIncomeAmountInputState extends State<FixedIncomeAmountInput> {
                     Navigator.push(
                       context,
                       FixedIncomePurchaseSource.route(
+                        cards: model.cards,
                           amount: amount,
                           productId: widget.investmentId,
                           uniqueName: widget.uniqueName,

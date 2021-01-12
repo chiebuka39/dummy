@@ -26,7 +26,6 @@ import 'package:zimvest/utils/strings.dart';
 import 'package:zimvest/widgets/home/action_box_widgets.dart';
 
 class HomeScreen extends StatefulWidget {
-
   @override
   _HomeScreenState createState() => _HomeScreenState();
 }
@@ -39,12 +38,11 @@ class _HomeScreenState extends State<HomeScreen> {
   ABSSavingViewModel savingViewModel;
   ABSSettingsViewModel settingsViewModel;
 
-
   @override
   void initState() {
-
     super.initState();
   }
+
   @override
   Widget build(BuildContext context) {
     identityViewModel = Provider.of(context);
@@ -62,19 +60,22 @@ class _HomeScreenState extends State<HomeScreen> {
                 child: Row(
                   children: [
                     GestureDetector(
-                      onTap:(){
-            Navigator.of(context).push(ProfileScreen.route());
-        },
+                      onTap: () {
+                        Navigator.of(context).push(ProfileScreen.route());
+                      },
                       child: Container(
                           height: 34,
                           width: 34,
                           decoration: BoxDecoration(
                               shape: BoxShape.circle, color: AppColors.kGrey),
-                          child:
-                              Center(child: SvgPicture.asset("images/profile.svg"))),
+                          child: Center(
+                              child: SvgPicture.asset("images/profile.svg"))),
                     ),
                     XMargin(10),
-                    Text("Hi, ${identityViewModel.user.fullname.split(" ").first}", style: TextStyle(fontFamily: AppStrings.fontMedium),),
+                    Text(
+                      "Hi, ${identityViewModel.user.fullname.split(" ").first}",
+                      style: TextStyle(fontFamily: AppStrings.fontMedium),
+                    ),
                     Spacer(),
                     EarnFreeCashWidget()
                   ],
@@ -88,63 +89,112 @@ class _HomeScreenState extends State<HomeScreen> {
                     Container(
                       height: 165,
                       width: double.infinity,
-                      padding: EdgeInsets.symmetric(vertical: 30,horizontal: 20),
+                      padding:
+                          EdgeInsets.symmetric(vertical: 30, horizontal: 20),
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Text("Naira Portfolio",
+                          Text(
+                            "Naira Portfolio",
                             style: TextStyle(
-                              fontSize: 12,
-                              color: AppColors.kSecondaryText,
-                                fontFamily: AppStrings.fontNormal),),
+                                fontSize: 12,
+                                color: AppColors.kSecondaryText,
+                                fontFamily: AppStrings.fontNormal),
+                          ),
                           YMargin(12),
-                          Row(children: [
-                            Transform.translate(
-                                offset:Offset(0,-4),
-                                child: Text(AppStrings.nairaSymbol, style: TextStyle(fontSize: 14,color: AppColors.kSecondaryBoldText),)),
-                            XMargin(2),
-                            Text(dashboardViewModel.dashboardModel.nairaPortfolio.substring(1).split(".").first,
-                              style: TextStyle(fontSize: 25, fontFamily: AppStrings.fontMedium,
-                                  color: AppColors.kSecondaryBoldText),),
-                            XMargin(3),
-                            Transform.translate(
-                              offset:Offset(0,-4),
-                              child: Text(".${dashboardViewModel.dashboardModel.nairaPortfolio.split(".").last}",
-                                style: TextStyle(fontSize: 14, fontFamily: AppStrings.fontMedium,color: AppColors.kSecondaryBoldText),),
-                            ),
-                          ],),
-                          YMargin(16),
-                          Row(children: [
-                            Icon(Icons.arrow_drop_up_outlined,color: AppColors.kFixed),
-                            Text("${AppStrings.nairaSymbol}0",
-                              style: TextStyle(fontFamily: AppStrings.fontMedium,color: AppColors.kFixed),),
-                            XMargin(5),
-                            Text("(0.00%)",
-                              style: TextStyle(fontFamily: AppStrings.fontMedium,color: AppColors.kFixed),),
-                            XMargin(5),
-                            Text("Past 24h",
-                              style: TextStyle(),),
-                            Spacer(),
-                            Transform.translate(
-                              offset: Offset(0,2),
-                              child: GestureDetector(
-                                onTap:(){
-                                  Navigator.of(context).push(NairaPortfolioBreakdownScreen.route());
-                                },
-                                child: Row(children: [
-                                  Text("Portfolio Breakdown", style: TextStyle(color: AppColors.kPrimaryColor,
-                                      fontSize: 11,fontFamily: AppStrings.fontNormal),),
-                                  Icon(Icons.navigate_next_rounded, color: AppColors.kPrimaryColor,size: 19,)
-                                ],),
+                          Row(
+                            children: [
+                              Transform.translate(
+                                  offset: Offset(0, -4),
+                                  child: Text(
+                                    AppStrings.nairaSymbol,
+                                    style: TextStyle(
+                                        fontSize: 14,
+                                        color: AppColors.kSecondaryBoldText),
+                                  )),
+                              XMargin(2),
+                              Text(
+                                dashboardViewModel.dashboardModel.nairaPortfolio
+                                    .substring(1)
+                                    .split(".")
+                                    .first,
+                                style: TextStyle(
+                                    fontSize: 25,
+                                    fontFamily: AppStrings.fontMedium,
+                                    color: AppColors.kSecondaryBoldText),
                               ),
-                            )
-
-                          ],)
-                        ],),),
+                              XMargin(3),
+                              Transform.translate(
+                                offset: Offset(0, -4),
+                                child: Text(
+                                  ".${dashboardViewModel.dashboardModel.nairaPortfolio.split(".").last}",
+                                  style: TextStyle(
+                                      fontSize: 14,
+                                      fontFamily: AppStrings.fontMedium,
+                                      color: AppColors.kSecondaryBoldText),
+                                ),
+                              ),
+                            ],
+                          ),
+                          YMargin(16),
+                          Row(
+                            children: [
+                              Icon(Icons.arrow_drop_up_outlined,
+                                  color: AppColors.kFixed),
+                              Text(
+                                "${AppStrings.nairaSymbol}0",
+                                style: TextStyle(
+                                    fontFamily: AppStrings.fontMedium,
+                                    color: AppColors.kFixed),
+                              ),
+                              XMargin(5),
+                              Text(
+                                "(0.00%)",
+                                style: TextStyle(
+                                    fontFamily: AppStrings.fontMedium,
+                                    color: AppColors.kFixed),
+                              ),
+                              XMargin(5),
+                              Text(
+                                "Past 24h",
+                                style: TextStyle(),
+                              ),
+                              Spacer(),
+                              Transform.translate(
+                                offset: Offset(0, 2),
+                                child: GestureDetector(
+                                  onTap: () {
+                                    Navigator.of(context).push(
+                                        NairaPortfolioBreakdownScreen.route());
+                                  },
+                                  child: Row(
+                                    children: [
+                                      Text(
+                                        "Portfolio Breakdown",
+                                        style: TextStyle(
+                                            color: AppColors.kPrimaryColor,
+                                            fontSize: 11,
+                                            fontFamily: AppStrings.fontNormal),
+                                      ),
+                                      Icon(
+                                        Icons.navigate_next_rounded,
+                                        color: AppColors.kPrimaryColor,
+                                        size: 19,
+                                      )
+                                    ],
+                                  ),
+                                ),
+                              )
+                            ],
+                          )
+                        ],
+                      ),
+                    ),
                     Container(
                       height: 165,
                       width: double.infinity,
-                      padding: EdgeInsets.symmetric(vertical: 30,horizontal: 20),
+                      padding:
+                          EdgeInsets.symmetric(vertical: 30, horizontal: 20),
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
@@ -154,67 +204,103 @@ class _HomeScreenState extends State<HomeScreen> {
                                   color: AppColors.kSecondaryText,
                                   fontFamily: AppStrings.fontNormal)),
                           YMargin(12),
-                          Row(children: [
-                            Transform.translate(
-                                offset:Offset(0,-4),
-                                child: Text("\$", style: TextStyle(fontSize: 14),)),
-                            XMargin(2),
-                            Text(dashboardViewModel.dashboardModel.dollarPortfolio.split(".").first,
-                              style: TextStyle(fontSize: 25, fontFamily: AppStrings.fontMedium,
-                                  color: AppColors.kSecondaryBoldText),),
-                            XMargin(3),
-                            Transform.translate(
-                              offset:Offset(0,-4),
-                              child: Text(".${dashboardViewModel.dashboardModel.dollarPortfolio.split(".").last}",
-                                style: TextStyle(fontSize: 14, fontFamily: AppStrings.fontMedium,color: AppColors.kSecondaryBoldText),),
-                            ),
-                          ],),
-                          YMargin(16),
-                          Row(children: [
-                            Icon(Icons.arrow_drop_up_outlined,color: AppColors.kFixed),
-                            Text("\$0",
-                              style: TextStyle(fontFamily: AppStrings.fontMedium,color: AppColors.kFixed)),
-                            XMargin(5),
-                            Text("(0.00%)",
-                              style: TextStyle(fontFamily: AppStrings.fontMedium,color: AppColors.kFixed),),
-                            XMargin(5),
-                            Text("Past 24h",
-                              style: TextStyle(),),
-                            Spacer(),
-                            Transform.translate(
-                              offset: Offset(0,2),
-                              child: GestureDetector(
-                                onTap: (){
-                                  Navigator.of(context).push(DollarPortfolioBreakdownScreen.route());
-                                },
-                                child: Row(children: [
-                                  Text("Portfolio Breakdown", style: TextStyle(color: AppColors.kPrimaryColor,
-                                      fontSize: 11,fontFamily: AppStrings.fontNormal),),
-                                  Icon(Icons.navigate_next_rounded, color: AppColors.kPrimaryColor,size: 19,)
-                                ],),
+                          Row(
+                            children: [
+                              Transform.translate(
+                                  offset: Offset(0, -4),
+                                  child: Text(
+                                    "\$",
+                                    style: TextStyle(fontSize: 14),
+                                  )),
+                              XMargin(2),
+                              Text(
+                                dashboardViewModel
+                                    .dashboardModel.dollarPortfolio
+                                    .split(".")
+                                    .first,
+                                style: TextStyle(
+                                    fontSize: 25,
+                                    fontFamily: AppStrings.fontMedium,
+                                    color: AppColors.kSecondaryBoldText),
                               ),
-                            )
-
-                          ],)
-                        ],),),
+                              XMargin(3),
+                              Transform.translate(
+                                offset: Offset(0, -4),
+                                child: Text(
+                                  ".${dashboardViewModel.dashboardModel.dollarPortfolio.split(".").last}",
+                                  style: TextStyle(
+                                      fontSize: 14,
+                                      fontFamily: AppStrings.fontMedium,
+                                      color: AppColors.kSecondaryBoldText),
+                                ),
+                              ),
+                            ],
+                          ),
+                          YMargin(16),
+                          Row(
+                            children: [
+                              Icon(Icons.arrow_drop_up_outlined,
+                                  color: AppColors.kFixed),
+                              Text("\$0",
+                                  style: TextStyle(
+                                      fontFamily: AppStrings.fontMedium,
+                                      color: AppColors.kFixed)),
+                              XMargin(5),
+                              Text(
+                                "(0.00%)",
+                                style: TextStyle(
+                                    fontFamily: AppStrings.fontMedium,
+                                    color: AppColors.kFixed),
+                              ),
+                              XMargin(5),
+                              Text(
+                                "Past 24h",
+                                style: TextStyle(),
+                              ),
+                              Spacer(),
+                              Transform.translate(
+                                offset: Offset(0, 2),
+                                child: GestureDetector(
+                                  onTap: () {
+                                    Navigator.of(context).push(
+                                        DollarPortfolioBreakdownScreen.route());
+                                  },
+                                  child: Row(
+                                    children: [
+                                      Text(
+                                        "Portfolio Breakdown",
+                                        style: TextStyle(
+                                            color: AppColors.kPrimaryColor,
+                                            fontSize: 11,
+                                            fontFamily: AppStrings.fontNormal),
+                                      ),
+                                      Icon(
+                                        Icons.navigate_next_rounded,
+                                        color: AppColors.kPrimaryColor,
+                                        size: 19,
+                                      )
+                                    ],
+                                  ),
+                                ),
+                              )
+                            ],
+                          )
+                        ],
+                      ),
+                    ),
                   ],
                 ),
               ),
-
               SmoothPageIndicator(
-                  controller: controller,  // PageController
+                  controller: controller, // PageController
                   count: 2,
-                  effect:  WormEffect(
+                  effect: WormEffect(
                       dotWidth: 8,
                       dotHeight: 8,
                       dotColor: AppColors.kGreyBg,
-                      activeDotColor: AppColors.kPrimaryColor
-                  ),  // your preferred effect
-                  onDotClicked: (index){
-
-                  }
-              ),
-
+                      activeDotColor:
+                          AppColors.kPrimaryColor), // your preferred effect
+                  onDotClicked: (index) {}),
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 20),
                 child: Row(
@@ -224,51 +310,226 @@ class _HomeScreenState extends State<HomeScreen> {
                 ),
               ),
               AnimatedOpacity(
-                opacity: settingsViewModel.completedSections == null ? 0:1,
+                opacity: settingsViewModel.completedSections == null ? 0 : 1,
                 duration: Duration(milliseconds: 500),
-                child: settingsViewModel.completedSections == null ? SizedBox(height: 120,): Container(
-                  margin: EdgeInsets.symmetric(horizontal: 20),
-                  height: 120,
-                    child: Timeline1(
-                      actions: settingsViewModel
-                          .completedSections.kycValidationCheck
-                          .isKycValidated == false ? ['Verify Identity','Fund Wallet']:
-                      ['Fund Wallet'],
-                      callbacks: settingsViewModel
-                          .completedSections.kycValidationCheck
-                          .isKycValidated == false ? [(){
-                        Navigator.push(context, VerificationDetailsScreen.route());
-                      },(){
-                        Navigator.push(context, FundWallet.route());
-                      }]:[(){
-                        Navigator.push(context, FundWallet.route());
-                      }],
-                    )),
+                child: settingsViewModel.completedSections == null
+                    ? SizedBox(
+                        height: 120,
+                      )
+                    : Container(
+                        margin: EdgeInsets.symmetric(horizontal: 20),
+                        height: 120,
+                        child: Timeline1(
+                          actions: settingsViewModel.completedSections
+                                      .kycValidationCheck.isKycValidated ==
+                                  false
+                              ? ['Verify Identity', 'Fund Wallet']
+                              : ['Fund Wallet'],
+                          callbacks: settingsViewModel.completedSections
+                                      .kycValidationCheck.isKycValidated ==
+                                  false
+                              ? [
+                                  () {
+                                    Navigator.push(context,
+                                        VerificationDetailsScreen.route());
+                                  },
+                                  () {
+                                    Navigator.push(context, FundWallet.route());
+                                  }
+                                ]
+                              : [
+                                  () {
+                                    Navigator.push(context, FundWallet.route());
+                                  }
+                                ],
+                        )),
               ),
-              ActionBoxWidget(title: "Save with Zimvest wealth box", desc: "This savings plan assists you save in a "
-                  "disciplined manner.",color: AppColors.kWealth,onTap: (){
-                if(savingViewModel.savingPlanModel == null ){
-                  Navigator.push(context, WealthBoxScreen.route());
-                }
-                else if( savingViewModel.savingPlanModel.where((element) => element.productId == 1).isEmpty){
-                  Navigator.push(context, WealthBoxScreen.route());
-                }else{
-                  Navigator.push(context, WealthBoxDetailsScreen.route(savingViewModel.savingPlanModel
-                      .where((element) => element.productId == 1).first));
-                }
-
-              },),
-              ActionBoxWidget(title: "Save with Zimvest Aspire", desc: "This savings plan allows you "
-                  "save towards a goal. ",color: AppColors.kAspire,img: 'aspire',
-                onTap: (){
+              ActionBoxWidget(
+                title: "Save with Zimvest wealth box",
+                desc: "This savings plan assists you save in a "
+                    "disciplined manner.",
+                color: AppColors.kWealth,
+                onTap: () {
+                  if (savingViewModel.savingPlanModel == null) {
+                    Navigator.push(context, WealthBoxScreen.route());
+                  } else if (savingViewModel.savingPlanModel
+                      .where((element) => element.productId == 1)
+                      .isEmpty) {
+                    Navigator.push(context, WealthBoxScreen.route());
+                  } else {
+                    Navigator.push(
+                        context,
+                        WealthBoxDetailsScreen.route(savingViewModel
+                            .savingPlanModel
+                            .where((element) => element.productId == 1)
+                            .first));
+                  }
+                },
+              ),
+              ActionBoxWidget(
+                title: "Save with Zimvest Aspire",
+                desc: "This savings plan allows you "
+                    "save towards a goal. ",
+                color: AppColors.kAspire,
+                img: 'aspire',
+                onTap: () {
                   Navigator.push(context, AspireSavingScreen.route());
                 },
               ),
               ActionBoxWidget(
                 onTap: () {
-                  Navigator.push(
-                    context,
-                    InvestmentHighYieldScreen.route(),
+                  showModalBottomSheet(
+                    context: context,
+                    builder: (context) => Container(
+                      height: 400,
+                      width: double.infinity,
+                      color: Colors.transparent,
+                      child: Column(
+                        children: [
+                          Container(
+                            height: 5,
+                            width: 40,
+                            decoration: BoxDecoration(
+                              color: AppColors.kWhite,
+                              borderRadius: BorderRadius.circular(30),
+                            ),
+                          ),
+                          YMargin(10),
+                          Container(
+                            height: 385,
+                            width: double.infinity,
+                            decoration: BoxDecoration(
+                              color: AppColors.kWhite,
+                              borderRadius: BorderRadius.only(
+                                topLeft: Radius.circular(30),
+                                topRight: Radius.circular(30),
+                              ),
+                            ),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                YMargin(50),
+                                Padding(
+                                  padding: const EdgeInsets.symmetric(
+                                      horizontal: 20.0),
+                                  child: Text(
+                                    "Zimvest High Yield",
+                                    style: TextStyle(
+                                        fontSize: 15,
+                                        fontWeight: FontWeight.w700,
+                                        fontFamily: AppStrings.fontNormal),
+                                  ),
+                                ),
+                                YMargin(20),
+                                Padding(
+                                  padding: const EdgeInsets.symmetric(
+                                      horizontal: 20.0),
+                                  child: GestureDetector(
+                                    child: Container(
+                                      height: 130,
+                                      width: double.infinity,
+                                      decoration: BoxDecoration(
+                                        borderRadius: BorderRadius.circular(20),
+                                        color: AppColors.kPrimaryColor,
+                                      ),
+                                      child: Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: [
+                                          Padding(
+                                            padding: const EdgeInsets.all(12.0),
+                                            child: Text(
+                                              "Zimvest High Yield Naira",
+                                              style: TextStyle(
+                                                fontSize: 13,
+                                                fontWeight: FontWeight.w400,
+                                                fontFamily:
+                                                    AppStrings.fontNormal,
+                                                color: AppColors.kWhite,
+                                              ),
+                                            ),
+                                          ),
+                                          Padding(
+                                            padding: const EdgeInsets.all(12.0),
+                                            child: Container(
+                                              height: 40,
+                                              width: 150,
+                                              child: Text(
+                                                "Invest in high yield naira based instruments",
+                                                style: TextStyle(
+                                                  fontSize: 11,
+                                                  fontWeight: FontWeight.w400,
+                                                  fontFamily:
+                                                      AppStrings.fontNormal,
+                                                  color: AppColors.kWhite,
+                                                ),
+                                                textAlign: TextAlign.start,
+                                              ),
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                                YMargin(20),
+                                Padding(
+                                  padding: const EdgeInsets.symmetric(
+                                      horizontal: 20.0),
+                                  child: GestureDetector(
+                                    child: Container(
+                                      height: 130,
+                                      width: double.infinity,
+                                      decoration: BoxDecoration(
+                                        borderRadius: BorderRadius.circular(20),
+                                        color: AppColors.kSecondaryColor,
+                                      ),
+                                      child: Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: [
+                                          Padding(
+                                            padding: const EdgeInsets.all(12.0),
+                                            child: Text(
+                                              "Zimvest High Yield Dollar",
+                                              style: TextStyle(
+                                                fontSize: 13,
+                                                fontWeight: FontWeight.w400,
+                                                fontFamily:
+                                                    AppStrings.fontNormal,
+                                                color: AppColors.kWhite,
+                                              ),
+                                            ),
+                                          ),
+                                          Padding(
+                                            padding: const EdgeInsets.all(12.0),
+                                            child: Container(
+                                              height: 40,
+                                              width: 150,
+                                              child: Text(
+                                                "Invest in high yield dollar based instruments",
+                                                style: TextStyle(
+                                                  fontSize: 11,
+                                                  fontWeight: FontWeight.w400,
+                                                  fontFamily:
+                                                      AppStrings.fontNormal,
+                                                  color: AppColors.kWhite,
+                                                ),
+                                                textAlign: TextAlign.start,
+                                              ),
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
                   );
                 },
                 title: "Invest in Zimvest High Yield",
@@ -298,8 +559,6 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 }
 
-
-
 class Timeline1 extends StatelessWidget {
   final List<String> actions;
   final List<VoidCallback> callbacks;
@@ -320,10 +579,16 @@ class Timeline1 extends StatelessWidget {
       ),
       padding: EdgeInsets.symmetric(vertical: 20.0),
       builder: TimelineTileBuilder.connected(
-        contentsBuilder: (_, index) => _EmptyContents(title: actions[index],onTap: callbacks[index],),
+        contentsBuilder: (_, index) => _EmptyContents(
+          title: actions[index],
+          onTap: callbacks[index],
+        ),
         connectorBuilder: (_, index, __) {
           if (index == 0) {
-            return SolidLineConnector(color: Color(0xffE9E9E9),thickness: 1,);
+            return SolidLineConnector(
+              color: Color(0xffE9E9E9),
+              thickness: 1,
+            );
           } else {
             return SolidLineConnector();
           }
@@ -332,20 +597,22 @@ class Timeline1 extends StatelessWidget {
           return Container(
             width: 22,
             height: 22,
-            child: Center(child: Container(
-              width: 12,
-              height: 12,
-              decoration: BoxDecoration(
-                  shape: BoxShape.circle,
-                  color: Colors.transparent,
-                border: Border.all(color: AppColors.kPrimaryColor,width: 0.5)
+            child: Center(
+              child: Container(
+                width: 12,
+                height: 12,
+                decoration: BoxDecoration(
+                    shape: BoxShape.circle,
+                    color: Colors.transparent,
+                    border:
+                        Border.all(color: AppColors.kPrimaryColor, width: 0.5)),
               ),
-            ),),
-            decoration: BoxDecoration(
-              shape: BoxShape.circle,
-                color: Colors.transparent,
-                border: Border.all(color: AppColors.kPrimaryColor.withOpacity(0.2))
             ),
+            decoration: BoxDecoration(
+                shape: BoxShape.circle,
+                color: Colors.transparent,
+                border: Border.all(
+                    color: AppColors.kPrimaryColor.withOpacity(0.2))),
           );
         },
         itemExtentBuilder: (_, __) => kTileHeight,
@@ -355,8 +622,8 @@ class Timeline1 extends StatelessWidget {
   }
 }
 
-
 const kTileHeight = 50.0;
+
 class _EmptyContents extends StatelessWidget {
   final String title;
   final VoidCallback onTap;
@@ -369,13 +636,21 @@ class _EmptyContents extends StatelessWidget {
       child: Container(
         margin: EdgeInsets.only(left: 10.0),
         height: 30.0,
-        child: Row(children: [
-          Text(title, style: TextStyle(fontSize: 12, fontFamily: AppStrings.fontNormal),),
-          Spacer(),
-          Icon(Icons.arrow_forward_ios_rounded,size: 16,color: AppColors.kPrimaryColor,)
-        ],),
+        child: Row(
+          children: [
+            Text(
+              title,
+              style: TextStyle(fontSize: 12, fontFamily: AppStrings.fontNormal),
+            ),
+            Spacer(),
+            Icon(
+              Icons.arrow_forward_ios_rounded,
+              size: 16,
+              color: AppColors.kPrimaryColor,
+            )
+          ],
+        ),
       ),
     );
   }
 }
-

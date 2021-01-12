@@ -1,6 +1,8 @@
 import 'package:zimvest/data/local/user_local.dart';
+import 'package:zimvest/data/models/payment/card.dart';
 import 'package:zimvest/data/models/payment/wallet.dart';
 import 'package:zimvest/data/models/wallets/wallets_model.dart';
+import 'package:zimvest/data/services/payment_service.dart';
 import 'package:zimvest/data/services/wallet_service.dart';
 import 'package:zimvest/data/view_models/base_model.dart';
 
@@ -11,6 +13,8 @@ class WalletViewModel extends BaseViewModel {
   final ABSStateLocalStorage _localStorage = locator<ABSStateLocalStorage>();
   List<Wallet> wallets = List<Wallet>();
   List<WalletTransaction> walletTransaction = List<WalletTransaction>();
+  ABSPaymentService _paymentService = locator<ABSPaymentService>();
+  List<PaymentCard> cards = List<PaymentCard>();
 
   bool _status = false;
   bool get status => _status;
@@ -32,7 +36,16 @@ class WalletViewModel extends BaseViewModel {
     String token = _localStorage.getUser().token;
     var walletTransactions = await _walletService.getWalletsTransactions(token);
     this.walletTransaction = walletTransactions;
-    print(walletTransactions[0].narration);
+    
+    setBusy(false);
+    notifyListeners();
+  }
+
+  Future<void> getCards()async{
+    setBusy(true);
+    String token = _localStorage.getUser().token;
+    var cards = await _paymentService.getUserCards(token);
+    this.cards = cards.data;
     setBusy(false);
     notifyListeners();
   }

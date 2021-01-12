@@ -121,7 +121,7 @@ class FixedIncomeInvestmentService implements ABSFixedIncomeInvestmentService {
         options: Options(
           headers: headers,
           validateStatus: (status) {
-            return status < 500;
+            return status < 600;
           },
         ),
       );
@@ -130,6 +130,8 @@ class FixedIncomeInvestmentService implements ABSFixedIncomeInvestmentService {
         return buyCommercialPaper.data["message"];
       } else if (buyCommercialPaper.statusCode == 400) {
         return buyCommercialPaper.data["message"];
+      } else if (buyCommercialPaper.statusCode == 500) {
+        return buyCommercialPaper.data["Message"];
       }
     } on DioError catch (e) {
       print(e.message.toString());
@@ -170,7 +172,7 @@ class FixedIncomeInvestmentService implements ABSFixedIncomeInvestmentService {
         options: Options(
           headers: headers,
           validateStatus: (status) {
-            return status < 500;
+            return status < 600;
           },
         ),
       );
@@ -179,6 +181,8 @@ class FixedIncomeInvestmentService implements ABSFixedIncomeInvestmentService {
         return buyCorporateBond.data["message"];
       } else if (buyCorporateBond.statusCode == 400) {
         return buyCorporateBond.data["message"];
+      } else if (buyCorporateBond.statusCode == 500) {
+        return buyCorporateBond.data["Message"];
       }
     } on DioError catch (e) {
       print(e.message.toString());
@@ -219,7 +223,7 @@ class FixedIncomeInvestmentService implements ABSFixedIncomeInvestmentService {
         options: Options(
           headers: headers,
           validateStatus: (status) {
-            return status < 500;
+            return status < 600;
           },
         ),
       );
@@ -228,6 +232,8 @@ class FixedIncomeInvestmentService implements ABSFixedIncomeInvestmentService {
         return buyEuroBond.data["message"];
       } else if (buyEuroBond.statusCode == 400) {
         return buyEuroBond.data["message"];
+      } else if (buyEuroBond.statusCode == 500) {
+        return buyEuroBond.data["Message"];
       }
     } on DioError catch (e) {
       print(e.message.toString());
@@ -266,7 +272,7 @@ class FixedIncomeInvestmentService implements ABSFixedIncomeInvestmentService {
         options: Options(
           headers: headers,
           validateStatus: (status) {
-            return status < 500;
+            return status < 600;
           },
         ),
       );
@@ -275,6 +281,8 @@ class FixedIncomeInvestmentService implements ABSFixedIncomeInvestmentService {
         return buyFGNBond.data["message"];
       } else if (buyFGNBond.statusCode == 400) {
         return buyFGNBond.data["message"];
+      } else if (buyFGNBond.statusCode == 500) {
+        return buyFGNBond.data["Message"];
       }
     } on DioError catch (e) {
       print(e.message.toString());
@@ -317,7 +325,7 @@ class FixedIncomeInvestmentService implements ABSFixedIncomeInvestmentService {
         options: Options(
           headers: headers,
           validateStatus: (status) {
-            return status < 500;
+            return status < 600;
           },
         ),
       );
@@ -326,6 +334,8 @@ class FixedIncomeInvestmentService implements ABSFixedIncomeInvestmentService {
         return buyPromissoryNote.data["message"];
       } else if (buyPromissoryNote.statusCode == 400) {
         return buyPromissoryNote.data["message"];
+      } else if (buyPromissoryNote.statusCode == 500) {
+        return buyPromissoryNote.data["Message"];
       }
     } on DioError catch (e) {
       print(e.message.toString());
@@ -347,7 +357,6 @@ class FixedIncomeInvestmentService implements ABSFixedIncomeInvestmentService {
       num faceValue,
       num investmentAmount}) async {
     var url = "${AppStrings.baseUrl}$microService/api/TreasuryBills";
-    print(url);
     FormData data = FormData.fromMap({
       "ProductId": productId,
       "RateValue": rate,
@@ -367,17 +376,19 @@ class FixedIncomeInvestmentService implements ABSFixedIncomeInvestmentService {
         options: Options(
           headers: headers,
           validateStatus: (status) {
-            return status < 500;
+            return status < 600;
           },
         ),
       );
+      print(buyTreasuryBill.data);
       if (buyTreasuryBill.statusCode == 200) {
         return buyTreasuryBill.data["message"];
       } else if (buyTreasuryBill.statusCode == 400) {
         return buyTreasuryBill.data["message"];
+      } else if (buyTreasuryBill.statusCode == 500) {
+        return buyTreasuryBill.data["Message"];
       }
     } on DioError catch (e) {
-      print(e.message.toString());
       throw Exception(e.response.toString());
     }
     return null;
@@ -396,7 +407,6 @@ class FixedIncomeInvestmentService implements ABSFixedIncomeInvestmentService {
       bool upFront}) async {
     var url =
         "${AppStrings.baseUrl}$microService/api/Calculator/calculateamountpayable";
-    print(url);
     FormData data = FormData.fromMap({
       "ProductId": productId,
       "Rate": rate,
@@ -415,10 +425,11 @@ class FixedIncomeInvestmentService implements ABSFixedIncomeInvestmentService {
         options: Options(
           headers: headers,
           validateStatus: (status) {
-            return status < 500;
+            return status < 600;
           },
         ),
       );
+
       if (calculateAmountPayable.statusCode == 200) {
         return AmountPayableResponse.fromJson(
             calculateAmountPayable.data["data"]);

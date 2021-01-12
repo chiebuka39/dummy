@@ -22,6 +22,7 @@ class WalletService implements ABSWalletService {
   Future<List<Wallet>> getWallets(String token) async {
     final url = "${AppStrings.baseUrl}$microService/api/Wallet/wallets";
     var headers = {HttpHeaders.authorizationHeader: "Bearer $token"};
+    print(url);
     try {
       var getWallets = await dio.get(
         url,
@@ -37,6 +38,7 @@ class WalletService implements ABSWalletService {
       print(e.message.toString());
       throw Exception(e.response.toString());
     }
+    return null;
   }
 
   @override
@@ -44,11 +46,13 @@ class WalletService implements ABSWalletService {
     final url =
         "${AppStrings.baseUrl}$microService/api/Wallet/WalletTransaction";
     var headers = {HttpHeaders.authorizationHeader: "Bearer $token"};
+    print(url);
     try {
       var getWalletTransactions = await dio.get(
         url,
         options: Options(headers: headers),
       );
+      
       if (getWalletTransactions.statusCode == 200) {
         final Iterable result = getWalletTransactions.data["data"];
         return result.map((e) => WalletTransaction.fromJson(e)).toList();
@@ -59,6 +63,7 @@ class WalletService implements ABSWalletService {
       print(e.message.toString());
       throw Exception(e.response.toString());
     }
+    return null;
   }
 
   @override

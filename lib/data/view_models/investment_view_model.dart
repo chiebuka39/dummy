@@ -713,7 +713,8 @@ class FixedIncomeViewModel extends BaseViewModel {
         _status = false;
       } else {
         setBusy(false);
-        _message = buyEuroBond.toString();
+        _message =
+            buyEuroBond.toString() == null ? message : buyEuroBond.toString();
         _status = true;
       }
       setBusy(false);
@@ -760,6 +761,7 @@ class FixedIncomeViewModel extends BaseViewModel {
           faceValue: amountPayableRes.faceValue,
           investmentAmount: amountPayableRes.investmentAmount,
           upFront: amountPayableRes.upFront);
+          print(buyTBill);
       if (buyTBill != "Transaction initiated successfully") {
         setBusy(false);
         _message = buyTBill.toString();

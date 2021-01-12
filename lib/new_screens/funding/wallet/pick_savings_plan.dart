@@ -1,5 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:provider_architecture/_viewmodel_provider.dart';
 import 'package:zimvest/data/models/saving_plan.dart';
+import 'package:zimvest/data/view_models/savings_view_model.dart';
+import 'package:zimvest/data/view_models/wallets_view_model.dart';
 import 'package:zimvest/new_screens/funding/top_up_screen.dart';
 import 'package:zimvest/new_screens/funding/wallet/top_up_plan_screen.dart';
 import 'package:zimvest/new_screens/navigation/portfolio/aspire_widgets.dart';
@@ -14,9 +18,11 @@ class PickSavingsPlanSceen extends StatefulWidget {
 
   const PickSavingsPlanSceen({Key key, this.aspirePlans}) : super(key: key);
 
-  static Route<dynamic> route({List<SavingPlanModel> aspirePlans }) {
+  static Route<dynamic> route({List<SavingPlanModel> aspirePlans}) {
     return MaterialPageRoute(
-        builder: (_) => PickSavingsPlanSceen(aspirePlans: aspirePlans,),
+        builder: (_) => PickSavingsPlanSceen(
+              aspirePlans: aspirePlans,
+            ),
         settings: RouteSettings(name: PickSavingsPlanSceen().toStringShort()));
   }
 
@@ -29,36 +35,50 @@ class _PickSavingsPlanSceenState extends State<PickSavingsPlanSceen> {
 
   @override
   void initState() {
-    aspirePlans = widget.aspirePlans;
+    // aspirePlans = widget.aspirePlans;
     super.initState();
   }
+
+  ABSSavingViewModel savingViewModel;
   @override
   Widget build(BuildContext context) {
-    List<SavingPlanModel> goals = [...aspirePlans,SavingPlanModel()];
-    List<SavingPlanModel> goals1 = [...aspirePlans,SavingPlanModel()];
-    return Scaffold(
-
-      body: CustomScrollView(
-
-        slivers: [
-          SliverAppBar(
-            backgroundColor: Colors.transparent,
-            elevation: 0,
-            leading: IconButton(
-              icon: Icon(Icons.navigate_before_rounded, color: AppColors.kPrimaryColor,),onPressed: (){
+    savingViewModel = Provider.of(context);
+    List<SavingPlanModel> goals = savingViewModel.savingPlanModel
+        .where((element) => element.productId == 2)
+        .toList();
+    SavingPlanModel wealthBox = savingViewModel.savingPlanModel
+        .where((element) => element.productId == 1)
+        .first;
+    return ViewModelProvider<WalletViewModel>.withConsumer(
+      viewModelBuilder: () => WalletViewModel(),
+      onModelReady: (model) => model.getWallets(),
+      builder: (context, model, _) => Scaffold(
+        appBar: AppBar(
+          backgroundColor: Colors.transparent,
+          elevation: 0,
+          leading: IconButton(
+            icon: Icon(
+              Icons.navigate_before_rounded,
+              color: AppColors.kPrimaryColor,
+            ),
+            onPressed: () {
               Navigator.pop(context);
             },
-            ),
           ),
-          SliverPadding(
-            padding: EdgeInsets.symmetric(horizontal: 20),
-            sliver: SliverList(delegate: SliverChildListDelegate([
-              Text("Where do you want to withdraw to ?",
-                style: TextStyle(fontSize: 15,fontFamily: AppStrings.fontBold),),
+        ),
+        body: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 20),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                "Pick a Savings Plan",
+                style: TextStyle(fontSize: 15, fontFamily: AppStrings.fontBold),
+              ),
               YMargin(33),
               GestureDetector(
-                onTap: (){
-                  Navigator.push(context, TopUpPlanScreen.route());
+                onTap: () {
+                  Navigator.push(context, TopUpPlanScreen.route(wallets: model.wallets, savingsPlan: savingViewModel.savingPlanModel));
                 },
                 child: Container(
                   height: 154,
@@ -73,7 +93,7 @@ class _PickSavingsPlanSceenState extends State<PickSavingsPlanSceen> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       YMargin(3),
-                      Text("Zimvest WealthBox"),
+                      Text(wealthBox.planName),
                       Spacer(),
                       Row(
                         children: [
@@ -89,7 +109,7 @@ class _PickSavingsPlanSceenState extends State<PickSavingsPlanSceen> {
                               ),
                               YMargin(10),
                               Text(
-                                "${AppStrings.nairaSymbol}500,000",
+                                "${AppStrings.nairaSymbol}${wealthBox.amountSaved}",
                                 style: TextStyle(
                                     color: AppColors.kGreyText,
                                     fontFamily: AppStrings.fontMedium),
@@ -109,7 +129,7 @@ class _PickSavingsPlanSceenState extends State<PickSavingsPlanSceen> {
                               ),
                               YMargin(10),
                               Text(
-                                "5.5%",
+                                "${wealthBox.interestRate}%",
                                 textAlign: TextAlign.end,
                                 style: TextStyle(
                                     color: AppColors.kGreyText,
@@ -144,45 +164,26 @@ class _PickSavingsPlanSceenState extends State<PickSavingsPlanSceen> {
                   ],
                 ),
               ),
-            ])),
-          ),
-          SliverPadding(
-              padding: EdgeInsets.symmetric(horizontal: 20),
-              sliver: SliverList(delegate: SliverChildListDelegate([
-                ...List.generate((goals.length / 2).round(), (index) {
-                  print("ppmm ${index} >>>> ${(goals.length / 2).round() - 1}");
-
-                  if (goals.length.isOdd && ((goals.length / 2).round() - 1) == index) {
-                    SavingPlanModel goal = goals1.removeAt(0);
-                    return Padding(
-                      padding: const EdgeInsets.only(top: 20),
-                      child: Row(
-                        children: [
-                          AspireContainerWidget(goal: goal,),
-                          XMargin(20),
-                          Expanded(child: SizedBox())
-
-                        ],
+              goals == null
+                  ? Center(
+                      child: Text("No Plans to display."),
+                    )
+                  : Expanded(
+                      child: GridView.builder(
+                        itemCount: goals.length,
+                        itemBuilder: (context, index) => Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: AspireContainerWidget(
+                            goal: goals[index],
+                          ),
+                        ),
+                        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                            childAspectRatio: 0.7, crossAxisCount: 2),
                       ),
-                    );
-                  }
-                  SavingPlanModel goal = goals1.removeAt(0);
-                  SavingPlanModel goal1 = goals1.removeAt(0);
-
-                  return Padding(
-                    padding: const EdgeInsets.only(top: 20),
-                    child: Row(
-                      children: [
-                        AspireContainerWidget(goal: goal,),
-                        XMargin(20),
-                        AspireContainerWidget(goal: goal1,),
-                      ],
                     ),
-                  );
-                }),
-              ]),),
-          )
-        ],
+            ],
+          ),
+        ),
       ),
     );
   }

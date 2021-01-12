@@ -233,10 +233,7 @@ Widget _walletCards(BuildContext context, String name) {
       List<Wallet> wallet = model.wallets;
       return model.busy
           ? Center(
-              child: CircularProgressIndicator(
-                strokeWidth: 1.0,
-                valueColor: AlwaysStoppedAnimation(AppColors.kPrimaryColor),
-              ),
+              child: Container()
             )
           : PageView(
               children: [
