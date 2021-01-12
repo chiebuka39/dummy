@@ -2,7 +2,9 @@ import 'dart:async';
 
 import 'package:connectivity/connectivity.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
+import 'package:flutter_statusbar_manager/flutter_statusbar_manager.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:hive/hive.dart';
 import 'package:provider/provider.dart';
@@ -26,7 +28,8 @@ import 'data/models/secondary_state.dart';
 import 'data/models/user.dart';
 import 'new_screens/landing_screen.dart';
 
-void main() async {
+
+void main()async {
   WidgetsFlutterBinding.ensureInitialized();
 
   //init hive flutter
@@ -51,36 +54,21 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
+
+
   @override
   Widget build(BuildContext context) {
     return MultiProvider(
       providers: [
-        ChangeNotifierProvider<ABSIdentityViewModel>(
-          create: (_) => IdentityViewModel(),
-        ),
-        ChangeNotifierProvider<ABSDashboardViewModel>(
-          create: (_) => DashboardViewModel(),
-        ),
-        ChangeNotifierProvider<ABSPaymentViewModel>(
-          create: (_) => PaymentViewModel(),
-        ),
-        ChangeNotifierProvider<ABSSavingViewModel>(
-          create: (_) => SavingViewModel(),
-        ),
-        ChangeNotifierProvider<ABSPinViewModel>(
-          create: (_) => PinViewModel(),
-        ),
-        ChangeNotifierProvider<ABSInvestmentViewModel>(
-          create: (_) => InvestmentViewModel(),
-        ),
-        ChangeNotifierProvider<ABSSettingsViewModel>(
-          create: (_) => SettingsViewModel(),
-        ),
-        ChangeNotifierProvider<ABSOthersViewModel>(
-          create: (_) => OthersViewModel(),
-        ),
-        ChangeNotifierProvider<ConnectionProvider>(
-            create: (_) => ConnectionProvider()),
+        ChangeNotifierProvider<ABSIdentityViewModel>(create: (_) => IdentityViewModel(),),
+        ChangeNotifierProvider<ABSDashboardViewModel>(create: (_) => DashboardViewModel(),),
+        ChangeNotifierProvider<ABSPaymentViewModel>(create: (_) => PaymentViewModel(),),
+        ChangeNotifierProvider<ABSSavingViewModel>(create: (_) => SavingViewModel(),),
+        ChangeNotifierProvider<ABSPinViewModel>(create: (_) => PinViewModel(),),
+        ChangeNotifierProvider<ABSInvestmentViewModel>(create: (_) => InvestmentViewModel(),),
+        ChangeNotifierProvider<ABSSettingsViewModel>(create: (_) => SettingsViewModel(),),
+        ChangeNotifierProvider<ABSOthersViewModel>(create: (_) => OthersViewModel(),),
+        ChangeNotifierProvider<ConnectionProvider>(create: (_) => ConnectionProvider()),
       ],
       child: MaterialApp(
         title: 'Zimvest',
@@ -88,18 +76,18 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
         theme: ThemeData(
           fontFamily: "Caros",
           primarySwatch: Colors.blue,
-          bottomSheetTheme:
-              BottomSheetThemeData(backgroundColor: Colors.transparent),
+          bottomSheetTheme: BottomSheetThemeData(backgroundColor: Colors.transparent),
+
           visualDensity: VisualDensity.adaptivePlatformDensity,
         ),
         builder: EasyLoading.init(),
-        home: HomeApp(),
+        home:HomeApp(),
       ),
     );
   }
 }
 
-class HomeApp extends StatefulWidget {
+class HomeApp extends StatefulWidget  {
   @override
   _HomeAppState createState() => _HomeAppState();
 }
@@ -107,22 +95,31 @@ class HomeApp extends StatefulWidget {
 class _HomeAppState extends State<HomeApp> with WidgetsBindingObserver {
   final ABSStateLocalStorage _localStorage = locator<ABSStateLocalStorage>();
   StreamSubscription<ConnectivityResult> _connectivitySubscription;
+
+
+  double _statusBarHeight = 0.0;
+  StatusBarAnimation _statusBarAnimation = StatusBarAnimation.SLIDE;
+
+
+  bool _navBarColorAnimated = false;
+  Color _navBarColor = Colors.black;
+  NavigationBarStyle _navBarStyle = NavigationBarStyle.DARK;
+
   @override
   void initState() {
     User user = _localStorage.getUser();
     print("llll ${_localStorage.getSecondaryState().password}");
     print("llll ${_localStorage.getSecondaryState().email}");
-    if (user != null) {
-      if (user.expires.difference(DateTime.now()).inSeconds < 0) {
-        SecondaryState state = SecondaryState(false,
-            email: _localStorage.getSecondaryState().email,
-            password: _localStorage.getSecondaryState().password);
+    if(user != null){
+      if(user.expires.difference(DateTime.now()).inSeconds < 0){
+        SecondaryState state = SecondaryState(false, email: _localStorage.getSecondaryState().email, password: _localStorage.getSecondaryState().password);
         _localStorage.saveSecondaryState(state);
       }
     }
 
     WidgetsBinding.instance.addObserver(this);
 
+    initPlatformState();
     super.initState();
   }
 
@@ -131,34 +128,25 @@ class _HomeAppState extends State<HomeApp> with WidgetsBindingObserver {
     print("stateee $state");
     if (state == AppLifecycleState.resumed) {
       print("App Resumed");
-      if (_localStorage.getSecondaryState().lastMinimized == null) {
+      if(_localStorage.getSecondaryState().lastMinimized == null){
         return;
       }
-      print(
-          "App Resumed 2 ${DateTime.now().difference(_localStorage.getSecondaryState().lastMinimized).inSeconds}");
-      print(
-          "App Resumed 211 ${_localStorage.getSecondaryState().lastMinimized.toIso8601String()}");
+      print("App Resumed 2 ${DateTime.now().difference(_localStorage.getSecondaryState().lastMinimized).inSeconds}");
+      print("App Resumed 211 ${_localStorage.getSecondaryState().lastMinimized.toIso8601String()}");
       print("App Resumed 2ww ${DateTime.now().toIso8601String()}");
-      if (DateTime.now()
-              .difference(_localStorage.getSecondaryState().lastMinimized)
-              .inSeconds >
-          150) {
+      if(DateTime.now().difference(_localStorage.getSecondaryState().lastMinimized).inSeconds > 150){
         print("App should stop");
-        SecondaryState state = SecondaryState(false,
-            email: _localStorage.getSecondaryState().email,
-            password: _localStorage.getSecondaryState().password);
+        SecondaryState state = SecondaryState(false, email: _localStorage.getSecondaryState().email, password: _localStorage.getSecondaryState().password);
         _localStorage.saveSecondaryState(state);
         Navigator.pushAndRemoveUntil(
             context,
-            MaterialPageRoute(
-                builder: (context) => TempLoginScreen(
-                      show: true,
-                    )),
-            (Route<dynamic> route) => false);
+            MaterialPageRoute(builder: (context) => TempLoginScreen(show: true,)),
+                (Route<dynamic> route) => false);
       }
     } else if (state == AppLifecycleState.inactive) {
       print("App inactive");
     } else if (state == AppLifecycleState.paused) {
+
       DateTime time = DateTime.now();
       SecondaryState secondaryState = _localStorage.getSecondaryState();
       secondaryState.lastMinimized = time;
@@ -174,19 +162,33 @@ class _HomeAppState extends State<HomeApp> with WidgetsBindingObserver {
     WidgetsBinding.instance.removeObserver(this);
   }
 
+  Future<void> initPlatformState() async {
+    double statusBarHeight;
+    // Platform messages may fail, so we use a try/catch PlatformException.
+    try {
+      statusBarHeight = await FlutterStatusbarManager.getHeight;
+    } on PlatformException {
+      statusBarHeight = 0.0;
+    }
+    if (!mounted) return;
+
+    setState(() {
+      _statusBarHeight = statusBarHeight;
+      FlutterStatusbarManager.setHidden(false,
+          animation: _statusBarAnimation);
+      FlutterStatusbarManager.setStyle(StatusBarStyle.DARK_CONTENT);
+    });
+  }
+
+
   @override
   Widget build(BuildContext context) {
     SecondaryState state = _localStorage.getSecondaryState();
     User user = _localStorage.getUser();
-    return state.isLoggedIn == false
-        ? user == null
-            ? LandingScreen()
-            : TempLoginScreen(
-                show: true,
-              )
-        : TabsContainer();
+    return state.isLoggedIn == false ? user == null ?  LandingScreen(): TempLoginScreen(show: true,) :TabsContainer();
   }
 }
+
 
 void configLoading() {
   EasyLoading.instance
@@ -196,6 +198,7 @@ void configLoading() {
     ..indicatorSize = 45.0
     ..radius = 10.0
     ..infoWidget = LoadingWIdget()
+    ..indicatorWidget = LoadingWIdget()
     ..progressColor = Colors.yellow
     ..backgroundColor = AppColors.kSecondaryColor
     ..indicatorColor = Colors.yellow
@@ -214,25 +217,24 @@ class LoadingWIdget extends StatefulWidget {
   _LoadingWIdgetState createState() => _LoadingWIdgetState();
 }
 
-class _LoadingWIdgetState extends State<LoadingWIdget>
-    with SingleTickerProviderStateMixin {
+class _LoadingWIdgetState extends State<LoadingWIdget> with SingleTickerProviderStateMixin {
+
   AnimationController controller;
 
   Animation<double> animation;
 
   @override
   void initState() {
-    controller =
-        AnimationController(vsync: this, duration: Duration(seconds: 1));
+    controller = AnimationController(vsync:this,duration: Duration(seconds: 1));
     controller.repeat(reverse: true);
-    animation = Tween(begin: 0.2, end: 0.5).animate(controller)
-      ..addListener(() {
-        setState(() {});
+    animation =  Tween(begin: 0.2,end: 0.5).animate(controller)..addListener(() {
+      setState(() {
+
       });
+    });
 
     super.initState();
   }
-
   void _startAnimation() {
     controller.stop();
     controller.reset();
@@ -253,32 +255,33 @@ class _LoadingWIdgetState extends State<LoadingWIdget>
       height: 100,
       width: 100,
       decoration: BoxDecoration(
-          color: AppColors.kSecondaryColor,
-          borderRadius: BorderRadius.circular(7)),
-      child: Center(
-        child: Stack(
-          children: [
-            SizedBox(
-              height: 70,
-              width: 70,
-              child: CircularProgressIndicator(
-                strokeWidth: 3,
-                valueColor:
-                    AlwaysStoppedAnimation<Color>(AppColors.kPrimaryColor),
-              ),
-            ),
+        color: AppColors.kSecondaryColor,
+        borderRadius: BorderRadius.circular(7)
+      ),
+      child: Center(child: Stack(
+        children: [
+          SizedBox(
+            height: 70,
+            width: 70,
+            child: CircularProgressIndicator(
+              strokeWidth: 3,
+              valueColor: AlwaysStoppedAnimation<Color>(AppColors.kPrimaryColor),),
+          ),
             Positioned(
               left: 0,
               right: 0,
               top: 0,
               bottom: 0,
               child: Transform.scale(
-                  scale: animation.value,
+                scale: animation.value,
                   child: SvgPicture.asset("images/new/zed.svg")),
             )
-          ],
-        ),
+
+        ],
+      ),
       ),
     );
   }
 }
+
+

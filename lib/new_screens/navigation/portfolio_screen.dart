@@ -1,7 +1,11 @@
 import 'package:after_layout/after_layout.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_money_formatter/flutter_money_formatter.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
+import 'package:percent_indicator/percent_indicator.dart';
 import 'package:provider/provider.dart';
 import 'package:provider_architecture/_viewmodel_provider.dart';
 import 'package:shimmer/shimmer.dart';
@@ -10,6 +14,8 @@ import 'package:zimvest/data/view_models/identity_view_model.dart';
 import 'package:zimvest/data/view_models/savings_view_model.dart';
 import 'package:zimvest/data/view_models/transaction_vm.dart';
 import 'package:zimvest/new_screens/navigation/portfolio/aspire_widgets.dart';
+import 'package:zimvest/new_screens/navigation/wealth/aspire/select_goals.dart';
+import 'package:zimvest/new_screens/navigation/wealth/aspire_box_details.dart';
 import 'package:zimvest/new_screens/navigation/wealth/investment_details.dart';
 import 'package:zimvest/new_screens/navigation/widgets/earn_free_cash.dart';
 import 'package:zimvest/new_screens/navigation/widgets/money_title_widget.dart';
@@ -20,6 +26,9 @@ import 'package:zimvest/utils/margin.dart';
 import 'package:zimvest/utils/margins.dart';
 import 'package:zimvest/utils/strings.dart';
 import 'package:zimvest/widgets/buttons.dart';
+import 'package:zimvest/widgets/home/action_box_widgets.dart';
+import 'package:zimvest/widgets/navigation/wealthbox_detail_widget.dart';
+import 'package:zimvest/widgets/new/loading.dart';
 
 class PortfolioScreen extends StatefulWidget {
   @override
@@ -125,7 +134,9 @@ class _PortfolioScreenState extends State<PortfolioScreen> {
               ),
               YMargin(30),
             ])),
-            showInvest ? PortfolioInvestmentWidget() : SavingsSection(),
+            showInvest
+                ? PortfolioInvestmentWidget()
+                : SavingsSection(),
           ],
         ),
       ),
@@ -142,8 +153,7 @@ class SavingsSection extends StatefulWidget {
   _SavingsSectionState createState() => _SavingsSectionState();
 }
 
-class _SavingsSectionState extends State<SavingsSection>
-    with AfterLayoutMixin<SavingsSection> {
+class _SavingsSectionState extends State<SavingsSection> with AfterLayoutMixin<SavingsSection> {
   ABSSavingViewModel savingViewModel;
   ABSIdentityViewModel identityViewModel;
 
@@ -154,51 +164,61 @@ class _SavingsSectionState extends State<SavingsSection>
   bool loading = false;
 
   @override
-  void afterFirstLayout(BuildContext context) async {
-    setState(() {
-      loading = true;
-    });
-
-    var r1 = await savingViewModel.getSavingPlans(
-        token: identityViewModel.user.token);
-    var r2 = await savingViewModel.getProductTypes(
-        token: identityViewModel.user.token);
-    if (r1.error == false && r2.error == false) {
-      wealthBox = savingViewModel.savingPlanModel
-              .where((element) => element.productId == 1)
-              .isNotEmpty
-          ? savingViewModel.savingPlanModel
-              .where((element) => element.productId == 1)
-              .first
-          : null;
-      aspirePlans = savingViewModel.savingPlanModel
-          .where((element) => element.productId == 2)
-          .toList();
-      savingViewModel.savingPlanModel.forEach((element) {
-        totalBalance = totalBalance + element.amountSaved;
-      });
+  void afterFirstLayout(BuildContext context)async {
 
       setState(() {
-        loading = false;
+        loading = true;
       });
 
-      if (savingViewModel.productTypes.isNotEmpty) {
-        await fetchTransactions(savingViewModel.productTypes.first.id);
+
+      var r1 = await savingViewModel.getSavingPlans(token: identityViewModel.user.token);
+      var r2 = await savingViewModel.getProductTypes(token: identityViewModel.user.token);
+      if(r1.error == false && r2.error == false ){
+
+        wealthBox =  savingViewModel.savingPlanModel.where((element) => element.productId == 1).isNotEmpty ?
+        savingViewModel.savingPlanModel.where((element) => element.productId == 1).first : null;
+        aspirePlans = savingViewModel.savingPlanModel.where((element) => element.productId == 2).toList();
+        savingViewModel.savingPlanModel.forEach((element) {
+          totalBalance = totalBalance + element.amountSaved;
+        });
+
+        setState(() {
+          loading = false;
+        });
+
+        if(savingViewModel.productTypes.isNotEmpty){
+          await fetchTransactions(savingViewModel.productTypes.first.id);
+        }
+
+        //getRequiredDetailsForForm();
       }
 
-      //getRequiredDetailsForForm();
-    }
+
+
+
+
+
+
+
   }
 
-  Future<void> fetchTransactions(int productId,
-      {bool showLoader = false}) async {
-    if (showLoader == true) {
+  Future<void> fetchTransactions(int productId,{bool showLoader = false}) async {
+    if(showLoader == true){
+
       await savingViewModel.getTransactionForProductType(
-          token: identityViewModel.user.token, productId: productId);
-    } else {
+          token: identityViewModel.user.token,
+          productId: productId);
+
+
+
+
+    }else{
       var result = await savingViewModel.getTransactionForProductType(
-          token: identityViewModel.user.token, productId: productId);
+          token: identityViewModel.user.token,
+          productId: productId);
+
     }
+
   }
 
   @override
@@ -228,7 +248,7 @@ class SavingsInvestmentWidget extends StatelessWidget {
       sliver: SliverList(
           delegate: SliverChildListDelegate([
         YMargin(MediaQuery.of(context).size.height > 700 ? 200 : 100),
-        SvgPicture.asset("images/new/savings_illus.svg"),
+            SvgPicture.asset("images/new/savings_illus.svg"),
         Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
@@ -250,6 +270,9 @@ class SavingsInvestmentWidget extends StatelessWidget {
           children: [
             PrimaryButtonNew(
               title: "Start Saving",
+              onTap: (){
+                Navigator.of(context).push(SelectGoalScreen.route());
+              },
             ),
           ],
         ),
@@ -258,7 +281,6 @@ class SavingsInvestmentWidget extends StatelessWidget {
     );
   }
 }
-
 class SavingsInvestmentLoadingWidget extends StatelessWidget {
   const SavingsInvestmentLoadingWidget({
     Key key,
@@ -269,64 +291,61 @@ class SavingsInvestmentLoadingWidget extends StatelessWidget {
     return SliverPadding(
       sliver: SliverList(
           delegate: SliverChildListDelegate([
-        Container(
-          height: 400,
-          child: Shimmer.fromColors(
-            baseColor: Colors.grey[300],
-            highlightColor: Colors.grey[100],
-            child: ListView.builder(
-              itemBuilder: (BuildContext context, int index) {
-                if (index == 0) {
-                  return Row(
-                    children: [
-                      SizedBox(
-                        width: 200.0,
-                        height: 50.0,
-                        child: Shimmer.fromColors(
-                          baseColor: Colors.red,
-                          highlightColor: Colors.yellow,
-                          child: Container(
-                            margin: EdgeInsets.only(top: 10),
-                            width: 40.0,
-                            height: 8.0,
-                            color: Colors.white,
+            Container(
+              height: 400,
+              child: Shimmer.fromColors(
+                baseColor: Colors.grey[300],
+                highlightColor: Colors.grey[100],
+                child: ListView.builder(itemBuilder: (BuildContext context, int index) {
+                  if(index == 0){
+                    return  Row(
+                      children: [
+                        SizedBox(
+                          width: 200.0,
+                          height: 50.0,
+                          child: Shimmer.fromColors(
+                            baseColor: Colors.red,
+                            highlightColor: Colors.yellow,
+                            child: Container(
+                              margin: EdgeInsets.only(top: 10),
+                              width: 40.0,
+                              height: 8.0,
+                              color: Colors.white,
+                            ),
                           ),
                         ),
+                      ],
+                    );
+                  }
+                  return  SizedBox(
+                    width: 200.0,
+                    height: 100.0,
+                    child: Shimmer.fromColors(
+                      baseColor: Colors.red,
+                      highlightColor: Colors.yellow,
+                      child: Container(
+                        margin: EdgeInsets.only(top: 10),
+                        width: 40.0,
+                        height: 8.0,
+                        color: Colors.white,
                       ),
-                    ],
-                  );
-                }
-                return SizedBox(
-                  width: 200.0,
-                  height: 100.0,
-                  child: Shimmer.fromColors(
-                    baseColor: Colors.red,
-                    highlightColor: Colors.yellow,
-                    child: Container(
-                      margin: EdgeInsets.only(top: 10),
-                      width: 40.0,
-                      height: 8.0,
-                      color: Colors.white,
                     ),
-                  ),
-                );
-              },
-              itemCount: 4,
-            ),
-          ),
-        )
+                  );
+                },itemCount: 4,
+
+                ),
+              ),
+            )
       ])),
       padding: EdgeInsets.symmetric(horizontal: 20),
     );
   }
 }
 
+
 class SavingsInvestmentCashWidget extends StatelessWidget {
   const SavingsInvestmentCashWidget({
-    Key key,
-    this.wealthBox,
-    this.aspirePlans,
-    this.totalBalance,
+    Key key, this.wealthBox, this.aspirePlans, this.totalBalance,
   }) : super(key: key);
 
   final SavingPlanModel wealthBox;
@@ -335,8 +354,8 @@ class SavingsInvestmentCashWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    List<SavingPlanModel> goals = [...aspirePlans, SavingPlanModel()];
-    List<SavingPlanModel> goals1 = [...aspirePlans, SavingPlanModel()];
+    List<SavingPlanModel> goals = [...aspirePlans,SavingPlanModel()];
+    List<SavingPlanModel> goals1 = [...aspirePlans,SavingPlanModel()];
     return SliverPadding(
       sliver: SliverList(
           delegate: SliverChildListDelegate([
@@ -350,77 +369,74 @@ class SavingsInvestmentCashWidget extends StatelessWidget {
           amount: totalBalance,
         ),
         YMargin(25),
-        wealthBox == null
-            ? SizedBox()
-            : GestureDetector(
-                onTap: () {
-                  Navigator.push(
-                      context, WealthBoxDetailsScreen.route(wealthBox));
-                },
-                child: Container(
-                  height: 154,
-                  margin: EdgeInsets.only(bottom: 30),
-                  width: double.infinity,
-                  padding: EdgeInsets.symmetric(horizontal: 15, vertical: 15),
-                  decoration: BoxDecoration(
-                    color: AppColors.kWhite,
-                    boxShadow: AppUtils.getBoxShaddow,
-                    borderRadius: BorderRadius.circular(11),
-                  ),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      YMargin(3),
-                      Text(wealthBox.planName),
-                      Spacer(),
-                      Row(
-                        children: [
-                          Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(
-                                "Balance",
-                                style: TextStyle(
-                                    fontSize: 12,
-                                    fontFamily: AppStrings.fontNormal,
-                                    color: AppColors.kGreyText),
-                              ),
-                              YMargin(10),
-                              Text(
-                                "${AppStrings.nairaSymbol}${wealthBox.amountSaved}",
-                                style: TextStyle(
-                                    color: AppColors.kGreyText,
-                                    fontFamily: AppStrings.fontMedium),
-                              )
-                            ],
-                          ),
-                          Spacer(),
-                          Column(
-                            crossAxisAlignment: CrossAxisAlignment.end,
-                            children: [
-                              Text(
-                                "Interest P.A",
-                                style: TextStyle(
-                                    fontSize: 12,
-                                    fontFamily: AppStrings.fontNormal,
-                                    color: AppColors.kGreyText),
-                              ),
-                              YMargin(10),
-                              Text(
-                                "${wealthBox.interestRate}%",
-                                textAlign: TextAlign.end,
-                                style: TextStyle(
-                                    color: AppColors.kGreyText,
-                                    fontFamily: AppStrings.fontMedium),
-                              )
-                            ],
-                          ),
-                        ],
-                      )
-                    ],
-                  ),
-                ),
-              ),
+        wealthBox == null ? SizedBox(): GestureDetector(
+          onTap: (){
+            Navigator.push(context, WealthBoxDetailsScreen.route(wealthBox));
+          },
+          child: Container(
+            height: 154,
+            margin: EdgeInsets.only(bottom: 30),
+            width: double.infinity,
+            padding: EdgeInsets.symmetric(horizontal: 15, vertical: 15),
+            decoration: BoxDecoration(
+              color: AppColors.kWhite,
+              boxShadow: AppUtils.getBoxShaddow,
+              borderRadius: BorderRadius.circular(11),
+            ),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                YMargin(3),
+                Text(wealthBox.planName),
+                Spacer(),
+                Row(
+                  children: [
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          "Balance",
+                          style: TextStyle(
+                              fontSize: 12,
+                              fontFamily: AppStrings.fontNormal,
+                              color: AppColors.kGreyText),
+                        ),
+                        YMargin(10),
+                        Text(
+                          "${AppStrings.nairaSymbol}${wealthBox.amountSaved}",
+                          style: TextStyle(
+                              color: AppColors.kGreyText,
+                              fontFamily: AppStrings.fontMedium),
+                        )
+                      ],
+                    ),
+                    Spacer(),
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.end,
+                      children: [
+                        Text(
+                          "Interest P.A",
+                          style: TextStyle(
+                              fontSize: 12,
+                              fontFamily: AppStrings.fontNormal,
+                              color: AppColors.kGreyText),
+                        ),
+                        YMargin(10),
+                        Text(
+                          "${wealthBox.interestRate}%",
+                          textAlign: TextAlign.end,
+                          style: TextStyle(
+                              color: AppColors.kGreyText,
+                              fontFamily: AppStrings.fontMedium),
+                        )
+                      ],
+                    ),
+                  ],
+                )
+              ],
+            ),
+          ),
+        ),
         Row(
           children: [
             Text(
@@ -465,8 +481,7 @@ class SavingsInvestmentCashWidget extends StatelessWidget {
               ),
             );
           }
-          if (goals.length.isEven &&
-              ((goals.length / 2).round() - 1) == index) {
+          if (goals.length.isEven && ((goals.length / 2).round() - 1) == index) {
             SavingPlanModel goal = goals1.removeAt(0);
             return Padding(
               padding: const EdgeInsets.only(top: 20),
@@ -698,47 +713,59 @@ class InvestmentItemWidget extends StatelessWidget {
   }
 }
 
-class EmptyInvstmentWidget extends StatelessWidget {
+class EmptyInvstmentWidget extends StatefulWidget {
   const EmptyInvstmentWidget({
     Key key,
   }) : super(key: key);
 
   @override
+  _EmptyInvstmentWidgetState createState() => _EmptyInvstmentWidgetState();
+}
+
+class _EmptyInvstmentWidgetState extends State<EmptyInvstmentWidget> with AfterLayoutMixin<EmptyInvstmentWidget> {
+
+
+  @override
+  void afterFirstLayout(BuildContext context) {
+    print("1111111111");
+    setState(() {
+
+    });
+  }
+
+  @override
   Widget build(BuildContext context) {
-    return Column(
-      children: [
-        YMargin(MediaQuery.of(context).size.height > 700 ? 100 : 50),
-        SvgPicture.asset(
-          "images/new/empty3.svg",
-        ),
-        YMargin(20),
-        Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            SizedBox(
-                width: 200,
-                child: Text(
-                  "You currently don’t have an Investment plan",
-                  textAlign: TextAlign.center,
-                  style: TextStyle(
-                      fontFamily: AppStrings.fontNormal,
-                      color: AppColors.kGreyText,
-                      height: 1.6),
-                )),
-          ],
-        ),
-        YMargin(40),
-        Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            PrimaryButtonNew(
-              onTap: () {},
-              title: "Start Investing",
-            ),
-          ],
-        ),
-      ],
-    );
+
+    return Column(children: [
+      YMargin(MediaQuery.of(context).size.height > 700 ? 100 : 50),
+      SvgPicture.asset("images/new/empty3.svg",),
+      YMargin(20),
+      Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          SizedBox(
+              width: 200,
+              child: Text(
+                "You currently don’t have an Investment plan",
+                textAlign: TextAlign.center,
+                style: TextStyle(
+                    fontFamily: AppStrings.fontNormal,
+                    color: AppColors.kGreyText,
+                    height: 1.6),
+              )),
+        ],
+      ),
+      YMargin(40),
+      Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          PrimaryButtonNew(
+            onTap: (){},
+            title: "Start Investing",
+          ),
+        ],
+      ),
+    ],);
   }
 }
 

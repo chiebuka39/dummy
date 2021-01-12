@@ -1,4 +1,8 @@
+import 'package:after_layout/after_layout.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:zimvest/data/view_models/identity_view_model.dart';
+import 'package:zimvest/data/view_models/settings_view_model.dart';
 import 'package:zimvest/new_screens/investor_profile/investor_profile_form.dart';
 import 'package:zimvest/styles/colors.dart';
 import 'package:zimvest/utils/app_utils.dart';
@@ -20,9 +24,21 @@ class InvestorProfileScreen extends StatefulWidget {
   _InvestorProfileScreenState createState() => _InvestorProfileScreenState();
 }
 
-class _InvestorProfileScreenState extends State<InvestorProfileScreen> {
+class _InvestorProfileScreenState extends State<InvestorProfileScreen> with AfterLayoutMixin<InvestorProfileScreen> {
+  ABSSettingsViewModel settingsViewModel;
+  ABSIdentityViewModel identityViewModel;
+
+  @override
+  void afterFirstLayout(BuildContext context) {
+   var result = settingsViewModel.checkipsstatus(
+       token: identityViewModel.user.token);
+
+  }
+
   @override
   Widget build(BuildContext context) {
+    identityViewModel = Provider.of(context);
+    settingsViewModel = Provider.of(context);
     return Scaffold(
       appBar: ZimAppBar(
         text: "Investor Profile",

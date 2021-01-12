@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_money_formatter/flutter_money_formatter.dart';
 import 'package:provider/provider.dart';
+import 'package:zimvest/data/models/dashboard.dart';
 import 'package:zimvest/data/view_models/dashboard_view_model.dart';
 import 'package:zimvest/data/view_models/identity_view_model.dart';
 import 'package:zimvest/styles/colors.dart';
@@ -46,9 +47,9 @@ class _NairaPortfolioBreakdownScreenState extends State<NairaPortfolioBreakdownS
           child: Column(children: [
             PieChartSample2(
               value: dashboardViewModel.dashboardModel.nairaPortfolio == "0.01"? "N50,000.00":dashboardViewModel.dashboardModel.nairaPortfolio ,
-              savingsValue: dashboardViewModel.dashboardModel.nairaSavingPercent ,
-              investmentValue: dashboardViewModel.dashboardModel.nairaInvestmentPercent,
-              walletValue: dashboardViewModel.dashboardModel.nairaWalletPercent,
+              savingsValue: DashboardModel.savingSum(dashboardViewModel.dashboardModel) == 0.0 ?50.0: dashboardViewModel.dashboardModel.nairaSavingPercent ,
+              investmentValue:DashboardModel.savingSum(dashboardViewModel.dashboardModel) == 0.0 ?50.0: dashboardViewModel.dashboardModel.nairaInvestmentPercent,
+              walletValue:DashboardModel.savingSum(dashboardViewModel.dashboardModel) == 0.0 ?50.0: dashboardViewModel.dashboardModel.nairaWalletPercent,
             ),
             YMargin(20),
             Divider(),

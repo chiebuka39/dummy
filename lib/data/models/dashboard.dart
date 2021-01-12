@@ -59,6 +59,15 @@ class DashboardModel{
     dashboardModel.nairaInvestmentPercent = investmentPercent;
     return dashboardModel;
   }
+  static double savingSum(DashboardModel dashboardModel){
+    double savings = double.parse(dashboardModel.nairaSavings.substring(1).replaceAll(',', ''));
+    double investment = double.parse(dashboardModel.nairaInvestment.substring(1).replaceAll(',', ''));
+    double wallet = double.parse(dashboardModel.nairaWallet.substring(1).replaceAll(',', ''));
+
+    double total = savings + investment + wallet;
+
+    return total;
+  }
   static DashboardModel calculateDollarPercent(DashboardModel dashboardModel){
     double investment = double.parse(dashboardModel.dollarInvestment.substring(1).replaceAll(',', ''));
     double wallet = double.parse(dashboardModel.dollarWallet.substring(1).replaceAll(',', ''));
@@ -80,6 +89,7 @@ class DashboardModel{
     dashboardModel.dollarInvestmentPercent = investmentPercent;
     return dashboardModel;
   }
+
 }
 
 class PortfolioDistribution {

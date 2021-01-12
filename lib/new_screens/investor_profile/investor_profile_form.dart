@@ -518,6 +518,12 @@ class _InvestorProfileFormState extends State<InvestorProfileForm> {
                     Navigator.push(context, ResultSentScreen.route());
                     return;
                   }else{
+                    showModalBottomSheet < Null > (context: context, builder: (BuildContext context) {
+                      return PasswordSuccessWidget(onDone: (){
+                        Navigator.pop(context);
+                      },message: result?.errorMessage?? "An Error Occured",
+                        success: false,);
+                    }, isDismissible: false);
                     return;
                   }
 

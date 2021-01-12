@@ -31,6 +31,8 @@ abstract class ABSSettingsService{
     String email,
     String phoneNumber,
   });
+  Future<Result<void>> checkipsstatus({String token});
+
   Future<Result<void>> profileInvestor({String token, String firstName,
     int investmentKnowledge, int mostConernedDuringInvestment,
     int instrumentCurrentlyOwned, int marketAndParticularStockDrops,
@@ -553,7 +555,7 @@ class SettingsService extends ABSSettingsService{
     var headers = {
       HttpHeaders.authorizationHeader: "Bearer $token"
     };
-    var url = "${AppStrings.baseUrl}zimvest.onboarding.individual/api/NextOfKins";
+    var url = "${AppStrings.baseUrl}zimvest.services.general/api/IPS/profilerInformation";
 
     var body = {
       "investmentKnowledge":investmentKnowledge,
@@ -568,8 +570,6 @@ class SettingsService extends ABSSettingsService{
       "durationToCompletelyWithdraw":durationToCompletelyWithdraw,
       "ethicalConsideration":ethicalConsideration,
 
-
-
     };
 
 
@@ -577,6 +577,41 @@ class SettingsService extends ABSSettingsService{
     print("lll $body");
     try{
       var response = await dio.post(url, options: Options(headers: headers),data: body);
+      final int statusCode = response.statusCode;
+      var response1 = response.data;
+      print("iii ${response1}");
+
+      if (statusCode != 200) {
+        result.errorMessage = response1['message'];
+        result.error = true;
+      }else {
+        result.error = false;
+      }
+
+    }on DioError catch(e){
+      print("error ${e.response.data}");
+      print("error22 $e");
+      result.error = true;
+    }
+
+    return result;
+  }
+
+
+  @override
+  Future<Result<void>> checkipsstatus({String token}) async{
+    Result<void> result = Result(error: false);
+
+
+    var headers = {
+      HttpHeaders.authorizationHeader: "Bearer $token"
+    };
+    var url = "${AppStrings.baseUrl}zimvest.services.general/api/IPS/checkipsstatus";
+
+
+    print("lll $url");
+    try{
+      var response = await dio.get(url, options: Options(headers: headers));
       final int statusCode = response.statusCode;
       var response1 = response.data;
       print("iii ${response1}");

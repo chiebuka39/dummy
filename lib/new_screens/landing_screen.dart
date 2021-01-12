@@ -117,7 +117,10 @@ class _LandingScreenState extends State<LandingScreen> {
           ),
           YMargin(15),
           FlatButton(onPressed: (){
-            //EasyLoading.showInfo("",duration: Duration(seconds: 5));
+            // EasyLoading.show(status:"",);
+            // Future.delayed(Duration(seconds: 2)).then((value) {
+            //   EasyLoading.showSuccess("success");
+            // });
             Navigator.of(context).push(LoginScreen.route());
             // MaterialPageRoute(builder: )
           }, child: Text("Log In",style: TextStyle(fontFamily: "Caros-Medium"),)),

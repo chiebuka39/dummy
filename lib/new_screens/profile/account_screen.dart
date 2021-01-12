@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:after_layout/after_layout.dart';
 import 'package:circular_profile_avatar/circular_profile_avatar.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
@@ -322,9 +323,7 @@ class _AccountScreenState extends State<AccountScreen> with AfterLayoutMixin<Acc
                   loading: loading,
                   onTap:_fullName.isNotEmpty && _email.isNotEmpty
                       && _phone.isNotEmpty && _dob != null && _image != null ?  ()async{
-                    setState(() {
-                      loading = true;
-                    });
+                    EasyLoading.show(status: "");
                     var result = await settingsViewModel.updateProfile(
                       profile1: _image,
                       dOB: _dob.toIso8601String(),
@@ -334,10 +333,8 @@ class _AccountScreenState extends State<AccountScreen> with AfterLayoutMixin<Acc
                       gender: gender,
                       email: _email
                     );
-                    setState(() {
-                      loading = false;
-                    });
                     if(result.error == false){
+                      EasyLoading.dismiss();
                       showModalBottomSheet < Null > (context: context, builder: (BuildContext context) {
                         return PasswordSuccessWidget(
                           message: "Profile was updated successful",
@@ -348,6 +345,7 @@ class _AccountScreenState extends State<AccountScreen> with AfterLayoutMixin<Acc
                         );
                       },isDismissible: false);
                     }else{
+                      EasyLoading.dismiss();
                       showModalBottomSheet < Null > (context: context, builder: (BuildContext context) {
                         return PasswordSuccessWidget(
                           success: false,

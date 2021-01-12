@@ -42,6 +42,8 @@ class _TabsContainerState extends State<TabsContainer>
   ABSSavingViewModel savingViewModel;
   ABSPaymentViewModel paymentViewModel;
 
+  BuildContext context1;
+
   List<Widget> _screenWidgetList = [
     HomeScreen(),
     WealthScreen(),
@@ -55,6 +57,14 @@ class _TabsContainerState extends State<TabsContainer>
 
   @override
   void afterFirstLayout(BuildContext context) async{
+    _screenWidgetList[0] = HomeScreen(callback: (){
+      setState(() {
+        _currentIndex = 4;
+      });
+    },);
+    setState(() {
+
+    });
 
     dashboardViewModel.getPortfolioValue(identityViewModel.user.token);
     savingViewModel.getSavingPlans(token: identityViewModel.user.token);

@@ -131,7 +131,7 @@ class IdentityService extends ABSIdentityService {
       };
 
 
-      var url = "${AppStrings.baseUrl}zimvest.Onboarding.individual/api/IndividualOnboarding/registerindividual";
+      var url = "${AppStrings.baseUrl}zimvest.onboarding.individual/api/IndividualOnboarding/registerindividual";
       print("body $body");
       print("url $url");
       try{

@@ -487,6 +487,7 @@ class _CreatePinWidgetState extends State<CreatePinWidget> {
     if(result.error == true) {
       EasyLoading.showError('Error occurred');
     }else{
+      EasyLoading.showSuccess("Pin Created", duration: Duration(seconds: 1));
       showModalBottomSheet < Null > (context: context, builder: (BuildContext context) {
         return EnableFaceIdWidget();
       });
