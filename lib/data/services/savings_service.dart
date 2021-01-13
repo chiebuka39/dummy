@@ -244,7 +244,8 @@ class SavingService extends ABSSavingService{
       if(e.error.runtimeType == SocketException){
         print("<<<<<<<<<");
         result.networkAvailable = false;
-        result.errorMessage = "Sorry, We could not complete your request";
+        result.errorMessage = "Failed to connect, "
+            "please connect to the internet and try again";
 
       }else{
         print("error000 ${e.response}");

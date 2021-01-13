@@ -164,6 +164,8 @@ class _SavingsSectionState extends State<SavingsSection> with AfterLayoutMixin<S
   bool loading = false;
 
   bool error = false;
+  bool networkAvailable = true;
+  String errorMessage ;
 
   @override
   void afterFirstLayout(BuildContext context)async {
@@ -211,6 +213,9 @@ class _SavingsSectionState extends State<SavingsSection> with AfterLayoutMixin<S
       setState(() {
         loading = false;
         error = true;
+        networkAvailable = r1.networkAvailable;
+        errorMessage = r1.errorMessage;
+
       });
     }
   }
@@ -238,7 +243,11 @@ class _SavingsSectionState extends State<SavingsSection> with AfterLayoutMixin<S
   Widget build(BuildContext context) {
     savingViewModel = Provider.of(context);
     identityViewModel = Provider.of(context);
-    return error == true ? SavingsInvestmentErrorWidget(retry: getSavings,): loading == true
+    return error == true ? SavingsInvestmentErrorWidget(
+      retry: getSavings,
+      networkAvailable: networkAvailable,
+      message: errorMessage,
+    ): loading == true
         ? SavingsInvestmentLoadingWidget()
         : wealthBox == null && aspirePlans.isEmpty
             ? SavingsInvestmentWidget()
@@ -356,10 +365,12 @@ class SavingsInvestmentLoadingWidget extends StatelessWidget {
 }
 class SavingsInvestmentErrorWidget extends StatelessWidget {
   const SavingsInvestmentErrorWidget({
-    Key key, this.retry,
+    Key key, this.retry, this.networkAvailable, this.message,
   }) : super(key: key);
 
   final VoidCallback retry;
+  final bool networkAvailable;
+  final String message;
 
   @override
   Widget build(BuildContext context) {
@@ -375,8 +386,7 @@ class SavingsInvestmentErrorWidget extends StatelessWidget {
                   YMargin(20),
                   SizedBox(
                     width: 300,
-                      child: Text("Failed to connect, "
-                          "please connect to the internet and try again",style:TextStyle(fontFamily: AppStrings.fontNormal,height: 1.7),textAlign: TextAlign.center,)),
+                      child: Text(message,style:TextStyle(fontFamily: AppStrings.fontNormal,height: 1.7),textAlign: TextAlign.center,)),
                   YMargin(30),
                   PrimaryButtonNew(
                     title: 'Retry',
