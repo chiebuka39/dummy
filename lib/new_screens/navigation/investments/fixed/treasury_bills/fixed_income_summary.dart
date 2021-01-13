@@ -597,7 +597,7 @@ class _SavingsSummaryScreenState extends State<SavingsSummaryScreen> {
                         details.delta.dy == -2.0) {
                       startAnim();
                       model.buyTreasuryBills(
-                        cardId: paymentViewModel.selectedCard.id,
+                        cardId: paymentViewModel.selectedCard == null ? null : paymentViewModel.selectedCard.id,
                         productId: widget.investmentId,
                         instrumentId: widget.instrumentId,
                         fundingChannel: widget.channelId,

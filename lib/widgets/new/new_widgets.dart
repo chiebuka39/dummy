@@ -319,6 +319,7 @@ class ResetPinWidget extends StatelessWidget {
                 Center(
                   child: PrimaryButtonNew(
                     onTap: (){
+                      Navigator.pop(context);
                       Navigator.push(context, VerifCodeScreen.route());
                     },
                     title: "Reset Pin",

@@ -49,6 +49,7 @@ class _NewPinScreenState extends State<NewPinScreen> {
     return Scaffold(
       appBar: ZimAppBar(
         callback: (){
+          pinViewModel.resetPins();
           Navigator.pop(context);
         },
         icon: Icons.arrow_back_ios,

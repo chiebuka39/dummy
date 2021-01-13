@@ -27,11 +27,17 @@ class InvestorProfileScreen extends StatefulWidget {
 class _InvestorProfileScreenState extends State<InvestorProfileScreen> with AfterLayoutMixin<InvestorProfileScreen> {
   ABSSettingsViewModel settingsViewModel;
   ABSIdentityViewModel identityViewModel;
+  bool isCompleted;
 
   @override
-  void afterFirstLayout(BuildContext context) {
-   var result = settingsViewModel.checkipsstatus(
+  void afterFirstLayout(BuildContext context)async {
+   var result =await settingsViewModel.checkipsstatus(
        token: identityViewModel.user.token);
+   if(result.error == false){
+     setState(() {
+       isCompleted = result.data;
+     });
+   }
 
   }
 

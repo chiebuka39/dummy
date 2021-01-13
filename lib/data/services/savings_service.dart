@@ -241,15 +241,24 @@ class SavingService extends ABSSavingService{
       }
 
     }on DioError catch(e){
-      print("error000 ${e.response}");
-      if(e.response != null ){
-        print(e.response.data);
-        //result.errorMessage = e.response.data['message'];
-      }else{
-        print(e.toString());
+      if(e.error.runtimeType == SocketException){
+        print("<<<<<<<<<");
+        result.networkAvailable = false;
         result.errorMessage = "Sorry, We could not complete your request";
+
+      }else{
+        print("error000 ${e.response}");
+
+        if(e.response != null ){
+          print(e.response.data);
+          //result.errorMessage = e.response.data['message'];
+        }else{
+          print(e.toString());
+          result.errorMessage = "Sorry, We could not complete your request";
+        }
+        result.error = true;
       }
-      result.error = true;
+
     }
 
     return result;
@@ -687,13 +696,23 @@ class SavingService extends ABSSavingService{
       }
 
     }on DioError catch(e){
-      print("errrrrrrrr");
+      print("errrrrrrrr ${e.response.data.runtimeType}");
       print("error $e}");
+
       if(e.response != null ){
-        print(e.response.data);
-        if(e.response.data['message'] is String){
-          result.errorMessage = e.response.data['message'];
+        if(e.response.data is String){
+          result.errorMessage = "Sorry, We could not complete your request";
+
+        }else if(e.response?.data ?? '' is Map){
+          if(e.response.data['message'] is String){
+            result.errorMessage = e.response.data['message'];
+          }
         }
+        else{
+          print(e.toString());
+          result.errorMessage = "Sorry, We could not complete your request";
+        }
+
 
       }else{
         print(e.toString());

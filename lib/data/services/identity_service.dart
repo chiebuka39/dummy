@@ -689,17 +689,17 @@ class IdentityService extends ABSIdentityService {
       }
 
     }on DioError catch(e){
-      print("error ${e.response.data}");
+
       result.error = true;
 
-        if(e.response.data is Map){
+        if(e.response?.data ?? '' is Map){
           result.errorMessage = e.response.data['message'];
 
         }else{
           result.errorMessage = "An error occured";
         }
 
-      print("lllll ${e.response.data is Map}");
+      print("lllll ${e.response?.data ?? 'false' is Map}");
     }
 
     return result;

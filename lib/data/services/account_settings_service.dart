@@ -31,7 +31,7 @@ abstract class ABSSettingsService{
     String email,
     String phoneNumber,
   });
-  Future<Result<void>> checkipsstatus({String token});
+  Future<Result<bool>> checkipsstatus({String token});
 
   Future<Result<void>> profileInvestor({String token, String firstName,
     int investmentKnowledge, int mostConernedDuringInvestment,
@@ -599,8 +599,8 @@ class SettingsService extends ABSSettingsService{
 
 
   @override
-  Future<Result<void>> checkipsstatus({String token}) async{
-    Result<void> result = Result(error: false);
+  Future<Result<bool>> checkipsstatus({String token}) async{
+    Result<bool> result = Result(error: false);
 
 
     var headers = {
@@ -621,6 +621,7 @@ class SettingsService extends ABSSettingsService{
         result.error = true;
       }else {
         result.error = false;
+        result.data = response1['data']['isComplete'];
       }
 
     }on DioError catch(e){

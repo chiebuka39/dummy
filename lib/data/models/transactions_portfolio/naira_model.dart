@@ -6,7 +6,7 @@ class NairaPortfolioTransactions {
   String percentageInterest;
   String currentValue;
   bool isMatured;
-  int withdrawableValue;
+  double withdrawableValue;
   String maturityDate;
   String zimvestInstrumentName;
   String uniqueName;
