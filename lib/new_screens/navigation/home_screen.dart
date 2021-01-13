@@ -2,10 +2,12 @@ import 'package:dots_indicator/dots_indicator.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:provider/provider.dart';
+import 'package:provider_architecture/_viewmodel_provider.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 import 'package:timelines/timelines.dart';
 import 'package:zimvest/data/view_models/dashboard_view_model.dart';
 import 'package:zimvest/data/view_models/identity_view_model.dart';
+import 'package:zimvest/data/view_models/investment_view_model.dart';
 import 'package:zimvest/data/view_models/savings_view_model.dart';
 import 'package:zimvest/data/view_models/settings_view_model.dart';
 import 'package:zimvest/new_screens/navigation/investments/fixed/fixed_income_screen.dart';
@@ -269,9 +271,170 @@ class _HomeScreenState extends State<HomeScreen> {
               ),
               ActionBoxWidget(
                 onTap: () {
-                  Navigator.push(
-                    context,
-                    InvestmentHighYieldScreen.route(),
+                  showModalBottomSheet(
+                    context: context,
+                    builder: (context) => ViewModelProvider<
+                        InvestmentHighYieldViewModel>.withConsumer(
+                      viewModelBuilder: () => InvestmentHighYieldViewModel(),
+                      builder: (context, model, _) => Container(
+                        height: 400,
+                        width: double.infinity,
+                        color: Colors.transparent,
+                        child: Column(
+                          children: [
+                            Container(
+                              height: 5,
+                              width: 40,
+                              decoration: BoxDecoration(
+                                color: AppColors.kWhite,
+                                borderRadius: BorderRadius.circular(30),
+                              ),
+                            ),
+                            YMargin(10),
+                            Container(
+                              height: 385,
+                              width: double.infinity,
+                              decoration: BoxDecoration(
+                                color: AppColors.kWhite,
+                                borderRadius: BorderRadius.only(
+                                  topLeft: Radius.circular(30),
+                                  topRight: Radius.circular(30),
+                                ),
+                              ),
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  YMargin(50),
+                                  Padding(
+                                    padding: const EdgeInsets.symmetric(
+                                        horizontal: 20.0),
+                                    child: Text(
+                                      "Zimvest High Yield",
+                                      style: TextStyle(
+                                          fontSize: 15,
+                                          fontWeight: FontWeight.w700,
+                                          fontFamily: AppStrings.fontNormal),
+                                    ),
+                                  ),
+                                  YMargin(20),
+                                  Padding(
+                                    padding: const EdgeInsets.symmetric(
+                                        horizontal: 20.0),
+                                    child: GestureDetector(
+                                      onTap: () => model.getNairaTermInstruments(),
+                                      child: Container(
+                                        height: 130,
+                                        width: double.infinity,
+                                        decoration: BoxDecoration(
+                                          borderRadius:
+                                              BorderRadius.circular(20),
+                                          color: AppColors.kPrimaryColor,
+                                        ),
+                                        child: Column(
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
+                                          children: [
+                                            Padding(
+                                              padding:
+                                                  const EdgeInsets.all(12.0),
+                                              child: Text(
+                                                "Zimvest High Yield Naira",
+                                                style: TextStyle(
+                                                  fontSize: 13,
+                                                  fontWeight: FontWeight.w400,
+                                                  fontFamily:
+                                                      AppStrings.fontNormal,
+                                                  color: AppColors.kWhite,
+                                                ),
+                                              ),
+                                            ),
+                                            Padding(
+                                              padding:
+                                                  const EdgeInsets.all(12.0),
+                                              child: Container(
+                                                height: 40,
+                                                width: 150,
+                                                child: Text(
+                                                  "Invest in high yield naira based instruments",
+                                                  style: TextStyle(
+                                                    fontSize: 11,
+                                                    fontWeight: FontWeight.w400,
+                                                    fontFamily:
+                                                        AppStrings.fontNormal,
+                                                    color: AppColors.kWhite,
+                                                  ),
+                                                  textAlign: TextAlign.start,
+                                                ),
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                  YMargin(20),
+                                  Padding(
+                                    padding: const EdgeInsets.symmetric(
+                                        horizontal: 20.0),
+                                    child: GestureDetector(
+                                      onTap: () => model.getDollarTermInstruments(),
+                                      child: Container(
+                                        height: 130,
+                                        width: double.infinity,
+                                        decoration: BoxDecoration(
+                                          borderRadius:
+                                              BorderRadius.circular(20),
+                                          color: AppColors.kSecondaryColor,
+                                        ),
+                                        child: Column(
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
+                                          children: [
+                                            Padding(
+                                              padding:
+                                                  const EdgeInsets.all(12.0),
+                                              child: Text(
+                                                "Zimvest High Yield Dollar",
+                                                style: TextStyle(
+                                                  fontSize: 13,
+                                                  fontWeight: FontWeight.w400,
+                                                  fontFamily:
+                                                      AppStrings.fontNormal,
+                                                  color: AppColors.kWhite,
+                                                ),
+                                              ),
+                                            ),
+                                            Padding(
+                                              padding:
+                                                  const EdgeInsets.all(12.0),
+                                              child: Container(
+                                                height: 40,
+                                                width: 150,
+                                                child: Text(
+                                                  "Invest in high yield dollar based instruments",
+                                                  style: TextStyle(
+                                                    fontSize: 11,
+                                                    fontWeight: FontWeight.w400,
+                                                    fontFamily:
+                                                        AppStrings.fontNormal,
+                                                    color: AppColors.kWhite,
+                                                  ),
+                                                  textAlign: TextAlign.start,
+                                                ),
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
                   );
                 },
                 title: "Invest in Zimvest High Yield",

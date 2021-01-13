@@ -229,7 +229,7 @@ class _VerifCodeScreenState extends State<VerifCodeScreen> with AfterLayoutMixin
       EasyLoading.showSuccess("OTP Confirmed");
       pinViewModel.resetPins();
       Future.delayed(Duration(milliseconds: 700)).then((value) =>
-          Navigator.push(context, NewPinScreen.route(reset: true)));
+          Navigator.pushReplacement(context, NewPinScreen.route(reset: true)));
 
     }
   }

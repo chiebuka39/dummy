@@ -40,23 +40,23 @@ class FixedIncomePurchaseSource extends StatefulWidget {
       this.minimumAmount,
       this.investmentMaturityDate,
       this.channelId,
-      this.intermediaryBankType, this.cards})
+      this.intermediaryBankType,
+      this.cards})
       : super(key: key);
-  static Route<dynamic> route({
-    double amount,
-    int productId,
-    String uniqueName,
-    String duration,
-    String maturityDate,
-    double rate,
-    int minimumAmount,
-    int investmentType,
-    int instrumentId,
-    String investmentMaturityDate,
-    int channelId,
-    int intermediaryBankType,
-    List<PaymentCard> cards
-  }) {
+  static Route<dynamic> route(
+      {double amount,
+      int productId,
+      String uniqueName,
+      String duration,
+      String maturityDate,
+      double rate,
+      int minimumAmount,
+      int investmentType,
+      int instrumentId,
+      String investmentMaturityDate,
+      int channelId,
+      int intermediaryBankType,
+      List<PaymentCard> cards}) {
     return MaterialPageRoute(
       builder: (_) => FixedIncomePurchaseSource(
         amount: amount,
@@ -85,9 +85,6 @@ class FixedIncomePurchaseSource extends StatefulWidget {
 }
 
 class _FixedIncomePurchaseSourceState extends State<FixedIncomePurchaseSource> {
-
-
-
   @override
   Widget build(BuildContext context) {
     return ViewModelProvider<InvestmentHighYieldViewModel>.withConsumer(
@@ -142,6 +139,7 @@ class _FixedIncomePurchaseSourceState extends State<FixedIncomePurchaseSource> {
                           navigate: () {
                             Navigator.of(context).push(
                               SavingsSummaryScreen.route(
+                                // cardId: ,
                                 amount: widget.amount,
                                 investmentId: widget.productId,
                                 instrumentId: widget.instrumentId,

@@ -5,10 +5,12 @@ import 'package:flutterwave/flutterwave.dart';
 import 'package:flutterwave/models/responses/charge_response.dart';
 import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 import 'package:provider/provider.dart';
+import 'package:provider_architecture/_viewmodel_provider.dart';
 import 'package:rave_flutter/rave_flutter.dart';
 import 'package:zimvest/data/models/payment/card.dart';
 import 'package:zimvest/data/models/payment/card_payload.dart';
 import 'package:zimvest/data/view_models/identity_view_model.dart';
+import 'package:zimvest/data/view_models/investment_view_model.dart';
 import 'package:zimvest/data/view_models/payment_view_model.dart';
 import 'package:zimvest/data/view_models/savings_view_model.dart';
 import 'package:zimvest/data/view_models/settings_view_model.dart';
@@ -310,7 +312,7 @@ class _SelectCardWidgetState extends State<SelectCardWidget> {
                     paymentViewModel.userCards.length,
                     (index) => CardItemWidget(
                       card: paymentViewModel.userCards[index],
-                      navigate: widget.navigate,
+                      navigate: () => widget.navigate,
                     ),
                   ),
                   Spacer(),
@@ -467,47 +469,50 @@ class CardItemWidget extends StatelessWidget {
   }) : super(key: key);
 
   final PaymentCard card;
-  final VoidCallback navigate;
+  final Function navigate;
 
   @override
   Widget build(BuildContext context) {
     ABSPaymentViewModel paymentViewModel = Provider.of(context);
     ABSSavingViewModel savingViewModel = Provider.of(context);
-    return GestureDetector(
-      onTap: () {
-        // savingViewModel.selectedChannel = savingViewModel
-        //     .fundingChannels.firstWhere((element) => element.name == "Wallet");
-        paymentViewModel.selectedCard = card;
-        if (navigate == null) {
-          Navigator.of(context).pushReplacement(SavingsSummaryScreen.route());
-        } else {
-          navigate();
-        }
-      },
-      child: Container(
-        margin: EdgeInsets.only(top: 10),
-        height: 60,
-        child: Row(
-          children: [
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  "Card ending with ${card.mp}",
-                  style: TextStyle(fontSize: 12),
+    return ViewModelProvider<FixedIncomeViewModel>.withConsumer(
+        builder: (context, model, _) => GestureDetector(
+              onTap: () {
+                // savingViewModel.selectedChannel = savingViewModel
+                //     .fundingChannels.firstWhere((element) => element.name == "Wallet");
+                paymentViewModel.selectedCard = card;
+                if (navigate == null) {
+                  Navigator.of(context)
+                      .pushReplacement(SavingsSummaryScreen.route());
+                } else {
+                  navigate();
+                }
+              },
+              child: Container(
+                margin: EdgeInsets.only(top: 10),
+                height: 60,
+                child: Row(
+                  children: [
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          "Card ending with ${card.mp}",
+                          style: TextStyle(fontSize: 12),
+                        ),
+                        YMargin(14),
+                        Text(
+                          "Expires ${card.expiryDate}",
+                          style: TextStyle(fontSize: 10),
+                        ),
+                      ],
+                    ),
+                    Spacer(),
+                    SvgPicture.asset('images/mastercard.svg')
+                  ],
                 ),
-                YMargin(14),
-                Text(
-                  "Expires ${card.expiryDate}",
-                  style: TextStyle(fontSize: 10),
-                ),
-              ],
+              ),
             ),
-            Spacer(),
-            SvgPicture.asset('images/mastercard.svg')
-          ],
-        ),
-      ),
-    );
+        viewModelBuilder: () => FixedIncomeViewModel());
   }
 }

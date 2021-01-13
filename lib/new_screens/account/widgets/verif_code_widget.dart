@@ -178,10 +178,16 @@ class _VerifCodeWidgetState extends State<VerifCodeWidget> with AfterLayoutMixin
           ],),
           YMargin(10),
           Center(child: FlatButton(onPressed: verificationCodeLoading ? null: ()async{
+            EasyLoading.show(status: '');
             var result = await identityViewModel.resendEmailOTP(
               verificationId: identityViewModel.verificationId,
               trackingId: identityViewModel.trackingId
             );
+            if(result.error == false){
+              EasyLoading.showSuccess("Another OTP sent");
+            }else{
+              EasyLoading.showError(result?.errorMessage ?? 'An Error occured');
+            }
           }, child: Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [

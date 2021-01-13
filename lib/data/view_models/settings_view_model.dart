@@ -67,7 +67,7 @@ abstract class ABSSettingsViewModel extends ChangeNotifier{
     int durationToCompletelyWithdraw,
     bool ethicalConsideration,
     String email, String lastName});
-  Future<Result<void>> checkipsstatus({String token});
+  Future<Result<bool>> checkipsstatus({String token});
 }
 
 class SettingsViewModel extends ABSSettingsViewModel{
@@ -276,7 +276,7 @@ class SettingsViewModel extends ABSSettingsViewModel{
   }
 
   @override
-  Future<Result<void>> checkipsstatus({String token}) {
+  Future<Result<bool>> checkipsstatus({String token}) {
     return _settingsService.checkipsstatus(token: token);
   }
 

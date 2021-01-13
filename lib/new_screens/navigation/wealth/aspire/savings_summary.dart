@@ -134,277 +134,282 @@ class _SavingsSummaryScreenState extends State<SavingsSummaryScreen> {
     savingViewModel = Provider.of(context);
     paymentViewModel = Provider.of(context);
     var size = MediaQuery.of(context).size;
-    return Scaffold(
-      backgroundColor: AppColors.kSecondaryColor,
-      body: Container(
-        height: MediaQuery.of(context).size.height,
-        child: Stack(children: [
-          Positioned.fill(
-            child: confirmed ? PlayAnimation<MultiTweenValues<AniProps>>(
-              tween: _tween,
-              duration: _tween.duration,
-              builder: (context, child, value){
-                return Container(
-                  height: MediaQuery.of(context).size.height,
-                  child: Center(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: [
-                        Spacer(),
-                        Transform.scale(
-                            scale: value.get(AniProps.scale),
-                            child: Transform.translate(
-                                offset: value.get(AniProps.offset1),
-                                child: Opacity(
-                                    opacity: value.get(AniProps.opacity1),
-                                    child: SvgPicture.asset("images/new/confetti.svg")))),
-                        YMargin(40),
-                        ItemFader(
+    return WillPopScope(
+      onWillPop: ()async{
+        return false;
+      },
+      child: Scaffold(
+        backgroundColor: AppColors.kSecondaryColor,
+        body: Container(
+          height: MediaQuery.of(context).size.height,
+          child: Stack(children: [
+            Positioned.fill(
+              child: confirmed ? PlayAnimation<MultiTweenValues<AniProps>>(
+                tween: _tween,
+                duration: _tween.duration,
+                builder: (context, child, value){
+                  return Container(
+                    height: MediaQuery.of(context).size.height,
+                    child: Center(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          Spacer(),
+                          Transform.scale(
+                              scale: value.get(AniProps.scale),
+                              child: Transform.translate(
+                                  offset: value.get(AniProps.offset1),
+                                  child: Opacity(
+                                      opacity: value.get(AniProps.opacity1),
+                                      child: SvgPicture.asset("images/new/confetti.svg")))),
+                          YMargin(40),
+                          ItemFader(
+                              offset: 10,
+                              curve: Curves.easeIn,
+                              key: keys[0],
+                              child: Text(errorMessage.isEmpty ? "Your Target creation was succesful":errorMessage, style: TextStyle(color: Colors.white),)),
+                          Spacer(),
+                          ItemFader(
                             offset: 10,
                             curve: Curves.easeIn,
-                            key: keys[0],
-                            child: Text(errorMessage.isEmpty ? "Your Target creation was succesful":errorMessage, style: TextStyle(color: Colors.white),)),
-                        Spacer(),
-                        ItemFader(
-                          offset: 10,
-                          curve: Curves.easeIn,
-                          key: keys[1],
-                          child: PrimaryButtonNew(
-                            onTap: (){
-                              Navigator.pushAndRemoveUntil(
-                                  context,
-                                  MaterialPageRoute(builder: (context) => TabsContainer()),
-                                      (Route<dynamic> route) => false);
-                              Future.delayed(Duration(seconds: 2)).then((value) {
-                                paymentViewModel.selectedCard = null;
-                                savingViewModel.startDate = null;
-                                savingViewModel.goalName = "";
-                                savingViewModel.selectedFrequency = null;
-                                savingViewModel.amountToSave = null;
-                                savingViewModel.selectedChannel = null;
-                              });
+                            key: keys[1],
+                            child: PrimaryButtonNew(
+                              onTap: (){
+                                Navigator.pushAndRemoveUntil(
+                                    context,
+                                    MaterialPageRoute(builder: (context) => TabsContainer()),
+                                        (Route<dynamic> route) => false);
+                                Future.delayed(Duration(seconds: 2)).then((value) {
+                                  paymentViewModel.selectedCard = null;
+                                  savingViewModel.startDate = null;
+                                  savingViewModel.goalName = "";
+                                  savingViewModel.selectedFrequency = null;
+                                  savingViewModel.amountToSave = null;
+                                  savingViewModel.selectedChannel = null;
+                                });
 
 
-                            },
-                            textColor: Colors.white,
-                            title: "Done",
-                            bg: AppColors.kPrimaryColor,
+                              },
+                              textColor: Colors.white,
+                              title: "Done",
+                              bg: AppColors.kPrimaryColor,
+                            ),
                           ),
-                        ),
-                        YMargin(50)
-                      ],),
-                  ),
-                );
-              },
-            ):SizedBox(),
-          ),
-
-          AnimatedPositioned(
-            duration: Duration(milliseconds: 500),
-            //top: -(MediaQuery.of(context).size.height - 200),
-            top: slideUp ?-(MediaQuery.of(context).size.height - 200): 0,
-            left: 0,right: 0,
-            child: Container(
-              width: double.infinity,
-              height: MediaQuery.of(context).size.height - 200,
-              decoration: BoxDecoration(
-                color: Colors.white,
-                borderRadius: BorderRadius.only(bottomLeft: Radius.circular(25),
-                    bottomRight: Radius.circular(25),
-
-                ),
-                boxShadow: AppUtils.getBoxShaddow3
-              ),
-              child: SafeArea(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Padding(
-                      padding: const EdgeInsets.only(left: 10),
-                      child: BackButton(
-                        color: AppColors.kPrimaryColor,
-
-                        onPressed: (){
-                          Navigator.pop(context);
-                        },
-                      ),
+                          YMargin(50)
+                        ],),
                     ),
-                    YMargin(50),
-                    Padding(
-                      padding: const EdgeInsets.only(left: 20),
-                      child: Text("Savings Summary", style: TextStyle(fontFamily: AppStrings.fontMedium),),
-                    ),
-                    YMargin(20),
-                    Container(
-                      margin: EdgeInsets.symmetric(horizontal: 20),
-                      padding: EdgeInsets.symmetric(horizontal: 20,vertical: 25),
-                      height: 380,
-                      width: double.infinity,
-                      decoration: BoxDecoration(
-                        color: AppColors.kWhite,
-                        boxShadow: AppUtils.getBoxShaddow3
-                      ),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                        Text("Plan name".toUpperCase(), style: TextStyle(fontSize: 12,
-                            color: AppColors.kSecondaryText,fontFamily: AppStrings.fontNormal,),),
-                          YMargin(15),
-                          Text(savingViewModel.goalName, style: TextStyle(
-                              fontFamily: AppStrings.fontMedium,
-                              fontSize: 13,color: AppColors.kGreyText
-                          ),),
-                          YMargin(40),
-                          Row(children: [
-                            Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text("Frequency".toUpperCase(), style: TextStyle(fontSize: 11,
-                                  color: AppColors.kSecondaryText,fontFamily: AppStrings.fontNormal,),),
-                                YMargin(15),
-                                Text(savingViewModel.selectedFrequency.name, style: TextStyle(
-                                    fontFamily: AppStrings.fontMedium,
-                                    fontSize: 13,color: AppColors.kGreyText
-                                ),),
-                              ],),
-                            Spacer(),
-
-                            Column(
-                              crossAxisAlignment: CrossAxisAlignment.end,
-                              children: [
-                                Text("Interest rate".toUpperCase(), style: TextStyle(fontSize: 12,
-                                  color: AppColors.kSecondaryText,fontFamily: AppStrings.fontNormal,),),
-                                YMargin(15),
-                                Text("6% P.A", style: TextStyle(
-                                    fontFamily: AppStrings.fontMedium,
-                                    fontSize: 13,color: AppColors.kGreyText
-                                ),),
-                              ],),
-
-
-                          ],),
-                          YMargin(40),
-                          Row(children: [
-                            Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text("${savingViewModel.selectedFrequency.name} amount".toUpperCase(), style: TextStyle(fontSize: 12,
-                                  color: AppColors.kSecondaryText,fontFamily: AppStrings.fontNormal,),),
-                                YMargin(15),
-                                Text(getFrequencyAmount(), style: TextStyle(
-                                    fontFamily: AppStrings.fontMedium,
-                                    fontSize: 13,color: AppColors.kGreyText
-                                ),),
-                            ],),
-                            Spacer(),
-
-                            Column(
-
-                              crossAxisAlignment: CrossAxisAlignment.end,
-                              children: [
-                                Text("target amount".toUpperCase(), style: TextStyle(fontSize: 11,
-                                  color: AppColors.kSecondaryText,fontFamily: AppStrings.fontNormal,),),
-                                YMargin(15),
-                                Text("${AppStrings.nairaSymbol}${getAmount(savingViewModel.amountToSave.toInt())}", style: TextStyle(
-                                    fontFamily: AppStrings.fontMedium,
-                                    fontSize: 13,color: AppColors.kGreyText
-                                ),),
-                            ],)
-                          ],),
-                          YMargin(40),
-                          Row(children: [
-                            Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text("start date".toUpperCase(), style: TextStyle(fontSize: 12,
-                                  color: AppColors.kSecondaryText,fontFamily: AppStrings.fontNormal,),),
-                                YMargin(15),
-                                Text(AppUtils.getReadableDate2(savingViewModel.startDate), style: TextStyle(
-                                    fontFamily: AppStrings.fontMedium,
-                                    fontSize: 13,color: AppColors.kGreyText
-                                ),),
-                            ],),
-                            Spacer(),
-                            Column(
-                              crossAxisAlignment: CrossAxisAlignment.end,
-                              children: [
-                                Text("Next maturity date".toUpperCase(), style: TextStyle(fontSize: 11,
-                                  color: AppColors.kSecondaryText,fontFamily: AppStrings.fontNormal,),),
-                                YMargin(15),
-                                Text(AppUtils.getReadableDate2(savingViewModel.endDate), style: TextStyle(
-                                    fontFamily: AppStrings.fontMedium,
-                                    fontSize: 13,color: AppColors.kGreyText
-                                ),),
-                            ],)
-                          ],),
-
-
-                      ],),
-                    )
-                ],),
-              ),
-            ),
-          ),
-
-          AnimatedPositioned(
-            duration: Duration(milliseconds: 500),
-            //top: MediaQuery.of(context).size.height - 100,
-            top:slideUp == true ? -60: (MediaQuery.of(context).size.height - 100),
-            left: 0,
-            right: 0,
-            child: GestureDetector(
-              onTap: (){
-                // showModalBottomSheet < Null > (context: context, builder: (BuildContext context) {
-                //   return ConfirmSavings();
-                // },isScrollControlled: true);
-              },
-              onVerticalDragStart: (details){
-                print("dff ${details.toString()}");
-                startAnim();
-              },
-              child: Container(
-                height: 60,
-                child: Column(children: [
-                  Column(
-                    children: [
-                      Icon(Icons.keyboard_arrow_up, color: AppColors.kWhite,),
-                      Text("Swipe up to confirm", style: TextStyle(fontFamily: AppStrings.fontMedium,
-                          color: Colors.white),),
-                    ],
-                  )
-                ],),
-              ),
-            ),
-          ),
-          error == false ? Container(
-            height: size.height,
-            width: size.width,
-            child: Center(child: loading ? CircularProgressIndicator():SizedBox()
-              ,),
-          ):Container(
-            height: size.height,
-            width: size.width,
-            child: Center(child:Column(children: [
-              Spacer(),
-              SizedBox(
-                width: 270,
-                  child: Text(errorMessage == null ? "Error Occured": errorMessage.isEmpty ? "Error Occured": errorMessage, style: TextStyle(color: AppColors.kWhite, fontFamily: AppStrings.fontNormal,height: 1.7),
-                    textAlign: TextAlign.center,)),
-              YMargin(20),
-              PrimaryButtonNew(
-                title: "Back to Home",
-                onTap: (){
-                  Navigator.pushAndRemoveUntil(
-                      context,
-                      MaterialPageRoute(builder: (context) => TabsContainer()),
-                          (Route<dynamic> route) => false);
+                  );
                 },
+              ):SizedBox(),
+            ),
+
+            AnimatedPositioned(
+              duration: Duration(milliseconds: 500),
+              //top: -(MediaQuery.of(context).size.height - 200),
+              top: slideUp ?-(MediaQuery.of(context).size.height - 200): 0,
+              left: 0,right: 0,
+              child: Container(
+                width: double.infinity,
+                height: MediaQuery.of(context).size.height - 200,
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.only(bottomLeft: Radius.circular(25),
+                      bottomRight: Radius.circular(25),
+
+                  ),
+                  boxShadow: AppUtils.getBoxShaddow3
+                ),
+                child: SafeArea(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Padding(
+                        padding: const EdgeInsets.only(left: 10),
+                        child: BackButton(
+                          color: AppColors.kPrimaryColor,
+
+                          onPressed: (){
+                            Navigator.pop(context);
+                          },
+                        ),
+                      ),
+                      YMargin(50),
+                      Padding(
+                        padding: const EdgeInsets.only(left: 20),
+                        child: Text("Savings Summary", style: TextStyle(fontFamily: AppStrings.fontMedium),),
+                      ),
+                      YMargin(20),
+                      Container(
+                        margin: EdgeInsets.symmetric(horizontal: 20),
+                        padding: EdgeInsets.symmetric(horizontal: 20,vertical: 25),
+                        height: 380,
+                        width: double.infinity,
+                        decoration: BoxDecoration(
+                          color: AppColors.kWhite,
+                          boxShadow: AppUtils.getBoxShaddow3
+                        ),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                          Text("Plan name".toUpperCase(), style: TextStyle(fontSize: 12,
+                              color: AppColors.kSecondaryText,fontFamily: AppStrings.fontNormal,),),
+                            YMargin(15),
+                            Text(savingViewModel.goalName, style: TextStyle(
+                                fontFamily: AppStrings.fontMedium,
+                                fontSize: 13,color: AppColors.kGreyText
+                            ),),
+                            YMargin(40),
+                            Row(children: [
+                              Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text("Frequency".toUpperCase(), style: TextStyle(fontSize: 11,
+                                    color: AppColors.kSecondaryText,fontFamily: AppStrings.fontNormal,),),
+                                  YMargin(15),
+                                  Text(savingViewModel.selectedFrequency.name, style: TextStyle(
+                                      fontFamily: AppStrings.fontMedium,
+                                      fontSize: 13,color: AppColors.kGreyText
+                                  ),),
+                                ],),
+                              Spacer(),
+
+                              Column(
+                                crossAxisAlignment: CrossAxisAlignment.end,
+                                children: [
+                                  Text("Interest rate".toUpperCase(), style: TextStyle(fontSize: 12,
+                                    color: AppColors.kSecondaryText,fontFamily: AppStrings.fontNormal,),),
+                                  YMargin(15),
+                                  Text("6% P.A", style: TextStyle(
+                                      fontFamily: AppStrings.fontMedium,
+                                      fontSize: 13,color: AppColors.kGreyText
+                                  ),),
+                                ],),
+
+
+                            ],),
+                            YMargin(40),
+                            Row(children: [
+                              Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text("${savingViewModel.selectedFrequency.name} amount".toUpperCase(), style: TextStyle(fontSize: 12,
+                                    color: AppColors.kSecondaryText,fontFamily: AppStrings.fontNormal,),),
+                                  YMargin(15),
+                                  Text(getFrequencyAmount(), style: TextStyle(
+                                      fontFamily: AppStrings.fontMedium,
+                                      fontSize: 13,color: AppColors.kGreyText
+                                  ),),
+                              ],),
+                              Spacer(),
+
+                              Column(
+
+                                crossAxisAlignment: CrossAxisAlignment.end,
+                                children: [
+                                  Text("target amount".toUpperCase(), style: TextStyle(fontSize: 11,
+                                    color: AppColors.kSecondaryText,fontFamily: AppStrings.fontNormal,),),
+                                  YMargin(15),
+                                  Text("${AppStrings.nairaSymbol}${getAmount(savingViewModel.amountToSave.toInt())}", style: TextStyle(
+                                      fontFamily: AppStrings.fontMedium,
+                                      fontSize: 13,color: AppColors.kGreyText
+                                  ),),
+                              ],)
+                            ],),
+                            YMargin(40),
+                            Row(children: [
+                              Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text("start date".toUpperCase(), style: TextStyle(fontSize: 12,
+                                    color: AppColors.kSecondaryText,fontFamily: AppStrings.fontNormal,),),
+                                  YMargin(15),
+                                  Text(AppUtils.getReadableDate2(savingViewModel.startDate), style: TextStyle(
+                                      fontFamily: AppStrings.fontMedium,
+                                      fontSize: 13,color: AppColors.kGreyText
+                                  ),),
+                              ],),
+                              Spacer(),
+                              Column(
+                                crossAxisAlignment: CrossAxisAlignment.end,
+                                children: [
+                                  Text("Next maturity date".toUpperCase(), style: TextStyle(fontSize: 11,
+                                    color: AppColors.kSecondaryText,fontFamily: AppStrings.fontNormal,),),
+                                  YMargin(15),
+                                  Text(AppUtils.getReadableDate2(savingViewModel.endDate), style: TextStyle(
+                                      fontFamily: AppStrings.fontMedium,
+                                      fontSize: 13,color: AppColors.kGreyText
+                                  ),),
+                              ],)
+                            ],),
+
+
+                        ],),
+                      )
+                  ],),
+                ),
               ),
-              Spacer(),
-            ],)
-              ,),
-          ),
-        ],),
+            ),
+
+            AnimatedPositioned(
+              duration: Duration(milliseconds: 500),
+              //top: MediaQuery.of(context).size.height - 100,
+              top:slideUp == true ? -60: (MediaQuery.of(context).size.height - 100),
+              left: 0,
+              right: 0,
+              child: GestureDetector(
+                onTap: (){
+                  // showModalBottomSheet < Null > (context: context, builder: (BuildContext context) {
+                  //   return ConfirmSavings();
+                  // },isScrollControlled: true);
+                },
+                onVerticalDragStart: (details){
+                  print("dff ${details.toString()}");
+                  startAnim();
+                },
+                child: Container(
+                  height: 60,
+                  child: Column(children: [
+                    Column(
+                      children: [
+                        Icon(Icons.keyboard_arrow_up, color: AppColors.kWhite,),
+                        Text("Swipe up to confirm", style: TextStyle(fontFamily: AppStrings.fontMedium,
+                            color: Colors.white),),
+                      ],
+                    )
+                  ],),
+                ),
+              ),
+            ),
+            error == false ? Container(
+              height: size.height,
+              width: size.width,
+              child: Center(child: loading ? CircularProgressIndicator():SizedBox()
+                ,),
+            ):Container(
+              height: size.height,
+              width: size.width,
+              child: Center(child:Column(children: [
+                Spacer(),
+                SizedBox(
+                  width: 270,
+                    child: Text(errorMessage == null ? "Error Occured": errorMessage.isEmpty ? "Error Occured": errorMessage, style: TextStyle(color: AppColors.kWhite, fontFamily: AppStrings.fontNormal,height: 1.7),
+                      textAlign: TextAlign.center,)),
+                YMargin(20),
+                PrimaryButtonNew(
+                  title: "Back to Home",
+                  onTap: (){
+                    Navigator.pushAndRemoveUntil(
+                        context,
+                        MaterialPageRoute(builder: (context) => TabsContainer()),
+                            (Route<dynamic> route) => false);
+                  },
+                ),
+                Spacer(),
+              ],)
+                ,),
+            ),
+          ],),
+        ),
       ),
     );
   }
