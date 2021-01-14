@@ -5,6 +5,7 @@ import 'package:flutter_switch/flutter_switch.dart';
 import 'package:provider/provider.dart';
 import 'package:zimvest/data/local/user_local.dart';
 import 'package:zimvest/data/models/secondary_state.dart';
+import 'package:zimvest/data/services/connectivity_service.dart';
 import 'package:zimvest/data/view_models/payment_view_model.dart';
 import 'package:zimvest/locator.dart';
 import 'package:zimvest/new_screens/profile/verif_code_screen.dart';
@@ -395,6 +396,68 @@ class PasswordSuccessWidget extends StatelessWidget {
         ))
       ],),
     );
+  }
+}
+class NoInternetWidget extends StatelessWidget {
+  const NoInternetWidget({
+    Key key, this.message ="",
+    this.onDone, this.success = true,
+  }) : super(key: key);
+
+  final String message;
+  final bool success;
+  final VoidCallback onDone;
+
+  @override
+  Widget build(BuildContext context) {
+    ConnectionProvider connectionProvider = Provider.of(context);
+
+    return Container(
+      height: 400,
+      decoration: BoxDecoration(
+        color: Colors.transparent,
+      ),
+      child: Column(children: [
+        YMargin(10),
+        Center(child: Container(
+          width: 30,
+          height: 5,
+          decoration: BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.circular(5)
+          ),
+        ),),
+        YMargin(20),
+        Expanded(child: Container(
+          width: double.infinity,
+          decoration: BoxDecoration(
+              color:Colors.white,
+              borderRadius: BorderRadius.only(
+                  topLeft: Radius.circular(25),
+                  topRight: Radius.circular(25)
+              )
+          ),
+          child: Column(
+            children: [
+              YMargin(30),
+              SvgPicture.asset("images/new/error3.svg"),
+              YMargin(20),
+              SizedBox(
+                  width: 300,
+                  child: Text('Failed to connect, please connect to the internet and try again',style:TextStyle(fontFamily: AppStrings.fontNormal,height: 1.7),textAlign: TextAlign.center,)),
+              YMargin(30),
+              PrimaryButtonNew(
+                title: 'Okay',
+                onTap: (){
+                  Navigator.pop(context);
+                },
+              )
+            ],
+          ),
+        ))
+      ],),
+    );
+
   }
 }
 

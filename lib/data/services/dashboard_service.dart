@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:dio/dio.dart';
 import 'package:zimvest/data/models/dashboard.dart';
 import 'package:zimvest/data/models/user.dart';
@@ -43,7 +45,13 @@ class DashboardService extends ABSDashboardService{
 
     }on DioError catch(e){
       print("error $e");
-      print("error ${e.response.data}");
+      if(e.error.runtimeType == SocketException){
+        print("<<<<<<<<<");
+        result.networkAvailable = false;
+        result.errorMessage = "Failed to connect, "
+            "please connect to the internet and try again";
+
+      }
       result.error = true;
     }
 

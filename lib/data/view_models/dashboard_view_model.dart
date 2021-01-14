@@ -47,6 +47,8 @@ class DashboardViewModel extends ABSDashboardViewModel{
      var result =await _dashboardService.getPortfolioValue(token);
      if(result.error == false){
        dashboardModel = result.data;
+     }else{
+       return result;
      }
      var result1 =await _dashboardService.getNairaPortfolio(token);
      if(result1.error == false){
