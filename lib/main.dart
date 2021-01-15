@@ -123,7 +123,7 @@ class _HomeAppState extends State<HomeApp> with WidgetsBindingObserver {
     WidgetsBinding.instance.addObserver(this);
 
     initPlatformState();
-    _setUPNotifications();
+    // _setUPNotifications();
     super.initState();
   }
   Future<void> _setUPNotifications() async {

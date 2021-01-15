@@ -18,4 +18,4 @@ class Application : FlutterApplication(), PluginRegistrantCallback {
     fun registerWith(registry: PluginRegistry?) {
         GeneratedPluginRegistrant.registerWith(registry)
     }
-}
+} 

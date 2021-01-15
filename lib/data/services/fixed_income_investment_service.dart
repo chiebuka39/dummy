@@ -72,6 +72,7 @@ abstract class ABSFixedIncomeInvestmentService {
       int intermediaryBankType,
       num amount,
       num rate,
+      int cardId,
       String uniqueName,
       num faceValue,
       num investmentAmount});
@@ -116,7 +117,7 @@ class FixedIncomeInvestmentService implements ABSFixedIncomeInvestmentService {
       "UniqueName": uniqueName,
       "FaceValue": faceValue,
       "InvestmentAmount": investmentAmount,
-      "CardId" : cardId,
+      "CardId": cardId,
       "UpFront": upFront
     });
 
@@ -169,7 +170,7 @@ class FixedIncomeInvestmentService implements ABSFixedIncomeInvestmentService {
       "Amount": amount,
       "UniqueName": uniqueName,
       "FaceValue": faceValue,
-      "CardId" : cardId,
+      "CardId": cardId,
       "InvestmentAmount": investmentAmount
     });
 
@@ -222,7 +223,7 @@ class FixedIncomeInvestmentService implements ABSFixedIncomeInvestmentService {
       "Amount": amount,
       "UniqueName": uniqueName,
       "FaceValue": faceValue,
-      "CardId" : cardId,
+      "CardId": cardId,
       "InvestmentAmount": investmentAmount
     });
 
@@ -273,7 +274,7 @@ class FixedIncomeInvestmentService implements ABSFixedIncomeInvestmentService {
       "Amount": amount,
       "UniqueName": uniqueName,
       "FaceValue": faceValue,
-      "CardId" : cardId,
+      "CardId": cardId,
       "InvestmentAmount": investmentAmount
     });
 
@@ -328,7 +329,7 @@ class FixedIncomeInvestmentService implements ABSFixedIncomeInvestmentService {
       "UniqueName": uniqueName,
       "FaceValue": faceValue,
       "InvestmentAmount": investmentAmount,
-      "CardId" : cardId,
+      "CardId": cardId,
       "UpFront": upFront,
     });
 
@@ -384,7 +385,7 @@ class FixedIncomeInvestmentService implements ABSFixedIncomeInvestmentService {
       "FaceValue": faceValue,
       "InvestmentAmount": investmentAmount,
       "UpFront": upFront,
-      "CardId" : cardId
+      "CardId": cardId
     });
     print("ppp ${data.fields}");
     var headers = {HttpHeaders.authorizationHeader: "Bearer $token"};
@@ -399,7 +400,7 @@ class FixedIncomeInvestmentService implements ABSFixedIncomeInvestmentService {
           },
         ),
       );
-      print("pppse ${buyTreasuryBill.data}");
+      print("pppse ${buyTreasuryBill.statusCode}");
       if (buyTreasuryBill.statusCode == 200) {
         return buyTreasuryBill.data["message"];
       } else if (buyTreasuryBill.statusCode == 400) {
@@ -426,7 +427,7 @@ class FixedIncomeInvestmentService implements ABSFixedIncomeInvestmentService {
       bool upFront}) async {
     var url =
         "${AppStrings.baseUrl}$microService/api/Calculator/calculateamountpayable";
-   print("llll ${url}");
+    print("llll ${url}");
     FormData data = FormData.fromMap({
       "ProductId": productId,
       "Rate": rate,

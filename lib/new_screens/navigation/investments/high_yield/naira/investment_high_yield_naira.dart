@@ -77,13 +77,7 @@ class _HighYieldNairaScreenState extends State<HighYieldNairaScreen> {
                                 (e) => GestureDetector(
                                   onTap: () => Navigator.push(
                                     context,
-                                    HighYieldDetails.route(
-                                        dur: "${instrumentNames[index]}",
-                                        id: e.id,
-                                        maturityDate: e.maturityDate,
-                                        rate: e.depositRate,
-                                        minimumAmount: e.minimumAmount,
-                                        maximumAmount: e.maximumAmount),
+                                    HighYieldDetails.route(),
                                   ),
                                   child: Padding(
                                     padding:
