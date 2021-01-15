@@ -13,6 +13,7 @@ import 'package:zimvest/utils/margins.dart';
 import 'package:zimvest/utils/strings.dart';
 import 'package:supercharged/supercharged.dart';
 import 'package:zimvest/widgets/buttons.dart';
+import 'package:zimvest/widgets/new/anim.dart';
 
 class InvestmentSummaryScreenNaira extends StatefulWidget {
   final double amount;

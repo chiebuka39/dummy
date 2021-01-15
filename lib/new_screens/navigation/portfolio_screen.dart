@@ -10,6 +10,7 @@ import 'package:provider/provider.dart';
 import 'package:provider_architecture/_viewmodel_provider.dart';
 import 'package:shimmer/shimmer.dart';
 import 'package:zimvest/data/models/saving_plan.dart';
+import 'package:zimvest/data/view_models/dashboard_view_model.dart';
 import 'package:zimvest/data/view_models/identity_view_model.dart';
 import 'package:zimvest/data/view_models/savings_view_model.dart';
 import 'package:zimvest/data/view_models/transaction_vm.dart';
@@ -415,6 +416,7 @@ class SavingsInvestmentCashWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     List<SavingPlanModel> goals = [...aspirePlans,SavingPlanModel()];
     List<SavingPlanModel> goals1 = [...aspirePlans,SavingPlanModel()];
+    ABSDashboardViewModel dashboardViewModel = Provider.of(context);
     return SliverPadding(
       sliver: SliverList(
           delegate: SliverChildListDelegate([
@@ -424,9 +426,21 @@ class SavingsInvestmentCashWidget extends StatelessWidget {
               color: AppColors.kGreyText, fontFamily: AppStrings.fontMedium),
         ),
         YMargin(12),
-        MoneyTitleWidget(
-          amount: totalBalance,
-        ),
+            Row(children: [
+              Transform.translate(
+                  offset:Offset(0,-4),
+                  child: Text(AppStrings.nairaSymbol, style: TextStyle(fontSize: 14,color: AppColors.kSecondaryBoldText),)),
+              XMargin(2),
+              Text(dashboardViewModel.dashboardModel.nairaSavings.substring(1).split(".").first,
+                style: TextStyle(fontSize: 25, fontFamily: AppStrings.fontMedium,
+                    color: AppColors.kSecondaryBoldText),),
+              XMargin(3),
+              Transform.translate(
+                offset:Offset(0,-4),
+                child: Text(".${dashboardViewModel.dashboardModel.nairaSavings.split(".").last}",
+                  style: TextStyle(fontSize: 14, fontFamily: AppStrings.fontMedium,color: AppColors.kSecondaryBoldText),),
+              ),
+            ],),
         YMargin(25),
         wealthBox == null ? SizedBox(): GestureDetector(
           onTap: (){

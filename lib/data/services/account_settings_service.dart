@@ -120,6 +120,13 @@ class SettingsService extends ABSSettingsService{
       }
 
     }on DioError catch(e){
+      if(e.error.runtimeType == SocketException){
+        print("<<<<<<<<<");
+        result.networkAvailable = false;
+        result.errorMessage = "Failed to connect, "
+            "please connect to the internet and try again";
+
+      }
       print("error $e");
       result.error = true;
     }
@@ -157,6 +164,13 @@ class SettingsService extends ABSSettingsService{
       }
 
     }on DioError catch(e){
+      if(e.error.runtimeType == SocketException){
+        print("<<<<<<<<<");
+        result.networkAvailable = false;
+        result.errorMessage = "Failed to connect, "
+            "please connect to the internet and try again";
+
+      }
       print("error ${e.response.data}");
       result.error = true;
     }
@@ -195,6 +209,13 @@ class SettingsService extends ABSSettingsService{
       }
 
     }on DioError catch(e){
+      if(e.error.runtimeType == SocketException){
+        print("<<<<<<<<<");
+        result.networkAvailable = false;
+        result.errorMessage = "Failed to connect, "
+            "please connect to the internet and try again";
+
+      }
       print("error ${e.response.data}");
       result.error = true;
     }
@@ -230,6 +251,13 @@ class SettingsService extends ABSSettingsService{
       }
 
     }on DioError catch(e){
+      if(e.error.runtimeType == SocketException){
+        print("<<<<<<<<<");
+        result.networkAvailable = false;
+        result.errorMessage = "Failed to connect, "
+            "please connect to the internet and try again";
+
+      }
       print("error ${e.response?.data}");
       result.error = true;
     }
@@ -267,6 +295,13 @@ class SettingsService extends ABSSettingsService{
       }
 
     }on DioError catch(e){
+      if(e.error.runtimeType == SocketException){
+        print("<<<<<<<<<");
+        result.networkAvailable = false;
+        result.errorMessage = "Failed to connect, "
+            "please connect to the internet and try again";
+
+      }
       print("error ${e.response.data}");
       result.error = true;
     }
@@ -300,6 +335,13 @@ class SettingsService extends ABSSettingsService{
       }
 
     }on DioError catch(e){
+      if(e.error.runtimeType == SocketException){
+        print("<<<<<<<<<");
+        result.networkAvailable = false;
+        result.errorMessage = "Failed to connect, "
+            "please connect to the internet and try again";
+
+      }
       print("error ${e.response.data}");
       result.error = true;
     }
@@ -337,6 +379,13 @@ class SettingsService extends ABSSettingsService{
       }
 
     }on DioError catch(e){
+      if(e.error.runtimeType == SocketException){
+        print("<<<<<<<<<");
+        result.networkAvailable = false;
+        result.errorMessage = "Failed to connect, "
+            "please connect to the internet and try again";
+
+      }
       print("error ${e.response.data}");
       result.error = true;
     }
@@ -370,6 +419,13 @@ class SettingsService extends ABSSettingsService{
       }
 
     }on DioError catch(e){
+      if(e.error.runtimeType == SocketException){
+        print("<<<<<<<<<");
+        result.networkAvailable = false;
+        result.errorMessage = "Failed to connect, "
+            "please connect to the internet and try again";
+
+      }
       print("error ${e.response.data}");
       result.error = true;
     }
@@ -445,6 +501,13 @@ class SettingsService extends ABSSettingsService{
       }
 
     }on DioError catch(e){
+      if(e.error.runtimeType == SocketException){
+        print("<<<<<<<<<");
+        result.networkAvailable = false;
+        result.errorMessage = "Failed to connect, "
+            "please connect to the internet and try again";
+
+      }
       print("error ${e.response.data}");
       result.error = true;
     }
@@ -491,6 +554,13 @@ class SettingsService extends ABSSettingsService{
       }
 
     }on DioError catch(e){
+      if(e.error.runtimeType == SocketException){
+        print("<<<<<<<<<");
+        result.networkAvailable = false;
+        result.errorMessage = "Failed to connect, "
+            "please connect to the internet and try again";
+
+      }
       print("error ${e.response.data}");
       result.error = true;
     }
@@ -537,6 +607,13 @@ class SettingsService extends ABSSettingsService{
       print("error ${e.response.data}");
       print("error22 $e");
       result.error = true;
+      if(e.error.runtimeType == SocketException){
+        print("<<<<<<<<<");
+        result.networkAvailable = false;
+        result.errorMessage = "Failed to connect, "
+            "please connect to the internet and try again";
+
+      }
     }
 
     return result;
@@ -592,6 +669,13 @@ class SettingsService extends ABSSettingsService{
       print("error ${e.response.data}");
       print("error22 $e");
       result.error = true;
+      if(e.error.runtimeType == SocketException){
+        print("<<<<<<<<<");
+        result.networkAvailable = false;
+        result.errorMessage = "Failed to connect, "
+            "please connect to the internet and try again";
+
+      }
     }
 
     return result;
@@ -628,6 +712,13 @@ class SettingsService extends ABSSettingsService{
       print("error ${e.response.data}");
       print("error22 $e");
       result.error = true;
+      if(e.error.runtimeType == SocketException){
+        print("<<<<<<<<<");
+        result.networkAvailable = false;
+        result.errorMessage = "Failed to connect, "
+            "please connect to the internet and try again";
+
+      }
     }
 
     return result;

@@ -11,6 +11,7 @@ import 'package:zimvest/utils/margin.dart';
 import 'package:zimvest/utils/margins.dart';
 import 'package:zimvest/utils/strings.dart';
 import 'package:zimvest/widgets/buttons.dart';
+import 'package:zimvest/widgets/new/anim.dart';
 
 import '../../../tabs.dart';
 import '../../top_up_successful.dart';

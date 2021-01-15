@@ -90,6 +90,13 @@ class DashboardService extends ABSDashboardService{
       }
 
     }on DioError catch(e){
+      if(e.error.runtimeType == SocketException){
+        print("<<<<<<<<<");
+        result.networkAvailable = false;
+        result.errorMessage = "Failed to connect, "
+            "please connect to the internet and try again";
+
+      }
       print("error $e");
       print("error ${e.response.data}");
       result.error = true;
@@ -129,6 +136,13 @@ class DashboardService extends ABSDashboardService{
       }
 
     }on DioError catch(e){
+      if(e.error.runtimeType == SocketException){
+        print("<<<<<<<<<");
+        result.networkAvailable = false;
+        result.errorMessage = "Failed to connect, "
+            "please connect to the internet and try again";
+
+      }
       print("error $e");
       print("error ${e.response.data}");
       result.error = true;
@@ -165,6 +179,13 @@ class DashboardService extends ABSDashboardService{
       }
 
     }on DioError catch(e){
+      if(e.error.runtimeType == SocketException){
+        print("<<<<<<<<<");
+        result.networkAvailable = false;
+        result.errorMessage = "Failed to connect, "
+            "please connect to the internet and try again";
+
+      }
       print("error $e");
       result.error = true;
     }
@@ -203,6 +224,13 @@ class DashboardService extends ABSDashboardService{
       }
 
     }on DioError catch(e){
+      if(e.error.runtimeType == SocketException){
+        print("<<<<<<<<<");
+        result.networkAvailable = false;
+        result.errorMessage = "Failed to connect, "
+            "please connect to the internet and try again";
+
+      }
       print("error $e");
       result.error = true;
     }

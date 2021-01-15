@@ -12,6 +12,7 @@ import 'package:zimvest/utils/margins.dart';
 import 'package:zimvest/utils/strings.dart';
 import 'package:supercharged/supercharged.dart';
 import 'package:zimvest/widgets/buttons.dart';
+import 'package:zimvest/widgets/new/anim.dart';
 
 import '../../../../tabs.dart';
 import 'dollar_investment_confirmation.dart';
