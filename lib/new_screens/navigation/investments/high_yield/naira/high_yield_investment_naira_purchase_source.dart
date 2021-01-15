@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:provider_architecture/_viewmodel_provider.dart';
+import 'package:zimvest/data/models/payment/card.dart';
 import 'package:zimvest/data/view_models/investment_view_model.dart';
 import 'package:zimvest/new_screens/navigation/investments/high_yield/naira/investment_summary.dart';
+import 'package:zimvest/new_screens/navigation/investments/widgets/card_widget.dart';
 import 'package:zimvest/styles/colors.dart';
 import 'package:zimvest/utils/margin.dart';
 import 'package:zimvest/utils/margins.dart';
@@ -13,11 +16,10 @@ class HighYieldInvestmentPurchaseSource extends StatefulWidget {
   final double amount;
   final int productId;
   final String uniqueName;
-  final String duration;
+  final int duration;
   final String maturityDate;
-  final String rate;
-  final String minimumAmount;
-  final String maximumAmount;
+  final double rate;
+  final List<PaymentCard> cards;
 
   const HighYieldInvestmentPurchaseSource(
       {Key key,
@@ -27,28 +29,26 @@ class HighYieldInvestmentPurchaseSource extends StatefulWidget {
       this.duration,
       this.maturityDate,
       this.rate,
-      this.minimumAmount,
-      this.maximumAmount})
+      this.cards})
       : super(key: key);
-  static Route<dynamic> route({
-    double amount,
-    int productId,
-    String uniqueName,
-    String duration,
-    String maturityDate,
-    String rate,
-    String minimumAmount,
-    String maximumAmount,
-  }) {
+  static Route<dynamic> route(
+      {double amount,
+      int productId,
+      String uniqueName,
+      int duration,
+      String maturityDate,
+      double rate,
+      List<PaymentCard> cards}) {
     return MaterialPageRoute(
       builder: (_) => HighYieldInvestmentPurchaseSource(
-          amount: amount,
-          productId: productId,
-          uniqueName: uniqueName,
-          maturityDate: maturityDate,
-          rate: rate,
-          minimumAmount: minimumAmount,
-          maximumAmount: maximumAmount),
+        amount: amount,
+        uniqueName: uniqueName,
+        maturityDate: maturityDate,
+        rate: rate,
+        cards: cards,
+        duration: duration,
+        productId: productId,
+      ),
       settings: RouteSettings(
         name: HighYieldInvestmentPurchaseSource().toStringShort(),
       ),
@@ -103,37 +103,80 @@ class _HighYieldInvestmentPurchaseSourceState
                 ),
               ),
               verticalSpace(52),
-              PaymentSourceButton(
-                onTap: () {
-                  print("hmmm");
-                  // Navigator.push(context, InvestmentSummaryScreenNaira.route());
-                },
-                paymentsource: "Debit Card",
-                image: "card",
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 20.0),
+                child: GestureDetector(
+                  onTap: () {
+                    showModalBottomSheet<Null>(
+                      context: context,
+                      builder: (BuildContext context) {
+                        return SelectPaymentCardWidget(
+                          cards: widget.cards,
+                          success: false,
+                          navigate: () {
+                            Navigator.of(context).push(
+                              InvestmentSummaryScreenNaira.route(
+                                channelId: 1,
+                                productId: widget.productId,
+                                amount: widget.amount,
+                                uniqueName: widget.uniqueName,
+                                maturityDate: widget.maturityDate,
+                                rate: widget.rate,
+                                duration: widget.duration
+                              ),
+                            );
+                          },
+                        );
+                      },
+                    );
+                  },
+                  child: Container(
+                    padding: EdgeInsets.symmetric(horizontal: 20),
+                    width: double.infinity,
+                    height: 55,
+                    decoration: BoxDecoration(
+                        color: AppColors.kPrimaryColor,
+                        borderRadius: BorderRadius.circular(15)),
+                    child: Row(
+                      children: [
+                        SvgPicture.asset("images/new/card.svg"),
+                        XMargin(10),
+                        Text(
+                          "Debit Card",
+                          style: TextStyle(
+                              color: AppColors.kWhite,
+                              fontSize: 13,
+                              fontFamily: AppStrings.fontNormal),
+                        ),
+                        Spacer(),
+                        Icon(
+                          Icons.navigate_next_rounded,
+                          color: AppColors.kWhite,
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
               ),
               YMargin(25),
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 20.0),
                 child: SelectWallet(
                   onPressed: () {
+                    print(widget.duration);
                     Navigator.push(
                       context,
                       InvestmentSummaryScreenNaira.route(
-                          channelId: 5,
-                          productId: widget.productId,
-                          duration: widget.duration,
-                          amount: widget.amount,
-                          uniqueName: widget.uniqueName,
-                          maturityDate: widget.maturityDate,
-                          rate: widget.rate,
-                          minimumAmount: widget.minimumAmount,
-                          maximumAmount: widget.maximumAmount),
+                        channelId: 5,
+                        productId: widget.productId,
+                        duration: widget.duration,
+                        amount: widget.amount,
+                        uniqueName: widget.uniqueName,
+                        maturityDate: widget.maturityDate,
+                        rate: widget.rate,
+                      ),
                     );
                   },
-                  // paymentsource: "Wallet",
-                  // image: "wallet",
-                  // amount: "${AppStrings.nairaSymbol}30,000,000",
-                  // color: AppColors.kTextColor,
                 ),
               ),
               YMargin(12),

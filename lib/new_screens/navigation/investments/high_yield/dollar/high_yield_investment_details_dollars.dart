@@ -104,7 +104,7 @@ class _HighYieldDetailsDollarState extends State<HighYieldDetailsDollar> {
                     Padding(
                       padding: const EdgeInsets.only(top: 39.0, left: 20),
                       child: Text(
-                        "Zimvest High Yield Dollar ${widget.duration}",
+                        "Zimvest High Yield Dollar",
                         style: TextStyle(
                             fontSize: 15, fontFamily: AppStrings.fontBold),
                       ),

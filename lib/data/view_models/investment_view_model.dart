@@ -347,6 +347,8 @@ class InvestmentHighYieldViewModel extends ChangeNotifier {
   bool _status = false;
   bool get status => _status;
 
+
+
   void setBusy(bool value) {
     _busy = value;
     notifyListeners();
@@ -368,6 +370,26 @@ class InvestmentHighYieldViewModel extends ChangeNotifier {
     String token = _localStorage.getUser().token;
     final dollar =
         await _investmentService.getDollarTermInstruments(token: token);
+    this.dollarInstrument = dollar;
+    setBusy(false);
+    notifyListeners();
+  }
+
+  Future<void> getNairaTermInstrumentsFilter(num number) async {
+    setBusy(true);
+    String token = _localStorage.getUser().token;
+    final naira = await _investmentService.getNairaTermInstrumentsFilter(
+        token: token, amountFilter: number);
+    this.nairaInstrument = naira;
+    setBusy(false);
+    notifyListeners();
+  }
+
+  Future<void> getDollarTermInstrumentsFilter(num number) async {
+    setBusy(true);
+    String token = _localStorage.getUser().token;
+    final dollar = await _investmentService.getDollarTermInstrumentsFilter(
+        token: token, amountFilter: number);
     this.dollarInstrument = dollar;
     setBusy(false);
     notifyListeners();
@@ -441,13 +463,14 @@ class InvestmentHighYieldViewModel extends ChangeNotifier {
     setBusy(true);
     String token = _localStorage.getUser().token;
     var purchaseRes = await _investmentService.buyNairaInstrument(
+      cardId: cardId,
         productId: productId,
         fundingChannel: fundingChannel,
         amount: amount,
         uniqueName: uniqueName,
         token: token);
     print(purchaseRes.toString());
-    if (purchaseRes == null) {
+    if (purchaseRes != "Success") {
       _status = false;
       setBusy(false);
     } else {
@@ -497,9 +520,10 @@ class InvestmentHighYieldViewModel extends ChangeNotifier {
     String token = _localStorage.getUser().token;
     var gotRate = await _investmentService.getRate(token);
     this.gotRate = gotRate;
-    // print(this.gotRate);
     notifyListeners();
   }
+
+
 }
 
 class FixedIncomeViewModel extends BaseViewModel {
@@ -513,10 +537,6 @@ class FixedIncomeViewModel extends BaseViewModel {
 
   String _message = "";
   String get message => _message;
-
-
-
-
 
   Future<void> buyCommercialPaper(
       {int productId,
@@ -554,6 +574,7 @@ class FixedIncomeViewModel extends BaseViewModel {
         amount: amountPayableRes.investmentAmount,
         rate: rate,
         uniqueName: uniqueName,
+        cardId: cardId,
         upFront: amountPayableRes.upFront,
         faceValue: amountPayableRes.faceValue,
         investmentAmount: amountPayableRes.investmentAmount,
@@ -561,11 +582,11 @@ class FixedIncomeViewModel extends BaseViewModel {
       if (buyCommercialPaper != "Transaction initiated successfully") {
         setBusy(false);
         _message = buyEuroBond.toString();
-        _status = false;
+        _status = true;
       } else {
         setBusy(false);
         _message = buyEuroBond.toString();
-        _status = true;
+        _status = false;
       }
     }
   }
@@ -606,16 +627,17 @@ class FixedIncomeViewModel extends BaseViewModel {
         amount: this.amountPayableResponse.investmentAmount,
         rate: rate,
         uniqueName: uniqueName,
+        cardId: cardId,
         faceValue: this.amountPayableResponse.faceValue,
       );
       if (buyCorporateBond != "Transaction initiated successfully") {
         setBusy(false);
         _message = buyEuroBond.toString();
-        _status = false;
+        _status = true;
       } else {
         setBusy(false);
         _message = buyEuroBond.toString();
-        _status = true;
+        _status = false;
       }
     }
 
@@ -654,6 +676,7 @@ class FixedIncomeViewModel extends BaseViewModel {
       var buyFGNBond = await _investmentService.buyFGNBond(
         productId: productId,
         token: token,
+        cardId: cardId,
         fundingChannel: fundingChannel,
         amount: this.amountPayableResponse.investmentAmount,
         rate: this.amountPayableResponse.rateValue,
@@ -664,11 +687,11 @@ class FixedIncomeViewModel extends BaseViewModel {
       if (buyFGNBond != "Transaction initiated successfully") {
         setBusy(false);
         _message = buyEuroBond.toString();
-        _status = false;
+        _status = true;
       } else {
         setBusy(false);
         _message = buyEuroBond.toString();
-        _status = true;
+        _status = false;
       }
       setBusy(false);
     }
@@ -708,6 +731,7 @@ class FixedIncomeViewModel extends BaseViewModel {
       var buyPromissoryNote = await _investmentService.buyPromissoryNote(
         productId: productId,
         token: token,
+        cardId: cardId,
         fundingChannel: fundingChannel,
         amount: amountPayableRes.investmentAmount,
         rate: amountPayableRes.rateValue,
@@ -718,12 +742,11 @@ class FixedIncomeViewModel extends BaseViewModel {
       if (buyPromissoryNote != "Transaction initiated successfully") {
         setBusy(false);
         _message = buyEuroBond.toString();
-        _status = false;
+        _status = true;
       } else {
         setBusy(false);
-        _message =
-            buyEuroBond.toString() == null ? message : buyEuroBond.toString();
-        _status = true;
+        _message = buyEuroBond.toString();
+        _status = false;
       }
       setBusy(false);
     }
@@ -761,6 +784,7 @@ class FixedIncomeViewModel extends BaseViewModel {
     );
     if (amountPayableRes != null) {
       var buyTBill = await _investmentService.buyTreasuryBill(
+          cardId: cardId,
           productId: productId,
           token: token,
           fundingChannel: fundingChannel,
@@ -770,15 +794,15 @@ class FixedIncomeViewModel extends BaseViewModel {
           faceValue: amountPayableRes.faceValue,
           investmentAmount: amountPayableRes.investmentAmount,
           upFront: amountPayableRes.upFront);
-          print(buyTBill);
+      print(buyTBill);
       if (buyTBill != "Transaction initiated successfully") {
         setBusy(false);
         _message = buyTBill.toString();
-        _status = false;
+        _status = true;
       } else {
         setBusy(false);
         _message = buyTBill.toString();
-        _status = true;
+        _status = false;
       }
     }
     setBusy(false);
@@ -815,6 +839,7 @@ class FixedIncomeViewModel extends BaseViewModel {
     if (amountPayableRes != null) {
       var buyEuroBond = await _investmentService.buyEuroBond(
         productId: productId,
+        cardId: cardId,
         token: token,
         fundingChannel: fundingChannel,
         amount: amountPayableRes.investmentAmount,
@@ -826,11 +851,11 @@ class FixedIncomeViewModel extends BaseViewModel {
       if (buyEuroBond != "Transaction initiated successfully") {
         setBusy(false);
         _message = buyEuroBond.toString();
-        _status = false;
+        _status = true;
       } else {
         setBusy(false);
         _message = buyEuroBond.toString();
-        _status = true;
+        _status = false;
       }
     }
     setBusy(false);

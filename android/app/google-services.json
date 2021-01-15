@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "507629015037",
+    "firebase_url": "https://app-zimvest-com-ng.firebaseio.com",
+    "project_id": "app-zimvest-com-ng",
+    "storage_bucket": "app-zimvest-com-ng.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:507629015037:android:145360ce7738c049431394",
+        "android_client_info": {
+          "package_name": "com.ng.zimvest"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "507629015037-a6eh69erir8ggq4ga5835mruk4bqrom4.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBrDsgmRq78Y3xwE3jS7COftWtVavCbICk"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "507629015037-a6eh69erir8ggq4ga5835mruk4bqrom4.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

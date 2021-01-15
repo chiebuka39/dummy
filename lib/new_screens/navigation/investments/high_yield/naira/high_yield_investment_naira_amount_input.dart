@@ -1,53 +1,32 @@
 import 'package:flushbar/flushbar.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_masked_text/flutter_masked_text.dart';
 import 'package:provider_architecture/provider_architecture.dart';
 import 'package:zimvest/data/view_models/investment_view_model.dart';
 import 'package:zimvest/new_screens/navigation/investments/high_yield/naira/high_yield_investment_naira_purchase_source.dart';
+import 'package:zimvest/new_screens/navigation/investments/high_yield/naira/investment_duration.dart';
 import 'package:zimvest/new_screens/navigation/investments/widgets/text_field.dart';
 import 'package:zimvest/styles/colors.dart';
 import 'package:zimvest/utils/margin.dart';
-import 'package:zimvest/utils/nums.dart';
 import 'package:zimvest/utils/strings.dart';
 import 'package:zimvest/widgets/buttons.dart';
 import 'package:zimvest/widgets/number_keyboard.dart';
 
 class InvestmentHighYieldNairaAmountInput extends StatefulWidget {
+  final double minimumAmount;
   final String uniqueName;
-  final int id;
-  final String duration;
-  final String maturityDate;
-  final String rate;
-  final String minimumAmount;
-  final String maximumAmount;
 
-  const InvestmentHighYieldNairaAmountInput(
-      {Key key,
-      this.uniqueName,
-      this.id,
-      this.duration,
-      this.maturityDate,
-      this.rate,
-      this.minimumAmount,
-      this.maximumAmount})
+  const InvestmentHighYieldNairaAmountInput({Key key, this.minimumAmount, this.uniqueName})
       : super(key: key);
   static Route<dynamic> route({
-    String uniqueName,
-    int id,
-    String duration,
-    String maturityDate,
-    String rate,
-    String minimumAmount,
-    String maximumAmount,
+    double minimumAmount,
+    String uniqueName
   }) {
-    print("minimumAmount $minimumAmount");
     return MaterialPageRoute(
       builder: (_) => InvestmentHighYieldNairaAmountInput(
-          uniqueName: uniqueName,
-          id: id,
-          maturityDate: maturityDate,
-          rate: rate,
-          minimumAmount: minimumAmount,
-          maximumAmount: maximumAmount),
+        minimumAmount: minimumAmount,
+        uniqueName: uniqueName,
+      ),
       settings: RouteSettings(
         name: InvestmentHighYieldNairaAmountInput().toStringShort(),
       ),
@@ -62,7 +41,9 @@ class InvestmentHighYieldNairaAmountInput extends StatefulWidget {
 class _InvestmentHighYieldNairaAmountInputState
     extends State<InvestmentHighYieldNairaAmountInput> {
   // static String amountController.text;
-  TextEditingController amountController = TextEditingController();
+  var amountController =
+      MoneyMaskedTextController(thousandSeparator: ",", decimalSeparator: ".");
+
   @override
   Widget build(BuildContext context) {
     return ViewModelProvider<InvestmentHighYieldViewModel>.withConsumer(
@@ -112,7 +93,7 @@ class _InvestmentHighYieldNairaAmountInputState
               Padding(
                 padding: const EdgeInsets.only(left: 20.0, right: 20),
                 child: Text(
-                  "Minimum of ${widget.minimumAmount} and Maximum of Above ${widget.maximumAmount}",
+                  "Minimum of ${AppStrings.nairaSymbol}${widget.minimumAmount}",
                   style: TextStyle(
                     fontSize: 10,
                     fontFamily: AppStrings.fontNormal,
@@ -122,9 +103,10 @@ class _InvestmentHighYieldNairaAmountInputState
               ),
               YMargin(77),
               RoundedNextButton(
-                onTap: () {
-                  print(double.tryParse(amountController.text));
-                  double amount = double.tryParse(amountController.text);
+                loading: model.busy,
+                onTap: () async {
+                  double amount =
+                      double.tryParse(amountController.text.split(',').join());
                   if (amount == null) {
                     Flushbar(
                       icon: ImageIcon(
@@ -154,7 +136,7 @@ class _InvestmentHighYieldNairaAmountInputState
                       ),
                       duration: Duration(seconds: 3),
                     ).show(context);
-                  } else if (amount < AppNums.oneMillionAmount) {
+                  } else if (amount < widget.minimumAmount) {
                     Flushbar(
                       icon: ImageIcon(
                         AssetImage("images/failed.png"),
@@ -174,7 +156,7 @@ class _InvestmentHighYieldNairaAmountInputState
                       ),
                       backgroundColor: AppColors.kRed3,
                       messageText: Text(
-                        "Minimum purchase amount is ${widget.minimumAmount}",
+                        "Minimum purchase amount is ${AppStrings.nairaSymbol}${widget.minimumAmount}",
                         style: TextStyle(
                           fontSize: 11,
                           fontFamily: AppStrings.fontLight,
@@ -184,17 +166,14 @@ class _InvestmentHighYieldNairaAmountInputState
                       duration: Duration(seconds: 2),
                     ).show(context);
                   } else {
+                    await model.getNairaTermInstrumentsFilter(amount);
                     Navigator.push(
                       context,
-                      HighYieldInvestmentPurchaseSource.route(
-                          duration: widget.duration,
-                          amount: amount,
-                          productId: widget.id,
-                          uniqueName: widget.uniqueName,
-                          maturityDate: widget.maturityDate,
-                          rate: widget.rate,
-                          minimumAmount: widget.minimumAmount,
-                          maximumAmount: widget.maximumAmount),
+                      InvestmentDurationPeriod.route(
+                        amount: amount,
+                        instrument: model.nairaInstrument.data,
+                        uniqueName: widget.uniqueName,
+                      ),
                     );
                   }
                 },

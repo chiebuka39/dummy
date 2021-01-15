@@ -22,6 +22,9 @@ class WalletViewModel extends BaseViewModel {
   String _message = "";
   String get message => _message;
 
+  bool _select = false;
+  bool get select => _select;
+
   Future<void> getWallets() async {
     setBusy(true);
     String token = _localStorage.getUser().token;
@@ -36,12 +39,12 @@ class WalletViewModel extends BaseViewModel {
     String token = _localStorage.getUser().token;
     var walletTransactions = await _walletService.getWalletsTransactions(token);
     this.walletTransaction = walletTransactions;
-    
+
     setBusy(false);
     notifyListeners();
   }
 
-  Future<void> getCards()async{
+  Future<void> getCards() async {
     setBusy(true);
     String token = _localStorage.getUser().token;
     var cards = await _paymentService.getUserCards(token);
@@ -69,6 +72,11 @@ class WalletViewModel extends BaseViewModel {
       _status = false;
     }
     setBusy(false);
+    notifyListeners();
+  }
+
+  void check() {
+    _select = !_select;
     notifyListeners();
   }
 }

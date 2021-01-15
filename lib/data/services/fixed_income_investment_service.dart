@@ -400,7 +400,7 @@ class FixedIncomeInvestmentService implements ABSFixedIncomeInvestmentService {
           },
         ),
       );
-      print("pppse ${buyTreasuryBill.data}");
+      print("pppse ${buyTreasuryBill.statusCode}");
       if (buyTreasuryBill.statusCode == 200) {
         return buyTreasuryBill.data["message"];
       } else if (buyTreasuryBill.statusCode == 400) {

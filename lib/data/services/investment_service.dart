@@ -16,7 +16,6 @@ import 'package:zimvest/data/models/investment/term_instruments.dart';
 import 'dart:async';
 import 'dart:convert';
 
-
 import 'package:zimvest/locator.dart';
 import 'package:zimvest/utils/result.dart';
 import 'package:zimvest/utils/strings.dart';
@@ -34,8 +33,10 @@ abstract class ABSInvestmentService {
       {String token});
   Future<Result<List<InvestmentActivity>>> getTermFundActivities(
       {String token});
-  Future<Result<List<TermInstrument>>> getDollarTermInstruments({String token});
-  Future<Result<List<TermInstrument>>> getNairaTermInstruments({String token});
+  Future<Result<List<TermInstrument>>> getDollarTermInstruments(
+      {String token, int amountFilter});
+  Future<Result<List<TermInstrument>>> getNairaTermInstruments(
+      {String token, int amountFilter});
   Future<Result<List<MutualFund>>> getMoneyMarketFund({String token});
   Future<Result<dynamic>> buyMoneyMarketFund(
       {String token,
@@ -58,7 +59,7 @@ abstract class ABSInvestmentService {
       {String token, String fixedIncomeId, String fixedIncomeName});
   Future<Result<Fund>> getTermFundDetails(
       {String token, String termInstrumentId, String termInstrumentName});
-  Future<Result<dynamic>> buyNairaInstrument(
+  Future<dynamic> buyNairaInstrument(
       {int productId,
       int cardId,
       int fundingChannel,
@@ -66,7 +67,7 @@ abstract class ABSInvestmentService {
       double amount,
       String uniqueName,
       String token});
-  Future<Result<dynamic>> buyDollarnstrument(
+  Future<dynamic> buyDollarnstrument(
       {int productId,
       int beneficiaryBankType,
       int fundingChannel,
@@ -76,10 +77,12 @@ abstract class ABSInvestmentService {
       String uniqueName,
       String token});
 
-
-
   Future<ConvertedDollarRate> calculateRate({num amountUsd, String token});
   Future<Result<GottenRate>> getRate(String token);
+  Future<Result<List<TermInstrument>>> getDollarTermInstrumentsFilter(
+      {String token, num amountFilter});
+  Future<Result<List<TermInstrument>>> getNairaTermInstrumentsFilter(
+      {String token, num amountFilter});
 }
 
 class InvestmentService extends ABSInvestmentService {
@@ -672,7 +675,7 @@ class InvestmentService extends ABSInvestmentService {
 
   @override
   Future<Result<List<TermInstrument>>> getDollarTermInstruments(
-      {String token}) async {
+      {String token, int amountFilter}) async {
     Result<List<TermInstrument>> result = Result(error: false);
 
     var headers = {HttpHeaders.authorizationHeader: "Bearer $token"};
@@ -715,7 +718,7 @@ class InvestmentService extends ABSInvestmentService {
 
   @override
   Future<Result<List<TermInstrument>>> getNairaTermInstruments(
-      {String token}) async {
+      {String token, int amountFilter}) async {
     Result<List<TermInstrument>> result = Result(error: false);
 
     var headers = {HttpHeaders.authorizationHeader: "Bearer $token"};
@@ -949,7 +952,7 @@ class InvestmentService extends ABSInvestmentService {
   }
 
   @override
-  Future<Result<dynamic>> buyDollarnstrument(
+  Future<dynamic> buyDollarnstrument(
       {int productId,
       int beneficiaryBankType,
       int fundingChannel,
@@ -986,7 +989,7 @@ class InvestmentService extends ABSInvestmentService {
       print("Success: ${buydollaInstrument.data}");
       if (buydollaInstrument.statusCode == 200) {
         print("Success: ${buydollaInstrument.data}");
-        result.data = buydollaInstrument.data;
+        result.data = buydollaInstrument.data["message"];
         return result.data;
       }
       if (buydollaInstrument.statusCode == 400) {
@@ -998,15 +1001,12 @@ class InvestmentService extends ABSInvestmentService {
       result.error = true;
       print(e.message.toString());
       throw Exception(e.response.toString());
-    } catch (e) {
-      print(e.message.toString());
-      throw Exception(e.response.toString());
     }
     return null;
   }
 
   @override
-  Future<Result<dynamic>> buyNairaInstrument(
+  Future<dynamic> buyNairaInstrument(
       {int productId,
       int cardId,
       int fundingChannel,
@@ -1025,7 +1025,8 @@ class InvestmentService extends ABSInvestmentService {
       "ProductId": productId,
       "FundingChannel": fundingChannel,
       "Amount": amount,
-      "UniqueName": uniqueName
+      "UniqueName": uniqueName,
+      "CardId": cardId
     });
     Result<dynamic> result = Result(error: false);
 
@@ -1043,24 +1044,22 @@ class InvestmentService extends ABSInvestmentService {
       print("Success: ${buyNairaInstrument.statusCode}");
       if (buyNairaInstrument.statusCode == 200) {
         print("Success: ${buyNairaInstrument.data}");
-        result.data = buyNairaInstrument.data;
-        return result.data;
+        // result.data = buyNairaInstrument.data["message"];
+        return "Success";
       }
       if (buyNairaInstrument.statusCode == 400) {
         print("Failure: ${buyNairaInstrument.data}");
-        result.data = buyNairaInstrument.data;
-        return buyNairaInstrument.data["message"];
+        // result.data = buyNairaInstrument.data;
+        return "Failed";
       }
     } on DioError catch (e) {
       result.error = true;
-      print(e.message.toString());
-      throw Exception(e.response.toString());
-    } catch (e) {
-      print(e.message.toString());
+      print(e.response.toString());
       throw Exception(e.response.toString());
     }
     return null;
   }
+
   @override
   Future<ConvertedDollarRate> calculateRate(
       {num amountUsd, String token}) async {
@@ -1121,6 +1120,92 @@ class InvestmentService extends ABSInvestmentService {
       }
       result.error = true;
     }
+    return result;
+  }
+
+  @override
+  Future<Result<List<TermInstrument>>> getDollarTermInstrumentsFilter(
+      {String token, num amountFilter}) async {
+    Result<List<TermInstrument>> result = Result(error: false);
+
+    var headers = {HttpHeaders.authorizationHeader: "Bearer $token"};
+
+    var url =
+        "${AppStrings.baseUrl}$microService/api/ZimvestTermInstruments/getdollarterminstrumentsV2?InvestmentAmount=$amountFilter";
+    print("url $url");
+    try {
+      var response = await dio.get(url, options: Options(headers: headers));
+      final int statusCode = response.statusCode;
+      var response1 = response.data;
+      print("iii ${response1}");
+
+      if (statusCode != 200) {
+        result.errorMessage = response1['message'];
+        result.error = true;
+      } else {
+        result.error = false;
+        List<TermInstrument> channels = [];
+        (response1['data'] as List).forEach((chaList) {
+          //initialize Chat Object
+          channels.add(TermInstrument.fromJson(chaList));
+        });
+        result.data = channels;
+      }
+    } on DioError catch (e) {
+      print("error $e}");
+      if (e.response != null) {
+        print(e.response.data);
+        //result.errorMessage = e.response.data['message'];
+      } else {
+        print(e.toString());
+        result.errorMessage = "Sorry, We could not complete your request";
+      }
+      result.error = true;
+    }
+
+    return result;
+  }
+
+  @override
+  Future<Result<List<TermInstrument>>> getNairaTermInstrumentsFilter(
+      {String token, num amountFilter}) async {
+    Result<List<TermInstrument>> result = Result(error: false);
+
+    var headers = {HttpHeaders.authorizationHeader: "Bearer $token"};
+
+    var url =
+        "${AppStrings.baseUrl}$microService/api/ZimvestTermInstruments/getnairaterminstrumentsV2?InvestmentAmount=$amountFilter";
+    print("url $url");
+    try {
+      var response = await dio.get(url, options: Options(headers: headers));
+      final int statusCode = response.statusCode;
+      var response1 = response.data;
+      print("iii ${response1}");
+
+      if (statusCode != 200) {
+        result.errorMessage = response1['message'];
+        result.error = true;
+      } else {
+        result.error = false;
+        List<TermInstrument> channels = [];
+        (response1['data'] as List).forEach((chaList) {
+          //initialize Chat Object
+          channels.add(TermInstrument.fromJson(chaList));
+        });
+        result.data = channels;
+      }
+    } on DioError catch (e) {
+      print("error $e}");
+      if (e.response != null) {
+        print(e.response.data);
+        //result.errorMessage = e.response.data['message'];
+      } else {
+        print(e.toString());
+        result.errorMessage = "Sorry, We could not complete your request";
+      }
+      result.error = true;
+    }
+
     return result;
   }
 }
