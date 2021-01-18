@@ -263,7 +263,7 @@ class _SavingsSummaryScreenState extends State<SavingsSummaryScreen> {
                                 Text("Next maturity date".toUpperCase(), style: TextStyle(fontSize: 11,
                                   color: AppColors.kSecondaryText,fontFamily: AppStrings.fontNormal,),),
                                 YMargin(15),
-                                Text(AppUtils.getReadableDate2(savingViewModel.endDate), style: TextStyle(
+                                Text(savingViewModel.endDate == null ? 'Nill': AppUtils.getReadableDate2(savingViewModel.endDate), style: TextStyle(
                                     fontFamily: AppStrings.fontMedium,
                                     fontSize: 13,color: AppColors.kGreyText
                                 ),),

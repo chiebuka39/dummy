@@ -131,9 +131,7 @@ class _SavingsSummaryScreenState extends State<SavingsSummaryScreen> {
     savingViewModel = Provider.of(context);
     paymentViewModel = Provider.of(context);
 
-    SavingPlanModel wealthBox = widget.savingsPlan
-        .where((element) => element.productId == 1)
-        .first;
+
     var size = MediaQuery.of(context).size;
     return WillPopScope(
       onWillPop: () async {
@@ -261,7 +259,7 @@ class _SavingsSummaryScreenState extends State<SavingsSummaryScreen> {
                               ),
                               YMargin(15),
                               Text(
-                                wealthBox.planName,
+                                savingViewModel.selectedPlan.planName,
                                 style: TextStyle(
                                     fontFamily: AppStrings.fontMedium,
                                     fontSize: 13,
@@ -284,7 +282,7 @@ class _SavingsSummaryScreenState extends State<SavingsSummaryScreen> {
                                       ),
                                       YMargin(15),
                                       Text(
-                                        "${AppStrings.nairaSymbol}${widget.amount.toString().convertWithComma()}",
+                                        "${AppStrings.nairaSymbol}${savingViewModel.amountToSave.toString().split(".").first.convertWithComma()}",
                                         style: TextStyle(
                                             fontFamily: AppStrings.fontMedium,
                                             fontSize: 13,
@@ -306,7 +304,8 @@ class _SavingsSummaryScreenState extends State<SavingsSummaryScreen> {
                                       ),
                                       YMargin(15),
                                       Text(
-                                         wealthBox.maturityDate.toString(),
+                                        savingViewModel.selectedPlan.maturityDate == null
+                                            ? "Nill":AppUtils.getReadableDate2(savingViewModel.selectedPlan.maturityDate),
                                         style: TextStyle(
                                             fontFamily: AppStrings.fontMedium,
                                             fontSize: 13,
@@ -327,7 +326,7 @@ class _SavingsSummaryScreenState extends State<SavingsSummaryScreen> {
                               ),
                               YMargin(15),
                               Text(
-                                "${wealthBox.interestRate}% P.A",
+                                "${savingViewModel.selectedPlan.interestRate}% P.A",
                                 style: TextStyle(
                                     fontFamily: AppStrings.fontMedium,
                                     fontSize: 13,

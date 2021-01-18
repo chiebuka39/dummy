@@ -5,6 +5,7 @@ import 'package:provider/provider.dart';
 import 'package:zimvest/data/models/payment/bank.dart';
 import 'package:zimvest/data/view_models/identity_view_model.dart';
 import 'package:zimvest/data/view_models/payment_view_model.dart';
+import 'package:zimvest/data/view_models/pin_view_model.dart';
 import 'package:zimvest/data/view_models/savings_view_model.dart';
 import 'package:zimvest/new_screens/profile/add_bank_cards.dart';
 import 'package:zimvest/new_screens/withdrawals/use_pin_widget.dart';
@@ -200,11 +201,13 @@ class _SelectCardWidgetState extends State<ShowBankDetailsWidget> {
 
   ABSPaymentViewModel paymentViewModel;
   ABSIdentityViewModel identityViewModel;
+  ABSPinViewModel pinViewModel;
 
   @override
   Widget build(BuildContext context) {
     identityViewModel = Provider.of(context);
     paymentViewModel = Provider.of(context);
+    pinViewModel = Provider.of(context);
     return Container(
       decoration: BoxDecoration(
         color: Colors.transparent,
@@ -273,23 +276,33 @@ class _SelectCardWidgetState extends State<ShowBankDetailsWidget> {
   processTransaction() async {
 
     EasyLoading.show(status: "Add Bank");
-    var result = await paymentViewModel.addBank(
-      token: identityViewModel.user.token,
-      bankId: widget.bank.id,
-      accountNum: widget.accNum,
-      accountName: widget.name,
-      bankName: widget.bank.name
+    var res = await identityViewModel.verifyPin(
+      code: "${pinViewModel.pin1}${pinViewModel.pin2}${pinViewModel.pin3}${pinViewModel.pin4}",
     );
-
-    if(result.error == false){
-      EasyLoading.showSuccess("Success");
+    if(res.error == true){
+      EasyLoading.showError(res.errorMessage, duration: Duration(seconds: 2));
+      pinViewModel.resetPins();
     }else{
-      EasyLoading.showSuccess("Failure");
+      var result = await paymentViewModel.addBank(
+          token: identityViewModel.user.token,
+          bankId: widget.bank.id,
+          accountNum: widget.accNum,
+          accountName: widget.name,
+          bankName: widget.bank.name
+      );
+
+      if(result.error == false){
+        EasyLoading.showSuccess("Success",duration: Duration(seconds: 2));
+      }else{
+        EasyLoading.showError(result.errorMessage, duration: Duration(seconds: 2));
+      }
+      pinViewModel.resetPins();
+
+      Navigator.pop(context);
+      Navigator.pop(context);
+      Navigator.pop(context, true);
     }
 
-    Navigator.pop(context);
-    Navigator.pop(context);
-    Navigator.pop(context, true);
 
 
   }

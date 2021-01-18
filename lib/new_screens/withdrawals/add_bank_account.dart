@@ -10,6 +10,7 @@ import 'package:zimvest/utils/margin.dart';
 import 'package:zimvest/utils/strings.dart';
 import 'package:zimvest/utils/validator.dart';
 import 'package:zimvest/widgets/buttons.dart';
+import 'package:zimvest/widgets/new/new_widgets.dart';
 
 class AddBankAccScreen extends StatefulWidget {
   static Route<dynamic> route() {
@@ -113,7 +114,17 @@ class _AddBankAccScreenState extends State<AddBankAccScreen> with AfterLayoutMix
                   if( accNumber.length != 10){
                     return;
                   }
-                  Navigator.push(context, AddBankAccScreen2.route(accountNumber: accNumber, banks: banks));
+                  if(banks ==null){
+                    showModalBottomSheet < Null > (context: context, builder: (BuildContext context) {
+                      return NoInternetWidget(onDone: (){
+                        Navigator.pop(context);
+                        Navigator.pop(context);
+                      },message: "Your Upload was successfully",);
+                    });
+                  }else{
+                    Navigator.push(context, AddBankAccScreen2.route(accountNumber: accNumber, banks: banks));
+
+                  }
 
                   //
                 }

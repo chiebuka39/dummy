@@ -52,36 +52,30 @@ class _AddBankAndCardsState extends State<AddBankAndCards> with AfterLayoutMixin
     return DefaultTabController(
       length: 2,
       child: Scaffold(
-        // appBar: AppBar(
-        //   elevation: 0,
-        //   iconTheme: IconThemeData(color: AppColors.kPrimaryColor),
-        //   leading: IconButton(
-        //     icon: Icon(Icons.arrow_back_ios_outlined,size: 20,),
-        //     onPressed: (){
-        //       Navigator.pop(context);
-        //     },
-        //   ),
-        //   backgroundColor: Colors.transparent,
-        //   title: Text("Banks & Cards",
-        //     style: TextStyle(color: Colors.black87,
-        //         fontSize: 13,
-        //         fontFamily: AppStrings.fontMedium),),
-        //   bottom: TabBar(
-        //     indicatorColor: AppColors.kPrimaryColor,
-        //     labelColor: AppColors.kPrimaryColor,
-        //       unselectedLabelColor: AppColors.kGreyText,
-        //       tabs: const <Widget>[
-        //         Tab( text: "Banks",),
-        //         Tab(text: "Cards",),
-        //       ]),
-        // ),
-        appBar: ZimAppBar(
-          text: "Banks & Cards",
-          callback: (){
-            Navigator.pop(context);
-          },
-          icon: Icons.arrow_back_ios_outlined,
+        appBar: AppBar(
+          elevation: 0,
+          iconTheme: IconThemeData(color: AppColors.kPrimaryColor),
+          leading: IconButton(
+            icon: Icon(Icons.arrow_back_ios_outlined,size: 20,),
+            onPressed: (){
+              Navigator.pop(context);
+            },
+          ),
+          backgroundColor: Colors.transparent,
+          title: Text("Banks & Cards",
+            style: TextStyle(color: Colors.black87,
+                fontSize: 13,
+                fontFamily: AppStrings.fontMedium),),
+          bottom: TabBar(
+            indicatorColor: AppColors.kPrimaryColor,
+            labelColor: AppColors.kPrimaryColor,
+              unselectedLabelColor: AppColors.kGreyText,
+              tabs: const <Widget>[
+                Tab( text: "Banks",),
+                Tab(text: "Cards",),
+              ]),
         ),
+
         body: TabBarView(
           children: [
             BankWidget(),
