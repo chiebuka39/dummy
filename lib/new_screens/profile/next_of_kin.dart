@@ -1,5 +1,6 @@
 import 'package:after_layout/after_layout.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:provider/provider.dart';
 import 'package:zimvest/data/models/individual/profile.dart';
 import 'package:zimvest/data/view_models/identity_view_model.dart';
@@ -292,9 +293,7 @@ class _NextOfKinScreenState extends State<NextOfKinScreen> with AfterLayoutMixin
                           });
                           return;
                         }
-                        setState(() {
-                          loading = true;
-                        });
+                        EasyLoading.show(status: "");
                         var result = await settingsViewModel.updateKin(
                           token: identityViewModel.user.token,
                           fullName: fullName,
@@ -302,9 +301,7 @@ class _NextOfKinScreenState extends State<NextOfKinScreen> with AfterLayoutMixin
                           phoneNumber: phone,
                           relationship:1
                         );
-                        setState(() {
-                          loading = false;
-                        });
+                        EasyLoading.dismiss();
                         if(result.error == false){
                           showModalBottomSheet < Null > (context: context, builder: (BuildContext context) {
                             return NextOfKinStatus(success: true,);
