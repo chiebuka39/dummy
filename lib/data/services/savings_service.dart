@@ -18,7 +18,7 @@ abstract class ABSSavingService{
   Future<Result<void>> pauseSaving({String token,int savingModelId});
   Future<Result<void>> continueSaving({String token,int savingModelId});
   Future<Result<void>> withdrawFund({String token,int customerSavingId,
-    double amount, int customerBankId, String password,int withdrawalChannel});
+    double amount, int customerBankId, String pin,int withdrawalChannel});
 
   ///Get Customer's Savings information
   Future<Result<List<SavingPlanModel>>> getSavingPlans({String token});
@@ -929,7 +929,7 @@ class SavingService extends ABSSavingService{
 
   @override
   Future<Result<void>> withdrawFund({String token, int customerSavingId,
-    double amount, int customerBankId, String password,int withdrawalChannel}) async{
+    double amount, int customerBankId, String pin,int withdrawalChannel}) async{
     Result<void> result = Result(error: false);
 
 
@@ -941,7 +941,8 @@ class SavingService extends ABSSavingService{
       "customerSavingId": customerSavingId,
       "amount": amount,
       "customerBankId": customerBankId,
-      "password": password,
+      "pin": pin,
+      'requestChannel':2
     };
 
 

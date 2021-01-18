@@ -53,12 +53,14 @@ class _SavingDailyScreenState extends State<AmountWithdrawScreen> with AfterLayo
     print(height);
     return GestureDetector(
       onTap: (){
+
         FocusScope.of(context).requestFocus(new FocusNode());
       },
       child: Scaffold(
         appBar: ZimAppBar(
           icon: Icons.arrow_back_ios_outlined,
           callback: (){
+            pinViewModel.resetAmount();
             Navigator.pop(context);
           },
           text: "Withdraw",

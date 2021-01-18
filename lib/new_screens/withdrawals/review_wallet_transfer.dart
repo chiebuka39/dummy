@@ -6,6 +6,7 @@ import 'package:provider/provider.dart';
 import 'package:zimvest/data/local/user_local.dart';
 import 'package:zimvest/data/view_models/identity_view_model.dart';
 import 'package:zimvest/data/view_models/payment_view_model.dart';
+import 'package:zimvest/data/view_models/pin_view_model.dart';
 import 'package:zimvest/data/view_models/savings_view_model.dart';
 import 'package:zimvest/locator.dart';
 import 'package:zimvest/new_screens/funding/top_up_successful.dart';
@@ -38,6 +39,7 @@ class _ReviewBankTransferState extends State<ReviewWalletTransfer> {
   ABSSavingViewModel savingViewModel;
   ABSIdentityViewModel identityViewModel;
   ABSPaymentViewModel paymentViewModel;
+  ABSPinViewModel pinViewModel;
   bool loading = false;
 
   final _tween = MultiTween<AniProps>()
@@ -53,6 +55,7 @@ class _ReviewBankTransferState extends State<ReviewWalletTransfer> {
   bool slideUp = false;
   bool error = false;
 
+
   String errorMessage = "Error Occured";
 
   @override
@@ -61,7 +64,7 @@ class _ReviewBankTransferState extends State<ReviewWalletTransfer> {
     super.initState();
   }
 
-  void startAnim() async{
+  void startAnim(BuildContext buildContext) async{
     setState(() {
       slideUp = true;
       loading = true;
@@ -71,12 +74,14 @@ class _ReviewBankTransferState extends State<ReviewWalletTransfer> {
     await Future.delayed(1000.milliseconds);
     showCupertinoModalBottomSheet(context: context, builder: (context){
       return UsePinWidget(
-        onNext: startAnim2,
+        onNext: (){
+          startAnim2(buildContext);
+        },
       );
     },isDismissible: false);
   }
 
-  void startAnim2()async{
+  void startAnim2(BuildContext buildContext)async{
 
 
     var result = await savingViewModel.withdrawFund(
@@ -84,7 +89,7 @@ class _ReviewBankTransferState extends State<ReviewWalletTransfer> {
       token: identityViewModel.user.token,
       customerBankId: paymentViewModel.selectedBank?.id ?? null,
       amount: savingViewModel.amountToSave,
-      password: locator<ABSStateLocalStorage>().getSecondaryState().password,
+      pin: "${pinViewModel.pin1}${pinViewModel.pin2}${pinViewModel.pin3}${pinViewModel.pin4}",
         withdrawalChannel: paymentViewModel.selectedBank == null ?2: 1,
     );
     print("ooooo ${result.error}");
@@ -121,196 +126,208 @@ class _ReviewBankTransferState extends State<ReviewWalletTransfer> {
     identityViewModel = Provider.of(context);
     savingViewModel = Provider.of(context);
     paymentViewModel = Provider.of(context);
+    pinViewModel = Provider.of(context);
     var size = MediaQuery.of(context).size;
     return WillPopScope(
       onWillPop: ()async{
         return false;
       },
-      child: Scaffold(
-        backgroundColor: AppColors.kSecondaryColor,
-        body: Container(
-          height: MediaQuery.of(context).size.height,
-          child: Stack(children: [
-            Positioned.fill(
-              child: confirmed ? PlayAnimation<MultiTweenValues<AniProps>>(
-                tween: _tween,
-                duration: _tween.duration,
-                builder: (context, child, value){
-                  return Container(
-                    height: MediaQuery.of(context).size.height,
-                    child: Center(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: [
-                          Spacer(),
-                          Transform.scale(
-                              scale: value.get(AniProps.scale),
-                              child: Transform.translate(
-                                  offset: value.get(AniProps.offset1),
-                                  child: Opacity(
-                                      opacity: value.get(AniProps.opacity1),
-                                      child: SvgPicture.asset("images/new/confetti.svg")))),
-                          YMargin(40),
-                          ItemFader(
+      child: WillPopScope(
+        onWillPop: ()async{
+          return false;
+        },
+        child: Scaffold(
+          backgroundColor: AppColors.kSecondaryColor,
+          body: Container(
+            height: MediaQuery.of(context).size.height,
+            child: Stack(children: [
+              Positioned.fill(
+                child: confirmed ? PlayAnimation<MultiTweenValues<AniProps>>(
+                  tween: _tween,
+                  duration: _tween.duration,
+                  builder: (context, child, value){
+                    return Container(
+                      height: MediaQuery.of(context).size.height,
+                      child: Center(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: [
+                            Spacer(),
+                            Transform.scale(
+                                scale: value.get(AniProps.scale),
+                                child: Transform.translate(
+                                    offset: value.get(AniProps.offset1),
+                                    child: Opacity(
+                                        opacity: value.get(AniProps.opacity1),
+                                        child: SvgPicture.asset("images/new/confetti.svg")))),
+                            YMargin(40),
+                            ItemFader(
+                                offset: 10,
+                                curve: Curves.easeIn,
+                                key: keys[0],
+                                child: SizedBox(
+                                  width: 300,
+                                    child: Text("Withdrawal is successful. Your wallet has been credit successfully",
+                                      textAlign: TextAlign.center, style: TextStyle(color: Colors.white, fontFamily: AppStrings.fontNormal,height: 1.7),))),
+                            Spacer(),
+                            ItemFader(
                               offset: 10,
                               curve: Curves.easeIn,
-                              key: keys[0],
-                              child: Text("Your Topup was succesful", style: TextStyle(color: Colors.white),)),
-                          Spacer(),
-                          ItemFader(
-                            offset: 10,
-                            curve: Curves.easeIn,
-                            key: keys[1],
-                            child: PrimaryButtonNew(
-                              onTap: (){
-                                Navigator.pushAndRemoveUntil(
-                                    context,
-                                    MaterialPageRoute(builder: (context) => TabsContainer()),
-                                        (Route<dynamic> route) => false);
-                              },
-                              textColor: Colors.white,
-                              title: "Done",
-                              bg: AppColors.kPrimaryColor,
+                              key: keys[1],
+                              child: PrimaryButtonNew(
+                                onTap: (){
+                                  pinViewModel.resetPins();
+                                  Navigator.pushAndRemoveUntil(
+                                      context,
+                                      MaterialPageRoute(builder: (context) => TabsContainer()),
+                                          (Route<dynamic> route) => false);
+                                },
+                                textColor: Colors.white,
+                                title: "Done",
+                                bg: AppColors.kPrimaryColor,
+                              ),
                             ),
-                          ),
-                          YMargin(50)
-                        ],),
-                    ),
-                  );
-                },
-              ):SizedBox(),
-            ),
-
-            AnimatedPositioned(
-              duration: Duration(milliseconds: 500),
-              //top: -(MediaQuery.of(context).size.height - 200),
-              top: slideUp ?-(MediaQuery.of(context).size.height - 200): 0,
-              left: 0,right: 0,
-              child: Container(
-                width: double.infinity,
-                height: MediaQuery.of(context).size.height - 200,
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.only(bottomLeft: Radius.circular(25),
-                      bottomRight: Radius.circular(25),
-
-                  ),
-                  boxShadow: AppUtils.getBoxShaddow3
-                ),
-                child: SafeArea(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      BackButton(
-                        color: AppColors.kPrimaryColor,
-                        onPressed: (){
-                          Navigator.pop(context);
-                        },
-                      ),
-                      YMargin(50),
-                      Padding(
-                        padding: const EdgeInsets.only(left: 20),
-                        child: Text("Review", style: TextStyle(fontFamily: AppStrings.fontMedium),),
-                      ),
-                      YMargin(20),
-                      Container(
-                        margin: EdgeInsets.symmetric(horizontal: 20),
-                        padding: EdgeInsets.symmetric(horizontal: 20,vertical: 25),
-                        height: 200,
-                        width: double.infinity,
-                        decoration: BoxDecoration(
-                            color: AppColors.kWhite,
-                            boxShadow: AppUtils.getBoxShaddow3,
-                          borderRadius: BorderRadius.circular(13)
-                        ),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text("Plan Name".toUpperCase(), style: TextStyle(fontSize: 12,
-                              color: AppColors.kSecondaryText,fontFamily: AppStrings.fontNormal,),),
-                            YMargin(15),
-                            Text(savingViewModel.selectedPlan.planName, style: TextStyle(
-                                fontFamily: AppStrings.fontMedium,
-                                fontSize: 13,color: AppColors.kGreyText
-                            ),),
-                            YMargin(40),
-                            Text("Amount".toUpperCase(), style: TextStyle(fontSize: 12,
-                              color: AppColors.kSecondaryText,fontFamily: AppStrings.fontNormal,),),
-                            YMargin(15),
-                            Text("${AppStrings.nairaSymbol}${savingViewModel.selectedPlan.savingsAmount.toInt().toString().convertWithComma()}", style: TextStyle(
-                                fontFamily: AppStrings.fontMedium,
-                                fontSize: 13,color: AppColors.kGreyText
-                            ),),
-
+                            YMargin(50)
                           ],),
-                      )
-                  ],),
-                ),
-              ),
-            ),
-
-            AnimatedPositioned(
-              duration: Duration(milliseconds: 500),
-              //top: MediaQuery.of(context).size.height - 100,
-              top:slideUp == true ? -60: (MediaQuery.of(context).size.height - 100),
-              left: 0,
-              right: 0,
-              child: GestureDetector(
-                onTap: (){
-                  // showModalBottomSheet < Null > (context: context, builder: (BuildContext context) {
-                  //   return ConfirmSavings();
-                  // },isScrollControlled: true);
-                },
-                onVerticalDragStart: (details){
-                  print("dff ${details.toString()}");
-                  startAnim();
-                },
-                child: Container(
-                  height: 60,
-                  child: Column(children: [
-                    Column(
-                      children: [
-                        Icon(Icons.keyboard_arrow_up, color: AppColors.kWhite,),
-                        Text("Swipe up to confirm", style: TextStyle(fontFamily: AppStrings.fontMedium,
-                            color: Colors.white),),
-                      ],
-                    )
-                  ],),
-                ),
-              ),
-            ),
-            error == false ? Container(
-              height: size.height,
-              width: size.width,
-              child: Center(child: loading ? CircularProgressIndicator():SizedBox()
-                ,),
-            ):Container(
-              height: size.height,
-              width: size.width,
-              child: Center(child:Column(children: [
-                Spacer(),
-                SvgPicture.asset("images/new/error2.svg"),
-                YMargin(40),
-                SizedBox(
-                    width: 250,
-                    child: Text(errorMessage,
-                      style: TextStyle(color: AppColors.kWhite,
-                          fontFamily: AppStrings.fontNormal,height: 1.7),textAlign: TextAlign.center,)),
-                Spacer(),
-                PrimaryButtonNew(
-                  title: "Back to Home",
-                  onTap: (){
-                    Navigator.pushAndRemoveUntil(
-                        context,
-                        MaterialPageRoute(builder: (context) => TabsContainer()),
-                            (Route<dynamic> route) => false);
+                      ),
+                    );
                   },
+                ):SizedBox(),
+              ),
+
+              AnimatedPositioned(
+                duration: Duration(milliseconds: 500),
+                //top: -(MediaQuery.of(context).size.height - 200),
+                top: slideUp ?-(MediaQuery.of(context).size.height - 200): 0,
+                left: 0,right: 0,
+                child: Container(
+                  width: double.infinity,
+                  height: MediaQuery.of(context).size.height - 200,
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.only(bottomLeft: Radius.circular(25),
+                        bottomRight: Radius.circular(25),
+
+                    ),
+                    boxShadow: AppUtils.getBoxShaddow3
+                  ),
+                  child: SafeArea(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        BackButton(
+                          color: AppColors.kPrimaryColor,
+                          onPressed: (){
+                            Navigator.pop(context);
+                          },
+                        ),
+                        YMargin(50),
+                        Padding(
+                          padding: const EdgeInsets.only(left: 20),
+                          child: Text("Review", style: TextStyle(fontFamily: AppStrings.fontMedium),),
+                        ),
+                        YMargin(20),
+                        Container(
+                          margin: EdgeInsets.symmetric(horizontal: 20),
+                          padding: EdgeInsets.symmetric(horizontal: 20,vertical: 25),
+                          height: 200,
+                          width: double.infinity,
+                          decoration: BoxDecoration(
+                              color: AppColors.kWhite,
+                              boxShadow: AppUtils.getBoxShaddow3,
+                            borderRadius: BorderRadius.circular(13)
+                          ),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text("Plan Name".toUpperCase(), style: TextStyle(fontSize: 12,
+                                color: AppColors.kSecondaryText,fontFamily: AppStrings.fontNormal,),),
+                              YMargin(15),
+                              Text(savingViewModel.selectedPlan.planName, style: TextStyle(
+                                  fontFamily: AppStrings.fontMedium,
+                                  fontSize: 13,color: AppColors.kGreyText
+                              ),),
+                              YMargin(40),
+                              Text("Amount".toUpperCase(), style: TextStyle(fontSize: 12,
+                                color: AppColors.kSecondaryText,fontFamily: AppStrings.fontNormal,),),
+                              YMargin(15),
+                              Text("${AppStrings.nairaSymbol}${savingViewModel.selectedPlan.savingsAmount.toInt().toString().convertWithComma()}", style: TextStyle(
+                                  fontFamily: AppStrings.fontMedium,
+                                  fontSize: 13,color: AppColors.kGreyText
+                              ),),
+
+                            ],),
+                        )
+                    ],),
+                  ),
                 ),
-                YMargin(40)
-              ],)
-                ,),
-            ),
-          ],),
+              ),
+
+              AnimatedPositioned(
+                duration: Duration(milliseconds: 500),
+                //top: MediaQuery.of(context).size.height - 100,
+                top:slideUp == true ? -60: (MediaQuery.of(context).size.height - 100),
+                left: 0,
+                right: 0,
+                child: GestureDetector(
+                  onTap: (){
+                    // showModalBottomSheet < Null > (context: context, builder: (BuildContext context) {
+                    //   return ConfirmSavings();
+                    // },isScrollControlled: true);
+                  },
+                  onVerticalDragStart: (details){
+                    print("dff ${details.toString()}");
+                    startAnim(context);
+                  },
+                  child: Container(
+                    height: 60,
+                    child: Column(children: [
+                      Column(
+                        children: [
+                          Icon(Icons.keyboard_arrow_up, color: AppColors.kWhite,),
+                          Text("Swipe up to confirm", style: TextStyle(fontFamily: AppStrings.fontMedium,
+                              color: Colors.white),),
+                        ],
+                      )
+                    ],),
+                  ),
+                ),
+              ),
+              error == false ? Container(
+                height: size.height,
+                width: size.width,
+                child: Center(child: loading ? CircularProgressIndicator():SizedBox()
+                  ,),
+              ):Container(
+                height: size.height,
+                width: size.width,
+                child: Center(child:Column(children: [
+                  Spacer(),
+                  SvgPicture.asset("images/new/error2.svg"),
+                  YMargin(40),
+                  SizedBox(
+                      width: 250,
+                      child: Text(errorMessage,
+                        style: TextStyle(color: AppColors.kWhite,
+                            fontFamily: AppStrings.fontNormal,height: 1.7),textAlign: TextAlign.center,)),
+                  Spacer(),
+                  PrimaryButtonNew(
+                    title: "Back to Home",
+                    onTap: (){
+                      pinViewModel.resetPins();
+                      paymentViewModel.selectedBank = null;
+                      Navigator.pushAndRemoveUntil(
+                          context,
+                          MaterialPageRoute(builder: (context) => TabsContainer()),
+                              (Route<dynamic> route) => false);
+                    },
+                  ),
+                  YMargin(40)
+                ],)
+                  ,),
+              ),
+            ],),
+          ),
         ),
       ),
     );

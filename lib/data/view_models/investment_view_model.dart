@@ -791,7 +791,6 @@ class FixedIncomeViewModel extends BaseViewModel {
           amount: amountPayableRes.investmentAmount,
           rate: amountPayableRes.rateValue,
           uniqueName: uniqueName,
-          cardId: cardId,
           faceValue: amountPayableRes.faceValue,
           investmentAmount: amountPayableRes.investmentAmount,
           upFront: amountPayableRes.upFront);

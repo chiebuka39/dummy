@@ -24,15 +24,15 @@ class UsePinWidget extends StatefulWidget {
 
 class _UsePinWidgetState extends State<UsePinWidget> {
 
-  String pin1 = "";
-  String pin2 = "";
-  String pin3 = "";
-  String pin4 = "";
+
 
   ABSIdentityViewModel identityViewModel;
+  ABSPinViewModel pinViewModel;
   @override
   Widget build(BuildContext context) {
     identityViewModel = Provider.of(context);
+    pinViewModel = Provider.of(context);
+
     final node = FocusScope.of(context);
     return Container(
       height: MediaQuery.of(context).size.height * 0.85,
@@ -60,7 +60,7 @@ class _UsePinWidgetState extends State<UsePinWidget> {
                 duration: Duration(milliseconds: 300),
                 height: 51,
                 width: 46,
-                decoration: pin1.isEmpty ?  BoxDecoration(
+                decoration: pinViewModel.pin1.isEmpty ?  BoxDecoration(
                     color: Color(0xFFF9F2DD),
                     border: Border.all(color: AppColors.kPrimaryColor),
                     borderRadius: BorderRadius.circular(7)
@@ -69,7 +69,7 @@ class _UsePinWidgetState extends State<UsePinWidget> {
                     borderRadius: BorderRadius.circular(7)
                 ),
                 child: Center(
-                  child: Text(pin1,style: TextStyle(fontSize: 20),),
+                  child: Text(pinViewModel.pin1,style: TextStyle(fontSize: 20),),
                 ),
               ),
               XMargin(25),
@@ -77,7 +77,7 @@ class _UsePinWidgetState extends State<UsePinWidget> {
                 duration: Duration(milliseconds: 300),
                 height: 51,
                 width: 46,
-                decoration: (pin1.isNotEmpty && pin2.isEmpty) ? BoxDecoration(
+                decoration: (pinViewModel.pin1.isNotEmpty && pinViewModel.pin2.isEmpty) ? BoxDecoration(
                     color: Color(0xFFF9F2DD),
                     border: Border.all(color: AppColors.kPrimaryColor),
                     borderRadius: BorderRadius.circular(7)
@@ -86,7 +86,7 @@ class _UsePinWidgetState extends State<UsePinWidget> {
                     borderRadius: BorderRadius.circular(7)
                 ),
                 child: Center(
-                  child: Text(pin2,style: TextStyle(fontSize: 20),),
+                  child: Text(pinViewModel.pin2,style: TextStyle(fontSize: 20),),
                 ),
               ),
               XMargin(25),
@@ -94,7 +94,7 @@ class _UsePinWidgetState extends State<UsePinWidget> {
                 duration: Duration(milliseconds: 300),
                 height: 51,
                 width: 46,
-                decoration:(pin1.isNotEmpty && pin2.isNotEmpty && pin3.isEmpty) ? BoxDecoration(
+                decoration:(pinViewModel.pin1.isNotEmpty && pinViewModel.pin2.isNotEmpty && pinViewModel.pin3.isEmpty) ? BoxDecoration(
                     color: Color(0xFFF9F2DD),
                     border: Border.all(color: AppColors.kPrimaryColor),
                     borderRadius: BorderRadius.circular(7)
@@ -103,7 +103,7 @@ class _UsePinWidgetState extends State<UsePinWidget> {
                     borderRadius: BorderRadius.circular(7)
                 ),
                 child: Center(
-                  child: Text(pin3,style: TextStyle(fontSize: 20),),
+                  child: Text(pinViewModel.pin3,style: TextStyle(fontSize: 20),),
                 ),
               ),
               XMargin(25),
@@ -111,7 +111,7 @@ class _UsePinWidgetState extends State<UsePinWidget> {
                 duration: Duration(milliseconds: 300),
                 height: 51,
                 width: 46,
-                decoration:(pin1.isNotEmpty && pin2.isNotEmpty && pin3.isNotEmpty && pin4.isEmpty) ? BoxDecoration(
+                decoration:(pinViewModel.pin1.isNotEmpty && pinViewModel.pin2.isNotEmpty && pinViewModel.pin3.isNotEmpty && pinViewModel.pin4.isEmpty) ? BoxDecoration(
                     color: Color(0xFFF9F2DD),
                     border: Border.all(color: AppColors.kPrimaryColor),
                     borderRadius: BorderRadius.circular(7)
@@ -120,7 +120,7 @@ class _UsePinWidgetState extends State<UsePinWidget> {
                     borderRadius: BorderRadius.circular(7)
                 ),
                 child: Center(
-                  child: Text(pin4,style: TextStyle(fontSize: 20),),
+                  child: Text(pinViewModel.pin4,style: TextStyle(fontSize: 20),),
                 ),
               ),
             ],),
@@ -132,27 +132,28 @@ class _UsePinWidgetState extends State<UsePinWidget> {
                 Expanded(
                   child: GestureDetector(
                     onTap: (){
-                      if(pin1.isEmpty){
-                        setState(() {
-                          pin1 = "1";
-                        });
-                      }else if(pin2.isEmpty){
-                        setState(() {
-                          pin2 = "1";
-                        });
-                      }else if(pin3.isEmpty){
-                        setState(() {
-                          pin3 = "1";
-                        });
-                      }else if(pin4.isEmpty){
-                        setState(() {
-                          pin4 = "1";
-                        });
+                      if(pinViewModel.pin1.isEmpty){
+
+                          pinViewModel.pin1 = "1";
+
+                      }else if(pinViewModel.pin2.isEmpty){
+
+                          pinViewModel.pin2 = "1";
+
+                      }else if(pinViewModel.pin3.isEmpty){
+
+                          pinViewModel.pin3 = "1";
+
+                      }else if(pinViewModel.pin4.isEmpty){
+
+                          pinViewModel.pin4 = "1";
+
                         confirmCode();
                       }
                     },
                     child: Container(
                       height: 50,
+                      color: Colors.transparent,
                       child: Center(
                         child: Text("1", style: TextStyle(fontSize: 20),),
                       ),
@@ -162,27 +163,28 @@ class _UsePinWidgetState extends State<UsePinWidget> {
                 Expanded(
                   child: GestureDetector(
                     onTap: (){
-                      if(pin1.isEmpty){
-                        setState(() {
-                          pin1 = "2";
-                        });
-                      }else if(pin2.isEmpty){
-                        setState(() {
-                          pin2 = "2";
-                        });
-                      }else if(pin3.isEmpty){
-                        setState(() {
-                          pin3 = "2";
-                        });
-                      }else if(pin4.isEmpty){
-                        setState(() {
-                          pin4 = "2";
-                        });
+                      if(pinViewModel.pin1.isEmpty){
+
+                          pinViewModel.pin1 = "2";
+
+                      }else if(pinViewModel.pin2.isEmpty){
+
+                          pinViewModel.pin2 = "2";
+
+                      }else if(pinViewModel.pin3.isEmpty){
+
+                          pinViewModel.pin3 = "2";
+
+                      }else if(pinViewModel.pin4.isEmpty){
+
+                          pinViewModel.pin4 = "2";
+
                         confirmCode();
                       }
                     },
                     child: Container(
                       height: 50,
+                      color: Colors.transparent,
                       child: Center(
                         child: Text("2", style: TextStyle(fontSize: 20),),
                       ),
@@ -192,27 +194,28 @@ class _UsePinWidgetState extends State<UsePinWidget> {
                 Expanded(
                   child: GestureDetector(
                     onTap: (){
-                      if(pin1.isEmpty){
-                        setState(() {
-                          pin1 = "3";
-                        });
-                      }else if(pin2.isEmpty){
-                        setState(() {
-                          pin2 = "3";
-                        });
-                      }else if(pin3.isEmpty){
-                        setState(() {
-                          pin3 = "3";
-                        });
-                      }else if(pin4.isEmpty){
-                        setState(() {
-                          pin4 = "3";
-                        });
+                      if(pinViewModel.pin1.isEmpty){
+
+                          pinViewModel.pin1 = "3";
+
+                      }else if(pinViewModel.pin2.isEmpty){
+
+                          pinViewModel.pin2 = "3";
+
+                      }else if(pinViewModel.pin3.isEmpty){
+
+                          pinViewModel.pin3 = "3";
+
+                      }else if(pinViewModel.pin4.isEmpty){
+
+                          pinViewModel.pin4 = "3";
+
                         confirmCode();
                       }
                     },
                     child: Container(
                       height: 50,
+                      color: Colors.transparent,
                       child: Center(
                         child: Text("3", style: TextStyle(fontSize: 20),),
                       ),
@@ -227,27 +230,28 @@ class _UsePinWidgetState extends State<UsePinWidget> {
                   Expanded(
                     child: GestureDetector(
                       onTap:(){
-                        if(pin1.isEmpty){
-                          setState(() {
-                            pin1 = "4";
-                          });
-                        }else if(pin2.isEmpty){
-                          setState(() {
-                            pin2 = "4";
-                          });
-                        }else if(pin3.isEmpty){
-                          setState(() {
-                            pin3 = "4";
-                          });
-                        }else if(pin4.isEmpty){
-                          setState(() {
-                            pin4 = "4";
-                          });
+                        if(pinViewModel.pin1.isEmpty){
+
+                            pinViewModel.pin1 = "4";
+
+                        }else if(pinViewModel.pin2.isEmpty){
+
+                            pinViewModel.pin2 = "4";
+
+                        }else if(pinViewModel.pin3.isEmpty){
+
+                            pinViewModel.pin3 = "4";
+
+                        }else if(pinViewModel.pin4.isEmpty){
+
+                            pinViewModel.pin4 = "4";
+
                           confirmCode();
                         }
                       },
                       child: Container(
                         height: 50,
+                        color: Colors.transparent,
                         child: Center(
                           child: Text("4", style: TextStyle(fontSize: 20),),
                         ),
@@ -257,27 +261,28 @@ class _UsePinWidgetState extends State<UsePinWidget> {
                   Expanded(
                     child: GestureDetector(
                       onTap: (){
-                        if(pin1.isEmpty){
-                          setState(() {
-                            pin1 = "5";
-                          });
-                        }else if(pin2.isEmpty){
-                          setState(() {
-                            pin2 = "5";
-                          });
-                        }else if(pin3.isEmpty){
-                          setState(() {
-                            pin3 = "5";
-                          });
-                        }else if(pin4.isEmpty){
-                          setState(() {
-                            pin4 = "5";
-                          });
+                        if(pinViewModel.pin1.isEmpty){
+
+                            pinViewModel.pin1 = "5";
+
+                        }else if(pinViewModel.pin2.isEmpty){
+
+                            pinViewModel.pin2 = "5";
+
+                        }else if(pinViewModel.pin3.isEmpty){
+
+                            pinViewModel.pin3 = "5";
+
+                        }else if(pinViewModel.pin4.isEmpty){
+
+                            pinViewModel.pin4 = "5";
+
                           confirmCode();
                         }
                       },
                       child: Container(
                         height: 50,
+                        color: Colors.transparent,
                         child: Center(
                           child: Text("5", style: TextStyle(fontSize: 20),),
                         ),
@@ -287,27 +292,28 @@ class _UsePinWidgetState extends State<UsePinWidget> {
                   Expanded(
                     child: GestureDetector(
                       onTap: (){
-                        if(pin1.isEmpty){
-                          setState(() {
-                            pin1 = "6";
-                          });
-                        }else if(pin2.isEmpty){
-                          setState(() {
-                            pin2 = "6";
-                          });
-                        }else if(pin3.isEmpty){
-                          setState(() {
-                            pin3 = "6";
-                          });
-                        }else if(pin4.isEmpty){
-                          setState(() {
-                            pin4 = "6";
-                          });
+                        if(pinViewModel.pin1.isEmpty){
+
+                            pinViewModel.pin1 = "6";
+
+                        }else if(pinViewModel.pin2.isEmpty){
+
+                            pinViewModel.pin2 = "6";
+
+                        }else if(pinViewModel.pin3.isEmpty){
+
+                            pinViewModel.pin3 = "6";
+
+                        }else if(pinViewModel.pin4.isEmpty){
+
+                            pinViewModel.pin4 = "6";
+
                           confirmCode();
                         }
                       },
                       child: Container(
                         height: 50,
+                        color: Colors.transparent,
                         child: Center(
                           child: Text("6", style: TextStyle(fontSize: 20),),
                         ),
@@ -323,27 +329,28 @@ class _UsePinWidgetState extends State<UsePinWidget> {
                 Expanded(
                   child: GestureDetector(
                     onTap: (){
-                      if(pin1.isEmpty){
-                        setState(() {
-                          pin1 = "7";
-                        });
-                      }else if(pin2.isEmpty){
-                        setState(() {
-                          pin2 = "7";
-                        });
-                      }else if(pin3.isEmpty){
-                        setState(() {
-                          pin3 = "7";
-                        });
-                      }else if(pin4.isEmpty){
-                        setState(() {
-                          pin4 = "7";
-                        });
+                      if(pinViewModel.pin1.isEmpty){
+
+                          pinViewModel.pin1 = "7";
+
+                      }else if(pinViewModel.pin2.isEmpty){
+
+                          pinViewModel.pin2 = "7";
+
+                      }else if(pinViewModel.pin3.isEmpty){
+
+                          pinViewModel.pin3 = "7";
+
+                      }else if(pinViewModel.pin4.isEmpty){
+
+                          pinViewModel.pin4 = "7";
+
                         confirmCode();
                       }
                     },
                     child: Container(
                       height: 50,
+                      color: Colors.transparent,
                       child: Center(
                         child: Text("7", style: TextStyle(fontSize: 20),),
                       ),
@@ -353,27 +360,28 @@ class _UsePinWidgetState extends State<UsePinWidget> {
                 Expanded(
                   child: GestureDetector(
                     onTap: (){
-                      if(pin1.isEmpty){
-                        setState(() {
-                          pin1 = "8";
-                        });
-                      }else if(pin2.isEmpty){
-                        setState(() {
-                          pin2 = "8";
-                        });
-                      }else if(pin3.isEmpty){
-                        setState(() {
-                          pin3 = "8";
-                        });
-                      }else if(pin4.isEmpty){
-                        setState(() {
-                          pin4 = "8";
-                        });
+                      if(pinViewModel.pin1.isEmpty){
+
+                          pinViewModel.pin1 = "8";
+
+                      }else if(pinViewModel.pin2.isEmpty){
+
+                          pinViewModel.pin2 = "8";
+
+                      }else if(pinViewModel.pin3.isEmpty){
+
+                          pinViewModel.pin3 = "8";
+
+                      }else if(pinViewModel.pin4.isEmpty){
+
+                          pinViewModel.pin4 = "8";
+
                         confirmCode();
                       }
                     },
                     child: Container(
                       height: 50,
+                      color: Colors.transparent,
                       child: Center(
                         child: Text("8", style: TextStyle(fontSize: 20),),
                       ),
@@ -383,27 +391,28 @@ class _UsePinWidgetState extends State<UsePinWidget> {
                 Expanded(
                   child: GestureDetector(
                     onTap: (){
-                      if(pin1.isEmpty){
-                        setState(() {
-                          pin1 = "9";
-                        });
-                      }else if(pin2.isEmpty){
-                        setState(() {
-                          pin2 = "9";
-                        });
-                      }else if(pin3.isEmpty){
-                        setState(() {
-                          pin3 = "9";
-                        });
-                      }else if(pin4.isEmpty){
-                        setState(() {
-                          pin4 = "9";
-                        });
+                      if(pinViewModel.pin1.isEmpty){
+
+                          pinViewModel.pin1 = "9";
+
+                      }else if(pinViewModel.pin2.isEmpty){
+
+                          pinViewModel.pin2 = "9";
+
+                      }else if(pinViewModel.pin3.isEmpty){
+
+                          pinViewModel.pin3 = "9";
+
+                      }else if(pinViewModel.pin4.isEmpty){
+
+                          pinViewModel.pin4 = "9";
+
                         confirmCode();
                       }
                     },
                     child: Container(
                       height: 50,
+                      color: Colors.transparent,
                       child: Center(
                         child: Text("9", style: TextStyle(fontSize: 20),),
                       ),
@@ -425,27 +434,28 @@ class _UsePinWidgetState extends State<UsePinWidget> {
                 Expanded(
                   child: GestureDetector(
                     onTap: (){
-                      if(pin1.isEmpty){
-                        setState(() {
-                          pin1 = "0";
-                        });
-                      }else if(pin2.isEmpty){
-                        setState(() {
-                          pin2 = "0";
-                        });
-                      }else if(pin3.isEmpty){
-                        setState(() {
-                          pin3 = "0";
-                        });
-                      }else if(pin4.isEmpty){
-                        setState(() {
-                          pin4 = "0";
-                        });
+                      if(pinViewModel.pin1.isEmpty){
+
+                          pinViewModel.pin1 = "0";
+
+                      }else if(pinViewModel.pin2.isEmpty){
+
+                          pinViewModel.pin2 = "0";
+
+                      }else if(pinViewModel.pin3.isEmpty){
+
+                          pinViewModel.pin3 = "0";
+
+                      }else if(pinViewModel.pin4.isEmpty){
+
+                          pinViewModel.pin4 = "0";
+
                         confirmCode();
                       }
                     },
                     child: Container(
                       height: 50,
+                      color: Colors.transparent,
                       child: Center(
                         child: Text("0", style: TextStyle(fontSize: 20),),
                       ),
@@ -455,21 +465,20 @@ class _UsePinWidgetState extends State<UsePinWidget> {
                 Expanded(
                   child: GestureDetector(
                     onTap: (){
-                      if(pin4.isNotEmpty){
-                        pin4 = '';
-                      }else if(pin3.isNotEmpty){
-                        pin3 = '';
-                      }else if(pin2.isNotEmpty){
-                        pin2 = '';
-                      }else if(pin1.isNotEmpty){
-                        pin1 = '';
+                      if(pinViewModel.pin4.isNotEmpty){
+                        pinViewModel.pin4 = '';
+                      }else if(pinViewModel.pin3.isNotEmpty){
+                        pinViewModel.pin3 = '';
+                      }else if(pinViewModel.pin2.isNotEmpty){
+                        pinViewModel.pin2 = '';
+                      }else if(pinViewModel.pin1.isNotEmpty){
+                        pinViewModel.pin1 = '';
                       }
-                      setState(() {
 
-                      });
                     },
                     child: Container(
                       height: 50,
+                      color: Colors.transparent,
                       child: Center(
                         child: Icon(Icons.arrow_back_ios,size: 18,color: AppColors.kPrimaryColor,),
                       ),

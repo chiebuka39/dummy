@@ -50,6 +50,8 @@ class _SavingsSummaryScreenState extends State<SavingsSummaryScreen> {
   bool slideUp = false;
   bool error = false;
 
+  String errorMessage = "Error Occured";
+
   @override
   void initState() {
     keys = List.generate(2, (index) => GlobalKey<ItemFaderState>());
@@ -85,16 +87,11 @@ class _SavingsSummaryScreenState extends State<SavingsSummaryScreen> {
       setState(() {
         loading = false;
         error = true;
+        if(result.errorMessage != null){
+          errorMessage = result.errorMessage;
+        }
       });
     }
-    // Future.delayed(Duration(seconds: 1)).then((value) {
-    //   setState(() {
-    //     confirmed = true;
-    //   });
-    //   Future.delayed(1000.milliseconds).then((value) => onInit());
-    // });
-
-
   }
 
   void onInit() async {
@@ -328,8 +325,14 @@ class _SavingsSummaryScreenState extends State<SavingsSummaryScreen> {
             width: size.width,
             child: Center(child:Column(children: [
               Spacer(),
-              Text("Error Occured", style: TextStyle(color: AppColors.kWhite),),
-              YMargin(20),
+              SvgPicture.asset("images/new/error2.svg"),
+              YMargin(40),
+              SizedBox(
+                  width: 250,
+                  child: Text(errorMessage,
+                    style: TextStyle(color: AppColors.kWhite,
+                        fontFamily: AppStrings.fontNormal,height: 1.7),textAlign: TextAlign.center,)),
+              Spacer(),
               PrimaryButtonNew(
                 title: "Back to Home",
                 onTap: (){
@@ -347,7 +350,7 @@ class _SavingsSummaryScreenState extends State<SavingsSummaryScreen> {
                   });
                 },
               ),
-              Spacer(),
+              YMargin(40)
             ],)
               ,),
           ),

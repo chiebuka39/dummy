@@ -5,6 +5,7 @@ import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 import 'package:provider/provider.dart';
 import 'package:zimvest/data/view_models/identity_view_model.dart';
 import 'package:zimvest/data/view_models/payment_view_model.dart';
+import 'package:zimvest/data/view_models/pin_view_model.dart';
 import 'package:zimvest/data/view_models/savings_view_model.dart';
 import 'package:zimvest/new_screens/funding/top_up_successful.dart';
 import 'package:zimvest/new_screens/tabs.dart';
@@ -36,6 +37,7 @@ class _ReviewBankTransferState extends State<ReviewBankTransfer> {
   ABSSavingViewModel savingViewModel;
   ABSIdentityViewModel identityViewModel;
   ABSPaymentViewModel paymentViewModel;
+  ABSPinViewModel pinViewModel;
   bool loading = false;
 
   final _tween = MultiTween<AniProps>()
@@ -59,7 +61,7 @@ class _ReviewBankTransferState extends State<ReviewBankTransfer> {
     super.initState();
   }
 
-  void startAnim() async{
+  void startAnim(BuildContext buildContext) async{
     setState(() {
       slideUp = true;
       loading = true;
@@ -69,12 +71,14 @@ class _ReviewBankTransferState extends State<ReviewBankTransfer> {
     await Future.delayed(1000.milliseconds);
     showCupertinoModalBottomSheet(context: context, builder: (context){
       return UsePinWidget(
-        onNext: startAnim2,
+        onNext: (){
+          startAnim2(buildContext);
+        },
       );
     },isDismissible: false);
   }
 
-  void startAnim2()async{
+  void startAnim2(BuildContext buildContext)async{
 
 
     var result = await savingViewModel.withdrawFund(
@@ -82,7 +86,7 @@ class _ReviewBankTransferState extends State<ReviewBankTransfer> {
       token: identityViewModel.user.token,
       customerBankId: paymentViewModel.selectedBank?.id ?? null,
       amount: savingViewModel.amountToSave,
-      password: "Zimvest26.",
+      pin: "${pinViewModel.pin1}${pinViewModel.pin2}${pinViewModel.pin3}${pinViewModel.pin4}",
         withdrawalChannel: paymentViewModel.selectedBank == null ?2: 1,
     );
     print("ooooo ${result.error}");
@@ -102,13 +106,6 @@ class _ReviewBankTransferState extends State<ReviewBankTransfer> {
         }
       });
     }
-    // Future.delayed(Duration(seconds: 1)).then((value) {
-    //   setState(() {
-    //     confirmed = true;
-    //   });
-    //   Future.delayed(1000.milliseconds).then((value) => onInit());
-    // });
-
 
   }
 
@@ -127,6 +124,7 @@ class _ReviewBankTransferState extends State<ReviewBankTransfer> {
     identityViewModel = Provider.of(context);
     savingViewModel = Provider.of(context);
     paymentViewModel = Provider.of(context);
+    pinViewModel = Provider.of(context);
     var size = MediaQuery.of(context).size;
     return WillPopScope(
       onWillPop: ()async{
@@ -161,7 +159,7 @@ class _ReviewBankTransferState extends State<ReviewBankTransfer> {
                               offset: 10,
                               curve: Curves.easeIn,
                               key: keys[0],
-                              child: Text("Your Topup was succesful", style: TextStyle(color: Colors.white),)),
+                              child: Text("Withdrawal is successful. Your Bank Account has been credit successfully", style: TextStyle(color: Colors.white),)),
                           Spacer(),
                           ItemFader(
                             offset: 10,
@@ -169,6 +167,8 @@ class _ReviewBankTransferState extends State<ReviewBankTransfer> {
                             key: keys[1],
                             child: PrimaryButtonNew(
                               onTap: (){
+                                pinViewModel.resetPins();
+                                paymentViewModel.selectedBank = null;
                                 Navigator.pushAndRemoveUntil(
                                     context,
                                     MaterialPageRoute(builder: (context) => TabsContainer()),
@@ -235,7 +235,7 @@ class _ReviewBankTransferState extends State<ReviewBankTransfer> {
                             Text("Account Name".toUpperCase(), style: TextStyle(fontSize: 12,
                               color: AppColors.kSecondaryText,fontFamily: AppStrings.fontNormal,),),
                             YMargin(15),
-                            Text(paymentViewModel.selectedBank.accountName, style: TextStyle(
+                            Text(paymentViewModel.selectedBank?.accountName ?? '', style: TextStyle(
                                 fontFamily: AppStrings.fontMedium,
                                 fontSize: 13,color: AppColors.kGreyText
                             ),),
@@ -247,7 +247,7 @@ class _ReviewBankTransferState extends State<ReviewBankTransfer> {
                                   Text("Bank".toUpperCase(), style: TextStyle(fontSize: 12,
                                     color: AppColors.kSecondaryText,fontFamily: AppStrings.fontNormal,),),
                                   YMargin(15),
-                                  Text(paymentViewModel.selectedBank.name, style: TextStyle(
+                                  Text(paymentViewModel.selectedBank?.name ?? '', style: TextStyle(
                                       fontFamily: AppStrings.fontMedium,
                                       fontSize: 13,color: AppColors.kGreyText
                                   ),),
@@ -295,7 +295,7 @@ class _ReviewBankTransferState extends State<ReviewBankTransfer> {
                 },
                 onVerticalDragStart: (details){
                   print("dff ${details.toString()}");
-                  startAnim();
+                  startAnim(context);
                 },
                 child: Container(
                   height: 60,
@@ -332,6 +332,8 @@ class _ReviewBankTransferState extends State<ReviewBankTransfer> {
                 PrimaryButtonNew(
                   title: "Back to Home",
                   onTap: (){
+                    pinViewModel.resetPins();
+                    paymentViewModel.selectedBank = null;
                     Navigator.pushAndRemoveUntil(
                         context,
                         MaterialPageRoute(builder: (context) => TabsContainer()),

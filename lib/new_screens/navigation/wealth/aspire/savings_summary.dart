@@ -390,6 +390,8 @@ class _SavingsSummaryScreenState extends State<SavingsSummaryScreen> {
               width: size.width,
               child: Center(child:Column(children: [
                 Spacer(),
+                SvgPicture.asset("images/new/error2.svg"),
+                YMargin(40),
                 SizedBox(
                   width: 270,
                     child: Text(errorMessage == null ? "Error Occured": errorMessage.isEmpty ? "Error Occured": errorMessage, style: TextStyle(color: AppColors.kWhite, fontFamily: AppStrings.fontNormal,height: 1.7),
