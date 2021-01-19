@@ -123,37 +123,6 @@ class WealthMore extends StatelessWidget {
                       ],
                     ),
                   ),
-                  Spacer(),
-                  GestureDetector(
-                    onTap: () {
-                      Navigator.pop(context);
-                      showModalBottomSheet<Null>(
-                          context: context,
-                          builder: (BuildContext context) {
-                            return DeleteWealthbox();
-                          },
-                          isScrollControlled: true);
-                    },
-                    child: Container(
-                      padding: EdgeInsets.symmetric(horizontal: 20),
-                      child: Row(
-                        children: [
-                          SvgPicture.asset('images/new/delete_plan.svg'),
-                          XMargin(15),
-                          Text(
-                            "Delete Plan",
-                            style: TextStyle(fontFamily: AppStrings.fontNormal),
-                          ),
-                          Spacer(),
-                          Icon(
-                            Icons.navigate_next_rounded,
-                            color: AppColors.kPrimaryColor,
-                          )
-                        ],
-                      ),
-                    ),
-                  ),
-                  YMargin(30),
                 ],
               ),
             ),

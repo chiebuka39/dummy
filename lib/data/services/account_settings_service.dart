@@ -31,7 +31,7 @@ abstract class ABSSettingsService{
     String email,
     String phoneNumber,
   });
-  Future<Result<void>> checkipsstatus({String token});
+  Future<Result<bool>> checkipsstatus({String token});
 
   Future<Result<void>> profileInvestor({String token, String firstName,
     int investmentKnowledge, int mostConernedDuringInvestment,
@@ -120,6 +120,13 @@ class SettingsService extends ABSSettingsService{
       }
 
     }on DioError catch(e){
+      if(e.error.runtimeType == SocketException){
+        print("<<<<<<<<<");
+        result.networkAvailable = false;
+        result.errorMessage = "Failed to connect, "
+            "please connect to the internet and try again";
+
+      }
       print("error $e");
       result.error = true;
     }
@@ -157,6 +164,13 @@ class SettingsService extends ABSSettingsService{
       }
 
     }on DioError catch(e){
+      if(e.error.runtimeType == SocketException){
+        print("<<<<<<<<<");
+        result.networkAvailable = false;
+        result.errorMessage = "Failed to connect, "
+            "please connect to the internet and try again";
+
+      }
       print("error ${e.response.data}");
       result.error = true;
     }
@@ -195,6 +209,13 @@ class SettingsService extends ABSSettingsService{
       }
 
     }on DioError catch(e){
+      if(e.error.runtimeType == SocketException){
+        print("<<<<<<<<<");
+        result.networkAvailable = false;
+        result.errorMessage = "Failed to connect, "
+            "please connect to the internet and try again";
+
+      }
       print("error ${e.response.data}");
       result.error = true;
     }
@@ -230,6 +251,13 @@ class SettingsService extends ABSSettingsService{
       }
 
     }on DioError catch(e){
+      if(e.error.runtimeType == SocketException){
+        print("<<<<<<<<<");
+        result.networkAvailable = false;
+        result.errorMessage = "Failed to connect, "
+            "please connect to the internet and try again";
+
+      }
       print("error ${e.response?.data}");
       result.error = true;
     }
@@ -267,6 +295,13 @@ class SettingsService extends ABSSettingsService{
       }
 
     }on DioError catch(e){
+      if(e.error.runtimeType == SocketException){
+        print("<<<<<<<<<");
+        result.networkAvailable = false;
+        result.errorMessage = "Failed to connect, "
+            "please connect to the internet and try again";
+
+      }
       print("error ${e.response.data}");
       result.error = true;
     }
@@ -300,6 +335,13 @@ class SettingsService extends ABSSettingsService{
       }
 
     }on DioError catch(e){
+      if(e.error.runtimeType == SocketException){
+        print("<<<<<<<<<");
+        result.networkAvailable = false;
+        result.errorMessage = "Failed to connect, "
+            "please connect to the internet and try again";
+
+      }
       print("error ${e.response.data}");
       result.error = true;
     }
@@ -337,6 +379,13 @@ class SettingsService extends ABSSettingsService{
       }
 
     }on DioError catch(e){
+      if(e.error.runtimeType == SocketException){
+        print("<<<<<<<<<");
+        result.networkAvailable = false;
+        result.errorMessage = "Failed to connect, "
+            "please connect to the internet and try again";
+
+      }
       print("error ${e.response.data}");
       result.error = true;
     }
@@ -370,6 +419,13 @@ class SettingsService extends ABSSettingsService{
       }
 
     }on DioError catch(e){
+      if(e.error.runtimeType == SocketException){
+        print("<<<<<<<<<");
+        result.networkAvailable = false;
+        result.errorMessage = "Failed to connect, "
+            "please connect to the internet and try again";
+
+      }
       print("error ${e.response.data}");
       result.error = true;
     }
@@ -445,6 +501,13 @@ class SettingsService extends ABSSettingsService{
       }
 
     }on DioError catch(e){
+      if(e.error.runtimeType == SocketException){
+        print("<<<<<<<<<");
+        result.networkAvailable = false;
+        result.errorMessage = "Failed to connect, "
+            "please connect to the internet and try again";
+
+      }
       print("error ${e.response.data}");
       result.error = true;
     }
@@ -491,6 +554,13 @@ class SettingsService extends ABSSettingsService{
       }
 
     }on DioError catch(e){
+      if(e.error.runtimeType == SocketException){
+        print("<<<<<<<<<");
+        result.networkAvailable = false;
+        result.errorMessage = "Failed to connect, "
+            "please connect to the internet and try again";
+
+      }
       print("error ${e.response.data}");
       result.error = true;
     }
@@ -537,6 +607,13 @@ class SettingsService extends ABSSettingsService{
       print("error ${e.response.data}");
       print("error22 $e");
       result.error = true;
+      if(e.error.runtimeType == SocketException){
+        print("<<<<<<<<<");
+        result.networkAvailable = false;
+        result.errorMessage = "Failed to connect, "
+            "please connect to the internet and try again";
+
+      }
     }
 
     return result;
@@ -592,6 +669,13 @@ class SettingsService extends ABSSettingsService{
       print("error ${e.response.data}");
       print("error22 $e");
       result.error = true;
+      if(e.error.runtimeType == SocketException){
+        print("<<<<<<<<<");
+        result.networkAvailable = false;
+        result.errorMessage = "Failed to connect, "
+            "please connect to the internet and try again";
+
+      }
     }
 
     return result;
@@ -599,8 +683,8 @@ class SettingsService extends ABSSettingsService{
 
 
   @override
-  Future<Result<void>> checkipsstatus({String token}) async{
-    Result<void> result = Result(error: false);
+  Future<Result<bool>> checkipsstatus({String token}) async{
+    Result<bool> result = Result(error: false);
 
 
     var headers = {
@@ -621,12 +705,20 @@ class SettingsService extends ABSSettingsService{
         result.error = true;
       }else {
         result.error = false;
+        result.data = response1['data']['isComplete'];
       }
 
     }on DioError catch(e){
       print("error ${e.response.data}");
       print("error22 $e");
       result.error = true;
+      if(e.error.runtimeType == SocketException){
+        print("<<<<<<<<<");
+        result.networkAvailable = false;
+        result.errorMessage = "Failed to connect, "
+            "please connect to the internet and try again";
+
+      }
     }
 
     return result;

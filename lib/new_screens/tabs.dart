@@ -17,6 +17,7 @@ import 'package:zimvest/screens/tabs/invstment/investment_screen.dart';
 import 'package:zimvest/screens/tabs/savings/savings_screen.dart';
 import 'package:zimvest/styles/colors.dart';
 import 'package:zimvest/widgets/bottom_nav.dart';
+import 'package:zimvest/widgets/new/new_widgets.dart';
 
 class TabsContainer extends StatefulWidget {
   const TabsContainer({Key key}) : super(key: key);
@@ -66,7 +67,17 @@ class _TabsContainerState extends State<TabsContainer>
 
     });
 
-    dashboardViewModel.getPortfolioValue(identityViewModel.user.token);
+    dashboardViewModel.getPortfolioValue(identityViewModel.user.token).then((value) {
+      print("jjjjjjjj<<<<<<<<<<<<<");
+      if(value.networkAvailable == false){
+        showModalBottomSheet < Null > (context: context, builder: (BuildContext context) {
+          return NoInternetWidget(onDone: (){
+            Navigator.pop(context);
+            Navigator.pop(context);
+          },message: "Your Upload was successfully",);
+        });
+      }
+    });
     savingViewModel.getSavingPlans(token: identityViewModel.user.token);
     paymentViewModel.getWallet(identityViewModel.user.token);
     settingsViewModel.getCompletedSections(token: identityViewModel.user.token);

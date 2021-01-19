@@ -14,6 +14,7 @@ import 'package:zimvest/data/view_models/identity_view_model.dart';
 import 'package:zimvest/data/view_models/payment_view_model.dart';
 import 'package:zimvest/data/view_models/savings_view_model.dart';
 import 'package:zimvest/widgets/buttons.dart';
+import 'package:zimvest/widgets/new/anim.dart';
 
 class SavingsSummaryScreen extends StatefulWidget {
   final double amount;

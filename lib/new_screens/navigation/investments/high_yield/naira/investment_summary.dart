@@ -15,6 +15,7 @@ import 'package:zimvest/utils/margins.dart';
 import 'package:zimvest/utils/strings.dart';
 import 'package:supercharged/supercharged.dart';
 import 'package:zimvest/widgets/buttons.dart';
+import 'package:zimvest/widgets/new/anim.dart';
 
 class InvestmentSummaryScreenNaira extends StatefulWidget {
   final double amount;
@@ -286,7 +287,7 @@ class _InvestmentSummaryScreenNairaState
                                                 child: PrimaryButtonNew(
                                                   onTap: () {
                                                     model.buyNairaInstrument(
-                                                    cardId: paymentViewModel.selectedCard.id,
+                                                    cardId: paymentViewModel.selectedCard?.id??null,
                                                         amount: widget.amount,
                                                         productId:
                                                             widget.productId,
@@ -592,7 +593,7 @@ class _InvestmentSummaryScreenNairaState
                         details.delta.dy == -2.0) {
                       startAnim();
                       model.buyNairaInstrument(
-                        cardId: paymentViewModel.selectedCard.id,
+                        cardId: paymentViewModel.selectedCard?.id??null,
                           amount: widget.amount,
                           productId: widget.productId,
                           uniqueName: widget.uniqueName,

@@ -10,6 +10,8 @@ import 'package:provider/provider.dart';
 import 'package:provider_architecture/_viewmodel_provider.dart';
 import 'package:shimmer/shimmer.dart';
 import 'package:zimvest/data/models/saving_plan.dart';
+import 'package:zimvest/data/view_models/base_model.dart';
+import 'package:zimvest/data/view_models/dashboard_view_model.dart';
 import 'package:zimvest/data/view_models/identity_view_model.dart';
 import 'package:zimvest/data/view_models/savings_view_model.dart';
 import 'package:zimvest/data/view_models/transaction_vm.dart';
@@ -134,9 +136,7 @@ class _PortfolioScreenState extends State<PortfolioScreen> {
               ),
               YMargin(30),
             ])),
-            showInvest
-                ? PortfolioInvestmentWidget()
-                : SavingsSection(),
+            showInvest ? PortfolioInvestmentWidget() : SavingsSection(),
           ],
         ),
       ),
@@ -153,7 +153,8 @@ class SavingsSection extends StatefulWidget {
   _SavingsSectionState createState() => _SavingsSectionState();
 }
 
-class _SavingsSectionState extends State<SavingsSection> with AfterLayoutMixin<SavingsSection> {
+class _SavingsSectionState extends State<SavingsSection>
+    with AfterLayoutMixin<SavingsSection> {
   ABSSavingViewModel savingViewModel;
   ABSIdentityViewModel identityViewModel;
 
@@ -164,19 +165,12 @@ class _SavingsSectionState extends State<SavingsSection> with AfterLayoutMixin<S
   bool loading = false;
 
   bool error = false;
+  bool networkAvailable = true;
+  String errorMessage;
 
   @override
-  void afterFirstLayout(BuildContext context)async {
-
-      await getSavings();
-
-
-
-
-
-
-
-
+  void afterFirstLayout(BuildContext context) async {
+    await getSavings();
   }
 
   Future getSavings() async {
@@ -184,69 +178,77 @@ class _SavingsSectionState extends State<SavingsSection> with AfterLayoutMixin<S
       loading = true;
       error = false;
     });
-    
-    
-    var r1 = await savingViewModel.getSavingPlans(token: identityViewModel.user.token);
-    var r2 = await savingViewModel.getProductTypes(token: identityViewModel.user.token);
-    if(r1.error == false && r2.error == false ){
+
+    var r1 = await savingViewModel.getSavingPlans(
+        token: identityViewModel.user.token);
+    var r2 = await savingViewModel.getProductTypes(
+        token: identityViewModel.user.token);
+    if (r1.error == false && r2.error == false) {
       totalBalance = 0;
-      wealthBox =  savingViewModel.savingPlanModel.where((element) => element.productId == 1).isNotEmpty ?
-      savingViewModel.savingPlanModel.where((element) => element.productId == 1).first : null;
-      aspirePlans = savingViewModel.savingPlanModel.where((element) => element.productId == 2).toList();
+      wealthBox = savingViewModel.savingPlanModel
+              .where((element) => element.productId == 1)
+              .isNotEmpty
+          ? savingViewModel.savingPlanModel
+              .where((element) => element.productId == 1)
+              .first
+          : null;
+      aspirePlans = savingViewModel.savingPlanModel
+          .where((element) => element.productId == 2)
+          .toList();
       savingViewModel.savingPlanModel.forEach((element) {
         totalBalance = totalBalance + element.amountSaved;
       });
-    
+
       setState(() {
         loading = false;
         error = false;
       });
-    
-      if(savingViewModel.productTypes.isNotEmpty){
+
+      if (savingViewModel.productTypes.isNotEmpty) {
         await fetchTransactions(savingViewModel.productTypes.first.id);
       }
-    
+
       //getRequiredDetailsForForm();
-    }else{
+    } else {
       setState(() {
         loading = false;
         error = true;
+        networkAvailable = r1.networkAvailable;
+        errorMessage = r1.errorMessage;
       });
     }
   }
 
-  Future<void> fetchTransactions(int productId,{bool showLoader = false}) async {
-    if(showLoader == true){
-
+  Future<void> fetchTransactions(int productId,
+      {bool showLoader = false}) async {
+    if (showLoader == true) {
       await savingViewModel.getTransactionForProductType(
-          token: identityViewModel.user.token,
-          productId: productId);
-
-
-
-
-    }else{
+          token: identityViewModel.user.token, productId: productId);
+    } else {
       var result = await savingViewModel.getTransactionForProductType(
-          token: identityViewModel.user.token,
-          productId: productId);
-
+          token: identityViewModel.user.token, productId: productId);
     }
-
   }
 
   @override
   Widget build(BuildContext context) {
     savingViewModel = Provider.of(context);
     identityViewModel = Provider.of(context);
-    return error == true ? SavingsInvestmentErrorWidget(retry: getSavings,): loading == true
-        ? SavingsInvestmentLoadingWidget()
-        : wealthBox == null && aspirePlans.isEmpty
-            ? SavingsInvestmentWidget()
-            : SavingsInvestmentCashWidget(
-                wealthBox: wealthBox,
-                aspirePlans: aspirePlans,
-                totalBalance: totalBalance,
-              );
+    return error == true
+        ? SavingsInvestmentErrorWidget(
+            retry: getSavings,
+            networkAvailable: networkAvailable,
+            message: errorMessage,
+          )
+        : loading == true
+            ? SavingsInvestmentLoadingWidget()
+            : wealthBox == null && aspirePlans.isEmpty
+                ? SavingsInvestmentWidget()
+                : SavingsInvestmentCashWidget(
+                    wealthBox: wealthBox,
+                    aspirePlans: aspirePlans,
+                    totalBalance: totalBalance,
+                  );
   }
 }
 
@@ -261,7 +263,7 @@ class SavingsInvestmentWidget extends StatelessWidget {
       sliver: SliverList(
           delegate: SliverChildListDelegate([
         YMargin(MediaQuery.of(context).size.height > 700 ? 200 : 100),
-            SvgPicture.asset("images/new/savings_illus.svg"),
+        SvgPicture.asset("images/new/savings_illus.svg"),
         Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
@@ -283,7 +285,7 @@ class SavingsInvestmentWidget extends StatelessWidget {
           children: [
             PrimaryButtonNew(
               title: "Start Saving",
-              onTap: (){
+              onTap: () {
                 Navigator.of(context).push(SelectGoalScreen.route());
               },
             ),
@@ -294,6 +296,7 @@ class SavingsInvestmentWidget extends StatelessWidget {
     );
   }
 }
+
 class SavingsInvestmentLoadingWidget extends StatelessWidget {
   const SavingsInvestmentLoadingWidget({
     Key key,
@@ -304,97 +307,110 @@ class SavingsInvestmentLoadingWidget extends StatelessWidget {
     return SliverPadding(
       sliver: SliverList(
           delegate: SliverChildListDelegate([
-            Container(
-              height: 400,
-              child: Shimmer.fromColors(
-                baseColor: Colors.grey[300],
-                highlightColor: Colors.grey[100],
-                child: ListView.builder(itemBuilder: (BuildContext context, int index) {
-                  if(index == 0){
-                    return  Row(
-                      children: [
-                        SizedBox(
-                          width: 200.0,
-                          height: 50.0,
-                          child: Shimmer.fromColors(
-                            baseColor: Colors.red,
-                            highlightColor: Colors.yellow,
-                            child: Container(
-                              margin: EdgeInsets.only(top: 10),
-                              width: 40.0,
-                              height: 8.0,
-                              color: Colors.white,
-                            ),
+        Container(
+          height: 400,
+          child: Shimmer.fromColors(
+            baseColor: Colors.grey[300],
+            highlightColor: Colors.grey[100],
+            child: ListView.builder(
+              itemBuilder: (BuildContext context, int index) {
+                if (index == 0) {
+                  return Row(
+                    children: [
+                      SizedBox(
+                        width: 200.0,
+                        height: 50.0,
+                        child: Shimmer.fromColors(
+                          baseColor: Colors.red,
+                          highlightColor: Colors.yellow,
+                          child: Container(
+                            margin: EdgeInsets.only(top: 10),
+                            width: 40.0,
+                            height: 8.0,
+                            color: Colors.white,
                           ),
                         ),
-                      ],
-                    );
-                  }
-                  return  SizedBox(
-                    width: 200.0,
-                    height: 100.0,
-                    child: Shimmer.fromColors(
-                      baseColor: Colors.red,
-                      highlightColor: Colors.yellow,
-                      child: Container(
-                        margin: EdgeInsets.only(top: 10),
-                        width: 40.0,
-                        height: 8.0,
-                        color: Colors.white,
                       ),
-                    ),
+                    ],
                   );
-                },itemCount: 4,
-
-                ),
-              ),
-            )
+                }
+                return SizedBox(
+                  width: 200.0,
+                  height: 100.0,
+                  child: Shimmer.fromColors(
+                    baseColor: Colors.red,
+                    highlightColor: Colors.yellow,
+                    child: Container(
+                      margin: EdgeInsets.only(top: 10),
+                      width: 40.0,
+                      height: 8.0,
+                      color: Colors.white,
+                    ),
+                  ),
+                );
+              },
+              itemCount: 4,
+            ),
+          ),
+        )
       ])),
       padding: EdgeInsets.symmetric(horizontal: 20),
     );
   }
 }
+
 class SavingsInvestmentErrorWidget extends StatelessWidget {
   const SavingsInvestmentErrorWidget({
-    Key key, this.retry,
+    Key key,
+    this.retry,
+    this.networkAvailable,
+    this.message,
   }) : super(key: key);
 
   final VoidCallback retry;
+  final bool networkAvailable;
+  final String message;
 
   @override
   Widget build(BuildContext context) {
     return SliverPadding(
       sliver: SliverList(
           delegate: SliverChildListDelegate([
-            Container(
-              height: 400,
-              child: Column(
-                children: [
-                  YMargin(30),
-                  SvgPicture.asset("images/new/error3.svg"),
-                  YMargin(20),
-                  SizedBox(
-                    width: 300,
-                      child: Text("Failed to connect, "
-                          "please connect to the internet and try again",style:TextStyle(fontFamily: AppStrings.fontNormal,height: 1.7),textAlign: TextAlign.center,)),
-                  YMargin(30),
-                  PrimaryButtonNew(
-                    title: 'Retry',
-                    onTap: retry,
-                  )
-                ],
-              ),
-            )
+        Container(
+          height: 400,
+          child: Column(
+            children: [
+              YMargin(30),
+              SvgPicture.asset("images/new/error3.svg"),
+              YMargin(20),
+              SizedBox(
+                  width: 300,
+                  child: Text(
+                    message,
+                    style: TextStyle(
+                        fontFamily: AppStrings.fontNormal, height: 1.7),
+                    textAlign: TextAlign.center,
+                  )),
+              YMargin(30),
+              PrimaryButtonNew(
+                title: 'Retry',
+                onTap: retry,
+              )
+            ],
+          ),
+        )
       ])),
       padding: EdgeInsets.symmetric(horizontal: 20),
     );
   }
 }
 
-
 class SavingsInvestmentCashWidget extends StatelessWidget {
   const SavingsInvestmentCashWidget({
-    Key key, this.wealthBox, this.aspirePlans, this.totalBalance,
+    Key key,
+    this.wealthBox,
+    this.aspirePlans,
+    this.totalBalance,
   }) : super(key: key);
 
   final SavingPlanModel wealthBox;
@@ -403,8 +419,9 @@ class SavingsInvestmentCashWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    List<SavingPlanModel> goals = [...aspirePlans,SavingPlanModel()];
-    List<SavingPlanModel> goals1 = [...aspirePlans,SavingPlanModel()];
+    List<SavingPlanModel> goals = [...aspirePlans, SavingPlanModel()];
+    List<SavingPlanModel> goals1 = [...aspirePlans, SavingPlanModel()];
+    ABSDashboardViewModel dashboardViewModel = Provider.of(context);
     return SliverPadding(
       sliver: SliverList(
           delegate: SliverChildListDelegate([
@@ -414,78 +431,111 @@ class SavingsInvestmentCashWidget extends StatelessWidget {
               color: AppColors.kGreyText, fontFamily: AppStrings.fontMedium),
         ),
         YMargin(12),
-        MoneyTitleWidget(
-          amount: totalBalance,
+        Row(
+          children: [
+            Transform.translate(
+                offset: Offset(0, -4),
+                child: Text(
+                  AppStrings.nairaSymbol,
+                  style: TextStyle(
+                      fontSize: 14, color: AppColors.kSecondaryBoldText),
+                )),
+            XMargin(2),
+            Text(
+              dashboardViewModel.dashboardModel.nairaSavings
+                  .substring(1)
+                  .split(".")
+                  .first,
+              style: TextStyle(
+                  fontSize: 25,
+                  fontFamily: AppStrings.fontMedium,
+                  color: AppColors.kSecondaryBoldText),
+            ),
+            XMargin(3),
+            Transform.translate(
+              offset: Offset(0, -4),
+              child: Text(
+                ".${dashboardViewModel.dashboardModel.nairaSavings.split(".").last}",
+                style: TextStyle(
+                    fontSize: 14,
+                    fontFamily: AppStrings.fontMedium,
+                    color: AppColors.kSecondaryBoldText),
+              ),
+            ),
+          ],
         ),
         YMargin(25),
-        wealthBox == null ? SizedBox(): GestureDetector(
-          onTap: (){
-            Navigator.push(context, WealthBoxDetailsScreen.route(wealthBox));
-          },
-          child: Container(
-            height: 154,
-            margin: EdgeInsets.only(bottom: 30),
-            width: double.infinity,
-            padding: EdgeInsets.symmetric(horizontal: 15, vertical: 15),
-            decoration: BoxDecoration(
-              color: AppColors.kWhite,
-              boxShadow: AppUtils.getBoxShaddow,
-              borderRadius: BorderRadius.circular(11),
-            ),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                YMargin(3),
-                Text(wealthBox.planName),
-                Spacer(),
-                Row(
-                  children: [
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          "Balance",
-                          style: TextStyle(
-                              fontSize: 12,
-                              fontFamily: AppStrings.fontNormal,
-                              color: AppColors.kGreyText),
-                        ),
-                        YMargin(10),
-                        Text(
-                          "${AppStrings.nairaSymbol}${wealthBox.amountSaved}",
-                          style: TextStyle(
-                              color: AppColors.kGreyText,
-                              fontFamily: AppStrings.fontMedium),
-                        )
-                      ],
-                    ),
-                    Spacer(),
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.end,
-                      children: [
-                        Text(
-                          "Interest P.A",
-                          style: TextStyle(
-                              fontSize: 12,
-                              fontFamily: AppStrings.fontNormal,
-                              color: AppColors.kGreyText),
-                        ),
-                        YMargin(10),
-                        Text(
-                          "${wealthBox.interestRate}%",
-                          textAlign: TextAlign.end,
-                          style: TextStyle(
-                              color: AppColors.kGreyText,
-                              fontFamily: AppStrings.fontMedium),
-                        )
-                      ],
-                    ),
-                  ],
-                )
-              ],
-            ),
-          ),
-        ),
+        wealthBox == null
+            ? SizedBox()
+            : GestureDetector(
+                onTap: () {
+                  Navigator.push(
+                      context, WealthBoxDetailsScreen.route(wealthBox));
+                },
+                child: Container(
+                  height: 154,
+                  margin: EdgeInsets.only(bottom: 30),
+                  width: double.infinity,
+                  padding: EdgeInsets.symmetric(horizontal: 15, vertical: 15),
+                  decoration: BoxDecoration(
+                    color: AppColors.kWhite,
+                    boxShadow: AppUtils.getBoxShaddow,
+                    borderRadius: BorderRadius.circular(11),
+                  ),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      YMargin(3),
+                      Text(wealthBox.planName),
+                      Spacer(),
+                      Row(
+                        children: [
+                          Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                "Balance",
+                                style: TextStyle(
+                                    fontSize: 12,
+                                    fontFamily: AppStrings.fontNormal,
+                                    color: AppColors.kGreyText),
+                              ),
+                              YMargin(10),
+                              Text(
+                                "${AppStrings.nairaSymbol}${wealthBox.amountSaved}",
+                                style: TextStyle(
+                                    color: AppColors.kGreyText,
+                                    fontFamily: AppStrings.fontMedium),
+                              )
+                            ],
+                          ),
+                          Spacer(),
+                          Column(
+                            crossAxisAlignment: CrossAxisAlignment.end,
+                            children: [
+                              Text(
+                                "Interest P.A",
+                                style: TextStyle(
+                                    fontSize: 12,
+                                    fontFamily: AppStrings.fontNormal,
+                                    color: AppColors.kGreyText),
+                              ),
+                              YMargin(10),
+                              Text(
+                                "${wealthBox.interestRate}%",
+                                textAlign: TextAlign.end,
+                                style: TextStyle(
+                                    color: AppColors.kGreyText,
+                                    fontFamily: AppStrings.fontMedium),
+                              )
+                            ],
+                          ),
+                        ],
+                      )
+                    ],
+                  ),
+                ),
+              ),
         Row(
           children: [
             Text(
@@ -530,7 +580,8 @@ class SavingsInvestmentCashWidget extends StatelessWidget {
               ),
             );
           }
-          if (goals.length.isEven && ((goals.length / 2).round() - 1) == index) {
+          if (goals.length.isEven &&
+              ((goals.length / 2).round() - 1) == index) {
             SavingPlanModel goal = goals1.removeAt(0);
             return Padding(
               padding: const EdgeInsets.only(top: 20),
@@ -588,77 +639,82 @@ class PortfolioInvestmentWidget extends StatefulWidget {
 }
 
 class _PortfolioInvestmentWidgetState extends State<PortfolioInvestmentWidget> {
-  bool naira = true;
+  // bool naira = true;
   @override
   Widget build(BuildContext context) {
-    return SliverPadding(
-      padding: EdgeInsets.symmetric(horizontal: 20),
-      sliver: SliverList(
-        delegate: SliverChildListDelegate(
-          [
-            YMargin(10),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Container(
-                  width: 100,
-                  height: 50,
-                  child: Stack(
-                    children: [
-                      Row(
-                        children: [
-                          InkWell(
+    return ViewModelProvider<BaseViewModel>.withConsumer(
+      viewModelBuilder: () => BaseViewModel(),
+      builder: (context, model, _) => SliverPadding(
+        padding: EdgeInsets.symmetric(horizontal: 20),
+        sliver: SliverList(
+          delegate: SliverChildListDelegate(
+            [
+              YMargin(10),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Container(
+                    width: 100,
+                    height: 50,
+                    child: Stack(
+                      children: [
+                        Row(
+                          children: [
+                            InkWell(
+                                onTap: () {
+                                  // setState(() {
+                                  //   modelnaira = true;
+                                  // });
+                                  model.switcher();
+                                },
+                                child: Text(
+                                  "Naira",
+                                  style: TextStyle(
+                                      color: model.swittch
+                                          ? AppColors.kPrimaryColor
+                                          : AppColors.kTextColor,
+                                      fontSize: 12,
+                                      fontFamily: model.swittch
+                                          ? AppStrings.fontMedium
+                                          : AppStrings.fontNormal),
+                                )),
+                            Spacer(),
+                            InkWell(
                               onTap: () {
-                                setState(() {
-                                  naira = true;
-                                });
+                                model.switcher();
                               },
                               child: Text(
-                                "Naira",
+                                "Dollar",
                                 style: TextStyle(
-                                    color: naira
-                                        ? AppColors.kPrimaryColor
-                                        : AppColors.kTextColor,
+                                    color: model.swittch
+                                        ? AppColors.kTextColor
+                                        : AppColors.kPrimaryColor,
                                     fontSize: 12,
-                                    fontFamily: naira
-                                        ? AppStrings.fontMedium
-                                        : AppStrings.fontNormal),
-                              )),
-                          Spacer(),
-                          InkWell(
-                              onTap: () {
-                                setState(() {
-                                  naira = false;
-                                });
-                              },
-                              child: Text("Dollar",
-                                  style: TextStyle(
-                                      color: naira
-                                          ? AppColors.kTextColor
-                                          : AppColors.kPrimaryColor,
-                                      fontSize: 12,
-                                      fontFamily: naira
-                                          ? AppStrings.fontNormal
-                                          : AppStrings.fontMedium))),
-                        ],
-                      ),
-                      AnimatedPositioned(
-                          top: 20,
-                          left: naira ? 5 : 70,
-                          child: Container(
-                            height: 3,
-                            width: 20,
-                            decoration:
-                                BoxDecoration(color: AppColors.kPrimaryColor),
-                          ),
-                          duration: Duration(milliseconds: 300))
-                    ],
-                  ),
-                )
-              ],
-            ),
-            naira ? nairaPortfolio(context) : dollarPortfolio(context)
-          ],
+                                    fontFamily: model.swittch
+                                        ? AppStrings.fontNormal
+                                        : AppStrings.fontMedium),
+                              ),
+                            ),
+                          ],
+                        ),
+                        AnimatedPositioned(
+                            top: 20,
+                            left: model.swittch ? 5 : 70,
+                            child: Container(
+                              height: 3,
+                              width: 20,
+                              decoration:
+                                  BoxDecoration(color: AppColors.kPrimaryColor),
+                            ),
+                            duration: Duration(milliseconds: 300))
+                      ],
+                    ),
+                  )
+                ],
+              ),
+              model.swittch ? nairaPortfolio(context) : dollarPortfolio(context)
+            ],
+          ),
         ),
       ),
     );
@@ -670,22 +726,29 @@ class InvestmentItemWidget extends StatelessWidget {
   final String investmentType;
   final String balance;
   final String annualReturns;
+  final double topPadding;
   const InvestmentItemWidget({
     Key key,
     this.investmentName,
     this.investmentType,
     this.balance,
     this.annualReturns,
+    this.topPadding = 25.0,
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () {
-        Navigator.push(context, InvestmentDetailsScreen.route());
+        Navigator.push(context, InvestmentDetailsScreen.route(
+          investmentName: investmentName,
+          investmentType: investmentType,
+          balance: balance,
+          annualReturns: annualReturns
+        ));
       },
       child: Container(
-        margin: EdgeInsets.only(top: 25),
+        margin: EdgeInsets.only(top: topPadding),
         padding: EdgeInsets.all(11),
         height: 154,
         width: double.infinity,
@@ -771,167 +834,332 @@ class EmptyInvstmentWidget extends StatefulWidget {
   _EmptyInvstmentWidgetState createState() => _EmptyInvstmentWidgetState();
 }
 
-class _EmptyInvstmentWidgetState extends State<EmptyInvstmentWidget> with AfterLayoutMixin<EmptyInvstmentWidget> {
-
-
+class _EmptyInvstmentWidgetState extends State<EmptyInvstmentWidget>
+    with AfterLayoutMixin<EmptyInvstmentWidget> {
   @override
   void afterFirstLayout(BuildContext context) {
     print("1111111111");
-    setState(() {
-
-    });
+    setState(() {});
   }
 
   @override
   Widget build(BuildContext context) {
-
-    return Column(children: [
-      YMargin(MediaQuery.of(context).size.height > 700 ? 100 : 50),
-      SvgPicture.asset("images/new/empty3.svg",),
-      YMargin(20),
-      Row(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          SizedBox(
-              width: 200,
-              child: Text(
-                "You currently don’t have an Investment plan",
-                textAlign: TextAlign.center,
-                style: TextStyle(
-                    fontFamily: AppStrings.fontNormal,
-                    color: AppColors.kGreyText,
-                    height: 1.6),
-              )),
-        ],
-      ),
-      YMargin(40),
-      Row(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          PrimaryButtonNew(
-            onTap: (){},
-            title: "Start Investing",
-          ),
-        ],
-      ),
-    ],);
+    return Column(
+      children: [
+        YMargin(MediaQuery.of(context).size.height > 700 ? 100 : 50),
+        SvgPicture.asset(
+          "images/new/empty3.svg",
+        ),
+        YMargin(20),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            SizedBox(
+                width: 200,
+                child: Text(
+                  "You currently don’t have an Investment plan",
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                      fontFamily: AppStrings.fontNormal,
+                      color: AppColors.kGreyText,
+                      height: 1.6),
+                )),
+          ],
+        ),
+        YMargin(40),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            PrimaryButtonNew(
+              onTap: () {},
+              title: "Start Investing",
+            ),
+          ],
+        ),
+      ],
+    );
   }
 }
 
 Widget dollarPortfolio(BuildContext context) {
+  ABSDashboardViewModel dashboardViewModel = Provider.of(context);
   return ViewModelProvider<PortfolioViewModel>.withConsumer(
     viewModelBuilder: () => PortfolioViewModel(),
     onModelReady: (model) => model.getDollarPortfolio(),
     builder: (context, model, _) => Container(
       height: screenHeight(context),
       width: screenWidth(context),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(
-            "Total Balance",
-            style: TextStyle(
-              fontSize: 12,
-              color: AppColors.kTextColor.withOpacity(0.4),
-            ),
-          ),
-          YMargin(12),
-          MoneyTitleWidget(
-            amount: 820000,
-            dollar: true,
-          ),
-          Expanded(
-            child: model.dollarTransaction.length == 0
-                ? Center(
-                  child: Padding(
-                    padding: const EdgeInsets.only(bottom: 150.0),
-                    child: Text(
-                        "No Transactons yet",
-                        style: TextStyle(color: AppColors.kTextColor),
+      child: model.busy
+          ? Container(
+              height: 400,
+              child: Shimmer.fromColors(
+                baseColor: Colors.grey[300],
+                highlightColor: Colors.grey[100],
+                child: ListView.builder(
+                  itemBuilder: (BuildContext context, int index) {
+                    if (index == 0) {
+                      return Row(
+                        children: [
+                          SizedBox(
+                            width: 200.0,
+                            height: 50.0,
+                            child: Shimmer.fromColors(
+                              baseColor: Colors.red,
+                              highlightColor: Colors.yellow,
+                              child: Container(
+                                margin: EdgeInsets.only(top: 10),
+                                width: 40.0,
+                                height: 8.0,
+                                color: Colors.white,
+                              ),
+                            ),
+                          ),
+                        ],
+                      );
+                    }
+                    return SizedBox(
+                      width: 200.0,
+                      height: 100.0,
+                      child: Shimmer.fromColors(
+                        baseColor: Colors.red,
+                        highlightColor: Colors.yellow,
+                        child: Container(
+                          margin: EdgeInsets.only(top: 10),
+                          width: 40.0,
+                          height: 8.0,
+                          color: Colors.white,
+                        ),
                       ),
+                    );
+                  },
+                  itemCount: 4,
+                ),
+              ),
+            )
+          : Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  "Total Balance",
+                  style: TextStyle(
+                    fontSize: 12,
+                    color: AppColors.kTextColor.withOpacity(0.4),
                   ),
-                )
-                : ListView.builder(
-                    itemCount: model.dollarTransaction.length,
-                    itemBuilder: (context, index) => model.busy
-                        ? CircularProgressIndicator(
-                            valueColor:
-                                AlwaysStoppedAnimation(AppColors.kPrimaryColor),
+                ),
+                YMargin(12),
+                Row(
+                  children: [
+                    Transform.translate(
+                        offset: Offset(0, -4),
+                        child: Text(
+                          AppStrings.dollarSymbol,
+                          style: TextStyle(
+                              fontSize: 14,
+                              color: AppColors.kSecondaryBoldText),
+                        )),
+                    XMargin(2),
+                    Text(
+                      dashboardViewModel.dashboardModel.dollarPortfolio
+                          .substring(1)
+                          .split(".")
+                          .first,
+                      style: TextStyle(
+                          fontSize: 25,
+                          fontFamily: AppStrings.fontMedium,
+                          color: AppColors.kSecondaryBoldText),
+                    ),
+                    XMargin(3),
+                    Transform.translate(
+                      offset: Offset(0, -4),
+                      child: Text(
+                        ".${dashboardViewModel.dashboardModel.dollarPortfolio.split(".").last}",
+                        style: TextStyle(
+                            fontSize: 14,
+                            fontFamily: AppStrings.fontMedium,
+                            color: AppColors.kSecondaryBoldText),
+                      ),
+                    ),
+                  ],
+                ),
+                Expanded(
+                  child: Container(
+                    height: screenHeight(context),
+                    width: screenWidth(context),
+                    padding: EdgeInsets.only(bottom: 155),
+                    child: model.dollarTransaction.length == 0
+                        ? Center(
+                            child: Padding(
+                              padding: const EdgeInsets.only(bottom: 150.0),
+                              child: Text(
+                                "No Transactons yet",
+                                style: TextStyle(color: AppColors.kTextColor),
+                              ),
+                            ),
                           )
-                        : InvestmentItemWidget(
-                            investmentName:
-                                model.dollarTransaction[index].uniqueName,
-                            investmentType: model
-                                .dollarTransaction[index].zimvestInstrumentName,
-                            balance:
-                                "${AppStrings.dollarSymbol}${model.dollarTransaction[index].withdrawableValue.toString()}",
-                            annualReturns:
-                                "${model.dollarTransaction[index].percentageInterest.toString()}",
+                        : ListView.builder(
+                            itemCount: model.dollarTransaction.length,
+                            itemBuilder: (context, index) => Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: InvestmentItemWidget(
+                                topPadding: 0,
+                                investmentName:
+                                    model.dollarTransaction[index].uniqueName,
+                                investmentType: model.dollarTransaction[index]
+                                    .zimvestInstrumentName,
+                                balance:
+                                    "${AppStrings.dollarSymbol}${model.dollarTransaction[index].withdrawableValue.toString()}",
+                                annualReturns:
+                                    "${model.dollarTransaction[index].percentageInterest.toString()}",
+                              ),
+                            ),
                           ),
                   ),
-          ),
-          YMargin(104),
-        ],
-      ),
+                ),
+                YMargin(104),
+              ],
+            ),
     ),
   );
 }
 
 Widget nairaPortfolio(BuildContext context) {
+  ABSDashboardViewModel dashboardViewModel = Provider.of(context);
   return ViewModelProvider<PortfolioViewModel>.withConsumer(
     viewModelBuilder: () => PortfolioViewModel(),
     onModelReady: (model) => model.getNairaPortfolio(),
     builder: (context, model, _) => Container(
       height: screenHeight(context),
       width: screenWidth(context),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(
-            "Total Balance",
-            style: TextStyle(
-              fontSize: 12,
-              color: AppColors.kTextColor.withOpacity(0.4),
-            ),
-          ),
-          YMargin(12),
-          MoneyTitleWidget(
-            amount: 820000,
-            dollar: false,
-          ),
-          Expanded(
-            child: model.nairaTransaction.length == 0
-                ? Center(
-                  child: Padding(
-                    padding: const EdgeInsets.only(bottom: 150.0),
-                    child: Text(
-                        "No Transactons yet",
-                        style: TextStyle(color: AppColors.kTextColor),
+      child: model.busy
+          ? Container(
+              height: 400,
+              child: Shimmer.fromColors(
+                baseColor: Colors.grey[300],
+                highlightColor: Colors.grey[100],
+                child: ListView.builder(
+                  itemBuilder: (BuildContext context, int index) {
+                    if (index == 0) {
+                      return Row(
+                        children: [
+                          SizedBox(
+                            width: 200.0,
+                            height: 50.0,
+                            child: Shimmer.fromColors(
+                              baseColor: Colors.red,
+                              highlightColor: Colors.yellow,
+                              child: Container(
+                                margin: EdgeInsets.only(top: 10),
+                                width: 40.0,
+                                height: 8.0,
+                                color: Colors.white,
+                              ),
+                            ),
+                          ),
+                        ],
+                      );
+                    }
+                    return SizedBox(
+                      width: 200.0,
+                      height: 100.0,
+                      child: Shimmer.fromColors(
+                        baseColor: Colors.red,
+                        highlightColor: Colors.yellow,
+                        child: Container(
+                          margin: EdgeInsets.only(top: 10),
+                          width: 40.0,
+                          height: 8.0,
+                          color: Colors.white,
+                        ),
                       ),
+                    );
+                  },
+                  itemCount: 4,
+                ),
+              ),
+            )
+          : Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  "Total Balance",
+                  style: TextStyle(
+                    fontSize: 12,
+                    color: AppColors.kTextColor.withOpacity(0.4),
                   ),
-                )
-                : ListView.builder(
-                    itemCount: model.nairaTransaction.length,
-                    itemBuilder: (context, index) => model.busy
-                        ? CircularProgressIndicator(
-                            valueColor:
-                                AlwaysStoppedAnimation(AppColors.kPrimaryColor),
+                ),
+                YMargin(12),
+                Row(
+                  children: [
+                    Transform.translate(
+                        offset: Offset(0, -4),
+                        child: Text(
+                          AppStrings.nairaSymbol,
+                          style: TextStyle(
+                              fontSize: 14,
+                              color: AppColors.kSecondaryBoldText),
+                        )),
+                    XMargin(2),
+                    Text(
+                      dashboardViewModel.dashboardModel.nairaPortfolio
+                          .substring(1)
+                          .split(".")
+                          .first,
+                      style: TextStyle(
+                          fontSize: 25,
+                          fontFamily: AppStrings.fontMedium,
+                          color: AppColors.kSecondaryBoldText),
+                    ),
+                    XMargin(3),
+                    Transform.translate(
+                      offset: Offset(0, -4),
+                      child: Text(
+                        ".${dashboardViewModel.dashboardModel.nairaPortfolio.split(".").last}",
+                        style: TextStyle(
+                            fontSize: 14,
+                            fontFamily: AppStrings.fontMedium,
+                            color: AppColors.kSecondaryBoldText),
+                      ),
+                    ),
+                  ],
+                ),
+                Expanded(
+                  child: Container(
+                    height: screenHeight(context),
+                    width: screenWidth(context),
+                    padding: EdgeInsets.only(bottom: 155),
+                    margin: EdgeInsets.only(bottom: 10),
+                    child: model.nairaTransaction.length == 0
+                        ? Center(
+                            child: Padding(
+                              padding: const EdgeInsets.only(bottom: 150.0),
+                              child: Text(
+                                "No Transactons yet",
+                                style: TextStyle(color: AppColors.kTextColor),
+                              ),
+                            ),
                           )
-                        : InvestmentItemWidget(
-                            investmentName:
-                                model.nairaTransaction[index].uniqueName,
-                            investmentType: model
-                                .nairaTransaction[index].zimvestInstrumentName,
-                            balance:
-                                "${AppStrings.nairaSymbol}${model.nairaTransaction[index].withdrawableValue.toString()}",
-                            annualReturns:
-                                "${model.nairaTransaction[index].percentageInterest.toString()}",
+                        : ListView.builder(
+                            itemCount: model.nairaTransaction.length,
+                            itemBuilder: (context, index) => Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: InvestmentItemWidget(
+                                topPadding: 0,
+                                investmentName:
+                                    model.nairaTransaction[index].uniqueName,
+                                investmentType: model.nairaTransaction[index]
+                                    .zimvestInstrumentName,
+                                balance:
+                                    "${AppStrings.nairaSymbol}${model.nairaTransaction[index].withdrawableValue.toString()}",
+                                annualReturns:
+                                    "${model.nairaTransaction[index].percentageInterest.toString()}",
+                              ),
+                            ),
                           ),
                   ),
-          ),
-          YMargin(104),
-        ],
-      ),
+                ),
+                YMargin(150),
+              ],
+            ),
     ),
   );
 }

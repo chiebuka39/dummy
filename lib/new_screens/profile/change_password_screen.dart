@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:provider/provider.dart';
 import 'package:zimvest/data/view_models/identity_view_model.dart';
 import 'package:zimvest/styles/colors.dart';
@@ -146,16 +147,12 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
                 loading: loading,
                 title: "Change Password",
                 onTap:(isValidPass(newPassword) && oldPassword.length > 8) ?  ()async{
-                  setState(() {
-                    loading = true;
-                  });
+                  EasyLoading.show(status: '');
                   var result = await identityViewModel.changePassword(
                       newPassword: newPassword,
                       currentPassword: oldPassword
                   );
-                  setState(() {
-                    loading = false;
-                  });
+                  EasyLoading.dismiss();
                   if(result.error == false){
                     showModalBottomSheet < Null > (context: context, builder: (BuildContext context) {
                       return PasswordSuccessWidget(onDone: (){

@@ -41,7 +41,7 @@ class _ChooseFundingScreenState extends State<ChooseFundingScreen> {
 
   @override
   Widget build(BuildContext context) {
-    
+    ABSSavingViewModel savingViewModel = Provider.of(context);
     return GestureDetector(
       onTap: (){
         FocusScope.of(context).requestFocus(new FocusNode());
@@ -94,7 +94,7 @@ class _ChooseFundingScreenState extends State<ChooseFundingScreen> {
                 ),
                 YMargin(25),
                 SelectWallet(onPressed: (){
-                  Navigator.of(context).push(SavingsSummaryScreen.route());
+                  Navigator.of(context).push(SavingsSummaryScreen.route(amount: savingViewModel.amountToSave, savingsPlan: savingViewModel.savingPlanModel));
                 },),
                 YMargin(5),
                 Text("Funding with your Zimvest wallet is free",

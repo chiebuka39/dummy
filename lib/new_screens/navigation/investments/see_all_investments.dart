@@ -128,13 +128,7 @@ class _AllDollarInvestmentsState extends State<AllDollarInvestments> {
               (e) => GestureDetector(
                 onTap: () => Navigator.push(
                   context,
-                  HighYieldDetailsDollar.route(
-                      duration: "${widget.title}",
-                      productId: e.id,
-                      maturityDate: e.maturityDate,
-                      rate: e.depositRate,
-                      minimumAmount: e.minimumAmount,
-                      maximumAmount: e.maximumAmount),
+                  HighYieldDetailsDollar.route(),
                 ),
                 child: Padding(
                   padding: const EdgeInsets.only(bottom: 20.0),

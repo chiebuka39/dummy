@@ -193,9 +193,11 @@ class _SavingTransactionsWidgetState extends State<SavingTransactionsWidget>
 
   @override
   void afterFirstLayout(BuildContext context) async{
-    savingViewModel.getTransactionForProductType(
+    savingViewModel.getSavingsTopup(
       token: identityViewModel.user.token,
-      productId: 1
+    );
+    savingViewModel.getSavingsWithdrawal(
+      token: identityViewModel.user.token,
     );
   }
 
@@ -289,17 +291,23 @@ class _SavingTransactionsWidgetState extends State<SavingTransactionsWidget>
 
             ],
           )
-              : Column(
+              : savingViewModel.savingsTransactions[2] == null ?
+          ShimmerLoading()
+              :savingViewModel
+              .savingsTransactions[2].isEmpty ? EmptyInvstmentWidget(): Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
 
-              ...List.generate(6, (index) => TransactionItemWidget(
-                narration: "Paid money in",
-                date: "2 march",
-                amount: 2000,
-                symbol: AppStrings.nairaSymbol,
-                topUp: false,
-              )),
+              ...List.generate(savingViewModel.savingsTransactions[2].length, (index) {
+                ProductTransaction trans = savingViewModel.savingsTransactions[2][index];
+                return TransactionItemWidget(
+                  narration: trans.transactionDescription,
+                  date: AppUtils.getReadableDateShort(trans.dateUpdated),
+                  amount: trans.amount,
+                  symbol: AppStrings.nairaSymbol,
+                  topUp: false,
+                );
+              }),
               YMargin(50)
 
             ],

@@ -73,6 +73,8 @@ abstract class ABSSavingViewModel extends ChangeNotifier{
     int productId});
   Future<Result<List<ProductTransaction>>> getTransactionForProduct({String token,
     int id});
+  Future<Result<List<ProductTransaction>>> getSavingsTopup({String token});
+  Future<Result<List<ProductTransaction>>> getSavingsWithdrawal({String token});
   Future<Result<List<FundingChannel>>> getFundingChannel({String token});
   Future<Result<List<FundingChannel>>> getWithdrawalChannel({String token});
   Future<Result<List<SavingsFrequency>>> getSavingFrequency({String token});
@@ -200,6 +202,32 @@ class SavingViewModel extends ABSSavingViewModel{
     if(result.error == false){
       var t = savingsTransactions;
       t[productId] = result.data ;
+      savingsTransactions = t;
+    }
+    print(",,, ${result.data}");
+    return result;
+  }
+
+  @override
+  Future<Result<List<ProductTransaction>>> getSavingsTopup({String token}) async{
+
+    var result =await _savingService.getSavingsTopup(token: token);
+    if(result.error == false){
+      var t = savingsTransactions;
+      t[1] = result.data ;
+      savingsTransactions = t;
+    }
+    print(",,, ${result.data}");
+    return result;
+  }
+
+  @override
+  Future<Result<List<ProductTransaction>>> getSavingsWithdrawal({String token}) async{
+
+    var result =await _savingService.getSavingsWithdrawal(token: token);
+    if(result.error == false){
+      var t = savingsTransactions;
+      t[2] = result.data ;
       savingsTransactions = t;
     }
     print(",,, ${result.data}");

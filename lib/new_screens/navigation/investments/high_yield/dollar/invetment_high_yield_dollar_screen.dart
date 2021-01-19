@@ -80,13 +80,7 @@ class _HighYieldDollarScreenState extends State<HighYieldDollarScreen> {
                                 (e) => GestureDetector(
                                   onTap: () => Navigator.push(
                                     context,
-                                    HighYieldDetailsDollar.route(
-                                        duration: "${instrumentNames[index]}",
-                                        productId: e.id,
-                                        maturityDate: e.maturityDate,
-                                        rate: e.depositRate,
-                                        minimumAmount: e.minimumAmount,
-                                        maximumAmount: e.maximumAmount),
+                                    HighYieldDetailsDollar.route(),
                                   ),
                                   child: Padding(
                                     padding:

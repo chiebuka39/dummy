@@ -14,6 +14,7 @@ import 'package:zimvest/utils/margins.dart';
 import 'package:zimvest/utils/strings.dart';
 import 'package:zimvest/widgets/buttons.dart';
 import 'package:supercharged/supercharged.dart';
+import 'package:zimvest/widgets/new/anim.dart';
 
 import '../../../../tabs.dart';
 
@@ -597,7 +598,7 @@ class _SavingsSummaryScreenState extends State<SavingsSummaryScreen> {
                         details.delta.dy == -2.0) {
                       startAnim();
                       model.buyTreasuryBills(
-                        cardId: paymentViewModel.selectedCard.id,
+                        cardId: paymentViewModel.selectedCard == null ? null : paymentViewModel.selectedCard.id,
                         productId: widget.investmentId,
                         instrumentId: widget.instrumentId,
                         fundingChannel: widget.channelId,

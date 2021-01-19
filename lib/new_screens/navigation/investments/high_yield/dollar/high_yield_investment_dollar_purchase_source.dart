@@ -15,7 +15,7 @@ class HighYieldInvestmentDollarPurchaseSource extends StatefulWidget {
   final String duration;
   final String maturityDate;
   final String rate;
-  final String minimumAmount;
+  final double minimumAmount;
   final String maximumAmount;
   final double amount;
 
@@ -36,7 +36,7 @@ class HighYieldInvestmentDollarPurchaseSource extends StatefulWidget {
       String duration,
       String maturityDate,
       String rate,
-      String minimumAmount,
+      double minimumAmount,
       String maximumAmount,
       double amount}) {
     return MaterialPageRoute(

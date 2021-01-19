@@ -78,11 +78,11 @@ class _HighYieldInvestmentNairaUniqueNameState
               YMargin(252),
               RoundedNextButton(
                 onTap: () {
-                  List<double> minimumAmount = model.nairaInstrument.data
+                  List<num> minimumAmount = model.nairaInstrument.data
                       .map((e) => e.minAmount)
                       .toList();
                   print(minimumAmount);
-                  List<double> minimumAmounts = [];
+                  List<num> minimumAmounts = [];
                   for (var i in minimumAmount) {
                     if (i > 0) {
                       minimumAmounts.add(i);
@@ -121,8 +121,9 @@ class _HighYieldInvestmentNairaUniqueNameState
                     Navigator.push(
                       context,
                       InvestmentHighYieldNairaAmountInput.route(
-                          uniqueName: investmentName.text,
-                          minimumAmount: minimumAmounts.reduce(min)),
+                        uniqueName: investmentName.text,
+                        minimumAmount: minimumAmounts.reduce(min).toDouble(),
+                      ),
                     );
                   }
                 },

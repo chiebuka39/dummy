@@ -15,6 +15,7 @@ import 'package:simple_animations/simple_animations.dart';
 import 'package:supercharged/supercharged.dart';
 import 'package:zimvest/widgets/buttons.dart';
 import 'package:zimvest/widgets/navigation/delete_wealthbox.dart';
+import 'package:zimvest/widgets/new/anim.dart';
 
 class SavingsSummaryScreen extends StatefulWidget {
   static Route<dynamic> route() {
