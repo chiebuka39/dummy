@@ -139,8 +139,6 @@ class _TransactionsScreenState extends State<TransactionsScreen> {
   }
 }
 
-
-
 class SavingTransactionsEmptyWidget extends StatelessWidget {
   const SavingTransactionsEmptyWidget({
     Key key,
@@ -168,7 +166,6 @@ class SavingTransactionsEmptyWidget extends StatelessWidget {
           ],
         ),
         YMargin(40),
-        
       ])),
       padding: EdgeInsets.symmetric(horizontal: 20),
     );
@@ -181,7 +178,8 @@ class SavingTransactionsWidget extends StatefulWidget {
   }) : super(key: key);
 
   @override
-  _SavingTransactionsWidgetState createState() => _SavingTransactionsWidgetState();
+  _SavingTransactionsWidgetState createState() =>
+      _SavingTransactionsWidgetState();
 }
 
 class _SavingTransactionsWidgetState extends State<SavingTransactionsWidget>
@@ -192,7 +190,7 @@ class _SavingTransactionsWidgetState extends State<SavingTransactionsWidget>
   ABSIdentityViewModel identityViewModel;
 
   @override
-  void afterFirstLayout(BuildContext context) async{
+  void afterFirstLayout(BuildContext context) async {
     savingViewModel.getSavingsTopup(
       token: identityViewModel.user.token,
     );
@@ -262,7 +260,7 @@ class _SavingTransactionsWidgetState extends State<SavingTransactionsWidget>
                           height: 3,
                           width: 40,
                           decoration:
-                          BoxDecoration(color: AppColors.kPrimaryColor),
+                              BoxDecoration(color: AppColors.kPrimaryColor),
                         ),
                         duration: Duration(milliseconds: 300))
                   ],
@@ -271,58 +269,58 @@ class _SavingTransactionsWidgetState extends State<SavingTransactionsWidget>
             ],
           ),
           topUp
-              ? savingViewModel.savingsTransactions[1] == null ?
-          ShimmerLoading()
-              :savingViewModel
-              .savingsTransactions[1].isEmpty ? EmptyInvstmentWidget(): Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-
-              ...List.generate(savingViewModel.savingsTransactions[1].length, (index) {
-                ProductTransaction trans = savingViewModel.savingsTransactions[1][index];
-                return TransactionItemWidget(
-                  narration: trans.transactionDescription,
-                  date: AppUtils.getReadableDateShort(trans.dateUpdated),
-                  amount: trans.amount,
-                  symbol: AppStrings.nairaSymbol,
-                );
-              }),
-              YMargin(50)
-
-            ],
-          )
-              : savingViewModel.savingsTransactions[2] == null ?
-          ShimmerLoading()
-              :savingViewModel
-              .savingsTransactions[2].isEmpty ? EmptyInvstmentWidget(): Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-
-              ...List.generate(savingViewModel.savingsTransactions[2].length, (index) {
-                ProductTransaction trans = savingViewModel.savingsTransactions[2][index];
-                return TransactionItemWidget(
-                  narration: trans.transactionDescription,
-                  date: AppUtils.getReadableDateShort(trans.dateUpdated),
-                  amount: trans.amount,
-                  symbol: AppStrings.nairaSymbol,
-                  topUp: false,
-                );
-              }),
-              YMargin(50)
-
-            ],
-          ),
+              ? savingViewModel.savingsTransactions[1] == null
+                  ? ShimmerLoading()
+                  : savingViewModel.savingsTransactions[1].isEmpty
+                      ? EmptyInvstmentWidget()
+                      : Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            ...List.generate(
+                                savingViewModel.savingsTransactions[1].length,
+                                (index) {
+                              ProductTransaction trans =
+                                  savingViewModel.savingsTransactions[1][index];
+                              return TransactionItemWidget(
+                                narration: trans.transactionDescription,
+                                date: AppUtils.getReadableDateShort(
+                                    trans.dateUpdated),
+                                amount: trans.amount,
+                                symbol: AppStrings.nairaSymbol,
+                              );
+                            }),
+                            YMargin(50)
+                          ],
+                        )
+              : savingViewModel.savingsTransactions[2] == null
+                  ? ShimmerLoading()
+                  : savingViewModel.savingsTransactions[2].isEmpty
+                      ? EmptyInvstmentWidget()
+                      : Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            ...List.generate(
+                                savingViewModel.savingsTransactions[2].length,
+                                (index) {
+                              ProductTransaction trans =
+                                  savingViewModel.savingsTransactions[2][index];
+                              return TransactionItemWidget(
+                                narration: trans.transactionDescription,
+                                date: AppUtils.getReadableDateShort(
+                                    trans.dateUpdated),
+                                amount: trans.amount,
+                                symbol: AppStrings.nairaSymbol,
+                                topUp: false,
+                              );
+                            }),
+                            YMargin(50)
+                          ],
+                        ),
         ]),
       ),
     );
   }
-
-
 }
-
-
-
-
 
 class PortfolioInvestmentWidget extends StatefulWidget {
   const PortfolioInvestmentWidget({
@@ -404,25 +402,36 @@ class _PortfolioInvestmentWidgetState extends State<PortfolioInvestmentWidget> {
             ],
           ),
           topUp
-              ? EmptyInvstmentWidget(investment: true,)
-              : Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    ...List.generate(6, (index) => TransactionItemWidget()),
-                    YMargin(50)
-                  ],
-                ),
+              ? Center(
+                  child: Padding(
+                    padding: const EdgeInsets.only(top: 100.0),
+                    child: Text("Coming Soon"),
+                  ),
+                )
+              // ? EmptyInvstmentWidget(investment: true,)
+              : Center(
+                  child: Padding(
+                    padding: const EdgeInsets.only(top: 100.0),
+                    child: Text("Coming Soon"),
+                  ),
+                )
+          // Column(
+          //   crossAxisAlignment: CrossAxisAlignment.start,
+          //   children: [
+          //     ...List.generate(6, (index) => TransactionItemWidget()),
+          //     YMargin(50)
+          //   ],
+          // ),
         ]),
       ),
     );
   }
 }
 
-
-
 class EmptyInvstmentWidget extends StatelessWidget {
   const EmptyInvstmentWidget({
-    Key key, this.investment = false,
+    Key key,
+    this.investment = false,
   }) : super(key: key);
 
   final bool investment;
@@ -438,7 +447,7 @@ class EmptyInvstmentWidget extends StatelessWidget {
             SizedBox(
                 width: 200,
                 child: Text(
-                  "You do not have any ${investment ? 'investment':'Savings'} transaction",
+                  "You do not have any ${investment ? 'investment' : 'Savings'} transaction",
                   textAlign: TextAlign.center,
                   style: TextStyle(
                       fontFamily: AppStrings.fontNormal,
@@ -448,7 +457,6 @@ class EmptyInvstmentWidget extends StatelessWidget {
           ],
         ),
         YMargin(40),
-
       ],
     );
   }
