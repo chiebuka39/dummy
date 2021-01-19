@@ -251,10 +251,15 @@ class _ReviewBankTransferState extends State<ReviewWalletTransfer> {
                               Text("Amount".toUpperCase(), style: TextStyle(fontSize: 12,
                                 color: AppColors.kSecondaryText,fontFamily: AppStrings.fontNormal,),),
                               YMargin(15),
-                              Text("${AppStrings.nairaSymbol}${savingViewModel.selectedPlan.savingsAmount.toInt().toString().convertWithComma()}", style: TextStyle(
-                                  fontFamily: AppStrings.fontMedium,
-                                  fontSize: 13,color: AppColors.kGreyText
-                              ),),
+                              Row(
+                                children: [
+                                  Text(AppStrings.nairaSymbol, style: TextStyle(fontSize: 12),),
+                                  Text("${savingViewModel.selectedPlan.savingsAmount.toInt().toString().convertWithComma()}", style: TextStyle(
+                                      fontFamily: AppStrings.fontMedium,
+                                      fontSize: 13,color: AppColors.kGreyText
+                                  ),),
+                                ],
+                              ),
 
                             ],),
                         )
