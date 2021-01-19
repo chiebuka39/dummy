@@ -12,6 +12,7 @@ import 'package:zimvest/data/models/investment/investment_termed_fund.dart';
 import 'package:zimvest/data/models/investment/money_market_fund.dart';
 import 'package:zimvest/data/models/investment/mutual_item_detail.dart';
 import 'package:zimvest/data/models/investment/term_instruments.dart';
+import 'package:zimvest/data/models/transactions_portfolio/investment_activities.dart';
 
 import 'dart:async';
 import 'dart:convert';

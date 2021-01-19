@@ -287,7 +287,7 @@ class _InvestmentSummaryScreenNairaState
                                                 child: PrimaryButtonNew(
                                                   onTap: () {
                                                     model.buyNairaInstrument(
-                                                    cardId: paymentViewModel.selectedCard.id,
+                                                    cardId: paymentViewModel.selectedCard?.id??null,
                                                         amount: widget.amount,
                                                         productId:
                                                             widget.productId,
@@ -593,7 +593,7 @@ class _InvestmentSummaryScreenNairaState
                         details.delta.dy == -2.0) {
                       startAnim();
                       model.buyNairaInstrument(
-                        cardId: paymentViewModel.selectedCard?.id ?? null,
+                        cardId: paymentViewModel.selectedCard?.id??null,
                           amount: widget.amount,
                           productId: widget.productId,
                           uniqueName: widget.uniqueName,

@@ -1,9 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider_architecture/_viewmodel_provider.dart';
 import 'package:zimvest/data/models/investment/term_instruments.dart';
-import 'package:zimvest/data/models/payment/card.dart';
 import 'package:zimvest/data/view_models/wallets_view_model.dart';
-import 'package:zimvest/new_screens/navigation/investments/high_yield/naira/high_yield_investment_naira_purchase_source.dart';
 import 'package:zimvest/styles/colors.dart';
 import 'package:zimvest/utils/margin.dart';
 import 'package:zimvest/utils/strings.dart';
@@ -41,8 +39,8 @@ class _InvestmentDurationPeriodState extends State<InvestmentDurationPeriod> {
   @override
   Widget build(BuildContext context) {
     List<TermInstrument> instrument = widget.instrument
-        .where((element) => element.minAmount == widget.amount)
-        .toList();
+        ?.where((element) => element.minAmount == widget.amount)
+        ?.toList();
     // print(instrument.length);
     int selectedIndex;
     return ViewModelProvider<WalletViewModel>.withConsumer(
@@ -109,77 +107,86 @@ class _InvestmentDurationPeriodState extends State<InvestmentDurationPeriod> {
                         ),
                       )
                     : Expanded(
-                    child: ListView.builder(
-                      itemCount: instrument.length,
-                      itemBuilder: (context, index) => Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 20.0),
-                        child: InkWell(
-                          onTap: () {
-                            model.check();
-                            selectedIndex = index;
-                          },
-                          child: Container(
-                            height: 40,
-                            width: double.infinity,
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                Row(
+                        child: ListView.builder(
+                          itemCount: instrument.length,
+                          itemBuilder: (context, index) => Padding(
+                            padding:
+                                const EdgeInsets.symmetric(horizontal: 20.0),
+                            child: InkWell(
+                              onTap: () {
+                                model.check();
+                                selectedIndex = index;
+                              },
+                              child: Container(
+                                height: 40,
+                                width: double.infinity,
+                                child: Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
                                   children: [
-                                    Text(
-                                      instrument[index].instrumentName,
-                                      style: TextStyle(
-                                        fontSize: 13,
-                                        fontFamily: AppStrings.fontNormal,
-                                        color: AppColors.kTextColor,
-                                      ),
+                                    Row(
+                                      children: [
+                                        Text(
+                                          instrument[index].instrumentName,
+                                          style: TextStyle(
+                                            fontSize: 13,
+                                            fontFamily: AppStrings.fontNormal,
+                                            color: AppColors.kTextColor,
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                    Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.start,
+                                      children: [
+                                        Text(
+                                          "(${instrument[index].rate.toString()}%)",
+                                          style: TextStyle(
+                                            fontSize: 13,
+                                            fontFamily: AppStrings.fontNormal,
+                                            color: AppColors.kFixed,
+                                          ),
+                                        ),
+                                        XMargin(8),
+                                        AnimatedSwitcher(
+                                          duration: Duration(milliseconds: 600),
+                                          child:
+                                              model.select ? check : checkEmpty,
+                                        ),
+                                      ],
                                     ),
                                   ],
                                 ),
-                                Row(
-                                  mainAxisAlignment: MainAxisAlignment.start,
-                                  children: [
-                                    Text(
-                                      "(${instrument[index].rate.toString()}%)",
-                                      style: TextStyle(
-                                        fontSize: 13,
-                                        fontFamily: AppStrings.fontNormal,
-                                        color: AppColors.kFixed,
-                                      ),
-                                    ),
-                                    XMargin(8),
-                                    AnimatedSwitcher(
-                                      duration: Duration(milliseconds: 600),
-                                      child: model.select ? check : checkEmpty,
-                                    ),
-                                  ],
-                                ),
-                              ],
+                              ),
                             ),
                           ),
                         ),
                       ),
-                    ),
-                  ),
-                        instrument == null
+            instrument == null
                 ? SizedBox()
                 : instrument.length == 0
                     ? SizedBox()
-                    : RoundedNextButton(onTap: () {
-              print(selectedIndex);
-              Navigator.push(
-                context,
-                HighYieldInvestmentPurchaseSource.route(
-                  amount: widget.amount,
-                  cards: model.cards,
-                  productId: instrument[selectedIndex].id,
-                  rate: instrument[selectedIndex].rate,
-                  maturityDate: instrument[selectedIndex].maturityDate,
-                  uniqueName: widget.uniqueName,
-                  duration: instrument[selectedIndex].maturityPeriod,
-                ),
-              );
-            }),
+                    : 
+                    Expanded(
+                        child: RoundedNextButton(
+                          onTap: () {
+                            print(selectedIndex);
+                            // Navigator.push(
+                            //   context,
+                            //   HighYieldInvestmentPurchaseSource.route(
+                            //     amount: widget.amount,
+                            //     cards: model.cards,
+                            //     productId: instrument[selectedIndex].id,
+                            //     rate: instrument[selectedIndex].rate,
+                            //     maturityDate: instrument[selectedIndex].maturityDate,
+                            //     uniqueName: widget.uniqueName,
+                            //     duration: instrument[selectedIndex].maturityPeriod,
+                            //   ),
+                            // );
+                          },
+                        ),
+                      ),
           ],
         ),
       ),

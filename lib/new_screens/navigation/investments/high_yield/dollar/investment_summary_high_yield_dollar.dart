@@ -25,7 +25,7 @@ class InvestmentSummaryScreenDollar extends StatefulWidget {
   final String duration;
   final String maturityDate;
   final String rate;
-  final String minimumAmount;
+  final double minimumAmount;
   final String maximumAmount;
 
   const InvestmentSummaryScreenDollar(
@@ -48,7 +48,7 @@ class InvestmentSummaryScreenDollar extends StatefulWidget {
     String duration,
     String maturityDate,
     String rate,
-    String minimumAmount,
+    double minimumAmount,
     String maximumAmount,
   }) {
     return MaterialPageRoute(

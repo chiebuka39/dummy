@@ -7,8 +7,8 @@ class TermInstrument {
   String maturityDate;
   String minimumAmount;
   String maximumAmount;
-  double minAmount;
-  double maxAmount;
+  num minAmount;
+  num maxAmount;
   int maturityPeriod;
   double rate;
 

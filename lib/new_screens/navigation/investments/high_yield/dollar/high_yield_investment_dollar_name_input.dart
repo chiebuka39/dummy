@@ -1,5 +1,9 @@
+import 'dart:math';
+
 import 'package:flushbar/flushbar.dart';
 import 'package:flutter/material.dart';
+import 'package:provider_architecture/_viewmodel_provider.dart';
+import 'package:zimvest/data/view_models/investment_view_model.dart';
 import 'package:zimvest/new_screens/navigation/investments/high_yield/dollar/high_yield_investment_dollar_amout_input.dart';
 import 'package:zimvest/new_screens/navigation/investments/widgets/text_field.dart';
 import 'package:zimvest/styles/colors.dart';
@@ -8,39 +12,9 @@ import 'package:zimvest/utils/strings.dart';
 import 'package:zimvest/widgets/buttons.dart';
 
 class HighYieldInvestmentDollarUniqueName extends StatefulWidget {
-  final String instrumentName;
-  final int productId;
-  final String maturityDate;
-  final String rate;
-  final String minimumAmount;
-  final String maximumAmount;
-
-  const HighYieldInvestmentDollarUniqueName(
-      {Key key,
-      this.instrumentName,
-      this.productId,
-      this.maturityDate,
-      this.rate,
-      this.minimumAmount,
-      this.maximumAmount})
-      : super(key: key);
-  static Route<dynamic> route({
-    String duration,
-    int productId,
-    String maturityDate,
-    String rate,
-    String minimumAmount,
-    String maximumAmount,
-  }) {
+  static Route<dynamic> route() {
     return MaterialPageRoute(
-      builder: (_) => HighYieldInvestmentDollarUniqueName(
-        instrumentName: duration,
-        productId: productId,
-        maturityDate: maturityDate,
-        rate: rate,
-        minimumAmount: minimumAmount,
-        maximumAmount: maximumAmount,
-      ),
+      builder: (_) => HighYieldInvestmentDollarUniqueName(),
       settings: RouteSettings(
         name: HighYieldInvestmentDollarUniqueName().toStringShort(),
       ),
@@ -57,96 +31,106 @@ class _HighYieldInvestmentDollarUniqueNameState
   TextEditingController investmentName = TextEditingController();
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        backgroundColor: Colors.transparent,
-        title: Text(
-          "Invest",
-          style: TextStyle(
-            fontSize: 13,
-            fontFamily: AppStrings.fontMedium,
-            color: AppColors.kTextColor,
+    return ViewModelProvider<InvestmentHighYieldViewModel>.withConsumer(
+      viewModelBuilder: () => InvestmentHighYieldViewModel(),
+      onModelReady: (model) => model.getDollarTermInstruments(),
+      builder: (context, model, _) => Scaffold(
+        appBar: AppBar(
+          backgroundColor: Colors.transparent,
+          title: Text(
+            "Invest",
+            style: TextStyle(
+              fontSize: 13,
+              fontFamily: AppStrings.fontMedium,
+              color: AppColors.kTextColor,
+            ),
+          ),
+          elevation: 0,
+          centerTitle: true,
+          leading: IconButton(
+            icon: Icon(
+              Icons.arrow_back_ios,
+              color: AppColors.kPrimaryColor,
+            ),
+            onPressed: () => Navigator.pop(context),
           ),
         ),
-        elevation: 0,
-        centerTitle: true,
-        leading: IconButton(
-          icon: Icon(
-            Icons.arrow_back_ios,
-            color: AppColors.kPrimaryColor,
-          ),
-          onPressed: () => Navigator.pop(context),
-        ),
-      ),
-      body: SingleChildScrollView(
-        child: Column(
-          children: [
-            YMargin(72),
-            Padding(
-              padding: const EdgeInsets.only(left: 20.0, right: 76),
-              child: Text(
-                "Name Your Zimvest High Yield Dollar ${widget.instrumentName} Days Investment",
-                style: TextStyle(
-                  fontSize: 17,
-                  fontFamily: AppStrings.fontBold,
-                  color: AppColors.kTextColor,
+        body: SingleChildScrollView(
+          child: Column(
+            children: [
+              YMargin(72),
+              Padding(
+                padding: const EdgeInsets.only(left: 20.0, right: 76),
+                child: Text(
+                  "Name Your Zimvest High Yield Dollar Investment",
+                  style: TextStyle(
+                    fontSize: 17,
+                    fontFamily: AppStrings.fontBold,
+                    color: AppColors.kTextColor,
+                  ),
                 ),
               ),
-            ),
-            YMargin(36),
-            InvestmentTextField(
-                readOnly: false,
-                controller: investmentName,
-                hintText: "Enter a unique name"),
-            YMargin(252),
-            RoundedNextButton(
-              onTap: () {
-                if (investmentName.text == "") {
-                  Flushbar(
-                    icon: ImageIcon(
-                      AssetImage("images/failed.png"),
-                      color: AppColors.kRed,
-                      size: 70,
-                    ),
-                    margin: EdgeInsets.all(12),
-                    borderRadius: 20,
-                    flushbarPosition: FlushbarPosition.TOP,
-                    titleText: Text(
-                      "Error !",
-                      style: TextStyle(
-                        fontSize: 13,
-                        fontFamily: AppStrings.fontBold,
-                        color: AppColors.kRed4,
+              YMargin(36),
+              InvestmentTextField(
+                  readOnly: false,
+                  controller: investmentName,
+                  hintText: "Enter a unique name"),
+              YMargin(252),
+              RoundedNextButton(
+                onTap: () {
+                  // print(model.dollarInstrument.data);
+                  List<num> minimumAmount = model.dollarInstrument.data
+                      .map((e) => e.minAmount)
+                      .toList();
+                  print(minimumAmount);
+                  List<num> minimumAmounts = [];
+                  for (var i in minimumAmount) {
+                    if (i > 0) {
+                      minimumAmounts.add(i);
+                    }
+                  }
+                  if (investmentName.text == "") {
+                    Flushbar(
+                      icon: ImageIcon(
+                        AssetImage("images/failed.png"),
+                        color: AppColors.kRed,
+                        size: 70,
                       ),
-                    ),
-                    backgroundColor: AppColors.kRed3,
-                    messageText: Text(
-                      "Field Cannot be left empty",
-                      style: TextStyle(
-                        fontSize: 11,
-                        fontFamily: AppStrings.fontLight,
-                        color: AppColors.kRed4,
+                      margin: EdgeInsets.all(12),
+                      borderRadius: 20,
+                      flushbarPosition: FlushbarPosition.TOP,
+                      titleText: Text(
+                        "Error !",
+                        style: TextStyle(
+                          fontSize: 13,
+                          fontFamily: AppStrings.fontBold,
+                          color: AppColors.kRed4,
+                        ),
                       ),
-                    ),
-                    duration: Duration(seconds: 3),
-                  ).show(context);
-                } else {
-                  Navigator.push(
-                    context,
-                    InvestmentHighYieldDollarAmountInput.route(
-                      uniqueName: investmentName.text,
-                      id: widget.productId,
-                      duration: widget.instrumentName,
-                      rate: widget.rate,
-                      minimumAmount: widget.minimumAmount,
-                      maximumAmount: widget.maximumAmount,
-                      maturityDate: widget.maturityDate,
-                    ),
-                  );
-                }
-              },
-            ),
-          ],
+                      backgroundColor: AppColors.kRed3,
+                      messageText: Text(
+                        "Field Cannot be left empty",
+                        style: TextStyle(
+                          fontSize: 11,
+                          fontFamily: AppStrings.fontLight,
+                          color: AppColors.kRed4,
+                        ),
+                      ),
+                      duration: Duration(seconds: 3),
+                    ).show(context);
+                  } else {
+                    Navigator.push(
+                      context,
+                      InvestmentHighYieldDollarAmountInput.route(
+                        uniqueName: investmentName.text,
+                        minimumAmount: minimumAmounts.reduce(min).toDouble(),
+                      ),
+                    );
+                  }
+                },
+              ),
+            ],
+          ),
         ),
       ),
     );

@@ -7,39 +7,9 @@ import 'package:zimvest/utils/strings.dart';
 import 'package:zimvest/widgets/buttons.dart';
 
 class HighYieldDetailsDollar extends StatefulWidget {
-  final String duration;
-  final int productId;
-  final String maturityDate;
-  final String rate;
-  final String minimumAmount;
-  final String maximumAmount;
-
-  const HighYieldDetailsDollar(
-      {Key key,
-      this.duration,
-      this.productId,
-      this.maturityDate,
-      this.rate,
-      this.minimumAmount,
-      this.maximumAmount})
-      : super(key: key);
-  static Route<dynamic> route(
-      {String duration,
-      int productId,
-      String maturityDate,
-      String rate,
-      String minimumAmount,
-      String maximumAmount}) {
-    print(productId);
+  static Route<dynamic> route() {
     return MaterialPageRoute(
-      builder: (_) => HighYieldDetailsDollar(
-        duration: duration,
-        rate: rate,
-        productId: productId,
-        maturityDate: maturityDate,
-        minimumAmount: minimumAmount,
-        maximumAmount: maximumAmount,
-      ),
+      builder: (_) => HighYieldDetailsDollar(),
       settings: RouteSettings(
         name: HighYieldDetailsDollar().toStringShort(),
       ),
@@ -53,7 +23,6 @@ class HighYieldDetailsDollar extends StatefulWidget {
 class _HighYieldDetailsDollarState extends State<HighYieldDetailsDollar> {
   @override
   Widget build(BuildContext context) {
-    print(screenHeight(context));
     return Scaffold(
       backgroundColor: AppColors.kHighYield,
       body: Stack(
@@ -181,13 +150,7 @@ class _HighYieldDetailsDollarState extends State<HighYieldDetailsDollar> {
                                 title: "Get Started",
                                 onTap: () => Navigator.push(
                                   context,
-                                  HighYieldInvestmentDollarUniqueName.route(
-                                      duration: widget.duration,
-                                      productId: widget.productId,
-                                      maturityDate: widget.maturityDate,
-                                      rate: widget.rate,
-                                      minimumAmount: widget.minimumAmount,
-                                      maximumAmount: widget.maximumAmount),
+                                  HighYieldInvestmentDollarUniqueName.route(),
                                 ),
                               ),
                             ),

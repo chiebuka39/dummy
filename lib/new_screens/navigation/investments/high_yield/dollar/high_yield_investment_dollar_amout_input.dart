@@ -1,8 +1,12 @@
 import 'package:flushbar/flushbar.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_masked_text/flutter_masked_text.dart';
 import 'package:intl/intl.dart';
 import 'package:intl/number_symbols_data.dart';
+import 'package:provider_architecture/_viewmodel_provider.dart';
+import 'package:zimvest/data/view_models/investment_view_model.dart';
 import 'package:zimvest/new_screens/navigation/investments/high_yield/dollar/high_yield_investment_dollar_purchase_source.dart';
+import 'package:zimvest/new_screens/navigation/investments/high_yield/dollar/investment_duration.dart';
 import 'package:zimvest/new_screens/navigation/investments/widgets/text_field.dart';
 import 'package:zimvest/styles/colors.dart';
 import 'package:zimvest/utils/app_utils.dart';
@@ -18,7 +22,7 @@ class InvestmentHighYieldDollarAmountInput extends StatefulWidget {
   final String duration;
   final String maturityDate;
   final String rate;
-  final String minimumAmount;
+  final double minimumAmount;
   final String maximumAmount;
 
   const InvestmentHighYieldDollarAmountInput(
@@ -37,7 +41,7 @@ class InvestmentHighYieldDollarAmountInput extends StatefulWidget {
     String duration,
     String maturityDate,
     String rate,
-    String minimumAmount,
+    double minimumAmount,
     String maximumAmount,
   }) {
     return MaterialPageRoute(
@@ -62,39 +66,35 @@ class InvestmentHighYieldDollarAmountInput extends StatefulWidget {
 class _InvestmentHighYieldDollarAmountInputState
     extends State<InvestmentHighYieldDollarAmountInput> {
   // static String amountController.text;
-  TextEditingController amountController;
-  @override
-  void initState() {
-    amountController = TextEditingController();
-    super.initState();
-  }
+  var amountController =
+      MoneyMaskedTextController(thousandSeparator: ",", decimalSeparator: ".");
 
-  // TODO: Fix the textController make it make sense
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        backgroundColor: Colors.transparent,
-        title: Text(
-          "Invest",
-          style: TextStyle(
-            fontSize: 13,
-            fontFamily: AppStrings.fontMedium,
-            color: AppColors.kTextColor,
-          ),
-        ),
-        elevation: 0,
-        centerTitle: true,
-        leading: IconButton(
-            icon: Icon(
-              Icons.arrow_back_ios,
-              color: AppColors.kPrimaryColor,
+    return ViewModelProvider<InvestmentHighYieldViewModel>.withConsumer(
+      viewModelBuilder: () => InvestmentHighYieldViewModel(),
+      builder: (context, model, _) => Scaffold(
+        appBar: AppBar(
+          backgroundColor: Colors.transparent,
+          title: Text(
+            "Invest",
+            style: TextStyle(
+              fontSize: 13,
+              fontFamily: AppStrings.fontMedium,
+              color: AppColors.kTextColor,
             ),
-            onPressed: () => Navigator.pop(context)),
-      ),
-      body: Builder(
-        builder: (context) => SingleChildScrollView(
-          child: Column(
+          ),
+          elevation: 0,
+          centerTitle: true,
+          leading: IconButton(
+              icon: Icon(
+                Icons.arrow_back_ios,
+                color: AppColors.kPrimaryColor,
+              ),
+              onPressed: () => Navigator.pop(context)),
+        ),
+        body: Builder(
+          builder: (context) => Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               YMargin(72),
@@ -119,7 +119,7 @@ class _InvestmentHighYieldDollarAmountInputState
               Padding(
                 padding: const EdgeInsets.only(left: 20.0, right: 20),
                 child: Text(
-                  "Minimum of ${widget.minimumAmount} and Maximum of Above ${widget.maximumAmount}",
+                  "Minimum of ${AppStrings.dollarSymbol}${widget.minimumAmount}",
                   style: TextStyle(
                     fontSize: 10,
                     fontFamily: AppStrings.fontNormal,
@@ -143,8 +143,10 @@ class _InvestmentHighYieldDollarAmountInputState
               ),
               YMargin(70),
               RoundedNextButton(
-                onTap: () {
-                  double amount = double.tryParse(amountController.text);
+                loading: model.busy,
+                onTap: () async {
+                  double amount =
+                      double.tryParse(amountController.text.split(',').join());
                   if (amount == null) {
                     Flushbar(
                       icon: ImageIcon(
@@ -204,16 +206,13 @@ class _InvestmentHighYieldDollarAmountInputState
                       duration: Duration(seconds: 2),
                     ).show(context);
                   } else {
+                    await model.getDollarTermInstrumentsFilter(amount);
                     Navigator.push(
                       context,
-                      HighYieldInvestmentDollarPurchaseSource.route(
-                        uniqueName: widget.uniqueName,
-                        id: widget.id,
-                        maturityDate: widget.maturityDate,
-                        rate: widget.rate,
-                        minimumAmount: widget.minimumAmount,
-                        maximumAmount: widget.maximumAmount,
+                      InvestmentDurationPeriod.route(
                         amount: amount,
+                        instrument: model.nairaInstrument.data,
+                        uniqueName: widget.uniqueName,
                       ),
                     );
                   }
