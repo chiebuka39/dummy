@@ -475,11 +475,18 @@ class SavingsInvestmentCashWidget extends StatelessWidget {
                               color: AppColors.kGreyText),
                         ),
                         YMargin(10),
-                        Text(
-                          "${AppStrings.nairaSymbol}${wealthBox.amountSaved}",
-                          style: TextStyle(
-                              color: AppColors.kGreyText,
-                              fontFamily: AppStrings.fontMedium),
+
+                        Row(
+                          children: [
+                            Text(AppStrings.nairaSymbol,style: TextStyle(
+                                color: AppColors.kGreyText,fontSize: 12)),
+                            Text(
+                              "${wealthBox.amountSaved}",
+                              style: TextStyle(
+                                  color: AppColors.kGreyText,
+                                  fontFamily: AppStrings.fontMedium),
+                            ),
+                          ],
                         )
                       ],
                     ),

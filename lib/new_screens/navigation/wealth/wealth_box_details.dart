@@ -72,211 +72,228 @@ class _WealthBoxDetailsScreenState extends State<WealthBoxDetailsScreen> with Af
   Widget build(BuildContext context) {
     savingViewModel = Provider.of(context);
     identityViewModel = Provider.of(context);
+    double height = MediaQuery.of(context).size.height;
     // print("ooo ${savingViewModel.savingsTransactions[1]}");
     return Scaffold(
       backgroundColor: AppColors.kWealth,
-      appBar: AppBar(
-        backgroundColor: Colors.transparent,
-        elevation: 0,
-      ),
-      body: Column(
+
+      body: Stack(
         children: [
-          Spacer(),
-          Container(
-            height: MediaQuery.of(context).size.height - 130,
-              decoration: BoxDecoration(
-                color: AppColors.kWhite,
-                borderRadius: BorderRadius.only(topLeft: Radius.circular(25),topRight: Radius.circular(25))
-              ),
-              child: SingleChildScrollView(
-                child: Column(
-                  children: [
-                    YMargin(27),
-                    Row(
+          Positioned(
+            top: 30,
+            child: BackButton(
+              color: AppColors.kWhite,
+              onPressed: (){
+                Navigator.pop(context);
+              },
+            ),
+          ),
+          Positioned(
+            left: 0,
+              right: 0,
+              top: 30,
+              child: SvgPicture.asset("images/wealth_illus.svg")),
+          Column(
+            children: [
+              Spacer(),
+              Container(
+                height: MediaQuery.of(context).size.height - 250,
+                  decoration: BoxDecoration(
+                    color: AppColors.kWhite,
+                    borderRadius: BorderRadius.only(topLeft: Radius.circular(25),topRight: Radius.circular(25))
+                  ),
+                  child: SingleChildScrollView(
+                    child: Column(
                       children: [
-                        XMargin(20),
-                        Text(savingsPlanModel.planName, style: TextStyle(
-                            fontSize: 15, fontFamily: AppStrings.fontBold
-                        ),),
-                        Spacer(),
-                        IconButton(icon: Icon(Icons.more_horiz_rounded), onPressed: (){
-                          showModalBottomSheet < Null > (context: context, builder: (BuildContext context) {
-                            return WealthMore();
-                          },isScrollControlled: true);
+                        YMargin(27),
+                        Row(
+                          children: [
+                            XMargin(20),
+                            Text(savingsPlanModel.planName, style: TextStyle(
+                                fontSize: 15, fontFamily: AppStrings.fontBold
+                            ),),
+                            Spacer(),
+                            IconButton(icon: Icon(Icons.more_horiz_rounded), onPressed: (){
+                              showModalBottomSheet < Null > (context: context, builder: (BuildContext context) {
+                                return WealthMore();
+                              },isScrollControlled: true);
+                            })
+                          ],
+                        ),
+                        YMargin(30),
+                        Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 20),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text("Current Balance", style: TextStyle(fontSize: 12,
+                                  fontFamily: AppStrings.fontNormal,
+                                  color: AppColors.kSecondaryText),),
+                              YMargin(10),
+                              MoneyTitleWidget(
+                                amount: savingsPlanModel.amountSaved,
+                              ),
+                              YMargin(25),
+                              Row(children: [
+                                Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text("Accrued Interest",
+                                      style: TextStyle(
+                                          fontFamily: AppStrings.fontNormal,
+                                          color: AppColors.kGreyText,
+                                          fontSize: 11
+                                      ),),
+                                    YMargin(4),
+                                    Transform.translate(
+                                      offset: Offset(-8,0),
+                                      child: Row(children: [
+                                        Icon(Icons.arrow_drop_up_outlined),
+                                        Text(AppStrings.nairaSymbol,style: TextStyle(color: AppColors.kWealthDark,fontSize: 11)),
+                                        Text(" ${savingsPlanModel.accruedInterest}",
+                                          style: TextStyle(fontFamily: AppStrings.fontMedium, color: AppColors.kWealthDark,fontSize: 11),),
+                                        XMargin(5),
+                                        Text("Past 24h",
+                                          style: TextStyle(fontSize: 11,fontFamily: AppStrings.fontNormal),),
+                                      ],),
+                                    )
+                                  ],),
+                                Spacer(),
+                                Column(
+                                  crossAxisAlignment: CrossAxisAlignment.end,
+                                  children: [
+                                    Text("Interest P.A",
+                                      style: TextStyle(
+                                          fontFamily: AppStrings.fontNormal,
+                                          color: AppColors.kGreyText,
+                                          fontSize: 11
+                                      ),),
+                                    YMargin(4),
+                                    Text("${savingsPlanModel.interestRate}%",
+                                      style: TextStyle(fontSize: 11,fontFamily: AppStrings.fontMedium, color: AppColors.kWealthDark),),
+                                  ],),
+                              ],),
+
+
+                            ],
+                          ),
+                        ),
+                        YMargin(30),
+                        Row(
+
+                          children: [
+                            Expanded(
+                              child: Center(
+                                child: GestureDetector(
+                                  onTap:(){
+                                    savingViewModel.selectedPlan = savingsPlanModel;
+                                    Navigator.of(context).push(TopUpScreen.route());
+                                  },
+                                  child: Container(child: Column(children: [
+                                    Container(
+                                        height:35,
+                                        width: 35,
+                                        decoration: BoxDecoration(
+                                            color: AppColors.kPrimaryColorLight,
+                                            shape: BoxShape.circle
+                                        ),
+                                        child: Center(child: SvgPicture.asset("images/new/top_up.svg", color: AppColors.kPrimaryColor,))),
+                                    YMargin(12),
+                                    Text("Top Up", style: TextStyle(
+                                        fontSize: 12,
+                                        fontFamily: AppStrings.fontNormal
+                                    ),)
+                                  ],),),
+                                ),
+                              ),
+                            ),
+                            Expanded(
+                              child: Center(
+                                child: GestureDetector(
+                                  onTap: (){
+                                    savingViewModel.selectedPlan = savingsPlanModel;
+                                    Navigator.of(context).push(AmountWithdrawScreen.route());
+
+                                  },
+                                  child: Container(child: Column(children: [
+                                    Container(
+                                        height:35,
+                                        width: 35,
+                                        decoration: BoxDecoration(
+                                            color: AppColors.kPrimaryColorLight,
+                                            shape: BoxShape.circle
+                                        ),
+                                        child: Center(child: SvgPicture.asset("images/new/top_up.svg",color: AppColors.kPrimaryColor,))),
+                                    YMargin(12),
+                                    Text("Withdraw", style: TextStyle(
+                                        fontSize: 12,
+                                        fontFamily: AppStrings.fontNormal
+                                    ),)
+                                  ],),),
+                                ),
+                              ),
+                            ),
+                            Expanded(
+                              child: Center(
+                                child: GestureDetector(
+                                  onTap: ()async{
+                                    EasyLoading.show(status:"Pausing savings");
+                                    var result = await savingViewModel.pauseSaving(
+                                        token: identityViewModel.user.token,savingModelId: savingsPlanModel.id);
+                                    if(result.error == false){
+                                      EasyLoading.showSuccess("Savings paused");
+                                    }else{
+                                      EasyLoading.showError(result.errorMessage);
+                                    }
+                                  },
+                                  child: Container(child: Column(children: [
+                                    Container(
+                                        height:35,
+                                        width: 35,
+                                        decoration: BoxDecoration(
+                                            color: AppColors.kPrimaryColorLight,
+                                            shape: BoxShape.circle
+                                        ),
+                                        child: Center(child: SvgPicture.asset("images/new/pause.svg",color: AppColors.kPrimaryColor,))),
+                                    YMargin(12),
+                                    Text("Pause", style: TextStyle(
+                                        fontSize: 12,
+                                        fontFamily: AppStrings.fontNormal
+                                    ),)
+                                  ],),),
+                                ),
+                              ),
+                            ),
+                          ],),
+                        YMargin(40),
+                        Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 20),
+                          child: Row(children: [
+                            Text("Activities", style: TextStyle(fontSize: 14,
+                                fontFamily: AppStrings.fontMedium, color: AppColors.kGreyText),),
+                            Spacer(),
+                            GestureDetector(
+                              onTap: (){
+                                showModalBottomSheet < Null > (context: context, builder: (BuildContext context) {
+                                  return WealthBoxActivities(transactions:savingViewModel.savingsTransactions[savingsPlanModel.productId],);
+                                },isScrollControlled: true);
+                              },
+                              child: Text("See all", style: TextStyle(fontSize: 11,
+                                  fontFamily: AppStrings.fontMedium, color: AppColors.kGreyText)),
+                            )
+                          ],),
+                        ),
+                        ...List.generate( transactions == null ? 0 : transactions.length > 4? 4
+                            :transactions.length, (index) {
+                          return WealthBoxActivity(productTransaction: transactions[index],);
                         })
+
                       ],
                     ),
-                    YMargin(30),
-                    Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 20),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text("Current Balance", style: TextStyle(fontSize: 12,
-                              fontFamily: AppStrings.fontNormal,
-                              color: AppColors.kSecondaryText),),
-                          YMargin(10),
-                          MoneyTitleWidget(
-                            amount: savingsPlanModel.amountSaved,
-                          ),
-                          YMargin(25),
-                          Row(children: [
-                            Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text("Accrued Interest",
-                                  style: TextStyle(
-                                      fontFamily: AppStrings.fontNormal,
-                                      color: AppColors.kGreyText,
-                                      fontSize: 11
-                                  ),),
-                                YMargin(4),
-                                Transform.translate(
-                                  offset: Offset(-8,0),
-                                  child: Row(children: [
-                                    Icon(Icons.arrow_drop_up_outlined),
-                                    Text("${AppStrings.nairaSymbol}${savingsPlanModel.accruedInterest}",
-                                      style: TextStyle(fontFamily: AppStrings.fontMedium, color: AppColors.kWealthDark,fontSize: 11),),
-                                    XMargin(5),
-                                    Text("Past 24h",
-                                      style: TextStyle(fontSize: 11,fontFamily: AppStrings.fontNormal),),
-                                  ],),
-                                )
-                              ],),
-                            Spacer(),
-                            Column(
-                              crossAxisAlignment: CrossAxisAlignment.end,
-                              children: [
-                                Text("Interest P.A",
-                                  style: TextStyle(
-                                      fontFamily: AppStrings.fontNormal,
-                                      color: AppColors.kGreyText,
-                                      fontSize: 11
-                                  ),),
-                                YMargin(4),
-                                Text("${savingsPlanModel.interestRate}%",
-                                  style: TextStyle(fontSize: 11,fontFamily: AppStrings.fontMedium, color: AppColors.kWealthDark),),
-                              ],),
-                          ],),
-
-
-                        ],
-                      ),
-                    ),
-                    YMargin(30),
-                    Row(
-
-                      children: [
-                        Expanded(
-                          child: Center(
-                            child: GestureDetector(
-                              onTap:(){
-                                savingViewModel.selectedPlan = savingsPlanModel;
-                                Navigator.of(context).push(TopUpScreen.route());
-                              },
-                              child: Container(child: Column(children: [
-                                Container(
-                                    height:35,
-                                    width: 35,
-                                    decoration: BoxDecoration(
-                                        color: AppColors.kPrimaryColorLight,
-                                        shape: BoxShape.circle
-                                    ),
-                                    child: Center(child: SvgPicture.asset("images/new/top_up.svg", color: AppColors.kPrimaryColor,))),
-                                YMargin(12),
-                                Text("Top Up", style: TextStyle(
-                                    fontSize: 12,
-                                    fontFamily: AppStrings.fontNormal
-                                ),)
-                              ],),),
-                            ),
-                          ),
-                        ),
-                        Expanded(
-                          child: Center(
-                            child: GestureDetector(
-                              onTap: (){
-                                savingViewModel.selectedPlan = savingsPlanModel;
-                                Navigator.of(context).push(AmountWithdrawScreen.route());
-
-                              },
-                              child: Container(child: Column(children: [
-                                Container(
-                                    height:35,
-                                    width: 35,
-                                    decoration: BoxDecoration(
-                                        color: AppColors.kPrimaryColorLight,
-                                        shape: BoxShape.circle
-                                    ),
-                                    child: Center(child: SvgPicture.asset("images/new/top_up.svg",color: AppColors.kPrimaryColor,))),
-                                YMargin(12),
-                                Text("Withdraw", style: TextStyle(
-                                    fontSize: 12,
-                                    fontFamily: AppStrings.fontNormal
-                                ),)
-                              ],),),
-                            ),
-                          ),
-                        ),
-                        Expanded(
-                          child: Center(
-                            child: GestureDetector(
-                              onTap: ()async{
-                                EasyLoading.show(status:"Pausing savings");
-                                var result = await savingViewModel.pauseSaving(
-                                    token: identityViewModel.user.token,savingModelId: savingsPlanModel.id);
-                                if(result.error == false){
-                                  EasyLoading.showSuccess("Savings paused");
-                                }else{
-                                  EasyLoading.showError(result.errorMessage);
-                                }
-                              },
-                              child: Container(child: Column(children: [
-                                Container(
-                                    height:35,
-                                    width: 35,
-                                    decoration: BoxDecoration(
-                                        color: AppColors.kPrimaryColorLight,
-                                        shape: BoxShape.circle
-                                    ),
-                                    child: Center(child: SvgPicture.asset("images/new/pause.svg",color: AppColors.kPrimaryColor,))),
-                                YMargin(12),
-                                Text("Pause", style: TextStyle(
-                                    fontSize: 12,
-                                    fontFamily: AppStrings.fontNormal
-                                ),)
-                              ],),),
-                            ),
-                          ),
-                        ),
-                      ],),
-                    YMargin(40),
-                    Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 20),
-                      child: Row(children: [
-                        Text("Activities", style: TextStyle(fontSize: 14,
-                            fontFamily: AppStrings.fontMedium, color: AppColors.kGreyText),),
-                        Spacer(),
-                        GestureDetector(
-                          onTap: (){
-                            showModalBottomSheet < Null > (context: context, builder: (BuildContext context) {
-                              return WealthBoxActivities(transactions:savingViewModel.savingsTransactions[savingsPlanModel.productId],);
-                            },isScrollControlled: true);
-                          },
-                          child: Text("See all", style: TextStyle(fontSize: 11,
-                              fontFamily: AppStrings.fontMedium, color: AppColors.kGreyText)),
-                        )
-                      ],),
-                    ),
-                    ...List.generate( transactions == null ? 0 : transactions.length > 4? 4
-                        :transactions.length, (index) {
-                      return WealthBoxActivity(productTransaction: transactions[index],);
-                    })
-
-                  ],
+                  ),
                 ),
-              ),
-            ),
+            ],
+          ),
         ],
       ),
     );

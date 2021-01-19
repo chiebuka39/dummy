@@ -120,6 +120,8 @@ class _ProfileScreenState extends State<ProfileScreen> with AfterLayoutMixin<Pro
           ProfileWidget(title: "Log Out",icon: 'log-out',onClick: (){
             _showConfirmLogoutDialog(context);
           },),
+          YMargin(50)
+
         ],),
       ),
     );

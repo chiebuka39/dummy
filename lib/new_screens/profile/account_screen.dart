@@ -153,11 +153,16 @@ class _AccountScreenState extends State<AccountScreen> with AfterLayoutMixin<Acc
                 offset: Offset(0,5),
                 child: TextFormField(
                   initialValue: _fullName,
+                  style: TextStyle(fontSize: 13,
+                      fontFamily: AppStrings.fontNormal, color: AppColors.kTextColor),
                   decoration: InputDecoration(
                       border: InputBorder.none,
                       hintText: "Full Name",
+
                       hintStyle: TextStyle(
-                          fontSize: 14
+                          fontSize: 13,
+                        fontFamily: AppStrings.fontNormal,
+                        color: AppColors.kSecondaryColor.withOpacity(0.64)
                       )
                   ),
                   onChanged: (value){
@@ -188,12 +193,17 @@ class _AccountScreenState extends State<AccountScreen> with AfterLayoutMixin<Acc
                         _email = value;
                       });
                     },
+                      style: TextStyle(fontSize: 13,
+                          fontFamily: AppStrings.fontNormal, color: AppColors.kTextColor),
+
                     decoration: InputDecoration(
                         border: InputBorder.none,
                         hintText: "Email Address",
-                        hintStyle: TextStyle(
-                            fontSize: 14
-                        )
+                      hintStyle: TextStyle(
+                          fontSize: 13,
+                          fontFamily: AppStrings.fontNormal,
+                          color: AppColors.kSecondaryColor.withOpacity(0.64)
+                      )
                     ),
                   ),
                 ),
@@ -218,12 +228,17 @@ class _AccountScreenState extends State<AccountScreen> with AfterLayoutMixin<Acc
                       });
                     },
                     initialValue: _phone,
+                      style: TextStyle(fontSize: 13,
+                          fontFamily: AppStrings.fontNormal, color: AppColors.kTextColor),
+
                     decoration: InputDecoration(
                         border: InputBorder.none,
                         hintText: "Phone Number",
-                        hintStyle: TextStyle(
-                            fontSize: 14
-                        )
+                      hintStyle: TextStyle(
+                          fontSize: 13,
+                          fontFamily: AppStrings.fontNormal,
+                          color: AppColors.kSecondaryColor.withOpacity(0.64)
+                      )
                     ),
                   ),
                 ),
@@ -243,7 +258,7 @@ class _AccountScreenState extends State<AccountScreen> with AfterLayoutMixin<Acc
                   child: new DropdownButton<String>(
                     value: _selectedGender,
                     isDense: true,
-    hint: Text('Please choose a Gender'),
+    hint: Text('Please choose a Gender', style: TextStyle(fontSize: 13,fontFamily: AppStrings.fontNormal, color: AppColors.kTextColor),),
                     onChanged: (String newValue) {
                       setState(() {
 
@@ -260,7 +275,8 @@ class _AccountScreenState extends State<AccountScreen> with AfterLayoutMixin<Acc
                         .map((String value) {
                       return new DropdownMenuItem<String>(
                         value: value,
-                        child: new Text(value),
+                        child: new Text(value, style: TextStyle(fontSize: 13,
+                            fontFamily: AppStrings.fontNormal),),
                       );
                     })
                         .cast<DropdownMenuItem<String>>()
@@ -293,7 +309,8 @@ class _AccountScreenState extends State<AccountScreen> with AfterLayoutMixin<Acc
                     _dob == null? SizedBox():Text(""
                         "${AppUtils.addLeadingZeroIfNeeded(_dob.month)}/"
                         "${AppUtils.addLeadingZeroIfNeeded(_dob.day)}/"
-                        "${_dob.year}"
+                        "${_dob.year}",style: TextStyle(fontSize: 13,
+                        fontFamily: AppStrings.fontNormal, color: AppColors.kTextColor),
                     ),
                     Spacer(),
                     Icon(Icons.keyboard_arrow_down_rounded)

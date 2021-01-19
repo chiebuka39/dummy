@@ -103,9 +103,15 @@ class AspireContainerWidget extends StatelessWidget {
                   color: AppColors.kGreyText),
             ),
             YMargin(8),
-            Text(
-              "${AppStrings.nairaSymbol}${goal.amountSaved}",
-              style: TextStyle(fontFamily: AppStrings.fontMedium, fontSize: 12),
+
+            Row(
+              children: [
+                Text(AppStrings.nairaSymbol),
+                Text(
+                  "${goal.amountSaved}",
+                  style: TextStyle(fontFamily: AppStrings.fontMedium, fontSize: 12),
+                ),
+              ],
             )
           ],
         ),

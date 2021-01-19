@@ -65,15 +65,17 @@ class _InvestorProfileScreenState extends State<InvestorProfileScreen> with Afte
               borderRadius: BorderRadius.circular(17),
               boxShadow: AppUtils.getBoxShaddow3
             ),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-              Text("Investment Persona Analysis",
-                style: TextStyle(fontSize: 15, fontFamily: AppStrings.fontBold),),
-                YMargin(20),
-                Text(AppStrings.ips, style: TextStyle(fontSize: 11,
-                    fontFamily: AppStrings.fontLight,height: 1.8),)
-            ],),
+            child: SingleChildScrollView(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                Text("Investment Persona Analysis",
+                  style: TextStyle(fontSize: 15, fontFamily: AppStrings.fontBold),),
+                  YMargin(20),
+                  Text(AppStrings.ips, style: TextStyle(fontSize: 11,
+                      fontFamily: AppStrings.fontLight,height: 1.8),)
+              ],),
+            ),
 
           ),
         ),

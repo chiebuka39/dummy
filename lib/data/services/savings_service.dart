@@ -103,7 +103,7 @@ class SavingService extends ABSSavingService{
         result.errorMessage =  "Sorry, We could not complete your request";
       }else{
         print(e.toString());
-        result.errorMessage = "Sorry, We could not complete your request";
+        result.errorMessage = e.response.data['message'];
       }
       result.error = true;
     }
@@ -553,7 +553,7 @@ class SavingService extends ABSSavingService{
 
       }else{
         print(e.toString());
-        result.errorMessage = "Sorry, We could not complete your request";
+        result.errorMessage = "Your savings was not successful";
       }
       result.error = true;
     }

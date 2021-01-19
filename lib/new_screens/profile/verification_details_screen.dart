@@ -85,8 +85,9 @@ class _VerificationDetailsScreenState extends State<VerificationDetailsScreen> {
             },
             title: "BVN Verification",
             approved: settingsViewModel.completedSections
-                .kycValidationCheck.isBvnValid ,
-            pending: settingsViewModel.completedSections
+                .kycValidationCheck.isBvnValid,
+            pending:settingsViewModel.completedSections
+                .kycValidationCheck.isBvnValid ? false:  settingsViewModel.completedSections
                 .isBvnProvided ,
             showNext: settingsViewModel.completedSections
                 .kycValidationCheck.isBvnValid ==  false,

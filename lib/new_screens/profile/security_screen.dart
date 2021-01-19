@@ -40,6 +40,7 @@ class _SecurityScreenState extends State<SecurityScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.white,
       appBar: ZimAppBar(
         icon: Icons.arrow_back_ios_rounded,
         text: "Security",
@@ -90,65 +91,5 @@ class _SecurityScreenState extends State<SecurityScreen> {
   }
 }
 
-class SecuritySwitchWidget extends StatelessWidget {
 
-  final bool status;
-  final String title;
-
-  final Function toggle;
-
-  const SecuritySwitchWidget({Key key, this.status,
-    this.toggle, this.title}) : super(key: key);
-  @override
-  Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: (){
-        toggle(!status);
-      },
-      child: Container(height: 60,
-        color: Colors.transparent,
-        padding: EdgeInsets.symmetric(horizontal: 20),
-        child: Row(
-          children: [
-            Text(title, style: TextStyle(fontSize: 13,
-                fontFamily: AppStrings.fontNormal),),
-            Spacer(),
-            FlutterSwitch(
-              width: 50.0,
-              height: 30.0,
-              toggleSize: 20.0,
-              value: status,
-              borderRadius: 30.0,
-              padding: 2.0,
-              activeToggleColor: AppColors.kWhite,
-              inactiveToggleColor: AppColors.kWhite,
-              activeSwitchBorder: Border.all(
-                color: Color(0xFF3C1E70),
-                width: 0.0,
-              ),
-              inactiveSwitchBorder: Border.all(
-                color: Color(0xFFD1D5DA),
-                width: 0.0,
-              ),
-              activeColor: AppColors.kPrimaryColor,
-              inactiveColor: AppColors.kGrey,
-              activeIcon: Icon(
-                Icons.check,
-                color: AppColors.kPrimaryColor,
-                size: 15,
-              ),
-              inactiveIcon: Icon(
-                Icons.wb_sunny,
-                color: Colors.transparent,
-              ),
-              onToggle: (val) {
-                toggle(val);
-              },
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-}
 
