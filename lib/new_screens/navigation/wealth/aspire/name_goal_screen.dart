@@ -35,8 +35,8 @@ class _NameYourGoalScreenState extends State<NameYourGoalScreen> {
 
   ABSSavingViewModel savingViewModel;
 
-  Future getImage() async {
-    final pickedFile = await picker.getImage(source: ImageSource.gallery);
+  Future getImage(ImageSource source) async {
+    final pickedFile = await picker.getImage(source: source);
 
     setState(() {
       if (pickedFile != null) {
@@ -52,6 +52,7 @@ class _NameYourGoalScreenState extends State<NameYourGoalScreen> {
     goalName = widget.goalName;
     super.initState();
   }
+
 
   @override
   Widget build(BuildContext context) {
@@ -69,7 +70,15 @@ class _NameYourGoalScreenState extends State<NameYourGoalScreen> {
             children: [
             YMargin(20),
             GestureDetector(
-              onTap: getImage,
+              onTap: (){
+                showModalBottomSheet < Null > (context: context, builder: (BuildContext context) {
+                  return ImageUploadWidget(onCamera: (){
+                    getImage(ImageSource.camera);
+                  },onGallery: (){
+                    getImage(ImageSource.gallery);
+                  },);
+                }, isScrollControlled: true);
+              },
               child: Container(
                 height: 154,
                 width: (width /2) - 20,
@@ -81,7 +90,7 @@ class _NameYourGoalScreenState extends State<NameYourGoalScreen> {
                       borderRadius: BorderRadius.circular(10),
                       child: _image == null ? CachedNetworkImage(imageUrl: 'https://firebasestorage.googleapis.com/v0/b/tick-bc0e3.appspot.com/o/pexels-anete-lusina-5723322.'
                           'jpg?alt=media&token=4858ef91-820b-4ff3-aae7-a02ce3507c6d',
-                        height: 154,fit: BoxFit.fill,):Image.file(_image,height: 154,fit: BoxFit.fill),
+                        height: 154,fit: BoxFit.fill,):Image.file(_image,height: 154,fit: BoxFit.fill,width: (width /2) - 20,),
                     ),
                     Container(
                       height: 154,

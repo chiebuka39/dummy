@@ -233,7 +233,7 @@ class _SavingsSummaryScreenState extends State<SavingsSummaryScreen> {
                           },
                         ),
                       ),
-                      YMargin(50),
+                      YMargin(30),
                       Padding(
                         padding: const EdgeInsets.only(left: 20),
                         child: Text("Savings Summary", style: TextStyle(fontFamily: AppStrings.fontMedium),),
@@ -248,102 +248,114 @@ class _SavingsSummaryScreenState extends State<SavingsSummaryScreen> {
                           color: AppColors.kWhite,
                           boxShadow: AppUtils.getBoxShaddow3
                         ),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                          Text("Plan name".toUpperCase(), style: TextStyle(fontSize: 12,
-                              color: AppColors.kSecondaryText,fontFamily: AppStrings.fontNormal,),),
-                            YMargin(15),
-                            Text(savingViewModel.goalName, style: TextStyle(
-                                fontFamily: AppStrings.fontMedium,
-                                fontSize: 13,color: AppColors.kGreyText
-                            ),),
-                            YMargin(40),
-                            Row(children: [
-                              Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Text("Frequency".toUpperCase(), style: TextStyle(fontSize: 11,
-                                    color: AppColors.kSecondaryText,fontFamily: AppStrings.fontNormal,),),
-                                  YMargin(15),
-                                  Text(savingViewModel.selectedFrequency.name, style: TextStyle(
-                                      fontFamily: AppStrings.fontMedium,
-                                      fontSize: 13,color: AppColors.kGreyText
-                                  ),),
-                                ],),
-                              Spacer(),
+                        child: SingleChildScrollView(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                            Text("Plan name".toUpperCase(), style: TextStyle(fontSize: 12,
+                                color: AppColors.kSecondaryText,fontFamily: AppStrings.fontNormal,),),
+                              YMargin(15),
+                              Text(savingViewModel.goalName, style: TextStyle(
+                                  fontFamily: AppStrings.fontMedium,
+                                  fontSize: 13,color: AppColors.kGreyText
+                              ),),
+                              YMargin(40),
+                              Row(children: [
+                                Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text("Frequency".toUpperCase(), style: TextStyle(fontSize: 11,
+                                      color: AppColors.kSecondaryText,fontFamily: AppStrings.fontNormal,),),
+                                    YMargin(15),
+                                    Text(savingViewModel.selectedFrequency.name, style: TextStyle(
+                                        fontFamily: AppStrings.fontMedium,
+                                        fontSize: 13,color: AppColors.kGreyText
+                                    ),),
+                                  ],),
+                                Spacer(),
 
-                              Column(
-                                crossAxisAlignment: CrossAxisAlignment.end,
-                                children: [
-                                  Text("Interest rate".toUpperCase(), style: TextStyle(fontSize: 12,
-                                    color: AppColors.kSecondaryText,fontFamily: AppStrings.fontNormal,),),
-                                  YMargin(15),
-                                  Text("6% P.A", style: TextStyle(
-                                      fontFamily: AppStrings.fontMedium,
-                                      fontSize: 13,color: AppColors.kGreyText
-                                  ),),
-                                ],),
+                                Column(
+                                  crossAxisAlignment: CrossAxisAlignment.end,
+                                  children: [
+                                    Text("Interest rate".toUpperCase(), style: TextStyle(fontSize: 12,
+                                      color: AppColors.kSecondaryText,fontFamily: AppStrings.fontNormal,),),
+                                    YMargin(15),
+                                    Text("6% P.A", style: TextStyle(
+                                        fontFamily: AppStrings.fontMedium,
+                                        fontSize: 13,color: AppColors.kGreyText
+                                    ),),
+                                  ],),
 
 
-                            ],),
-                            YMargin(40),
-                            Row(children: [
-                              Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Text("${savingViewModel.selectedFrequency.name} amount".toUpperCase(), style: TextStyle(fontSize: 12,
-                                    color: AppColors.kSecondaryText,fontFamily: AppStrings.fontNormal,),),
-                                  YMargin(15),
-                                  Text(getFrequencyAmount(), style: TextStyle(
-                                      fontFamily: AppStrings.fontMedium,
-                                      fontSize: 13,color: AppColors.kGreyText
-                                  ),),
                               ],),
-                              Spacer(),
+                              YMargin(40),
+                              Row(children: [
+                                Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text("${savingViewModel.selectedFrequency.name} amount".toUpperCase(), style: TextStyle(fontSize: 12,
+                                      color: AppColors.kSecondaryText,fontFamily: AppStrings.fontNormal,),),
+                                    YMargin(15),
+                                    Row(
+                                      children: [
+                                        Text(AppStrings.nairaSymbol),
+                                        Text(getFrequencyAmount(), style: TextStyle(
+                                            fontFamily: AppStrings.fontMedium,
+                                            fontSize: 13,color: AppColors.kGreyText
+                                        ),),
+                                      ],
+                                    ),
+                                ],),
+                                Spacer(),
 
-                              Column(
+                                Column(
 
-                                crossAxisAlignment: CrossAxisAlignment.end,
-                                children: [
-                                  Text("target amount".toUpperCase(), style: TextStyle(fontSize: 11,
-                                    color: AppColors.kSecondaryText,fontFamily: AppStrings.fontNormal,),),
-                                  YMargin(15),
-                                  Text("${AppStrings.nairaSymbol}${getAmount(savingViewModel.amountToSave.toInt())}", style: TextStyle(
-                                      fontFamily: AppStrings.fontMedium,
-                                      fontSize: 13,color: AppColors.kGreyText
-                                  ),),
-                              ],)
-                            ],),
-                            YMargin(40),
-                            Row(children: [
-                              Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Text("start date".toUpperCase(), style: TextStyle(fontSize: 12,
-                                    color: AppColors.kSecondaryText,fontFamily: AppStrings.fontNormal,),),
-                                  YMargin(15),
-                                  Text(AppUtils.getReadableDate2(savingViewModel.startDate), style: TextStyle(
-                                      fontFamily: AppStrings.fontMedium,
-                                      fontSize: 13,color: AppColors.kGreyText
-                                  ),),
+                                  crossAxisAlignment: CrossAxisAlignment.end,
+                                  children: [
+                                    Text("target amount".toUpperCase(), style: TextStyle(fontSize: 11,
+                                      color: AppColors.kSecondaryText,fontFamily: AppStrings.fontNormal,),),
+                                    YMargin(15),
+                                    Row(
+                                      children: [
+                                        Text(AppStrings.nairaSymbol),
+                                        Text(" ${getAmount(savingViewModel.amountToSave.toInt())}", style: TextStyle(
+                                            fontFamily: AppStrings.fontMedium,
+                                            fontSize: 13,color: AppColors.kGreyText
+                                        ),),
+                                      ],
+                                    ),
+                                ],)
                               ],),
-                              Spacer(),
-                              Column(
-                                crossAxisAlignment: CrossAxisAlignment.end,
-                                children: [
-                                  Text("Next maturity date".toUpperCase(), style: TextStyle(fontSize: 11,
-                                    color: AppColors.kSecondaryText,fontFamily: AppStrings.fontNormal,),),
-                                  YMargin(15),
-                                  Text(AppUtils.getReadableDate2(savingViewModel.endDate), style: TextStyle(
-                                      fontFamily: AppStrings.fontMedium,
-                                      fontSize: 13,color: AppColors.kGreyText
-                                  ),),
-                              ],)
-                            ],),
+                              YMargin(40),
+                              Row(children: [
+                                Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text("start date".toUpperCase(), style: TextStyle(fontSize: 12,
+                                      color: AppColors.kSecondaryText,fontFamily: AppStrings.fontNormal,),),
+                                    YMargin(15),
+                                    Text(AppUtils.getReadableDate2(savingViewModel.startDate), style: TextStyle(
+                                        fontFamily: AppStrings.fontMedium,
+                                        fontSize: 13,color: AppColors.kGreyText
+                                    ),),
+                                ],),
+                                Spacer(),
+                                Column(
+                                  crossAxisAlignment: CrossAxisAlignment.end,
+                                  children: [
+                                    Text("Next maturity date".toUpperCase(), style: TextStyle(fontSize: 11,
+                                      color: AppColors.kSecondaryText,fontFamily: AppStrings.fontNormal,),),
+                                    YMargin(15),
+                                    Text(AppUtils.getReadableDate2(savingViewModel.endDate), style: TextStyle(
+                                        fontFamily: AppStrings.fontMedium,
+                                        fontSize: 13,color: AppColors.kGreyText
+                                    ),),
+                                ],)
+                              ],),
 
 
-                        ],),
+                          ],),
+                        ),
                       )
                   ],),
                 ),
@@ -418,17 +430,17 @@ class _SavingsSummaryScreenState extends State<SavingsSummaryScreen> {
 
   getFrequencyAmount() {
     if(savingViewModel.selectedFrequency.id == 2){
-      return "${AppStrings.nairaSymbol}${getAmount(savingViewModel.amountToSave ~/
+      return " ${getAmount(savingViewModel.amountToSave ~/
           (savingViewModel.endDate.difference(savingViewModel.startDate).inDays) )}";
     }else if(savingViewModel.selectedFrequency.id == 3){
-      return "${AppStrings.nairaSymbol}${getAmount(savingViewModel.amountToSave ~/
+      return " ${getAmount(savingViewModel.amountToSave ~/
           (savingViewModel.endDate.difference(savingViewModel.startDate).inDays) * 7 ) }";
     }
     else if(savingViewModel.selectedFrequency.id == 4){
-      return "${AppStrings.nairaSymbol}${getAmount(savingViewModel.amountToSave ~/
+      return " ${getAmount(savingViewModel.amountToSave ~/
           (savingViewModel.endDate.difference(savingViewModel.startDate).inDays) * 30 ) }";
     }
-    return "${AppStrings.nairaSymbol}${getAmount(savingViewModel.amountToSave.toInt())}";
+    return " ${getAmount(savingViewModel.amountToSave.toInt())}";
   }
 
   int getSavingsAmount(){

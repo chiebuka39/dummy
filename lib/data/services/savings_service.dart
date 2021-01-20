@@ -753,7 +753,18 @@ class SavingService extends ABSSavingService{
     var headers = {
       HttpHeaders.authorizationHeader: "Bearer $token"
     };
-    var body = FormData.fromMap({
+    var body = image == null ?{
+      "cardId": cardId,
+      'isAutoSave':autoSave,
+      "frequency": frequency,
+      "fundingChannel": fundingChannel,
+      "maturityDate": maturityDate.toIso8601String(),
+      "startDate": startDate.toIso8601String(),
+      "targetAmount": targetAmount,
+      "productId": productId,
+      "planName": planName,
+      "savingsAmount": savingsAmount,
+    } : FormData.fromMap({
       "cardId": cardId,
       'isAutoSave':autoSave,
       "frequency": frequency,
@@ -768,7 +779,8 @@ class SavingService extends ABSSavingService{
     });
 
 
-    var url = "${AppStrings.baseUrl}zimvest.services.savings/api/v2/Savings/TargetSavingsForm";
+    var url = image == null ?"${AppStrings.baseUrl}zimvest.services.savings/api/v2/Savings/TargetSavings":
+    "${AppStrings.baseUrl}zimvest.services.savings/api/v2/Savings/TargetSavingsForm";
     print("url $url");
     print("body $body");
     try{
@@ -793,21 +805,17 @@ class SavingService extends ABSSavingService{
       }
 
     }on DioError catch(e){
-      print("errrrrrrrr ${e.response.data.runtimeType}");
+      print("errrrrrrrr ${e.response.data}");
       print("error $e}");
 
       if(e.response != null ){
         if(e.response.data is String){
           result.errorMessage = "Sorry, We could not complete your request";
 
-        }else if(e.response?.data ?? '' is Map){
-          if(e.response.data['message'] is String){
-            result.errorMessage = e.response.data['message'];
-          }
         }
         else{
           print(e.toString());
-          result.errorMessage = "Sorry, We could not complete your request";
+          result.errorMessage = "Sorry, We could Create your target savings";
         }
 
 
