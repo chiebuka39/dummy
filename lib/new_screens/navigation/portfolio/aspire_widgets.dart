@@ -6,6 +6,7 @@ import 'package:zimvest/data/models/saving_plan.dart';
 import 'package:zimvest/new_screens/navigation/wealth/aspire/select_goals.dart';
 import 'package:zimvest/new_screens/navigation/wealth/aspire_box_details.dart';
 import 'package:zimvest/styles/colors.dart';
+import 'package:zimvest/utils/app_utils.dart';
 import 'package:zimvest/utils/margin.dart';
 import 'package:zimvest/utils/strings.dart';
 
@@ -104,11 +105,12 @@ class AspireContainerWidget extends StatelessWidget {
             ),
             YMargin(8),
 
+
             Row(
               children: [
                 Text(AppStrings.nairaSymbol),
                 Text(
-                  "${goal.amountSaved}",
+                  "${goal.amountSaved}".split(".").first.convertWithComma(),
                   style: TextStyle(fontFamily: AppStrings.fontMedium, fontSize: 12),
                 ),
               ],

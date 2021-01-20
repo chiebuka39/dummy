@@ -45,7 +45,7 @@ class WealthBoxDetailsWidget extends StatelessWidget {
                 Spacer(),
                 IconButton(icon: Icon(Icons.more_horiz_rounded), onPressed: (){
                   showModalBottomSheet < Null > (context: context, builder: (BuildContext context) {
-                    return WealthMore();
+                    return WealthMore(delete: false,);
                   },isScrollControlled: true);
                 })
               ],

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:zimvest/new_screens/navigation/wealth/investment_details.dart';
 import 'package:zimvest/styles/colors.dart';
+import 'package:zimvest/utils/app_utils.dart';
 import 'package:zimvest/utils/margin.dart';
 import 'package:zimvest/utils/strings.dart';
 
@@ -65,7 +66,12 @@ class TransactionItemWidget extends StatelessWidget {
               ],
             ),
             Spacer(),
-            Text("$symbol $amount", style: TextStyle(fontSize: 12),)
+            Row(
+              children: [
+                Text(symbol,style: TextStyle(fontSize: 12)),
+                Text("$amount".split(".").first.convertWithComma(), style: TextStyle(fontSize: 12),),
+              ],
+            )
           ],
         ),
       ),

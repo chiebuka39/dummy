@@ -35,7 +35,7 @@ class WealthBoxActivity extends StatelessWidget {
           ],),
         Spacer(),
         Text(AppStrings.nairaSymbol,style: TextStyle(fontSize: 12,)),
-        Text("${productTransaction.amount}", style: TextStyle(fontSize: 12, fontFamily: AppStrings.fontNormal),)
+        Text("${productTransaction.amount}".split(".").first.convertWithComma(), style: TextStyle(fontSize: 12, fontFamily: AppStrings.fontNormal),)
       ],),
     );
   }

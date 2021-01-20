@@ -41,7 +41,7 @@ class _VerificationDetailsScreenState extends State<VerificationDetailsScreen> {
     }
   }
   Future getImageFromCam() async {
-    final pickedFile = await picker.getImage(source: ImageSource.gallery);
+    final pickedFile = await picker.getImage(source: ImageSource.camera);
 
 
       if (pickedFile != null) {
@@ -58,18 +58,12 @@ class _VerificationDetailsScreenState extends State<VerificationDetailsScreen> {
     print("llll11 ${settingsViewModel.completedSections
         .kycValidationCheck.identificationStatus}");
     return Scaffold(
-      appBar: AppBar(
-        elevation: 0,
-        iconTheme: IconThemeData(color:AppColors.kTextColor),
-        backgroundColor: Colors.transparent,
-        leading: Padding(
-          padding: const EdgeInsets.only(left: 10),
-          child: IconButton(icon: Icon(Icons.close, color: AppColors.kPrimaryColor,), onPressed: () {
-            Navigator.pop(context);
-          },),
-        ),
-        title: Text("Verification Details", style: TextStyle(fontSize: 13,
-            fontFamily: AppStrings.fontMedium,color: AppColors.kTextColor),),
+      appBar: ZimAppBar(
+        text: "Create Zimvest Aspire",
+        icon: Icons.close,
+        callback: (){
+          Navigator.pop(context);
+        },
       ),
       body: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 20),
@@ -90,7 +84,7 @@ class _VerificationDetailsScreenState extends State<VerificationDetailsScreen> {
                 .kycValidationCheck.isBvnValid ? false:  settingsViewModel.completedSections
                 .isBvnProvided ,
             showNext: settingsViewModel.completedSections
-                .kycValidationCheck.isBvnValid ==  false,
+                .isBvnProvided ==  false,
           ),
           ProfileWidget(
             onClick: (){
@@ -102,6 +96,11 @@ class _VerificationDetailsScreenState extends State<VerificationDetailsScreen> {
           ),
           ProfileWidget(
             onClick: (){
+              if(settingsViewModel.completedSections
+                  .kycValidationCheck.identificationStatus == 1 ||settingsViewModel.completedSections
+                  .kycValidationCheck.identificationStatus == 0 ){
+                return;
+              }
               Navigator.push(context, IdentityUploadScreen.route());
             },
             title: "Identity document",
@@ -112,11 +111,17 @@ class _VerificationDetailsScreenState extends State<VerificationDetailsScreen> {
             pending: settingsViewModel.completedSections
                 .kycValidationCheck.identificationStatus == 0,
             showNext: settingsViewModel.completedSections
-                .kycValidationCheck.identificationStatus == 1 ? false:true,
+                .kycValidationCheck.identificationStatus == 1 || settingsViewModel.completedSections
+                .kycValidationCheck.identificationStatus == 0 ? false:true,
             padding: 0,
           ),
           ProfileWidget(
             onClick: (){
+              if(settingsViewModel.completedSections
+                  .kycValidationCheck.utilityBillStatus == 1 ||settingsViewModel.completedSections
+                  .kycValidationCheck.utilityBillStatus == 0 ){
+                return;
+              }
               settingsViewModel.selectedIdentity = null;
               showModalBottomSheet < Null > (context: context, builder: (BuildContext context) {
                 return ImageUploadWidget(onCamera: getImageFromCam,onGallery: getImageFromGallery,);
@@ -131,7 +136,8 @@ class _VerificationDetailsScreenState extends State<VerificationDetailsScreen> {
             pending: settingsViewModel.completedSections
                 .kycValidationCheck.utilityBillStatus == 0,
             showNext: settingsViewModel.completedSections
-                .kycValidationCheck.utilityBillStatus == 1 ? false:true,
+                .kycValidationCheck.utilityBillStatus == 1 ||settingsViewModel.completedSections
+                .kycValidationCheck.utilityBillStatus == 0  ? false:true,
             padding: 0,
           ),
         ],),

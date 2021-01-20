@@ -471,7 +471,7 @@ class SavingsInvestmentCashWidget extends StatelessWidget {
                             Text(AppStrings.nairaSymbol,style: TextStyle(
                                 color: AppColors.kGreyText,fontSize: 12)),
                             Text(
-                              "${wealthBox.amountSaved}",
+                              "${wealthBox.amountSaved}".split(".").first.convertWithComma(),
                               style: TextStyle(
                                   color: AppColors.kGreyText,
                                   fontFamily: AppStrings.fontMedium),

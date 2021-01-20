@@ -50,6 +50,7 @@ class _SelectGoalScreenState extends State<SelectGoalScreen> {
         slivers: [
           SliverAppBar(
             elevation: 0,
+            centerTitle: true,
             iconTheme: IconThemeData(color: AppColors.kPrimaryColor),
             leading: IconButton(
               icon: Icon(Icons.arrow_back_ios_outlined,size: 20,),

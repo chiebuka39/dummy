@@ -225,8 +225,8 @@ class _HomeScreenState extends State<HomeScreen> {
                                   )),
                               XMargin(2),
                               Text(
-                                dashboardViewModel
-                                    .dashboardModel.dollarPortfolio
+                                 dashboardViewModel
+                                    .dashboardModel.dollarPortfolio.substring(1)
                                     .split(".")
                                     .first,
                                 style: TextStyle(

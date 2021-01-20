@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:percent_indicator/circular_percent_indicator.dart';
 import 'package:provider/provider.dart';
+import 'package:shimmer/shimmer.dart';
 import 'package:zimvest/data/models/product_transaction.dart';
 import 'package:zimvest/data/models/saving_plan.dart';
 import 'package:zimvest/data/view_models/identity_view_model.dart';
@@ -103,7 +104,7 @@ class _AspireDetailsScreenState extends State<AspireDetailsScreen> with
                         Spacer(),
                         IconButton(icon: Icon(Icons.more_horiz_rounded, color: AppColors.kPrimaryColor,), onPressed: (){
                           showModalBottomSheet < Null > (context: context, builder: (BuildContext context) {
-                            return WealthMore();
+                            return WealthMore(savingPlanModel: widget.goal,);
                           },isScrollControlled: true);
                         })
                       ],
@@ -312,6 +313,52 @@ class _AspireDetailsScreenState extends State<AspireDetailsScreen> with
                         )
                       ],),
                     ),
+                    transactionsLoading ? Container(
+                      margin: EdgeInsets.symmetric(horizontal: 20),
+                      height: 400,
+                      child: Shimmer.fromColors(
+                        baseColor: Colors.grey[300],
+                        highlightColor: Colors.grey[100],
+                        child: ListView.builder(itemBuilder: (BuildContext context, int index) {
+                          if(index == 0){
+                            return  Row(
+                              children: [
+                                SizedBox(
+                                  width: 200.0,
+                                  height: 50.0,
+                                  child: Shimmer.fromColors(
+                                    baseColor: Colors.red,
+                                    highlightColor: Colors.yellow,
+                                    child: Container(
+                                      margin: EdgeInsets.only(top: 10),
+                                      width: 40.0,
+                                      height: 8.0,
+                                      color: Colors.white,
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            );
+                          }
+                          return  SizedBox(
+                            width: 200.0,
+                            height: 100.0,
+                            child: Shimmer.fromColors(
+                              baseColor: Colors.red,
+                              highlightColor: Colors.yellow,
+                              child: Container(
+                                margin: EdgeInsets.only(top: 10),
+                                width: 40.0,
+                                height: 8.0,
+                                color: Colors.white,
+                              ),
+                            ),
+                          );
+                        },itemCount: 4,
+
+                        ),
+                      ),
+                    ):SizedBox(),
                     ...List.generate(transactionsLoading ? 0:transactions.length > 4 ? 4:transactions.length, (index) {
                       ProductTransaction trans = transactions[index];
                       return WealthBoxActivity(productTransaction: trans,);

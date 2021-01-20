@@ -11,6 +11,7 @@ import 'package:zimvest/locator.dart';
 import 'package:zimvest/new_screens/profile/verif_code_screen.dart';
 import 'package:zimvest/new_screens/tabs.dart';
 import 'package:zimvest/styles/colors.dart';
+import 'package:zimvest/utils/app_utils.dart';
 import 'package:zimvest/utils/margin.dart';
 import 'package:zimvest/utils/strings.dart';
 import 'package:zimvest/widgets/buttons.dart';
@@ -42,7 +43,7 @@ class SelectWallet extends StatelessWidget {
               fontSize: 13,fontFamily: AppStrings.fontNormal),),
           Spacer(),
           Text(AppStrings.nairaSymbol, style: TextStyle(fontSize: 12, color: AppColors.kWhite),),
-          Text(" ${paymentViewModel.wallet == null ? '0.0':paymentViewModel.wallet.where((element) => element.currency == "NGN").first.balance}", style: TextStyle(color: AppColors.kWhite,
+          Text(" ${paymentViewModel.wallet == null ? '0.0':paymentViewModel.wallet.where((element) => element.currency == "NGN").first.balance.toString().split(".").first.convertWithComma()}", style: TextStyle(color: AppColors.kWhite,
               fontSize: 13,fontFamily: AppStrings.fontNormal),),
           XMargin(5),
           Icon(Icons.navigate_next_rounded,color: AppColors.kWhite,)

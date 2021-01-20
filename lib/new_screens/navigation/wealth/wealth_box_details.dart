@@ -2,6 +2,7 @@ import 'package:after_layout/after_layout.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:shimmer/shimmer.dart';
 import 'package:zimvest/data/models/saving_plan.dart';
 import 'package:percent_indicator/circular_percent_indicator.dart';
 import 'package:provider/provider.dart';
@@ -113,9 +114,9 @@ class _WealthBoxDetailsScreenState extends State<WealthBoxDetailsScreen> with Af
                                 fontSize: 15, fontFamily: AppStrings.fontBold
                             ),),
                             Spacer(),
-                            IconButton(icon: Icon(Icons.more_horiz_rounded), onPressed: (){
+                            IconButton(icon: Icon(Icons.more_horiz_rounded, color: AppColors.kPrimaryColor,), onPressed: (){
                               showModalBottomSheet < Null > (context: context, builder: (BuildContext context) {
-                                return WealthMore();
+                                return WealthMore(savingPlanModel: savingsPlanModel,delete: false,);
                               },isScrollControlled: true);
                             })
                           ],
@@ -148,7 +149,7 @@ class _WealthBoxDetailsScreenState extends State<WealthBoxDetailsScreen> with Af
                                     Transform.translate(
                                       offset: Offset(-8,0),
                                       child: Row(children: [
-                                        Icon(Icons.arrow_drop_up_outlined),
+                                        Icon(Icons.arrow_drop_up_outlined,color: AppColors.kWealthDark,),
                                         Text(AppStrings.nairaSymbol,style: TextStyle(color: AppColors.kWealthDark,fontSize: 11)),
                                         Text(" ${savingsPlanModel.accruedInterest}",
                                           style: TextStyle(fontFamily: AppStrings.fontMedium, color: AppColors.kWealthDark,fontSize: 11),),
@@ -279,10 +280,56 @@ class _WealthBoxDetailsScreenState extends State<WealthBoxDetailsScreen> with Af
                                 },isScrollControlled: true);
                               },
                               child: Text("See all", style: TextStyle(fontSize: 11,
-                                  fontFamily: AppStrings.fontMedium, color: AppColors.kGreyText)),
+                                  fontFamily: AppStrings.fontMedium, color: AppColors.kPrimaryColor)),
                             )
                           ],),
                         ),
+                        transactions == null ? Container(
+                          margin: EdgeInsets.symmetric(horizontal: 20),
+                          height: 400,
+                          child: Shimmer.fromColors(
+                            baseColor: Colors.grey[300],
+                            highlightColor: Colors.grey[100],
+                            child: ListView.builder(itemBuilder: (BuildContext context, int index) {
+                              if(index == 0){
+                                return  Row(
+                                  children: [
+                                    SizedBox(
+                                      width: 200.0,
+                                      height: 50.0,
+                                      child: Shimmer.fromColors(
+                                        baseColor: Colors.red,
+                                        highlightColor: Colors.yellow,
+                                        child: Container(
+                                          margin: EdgeInsets.only(top: 10),
+                                          width: 40.0,
+                                          height: 8.0,
+                                          color: Colors.white,
+                                        ),
+                                      ),
+                                    ),
+                                  ],
+                                );
+                              }
+                              return  SizedBox(
+                                width: 200.0,
+                                height: 100.0,
+                                child: Shimmer.fromColors(
+                                  baseColor: Colors.red,
+                                  highlightColor: Colors.yellow,
+                                  child: Container(
+                                    margin: EdgeInsets.only(top: 10),
+                                    width: 40.0,
+                                    height: 8.0,
+                                    color: Colors.white,
+                                  ),
+                                ),
+                              );
+                            },itemCount: 4,
+
+                            ),
+                          ),
+                        ):SizedBox(),
                         ...List.generate( transactions == null ? 0 : transactions.length > 4? 4
                             :transactions.length, (index) {
                           return WealthBoxActivity(productTransaction: transactions[index],);

@@ -94,7 +94,7 @@ class _TopUpScreenState extends State<TopUpScreen> with AfterLayoutMixin<TopUpSc
                 YMargin(3),
                 SizedBox(
                   width: 300,
-                  child: Text("N/B Savings must be at least 1000 naira", style: TextStyle(
+                  child: Text("N/B Savings must be at least 1,000 naira", style: TextStyle(
                       fontSize: 10,height: 1.6,color: AppColors.kRed),),
                 ),
                 YMargin(70),
