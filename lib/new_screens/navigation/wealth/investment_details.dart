@@ -1,11 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:provider_architecture/_viewmodel_provider.dart';
+import 'package:shimmer/shimmer.dart';
 import 'package:zimvest/data/models/product_transaction.dart';
+import 'package:zimvest/data/view_models/transaction_vm.dart';
 import 'package:zimvest/new_screens/funding/top_up_screen.dart';
 import 'package:zimvest/new_screens/funding/withdraw_screen.dart';
 import 'package:zimvest/new_screens/navigation/widgets/money_title_widget.dart';
 import 'package:zimvest/styles/colors.dart';
 import 'package:zimvest/utils/margin.dart';
+import 'package:zimvest/utils/margins.dart';
 import 'package:zimvest/utils/strings.dart';
 import 'package:zimvest/widgets/navigation/wealth_activites.dart';
 import 'package:zimvest/widgets/navigation/wealth_more.dart';
@@ -16,25 +20,33 @@ class InvestmentDetailsScreen extends StatefulWidget {
   final String investmentType;
   final String balance;
   final String annualReturns;
+  final int transactionId;
+  final int instrumentId;
 
   const InvestmentDetailsScreen(
       {Key key,
       this.investmentName,
       this.investmentType,
       this.balance,
-      this.annualReturns})
+      this.annualReturns,
+      this.transactionId,
+      this.instrumentId})
       : super(key: key);
   static Route<dynamic> route(
       {String investmentName,
       String investmentType,
       String balance,
-      String annualReturns}) {
+      String annualReturns,
+      int transactionId,
+      int instrumentId}) {
     return MaterialPageRoute(
         builder: (_) => InvestmentDetailsScreen(
               investmentName: investmentName,
               investmentType: investmentType,
               balance: balance,
               annualReturns: annualReturns,
+              transactionId: transactionId,
+              instrumentId: instrumentId,
             ),
         settings:
             RouteSettings(name: InvestmentDetailsScreen().toStringShort()));
@@ -48,6 +60,7 @@ class InvestmentDetailsScreen extends StatefulWidget {
 class _InvestmentDetailsScreenState extends State<InvestmentDetailsScreen> {
   @override
   Widget build(BuildContext context) {
+    bool whichActivity = widget.investmentType.contains("Zimvest High Yield");
     return Scaffold(
       backgroundColor: AppColors.kWhite,
       appBar: AppBar(
@@ -262,18 +275,163 @@ class _InvestmentDetailsScreenState extends State<InvestmentDetailsScreen> {
                   ],
                 ),
               ),
-              ...List.generate(4, (index) {
-                return WealthBoxActivity(
-                  productTransaction: ProductTransaction(
-                      id: 9,
-                      dateCreated: DateTime.now(),
-                      dateUpdated: DateTime.now(),
-                      status: 2,
-                      statusText: "Paid",
-                      amount: 30000,
-                      transactionDescription: "Funding from wallet"),
-                );
-              })
+              YMargin(10),
+              whichActivity
+                  ? ViewModelProvider<PortfolioViewModel>.withConsumer(
+                      builder: (context, model, _) => model.busy
+                          ? Padding(
+                              padding:
+                                  const EdgeInsets.symmetric(horizontal: 20.0),
+                              child: Container(
+                                height: 400,
+                                child: Shimmer.fromColors(
+                                  baseColor: Colors.grey[300],
+                                  highlightColor: Colors.grey[100],
+                                  child: ListView.builder(
+                                    itemBuilder:
+                                        (BuildContext context, int index) {
+                                      if (index == 0) {
+                                        return Row(
+                                          children: [
+                                            SizedBox(
+                                              width: 200.0,
+                                              height: 50.0,
+                                              child: Shimmer.fromColors(
+                                                baseColor: Colors.red,
+                                                highlightColor: Colors.yellow,
+                                                child: Container(
+                                                  margin:
+                                                      EdgeInsets.only(top: 10),
+                                                  width: 40.0,
+                                                  height: 8.0,
+                                                  color: Colors.white,
+                                                ),
+                                              ),
+                                            ),
+                                          ],
+                                        );
+                                      }
+                                      return SizedBox(
+                                        width: 200.0,
+                                        height: 100.0,
+                                        child: Shimmer.fromColors(
+                                          baseColor: Colors.red,
+                                          highlightColor: Colors.yellow,
+                                          child: Container(
+                                            margin: EdgeInsets.only(top: 10),
+                                            width: 40.0,
+                                            height: 8.0,
+                                            color: Colors.white,
+                                          ),
+                                        ),
+                                      );
+                                    },
+                                    itemCount: 3,
+                                  ),
+                                ),
+                              ),
+                            )
+                          : model.activities.transactionData.length == 0
+                              ? Padding(
+                                  padding: const EdgeInsets.only(top: 120.0),
+                                  child: Center(
+                                    child: Text("No Activities Yet"),
+                                  ),
+                                )
+                              : Container(
+                                height: screenHeight(context),
+                                width: screenWidth(context),
+                                child: ListView.builder(
+                                  itemBuilder: (context, index) =>
+                                      InvestmentActivity(productTransaction: model.activities.transactionData[index],),
+                                  itemCount: model
+                                      .activities.transactionData.length,
+                                ),
+                              ),
+                      onModelReady: (model) => model.getInvestmentActivities(
+                          name: widget.investmentType,
+                          transactionId: widget.transactionId,
+                          instrumentId: widget.instrumentId),
+                      viewModelBuilder: () => PortfolioViewModel(),
+                    )
+                  : ViewModelProvider<PortfolioViewModel>.withConsumer(
+                      builder: (context, model, _) => model.busy
+                          ? Padding(
+                              padding:
+                                  const EdgeInsets.symmetric(horizontal: 20.0),
+                              child: Container(
+                                height: 400,
+                                child: Shimmer.fromColors(
+                                  baseColor: Colors.grey[300],
+                                  highlightColor: Colors.grey[100],
+                                  child: ListView.builder(
+                                    itemBuilder:
+                                        (BuildContext context, int index) {
+                                      if (index == 0) {
+                                        return Row(
+                                          children: [
+                                            SizedBox(
+                                              width: 200.0,
+                                              height: 50.0,
+                                              child: Shimmer.fromColors(
+                                                baseColor: Colors.red,
+                                                highlightColor: Colors.yellow,
+                                                child: Container(
+                                                  margin:
+                                                      EdgeInsets.only(top: 10),
+                                                  width: 40.0,
+                                                  height: 8.0,
+                                                  color: Colors.white,
+                                                ),
+                                              ),
+                                            ),
+                                          ],
+                                        );
+                                      }
+                                      return SizedBox(
+                                        width: 200.0,
+                                        height: 100.0,
+                                        child: Shimmer.fromColors(
+                                          baseColor: Colors.red,
+                                          highlightColor: Colors.yellow,
+                                          child: Container(
+                                            margin: EdgeInsets.only(top: 10),
+                                            width: 40.0,
+                                            height: 8.0,
+                                            color: Colors.white,
+                                          ),
+                                        ),
+                                      );
+                                    },
+                                    itemCount: 3,
+                                  ),
+                                ),
+                              ),
+                            )
+                          : model.activities.transactionData.length == 0
+                              ? Padding(
+                                  padding: const EdgeInsets.only(top: 120.0),
+                                  child: Center(
+                                    child: Text("No Activities Yet"),
+                                  ),
+                                )
+                              : Container(
+                                height: screenHeight(context),
+                                width: screenWidth(context),
+                                child: ListView.builder(
+                                  itemBuilder: (context, index) =>
+                                      InvestmentActivity(productTransaction: model.activities.transactionData[index],),
+                                  itemCount: model
+                                      .activities.transactionData.length,
+                                ),
+                              ),
+                      onModelReady: (model) =>
+                          model.getFixedInvestmentActivities(
+                              name: widget.investmentType,
+                              transactionId: widget.transactionId,
+                              instrumentId: widget.instrumentId),
+                      viewModelBuilder: () => PortfolioViewModel(),
+                    )
             ],
           ),
         ),

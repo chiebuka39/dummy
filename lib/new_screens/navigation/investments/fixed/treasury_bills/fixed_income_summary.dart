@@ -46,20 +46,20 @@ class SavingsSummaryScreen extends StatefulWidget {
       this.channelId,
       this.intermediaryBankType})
       : super(key: key);
-  static Route<dynamic> route(
-      {double amount,
-      int investmentId,
-      String uniqueName,
-      String bondName,
-      String maturityDate,
-      double rate,
-      int minimumAmount,
-      int investmentType,
-      int instrumentId,
-      String investmentMaturityDate,
-      int channelId,
-      int intermediaryBankType,
-}) {
+  static Route<dynamic> route({
+    double amount,
+    int investmentId,
+    String uniqueName,
+    String bondName,
+    String maturityDate,
+    double rate,
+    int minimumAmount,
+    int investmentType,
+    int instrumentId,
+    String investmentMaturityDate,
+    int channelId,
+    int intermediaryBankType,
+  }) {
     print("Duration $bondName");
     return MaterialPageRoute(
       builder: (_) => SavingsSummaryScreen(
@@ -305,30 +305,18 @@ class _SavingsSummaryScreenState extends State<SavingsSummaryScreen> {
                                                         : 0.0,
                                                     child: PrimaryButtonNew(
                                                       onTap: () {
-                                                        model.buyTreasuryBills(
-                                                          cardId: paymentViewModel.selectedCard.id,
-                                                            productId: widget
-                                                                .investmentId,
-                                                            instrumentId: widget
-                                                                .instrumentId,
-                                                            fundingChannel:
-                                                                widget
-                                                                    .channelId,
-                                                            investmentAmount:
-                                                                widget.amount,
-                                                            maturityDate:
-                                                                DateTime.tryParse(
-                                                                    widget
-                                                                        .maturityDate),
-                                                            rate: widget.rate,
-                                                            instrumentName:
-                                                                widget.bondName,
-                                                            uniqueName: widget
-                                                                .uniqueName,
-                                                            instrumentType: 3);
+                                                        Navigator.pushAndRemoveUntil(
+                                                            context,
+                                                            MaterialPageRoute(
+                                                                builder:
+                                                                    (context) =>
+                                                                        TabsContainer()),
+                                                            (Route<dynamic>
+                                                                    route) =>
+                                                                false);
                                                       },
                                                       textColor: Colors.white,
-                                                      title: "Retry",
+                                                      title: "Done",
                                                       bg: AppColors
                                                           .kPrimaryColor,
                                                     ),
@@ -502,7 +490,7 @@ class _SavingsSummaryScreenState extends State<SavingsSummaryScreen> {
                                             ),
                                           ),
                                           Text(
-                                            "${AppStrings.nairaSymbol}${widget.amount}",
+                                            "${AppStrings.nairaSymbol}${StringUtils(widget.minimumAmount.toString()).convertWithComma()}",
                                             style: TextStyle(
                                               fontSize: 11,
                                               fontFamily: AppStrings.fontBold,
@@ -590,26 +578,22 @@ class _SavingsSummaryScreenState extends State<SavingsSummaryScreen> {
                 left: 0,
                 right: 0,
                 child: GestureDetector(
-                  onPanUpdate: (details) {
-                    // print(details.delta.dy);
-                    if (details.delta.dy == -0.5 ||
-                        details.delta.dy == -1.0 ||
-                        details.delta.dy == -1.5 ||
-                        details.delta.dy == -2.0) {
-                      startAnim();
-                      model.buyTreasuryBills(
-                        cardId: paymentViewModel.selectedCard == null ? null : paymentViewModel.selectedCard.id,
-                        productId: widget.investmentId,
-                        instrumentId: widget.instrumentId,
-                        fundingChannel: widget.channelId,
-                        investmentAmount: widget.amount,
-                        maturityDate: DateTime.tryParse(widget.maturityDate),
-                        rate: widget.rate,
-                        instrumentName: widget.bondName,
-                        uniqueName: widget.uniqueName,
-                        instrumentType: 3,
-                      );
-                    }
+                  onVerticalDragStart: (details) {
+                    startAnim();
+                    model.buyTreasuryBills(
+                      cardId: paymentViewModel.selectedCard == null
+                          ? null
+                          : paymentViewModel.selectedCard.id,
+                      productId: widget.investmentId,
+                      instrumentId: widget.instrumentId,
+                      fundingChannel: widget.channelId,
+                      investmentAmount: widget.amount,
+                      maturityDate: DateTime.tryParse(widget.maturityDate),
+                      rate: widget.rate,
+                      instrumentName: widget.bondName,
+                      uniqueName: widget.uniqueName,
+                      instrumentType: 3,
+                    );
                   },
                   child: Container(
                     height: 60,

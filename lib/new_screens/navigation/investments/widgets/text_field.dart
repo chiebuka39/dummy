@@ -32,7 +32,7 @@ class _InvestmentTextFieldState extends State<InvestmentTextField> {
           borderRadius: BorderRadius.circular(10),
           color: AppColors.kTextBg,
         ),
-        height: screenHeight(context) / 12.5,
+        height: screenHeight(context) / 14,
         child: Center(
           child: TextFormField(
             inputFormatters: widget.formatters,

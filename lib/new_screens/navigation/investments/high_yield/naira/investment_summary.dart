@@ -556,7 +556,7 @@ class _InvestmentSummaryScreenNairaState
                                             ),
                                           ),
                                           Text(
-                                            "${AppStrings.nairaSymbol}${widget.amount}",
+                                            "${AppStrings.nairaSymbol}${StringUtils(widget.minimumAmount.toString()).convertWithComma()}",
                                             style: TextStyle(
                                               fontSize: 11,
                                               fontFamily: AppStrings.fontBold,
@@ -586,11 +586,7 @@ class _InvestmentSummaryScreenNairaState
                 left: 0,
                 right: 0,
                 child: GestureDetector(
-                  onPanUpdate: (details) {
-                    if (details.delta.dy == -0.5 ||
-                        details.delta.dy == -1.0 ||
-                        details.delta.dy == -1.5 ||
-                        details.delta.dy == -2.0) {
+                  onVerticalDragStart: (details) {
                       startAnim();
                       model.buyNairaInstrument(
                         cardId: paymentViewModel.selectedCard?.id??null,
@@ -598,7 +594,6 @@ class _InvestmentSummaryScreenNairaState
                           productId: widget.productId,
                           uniqueName: widget.uniqueName,
                           fundingChannel: widget.channelId);
-                    }
                   },
                   // onVerticalDragStart: (details) {
                   //   print("dff ${details.toString()}");
