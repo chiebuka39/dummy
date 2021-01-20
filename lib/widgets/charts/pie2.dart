@@ -58,8 +58,13 @@ class PieChart2State extends State<PieChartSample2> {
               offset: Offset(-7,0),
               child: Row(children: [
                 Icon(Icons.arrow_drop_up_outlined, color: AppColors.kFixed,),
-                Text("${widget.dollar ?'\$' :AppStrings.nairaSymbol}0",
-                  style: TextStyle(fontFamily: AppStrings.fontMedium,color: AppColors.kFixed, fontSize: 11),),
+                Row(
+                  children: [
+                    Text("${widget.dollar ?'\$' :AppStrings.nairaSymbol}", style: TextStyle(fontSize: 12,color: AppColors.kFixed),),
+                    Text("0",
+                      style: TextStyle(fontFamily: AppStrings.fontMedium,color: AppColors.kFixed, fontSize: 11),),
+                  ],
+                ),
                 XMargin(5),
                 Text("(0.00%)",
                   style: TextStyle(fontFamily: AppStrings.fontMedium,color: AppColors.kFixed, fontSize: 11),),
