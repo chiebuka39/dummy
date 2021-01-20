@@ -73,6 +73,10 @@ class _VerificationDetailsScreenState extends State<VerificationDetailsScreen> {
             padding: 0,
             onClick: (){
               //Navigator.push(context, NextOfKinScreen.route());
+              if(settingsViewModel.completedSections
+                  .isBvnProvided){
+                return;
+              }
               showModalBottomSheet < Null > (context: context, builder: (BuildContext context) {
                 return EnterBVNWidget();
               }, isScrollControlled: false);
