@@ -136,7 +136,8 @@ class _AspireDetailsScreenState extends State<AspireDetailsScreen> with
                                   offset: Offset(-8,0),
                                   child: Row(children: [
                                     Icon(Icons.arrow_drop_up_outlined,color: AppColors.kWealthDark,),
-                                    Text("${AppStrings.nairaSymbol}${widget.goal.accruedInterest}",
+                                    Text(AppStrings.nairaSymbol,style: TextStyle(fontSize: 11,color: AppColors.kWealthDark)),
+                                    Text(" ${widget.goal.accruedInterest}",
                                       style: TextStyle(fontFamily: AppStrings.fontMedium,fontSize: 11,color: AppColors.kWealthDark),),
                                     XMargin(5),
                                     Text("Past 24h",
@@ -197,7 +198,7 @@ class _AspireDetailsScreenState extends State<AspireDetailsScreen> with
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
                                   Spacer(),
-                                  Text("${widget.goal.targetAmount}", style: TextStyle(
+                                  Text("${widget.goal.targetAmount}".split(".").first.convertWithComma(), style: TextStyle(
                                       fontFamily: AppStrings.fontMedium,color: AppColors.kGreyText
                                   ),),
                                   YMargin(8),
@@ -362,7 +363,8 @@ class _AspireDetailsScreenState extends State<AspireDetailsScreen> with
                     ...List.generate(transactionsLoading ? 0:transactions.length > 4 ? 4:transactions.length, (index) {
                       ProductTransaction trans = transactions[index];
                       return WealthBoxActivity(productTransaction: trans,);
-                    })
+                    }),
+                    YMargin(50)
 
                   ],
                 ),

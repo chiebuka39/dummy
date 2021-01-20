@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:provider/provider.dart';
 import 'package:zimvest/data/view_models/identity_view_model.dart';
 import 'package:zimvest/payment/input_formaters.dart';
@@ -70,13 +71,9 @@ class _EnterDOBWidgetState extends State<EnterDOBWidget> {
 
                return;
               }
-              setState(() {
-                loading = true;
-              });
+              EasyLoading.show(status: "");
               var result = await identityViewModel.sendEmailOTP(identityViewModel.email);
-              setState(() {
-                loading = false;
-              });
+              EasyLoading.dismiss();
               if(result.error == true){
 
                 AppUtils.showError(context,title: 'Something went wrong',

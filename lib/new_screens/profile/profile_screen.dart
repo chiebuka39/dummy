@@ -24,6 +24,7 @@ import 'package:zimvest/new_screens/profile/widgets/profile_widgets.dart';
 import 'package:zimvest/styles/colors.dart';
 import 'package:zimvest/utils/margin.dart';
 import 'package:zimvest/utils/strings.dart';
+import 'package:zimvest/widgets/navigation/delete_wealthbox.dart';
 
 class ProfileScreen extends StatefulWidget {
   static Route<dynamic> route() {
@@ -118,7 +119,12 @@ class _ProfileScreenState extends State<ProfileScreen> with AfterLayoutMixin<Pro
             },
           ),
           ProfileWidget(title: "Log Out",icon: 'log-out',onClick: (){
-            _showConfirmLogoutDialog(context);
+            showModalBottomSheet<Null>(
+                context: context,
+                builder: (BuildContext context) {
+                  return LogOutAction();
+                },
+                isScrollControlled: true);
           },),
           YMargin(50)
 

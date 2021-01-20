@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 import 'package:provider/provider.dart';
+import 'package:zimvest/animations/loading.dart';
 import 'package:zimvest/data/local/user_local.dart';
 import 'package:zimvest/data/view_models/identity_view_model.dart';
 import 'package:zimvest/data/view_models/payment_view_model.dart';
@@ -141,6 +142,7 @@ class _ReviewBankTransferState extends State<ReviewWalletTransfer> {
           body: Container(
             height: MediaQuery.of(context).size.height,
             child: Stack(children: [
+              SvgPicture.asset("images/patterns.svg", fit: BoxFit.fill,),
               Positioned.fill(
                 child: confirmed ? PlayAnimation<MultiTweenValues<AniProps>>(
                   tween: _tween,
@@ -301,7 +303,7 @@ class _ReviewBankTransferState extends State<ReviewWalletTransfer> {
               error == false ? Container(
                 height: size.height,
                 width: size.width,
-                child: Center(child: loading ? CircularProgressIndicator():SizedBox()
+                child: Center(child: loading ? LoadingWIdget():SizedBox()
                   ,),
               ):Container(
                 height: size.height,

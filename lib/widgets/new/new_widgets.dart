@@ -15,6 +15,7 @@ import 'package:zimvest/utils/app_utils.dart';
 import 'package:zimvest/utils/margin.dart';
 import 'package:zimvest/utils/strings.dart';
 import 'package:zimvest/widgets/buttons.dart';
+import 'package:zimvest/widgets/navigation/delete_wealthbox.dart';
 
 class SelectWallet extends StatelessWidget {
   const SelectWallet({
@@ -92,12 +93,13 @@ class DollarWallet extends StatelessWidget {
 
 class ZimAppBar extends StatelessWidget implements PreferredSizeWidget {
   const ZimAppBar({
-    Key key, this.icon = Icons.clear,@required this.callback, this.text = "Top Up",
+    Key key, this.icon = Icons.clear,@required this.callback, this.text = "Top Up", this.showCancel = false,
   }) : super(key: key);
 
   final IconData icon;
   final String text;
   final VoidCallback callback;
+  final bool showCancel;
 
   @override
   Widget build(BuildContext context) {
@@ -110,6 +112,23 @@ class ZimAppBar extends StatelessWidget implements PreferredSizeWidget {
         onPressed: callback,
       ),
       backgroundColor: Colors.transparent,
+      actions: [
+        showCancel ?Transform.translate(
+          offset: Offset(10,0),
+          child: FlatButton(
+            child: Text("Cancel", style: TextStyle(fontSize: 12,
+                fontFamily: AppStrings.fontMedium,color: AppColors.kPrimaryColor),),
+            onPressed: (){
+              showModalBottomSheet<Null>(
+                  context: context,
+                  builder: (BuildContext context) {
+                    return CancelAction();
+                  },
+                  isScrollControlled: true);
+            },
+          ),
+        ): SizedBox()
+      ],
       title: Text(text,
         style: TextStyle(color: Colors.black87,fontSize: 14,fontFamily: AppStrings.fontMedium),),
     );

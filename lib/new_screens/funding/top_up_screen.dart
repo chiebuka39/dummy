@@ -57,7 +57,7 @@ class _TopUpScreenState extends State<TopUpScreen> with AfterLayoutMixin<TopUpSc
 
         appBar: ZimAppBar(callback: (){
           Navigator.pop(context);
-        },icon: Icons.arrow_back_ios_outlined,text: "Top Up",),
+        }, showCancel: true,icon: Icons.arrow_back_ios_outlined,text: "Top Up",),
         body: GestureDetector(
           onTap: (){
             FocusScope.of(context).requestFocus(new FocusNode());

@@ -42,7 +42,9 @@ class _SaveFrequencyScreenState extends State<SaveFrequencyScreen> with
     savingViewModel = Provider.of(context);
 
     return Scaffold(
-      appBar: ZimAppBar(callback: (){
+      appBar: ZimAppBar(
+        showCancel: true,
+        callback: (){
         Navigator.pop(context);
       },icon: Icons.arrow_back_ios_outlined,text: "Create Zimvest Aspire",),
       body: Padding(
@@ -89,9 +91,12 @@ class _SaveFrequencyScreenState extends State<SaveFrequencyScreen> with
 
   int buildLength() {
     print("ooooo ${savingViewModel.endDate.difference(savingViewModel.startDate).inDays}");
-    if(savingViewModel.endDate.difference(savingViewModel.startDate).inDays < 180){
+    if(savingViewModel.endDate.difference(savingViewModel.startDate).inDays < 185){
       return savingViewModel.savingFrequency.length -2;
-    }else{
+    }else if(savingViewModel.endDate.difference(savingViewModel.startDate).inDays < 366){
+      return savingViewModel.savingFrequency.length -3;
+    }
+    else{
       return savingViewModel.savingFrequency.length;
     }
 

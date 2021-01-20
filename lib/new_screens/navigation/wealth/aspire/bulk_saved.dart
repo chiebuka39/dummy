@@ -29,7 +29,9 @@ class _BulkSaveScreenState extends State<BulkSaveScreen> {
     ABSSavingViewModel savingViewModel = Provider.of(context);
     print("pppmmmgg h ${savingViewModel.endDate.toIso8601String()}");
     return Scaffold(
-      appBar: ZimAppBar(callback: (){
+      appBar: ZimAppBar(
+        showCancel: true,
+        callback: (){
         Navigator.pop(context);
       },icon: Icons.arrow_back_ios_outlined,text: "Create Zimvest Aspire",),
       body: Padding(

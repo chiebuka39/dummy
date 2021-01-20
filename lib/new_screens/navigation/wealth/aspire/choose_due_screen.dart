@@ -71,7 +71,9 @@ class _ChooseDuedateScreenState extends State<ChooseDuedateScreen> with AfterLay
         FocusScope.of(context).requestFocus(new FocusNode());
       },
       child: Scaffold(
-        appBar: ZimAppBar(callback: (){
+        appBar: ZimAppBar(
+          showCancel: true,
+          callback: (){
           Navigator.pop(context);
         },icon: Icons.arrow_back_ios_outlined,text: "Create Zimvest Aspire",),
         body: GestureDetector(

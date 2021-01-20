@@ -51,6 +51,7 @@ class _ChooseFundingScreenState extends State<ChooseFundingScreen> {
           callback: (){
             Navigator.of(context).pop();
           },
+          showCancel: true,
           text: "Top Up",
           icon: Icons.arrow_back_ios_outlined,
         ),

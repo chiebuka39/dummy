@@ -59,7 +59,9 @@ class _NameYourGoalScreenState extends State<NameYourGoalScreen> {
     savingViewModel = Provider.of(context);
     final width = MediaQuery.of(context).size.width;
     return Scaffold(
-      appBar: ZimAppBar(callback: (){
+      appBar: ZimAppBar(
+        showCancel: true,
+        callback: (){
         Navigator.pop(context);
       },icon: Icons.arrow_back_ios_outlined,text: "Create Zimvest Aspire",),
       body: Padding(
@@ -73,8 +75,10 @@ class _NameYourGoalScreenState extends State<NameYourGoalScreen> {
               onTap: (){
                 showModalBottomSheet < Null > (context: context, builder: (BuildContext context) {
                   return ImageUploadWidget(onCamera: (){
+                    Navigator.pop(context);
                     getImage(ImageSource.camera);
                   },onGallery: (){
+                    Navigator.pop(context);
                     getImage(ImageSource.gallery);
                   },);
                 }, isScrollControlled: true);

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:keyboard_actions/keyboard_actions.dart';
 import 'package:provider/provider.dart';
 import 'package:zimvest/data/view_models/identity_view_model.dart';
@@ -113,13 +114,13 @@ class _EnterMailWidgetState extends State<EnterMailWidget> {
                 if(_emailError || _email.isEmpty){
                   return;
                 }
-                setState(() {
-                  loading = true;
-                });
+                EasyLoading.show(status: "");
+
                 var result = await _identityViewModel.emailAvailability(_email);
                 setState(() {
                   loading = false;
                 });
+                EasyLoading.dismiss();
                 if(result.error == true){
 
                   AppUtils.showError(context,title: 'Email unavailable',

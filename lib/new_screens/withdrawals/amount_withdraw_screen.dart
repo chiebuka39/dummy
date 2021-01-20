@@ -63,6 +63,7 @@ class _SavingDailyScreenState extends State<AmountWithdrawScreen> with AfterLayo
             pinViewModel.resetAmount();
             Navigator.pop(context);
           },
+          showCancel: true,
           text: "Withdraw",
         ),
         body: GestureDetector(

@@ -2,10 +2,12 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:provider/provider.dart';
+import 'package:zimvest/animations/loading.dart';
 import 'package:zimvest/data/view_models/identity_view_model.dart';
 import 'package:zimvest/data/view_models/payment_view_model.dart';
 import 'package:zimvest/data/view_models/savings_view_model.dart';
 import 'package:zimvest/new_screens/funding/top_up_successful.dart';
+import 'package:zimvest/new_screens/navigation/investments/widgets/terms_and_conditions_box.dart';
 import 'package:zimvest/new_screens/tabs.dart';
 import 'package:zimvest/styles/colors.dart';
 import 'package:zimvest/utils/app_utils.dart';
@@ -64,23 +66,16 @@ class _SavingsSummaryScreenState extends State<SavingsSummaryScreen> {
       slideUp = true;
       loading = true;
     });
-    // var result = await savingViewModel.createTargetSavings(
-    //   maturityDate: savingViewModel.endDate,
-    //   autoSave: savingViewModel.autoSave,
-    //   targetAmount: savingViewModel.amountToSave,
-    //   planName: savingViewModel.goalName ,
-    //   productId: 2,
-    //   cardId:paymentViewModel.selectedCard?.id ?? null,
-    //   token: identityViewModel.user.token,
-    //   frequency: savingViewModel.selectedFrequency.id,
-    //   startDate: savingViewModel.startDate,
-    //   fundingChannel: paymentViewModel.selectedCard == null ?
-    //       savingViewModel.fundingChannels.firstWhere((element) => element.name == "Wallet").id:
-    //   savingViewModel.fundingChannels.firstWhere((element) => element.name == "Card").id,
-    //   savingsAmount: getSavingsAmount()
-    // );
-    var result = await savingViewModel.createTargetSavings2(
 
+    await makeRemoteCall();
+
+
+
+  }
+
+  Future makeRemoteCall() async {
+    var result = await savingViewModel.createTargetSavings2(
+    
         cardId:paymentViewModel.selectedCard?.id ?? null,
         token: identityViewModel.user.token,
         fundingChannel: paymentViewModel.selectedCard == null ?
@@ -94,18 +89,18 @@ class _SavingsSummaryScreenState extends State<SavingsSummaryScreen> {
       setState(() {
         loading = false;
         confirmed = true;
-
+    
         if(result.errorMessage != null){
-
+    
           errorMessage = result.errorMessage;
-
+    
         }
-
+    
       });
-
+    
         Future.delayed(1000.milliseconds).then((value) => onInit());
-
-
+    
+    
     }else{
       setState(() {
         loading= false;
@@ -114,9 +109,6 @@ class _SavingsSummaryScreenState extends State<SavingsSummaryScreen> {
       });
       print(";;;;;;;; ${result.errorMessage}");
     }
-
-
-
   }
 
   void onInit() async {
@@ -143,6 +135,7 @@ class _SavingsSummaryScreenState extends State<SavingsSummaryScreen> {
         body: Container(
           height: MediaQuery.of(context).size.height,
           child: Stack(children: [
+            SvgPicture.asset("images/patterns.svg", fit: BoxFit.fill,),
             Positioned.fill(
               child: confirmed ? PlayAnimation<MultiTweenValues<AniProps>>(
                 tween: _tween,
@@ -395,7 +388,7 @@ class _SavingsSummaryScreenState extends State<SavingsSummaryScreen> {
             error == false ? Container(
               height: size.height,
               width: size.width,
-              child: Center(child: loading ? CircularProgressIndicator():SizedBox()
+              child: Center(child: loading ? LoadingWIdget():SizedBox()
                 ,),
             ):Container(
               height: size.height,
@@ -439,6 +432,14 @@ class _SavingsSummaryScreenState extends State<SavingsSummaryScreen> {
     else if(savingViewModel.selectedFrequency.id == 4){
       return " ${getAmount(savingViewModel.amountToSave ~/
           (savingViewModel.endDate.difference(savingViewModel.startDate).inDays) * 30 ) }";
+    }
+    else if(savingViewModel.selectedFrequency.id == 5){
+      return " ${getAmount(savingViewModel.amountToSave ~/
+          (savingViewModel.endDate.difference(savingViewModel.startDate).inDays) * 120 ) }";
+    }
+    else if(savingViewModel.selectedFrequency.id == 6){
+      return " ${getAmount(savingViewModel.amountToSave ~/
+          (savingViewModel.endDate.difference(savingViewModel.startDate).inDays) * 183 ) }";
     }
     return " ${getAmount(savingViewModel.amountToSave.toInt())}";
   }

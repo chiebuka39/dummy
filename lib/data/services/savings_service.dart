@@ -811,7 +811,6 @@ class SavingService extends ABSSavingService{
       if(e.response != null ){
         if(e.response.data is String){
           result.errorMessage = "Sorry, We could not complete your request";
-
         }
         else{
           print(e.toString());

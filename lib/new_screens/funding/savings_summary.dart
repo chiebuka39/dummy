@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:zimvest/animations/loading.dart';
 import 'package:zimvest/data/models/saving_plan.dart';
 import 'package:zimvest/new_screens/funding/top_up_successful.dart';
 import 'package:zimvest/new_screens/tabs.dart';
@@ -143,6 +144,7 @@ class _SavingsSummaryScreenState extends State<SavingsSummaryScreen> {
           height: MediaQuery.of(context).size.height,
           child: Stack(
             children: [
+              SvgPicture.asset("images/patterns.svg", fit: BoxFit.fill,),
               Positioned.fill(
                 child: confirmed
                     ? PlayAnimation<MultiTweenValues<AniProps>>(
@@ -281,12 +283,17 @@ class _SavingsSummaryScreenState extends State<SavingsSummaryScreen> {
                                         ),
                                       ),
                                       YMargin(15),
-                                      Text(
-                                        "${AppStrings.nairaSymbol}${savingViewModel.amountToSave.toString().split(".").first.convertWithComma()}",
-                                        style: TextStyle(
-                                            fontFamily: AppStrings.fontMedium,
-                                            fontSize: 13,
-                                            color: AppColors.kGreyText),
+                                      Row(
+                                        children: [
+                                          Text(AppStrings.nairaSymbol,style: TextStyle(fontSize: 12),),
+                                          Text(
+                                            "${savingViewModel.amountToSave.toString().split(".").first.convertWithComma()}",
+                                            style: TextStyle(
+                                                fontFamily: AppStrings.fontMedium,
+                                                fontSize: 13,
+                                                color: AppColors.kGreyText),
+                                          ),
+                                        ],
                                       ),
                                     ],
                                   ),
@@ -387,7 +394,7 @@ class _SavingsSummaryScreenState extends State<SavingsSummaryScreen> {
                       width: size.width,
                       child: Center(
                         child:
-                            loading ? CircularProgressIndicator() : SizedBox(),
+                            loading ? LoadingWIdget() : SizedBox(),
                       ),
                     )
                   : Container(

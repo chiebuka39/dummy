@@ -132,7 +132,7 @@ class WealthMore extends StatelessWidget {
                       showModalBottomSheet<Null>(
                           context: context,
                           builder: (BuildContext context) {
-                            return DeleteWealthbox();
+                            return DeleteWealthbox(savingPlanModel: savingPlanModel,);
                           },
                           isScrollControlled: true);
                     },
@@ -143,7 +143,7 @@ class WealthMore extends StatelessWidget {
                           SvgPicture.asset('images/new/delete_plan.svg'),
                           XMargin(15),
                           Text(
-                            "Delete Plan",
+                            "Close Plan",
                             style: TextStyle(fontFamily: AppStrings.fontNormal),
                           ),
                           Spacer(),

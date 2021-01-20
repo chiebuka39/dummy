@@ -312,7 +312,11 @@ class _SelectCardWidgetState extends State<SelectCardWidget> {
                     paymentViewModel.userCards.length,
                     (index) => CardItemWidget(
                       card: paymentViewModel.userCards[index],
-                      navigate: () => widget.navigate,
+                      navigate: (){
+                        print("p00001111223");
+                        Navigator.pop(context);
+                        widget.navigate();
+                      },
                     ),
                   ),
                   Spacer(),
@@ -476,8 +480,9 @@ class CardItemWidget extends StatelessWidget {
     ABSPaymentViewModel paymentViewModel = Provider.of(context);
     ABSSavingViewModel savingViewModel = Provider.of(context);
     return ViewModelProvider<FixedIncomeViewModel>.withConsumer(
-        builder: (context, model, _) => GestureDetector(
+        builder: (context, model, _) => InkWell(
               onTap: () {
+                print("ppffffff");
                 // savingViewModel.selectedChannel = savingViewModel
                 //     .fundingChannels.firstWhere((element) => element.name == "Wallet");
                 paymentViewModel.selectedCard = card;
@@ -485,10 +490,12 @@ class CardItemWidget extends StatelessWidget {
                   Navigator.of(context)
                       .pushReplacement(SavingsSummaryScreen.route());
                 } else {
+                  print("pppppmm222");
                   navigate();
                 }
               },
               child: Container(
+                color: Colors.transparent,
                 margin: EdgeInsets.only(top: 10),
                 height: 60,
                 child: Row(

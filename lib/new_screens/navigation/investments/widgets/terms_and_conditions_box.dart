@@ -7,8 +7,11 @@ import 'package:zimvest/widgets/buttons.dart';
 
 class TermsAndConditionsbox extends StatelessWidget {
   const TermsAndConditionsbox({
-    Key key,
+    Key key, this.onTapYes, this.onTapNo,
   }) : super(key: key);
+
+  final VoidCallback onTapYes;
+  final VoidCallback onTapNo;
 
   @override
   Widget build(BuildContext context) {
@@ -48,7 +51,7 @@ class TermsAndConditionsbox extends StatelessWidget {
                 ),
                 YMargin(25),
                 Text(
-                  "I agree that Interest on this investment is subject to 10% withholding tax.  Liquidating this investment before maturity will attract a 15% charge on the accrued interest.",
+                  "I agree that Interest on this investment is subject to 15% withholding tax.  Liquidating this investment before maturity will attract a 15% charge on the accrued interest.",
                   style: TextStyle(
                       fontSize: 11, height: 1.6, color: AppColors.kGreyText),
                 ),
@@ -60,6 +63,7 @@ class TermsAndConditionsbox extends StatelessWidget {
                       bg: AppColors.kPrimaryColorLight,
                       width: buttonWidth,
                       title: "No",
+                      onTap: onTapNo,
                     ),
                     XMargin(
                       20,
@@ -69,7 +73,7 @@ class TermsAndConditionsbox extends StatelessWidget {
                       bg: AppColors.kPrimaryColor,
                       width: buttonWidth,
                       title: "Yes",
-                      onTap: (){Navigator.push(context, InvestmentConfirmationDollar.route());},
+                      onTap: onTapYes,
                     )
                   ],
                 )
