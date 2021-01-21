@@ -230,7 +230,7 @@ class _SavingsSummaryScreenState extends State<SavingsSummaryScreen> {
                             Navigator.pop(context);
                           },
                         ),
-                        YMargin(70),
+                        YMargin(size.height < 650 ? 15:size.height > 700 ? 70:40),
                         Padding(
                           padding: const EdgeInsets.only(left: 20),
                           child: Text(
@@ -243,7 +243,7 @@ class _SavingsSummaryScreenState extends State<SavingsSummaryScreen> {
                           margin: EdgeInsets.symmetric(horizontal: 20),
                           padding: EdgeInsets.symmetric(
                               horizontal: 20, vertical: 25),
-                          height: 280,
+                          height: size.height < 650 ? 220:size.height > 700 ? 280:240,
                           width: double.infinity,
                           decoration: BoxDecoration(
                               color: AppColors.kWhite,
@@ -259,7 +259,7 @@ class _SavingsSummaryScreenState extends State<SavingsSummaryScreen> {
                                   fontFamily: AppStrings.fontNormal,
                                 ),
                               ),
-                              YMargin(15),
+                              YMargin(size.height < 650 ? 7:size.height > 700 ? 15:10),
                               Text(
                                 savingViewModel.selectedPlan.planName,
                                 style: TextStyle(
@@ -267,7 +267,8 @@ class _SavingsSummaryScreenState extends State<SavingsSummaryScreen> {
                                     fontSize: 13,
                                     color: AppColors.kGreyText),
                               ),
-                              YMargin(40),
+                              //YMargin(40),
+                              YMargin(size.height < 650 ? 18:size.height > 700 ? 40:30),
                               Row(
                                 children: [
                                   Column(
@@ -322,7 +323,7 @@ class _SavingsSummaryScreenState extends State<SavingsSummaryScreen> {
                                   )
                                 ],
                               ),
-                              YMargin(40),
+                              YMargin(size.height < 650 ? 18:size.height > 700 ? 40:30),
                               Text(
                                 "Interest rate".toUpperCase(),
                                 style: TextStyle(
@@ -331,7 +332,7 @@ class _SavingsSummaryScreenState extends State<SavingsSummaryScreen> {
                                   fontFamily: AppStrings.fontNormal,
                                 ),
                               ),
-                              YMargin(15),
+                              YMargin(size.height < 650 ? 7:size.height > 700 ? 15:10),
                               Text(
                                 "${savingViewModel.selectedPlan.interestRate}% P.A",
                                 style: TextStyle(

@@ -15,12 +15,13 @@ import 'package:zimvest/widgets/new/keyboard_widget.dart';
 import 'package:zimvest/widgets/new/new_widgets.dart';
 
 class AmountWithdrawScreen extends StatefulWidget {
+  final bool penaltyWithDraw;
   const AmountWithdrawScreen({
-    Key key,
+    Key key, this.penaltyWithDraw = false,
   }) : super(key: key);
-  static Route<dynamic> route() {
+  static Route<dynamic> route({bool penaltyWithDraw = false}) {
     return MaterialPageRoute(
-        builder: (_) => AmountWithdrawScreen(),
+        builder: (_) => AmountWithdrawScreen(penaltyWithDraw: penaltyWithDraw,),
         settings:
         RouteSettings(name: AmountWithdrawScreen().toStringShort()));
   }
@@ -92,6 +93,11 @@ class _SavingDailyScreenState extends State<AmountWithdrawScreen> with AfterLayo
                     alignment: Alignment.centerLeft,
                       child: Text(convertWithComma(pinViewModel.amount), style: TextStyle(fontSize: 15),)),
                 ),
+                if (widget.penaltyWithDraw) Padding(
+                  padding: const EdgeInsets.only(right: 40,top: 10),
+                  child: Text("You would be charged 10% of your accrued interest for "
+                      "liquidating outside of your accrued date", style: TextStyle(fontSize: 11,fontFamily: AppStrings.fontMedium, height: 1.6),),
+                ) else SizedBox(),
                 YMargin(height > 750 ? 65:30),
 
 
@@ -102,7 +108,7 @@ class _SavingDailyScreenState extends State<AmountWithdrawScreen> with AfterLayo
                     pinViewModel.resetAmount();
                   },
                 ),
-                YMargin(height > 750 ? 65:30),
+                YMargin(height > 750 ? 65:25),
                 NumKeyboardWidget()
 
 

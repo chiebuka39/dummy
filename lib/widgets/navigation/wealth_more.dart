@@ -86,7 +86,7 @@ class WealthMore extends StatelessWidget {
                             ),
                             YMargin(10),
                             Text(
-                              AppUtils.getReadableDate2(savingPlanModel?.maturityDate ?? savingPlanModel.startDate),
+                              AppUtils.getReadableDate2(savingPlanModel?.maturityDate ?? getDate()),
                               style: TextStyle(
                                   fontSize: 12,
                                   fontFamily: AppStrings.fontMedium,
@@ -163,5 +163,13 @@ class WealthMore extends StatelessWidget {
         ],
       ),
     );
+  }
+
+  DateTime getDate(){
+    DateTime now = DateTime.now();
+    List<DateTime> quaters = [DateTime(now.year,1),DateTime(now.year,4),
+      DateTime(now.year,7),DateTime(now.year,10)];
+    print(",,,,,,,,ooooo ${quaters.where((element) => element.microsecondsSinceEpoch >= now.microsecondsSinceEpoch)}");
+    return quaters.where((element) => element.microsecondsSinceEpoch >= now.microsecondsSinceEpoch).first;
   }
 }

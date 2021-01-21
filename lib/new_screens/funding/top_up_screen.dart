@@ -49,12 +49,13 @@ class _TopUpScreenState extends State<TopUpScreen> with AfterLayoutMixin<TopUpSc
     paymentViewModel = Provider.of(context);
     identityViewModel = Provider.of(context);
     ABSPinViewModel pinViewModel = Provider.of(context);
+    final height = MediaQuery.of(context).size.height;
+    print("juuu $height");
     return GestureDetector(
       onTap: (){
         FocusScope.of(context).requestFocus(new FocusNode());
       },
       child: Scaffold(
-
         appBar: ZimAppBar(callback: (){
           Navigator.pop(context);
         }, showCancel: true,icon: Icons.arrow_back_ios_outlined,text: "Top Up",),
@@ -97,7 +98,7 @@ class _TopUpScreenState extends State<TopUpScreen> with AfterLayoutMixin<TopUpSc
                   child: Text("N/B Savings must be at least 1,000 naira", style: TextStyle(
                       fontSize: 10,height: 1.6,color: AppColors.kRed),),
                 ),
-                YMargin(70),
+                YMargin(height < 650 ? 25:height > 700 ? 70:40),
 
 
                 RoundedNextButton(
@@ -107,7 +108,7 @@ class _TopUpScreenState extends State<TopUpScreen> with AfterLayoutMixin<TopUpSc
                     pinViewModel.resetAmount();
                   },
                 ),
-                YMargin(65),
+                YMargin(height < 650 ? 15: height > 700 ? 65:30),
                 NumKeyboardWidget()
 
 

@@ -19,6 +19,7 @@ import 'package:zimvest/styles/colors.dart';
 import 'package:zimvest/utils/app_utils.dart';
 import 'package:zimvest/utils/margin.dart';
 import 'package:zimvest/utils/strings.dart';
+import 'package:zimvest/widgets/navigation/delete_wealthbox.dart';
 import 'package:zimvest/widgets/navigation/wealth_activites.dart';
 import 'package:zimvest/widgets/navigation/wealth_more.dart';
 import 'package:zimvest/widgets/navigation/wealthbox_activity.dart';
@@ -254,8 +255,26 @@ class _AspireDetailsScreenState extends State<AspireDetailsScreen> with
                           child: Center(
                             child: GestureDetector(
                               onTap: (){
-                                savingViewModel.selectedPlan = widget.goal;
-                                Navigator.of(context).push(AmountWithdrawScreen.route());
+                                DateTime time = DateTime.now();
+                                if(time.day == widget.goal.maturityDate.day && time.month == widget.goal.maturityDate.month && time.year == widget.goal.maturityDate.year){
+
+                                  savingViewModel.selectedPlan = widget.goal;
+                                  Navigator.of(context).push(AmountWithdrawScreen.route());
+                                }else{
+                                  showModalBottomSheet<Null>(
+                                      context: context,
+                                      builder: (BuildContext context) {
+                                        return WithdrawWealthbox(
+                                          savingPlanModel: widget.goal,
+                                          onTapYes: (){
+
+                                            savingViewModel.selectedPlan = widget.goal;
+                                            Navigator.of(context).pushReplacement(AmountWithdrawScreen.route(penaltyWithDraw: true));
+                                          },
+                                        );
+                                      },
+                                      isScrollControlled: true);
+                                }
                               },
                               child: Container(child: Column(children: [
                                 Container(

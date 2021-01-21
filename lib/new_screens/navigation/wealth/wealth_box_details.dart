@@ -11,6 +11,7 @@ import 'package:zimvest/data/models/saving_plan.dart';
 import 'package:zimvest/data/view_models/identity_view_model.dart';
 import 'package:zimvest/data/view_models/savings_view_model.dart';
 import 'package:zimvest/new_screens/funding/top_up_screen.dart';
+import 'package:zimvest/new_screens/funding/wallet/wallet_withdraw_to.dart';
 import 'package:zimvest/new_screens/funding/withdraw_screen.dart';
 import 'package:zimvest/new_screens/navigation/portfolio_screen.dart';
 import 'package:zimvest/new_screens/navigation/widgets/money_title_widget.dart';
@@ -19,6 +20,7 @@ import 'package:zimvest/styles/colors.dart';
 import 'package:zimvest/utils/app_utils.dart';
 import 'package:zimvest/utils/margin.dart';
 import 'package:zimvest/utils/strings.dart';
+import 'package:zimvest/widgets/navigation/delete_wealthbox.dart';
 import 'package:zimvest/widgets/navigation/wealth_activites.dart';
 import 'package:zimvest/widgets/navigation/wealth_more.dart';
 import 'package:zimvest/widgets/navigation/wealthbox_activity.dart';
@@ -212,9 +214,26 @@ class _WealthBoxDetailsScreenState extends State<WealthBoxDetailsScreen> with Af
                               child: Center(
                                 child: GestureDetector(
                                   onTap: (){
-                                    savingViewModel.selectedPlan = savingsPlanModel;
-                                    Navigator.of(context).push(AmountWithdrawScreen.route());
 
+                                    if(DateTime.now().day == 1 &&( DateTime.now().month == 4 || DateTime.now().month == 7 || DateTime.now().month == 10 || DateTime.now().month == 1)){
+
+                                      savingViewModel.selectedPlan = savingsPlanModel;
+                                      Navigator.of(context).push(AmountWithdrawScreen.route());
+                                    }else{
+                                      showModalBottomSheet<Null>(
+                                          context: context,
+                                          builder: (BuildContext context) {
+                                            return WithdrawWealthbox(
+                                              savingPlanModel: savingsPlanModel,
+                                              onTapYes: (){
+
+                                                savingViewModel.selectedPlan = savingsPlanModel;
+                                                Navigator.of(context).pushReplacement(AmountWithdrawScreen.route(penaltyWithDraw: true));
+                                              },
+                                            );
+                                          },
+                                          isScrollControlled: true);
+                                    }
                                   },
                                   child: Container(child: Column(children: [
                                     Container(
@@ -344,5 +363,13 @@ class _WealthBoxDetailsScreenState extends State<WealthBoxDetailsScreen> with Af
         ],
       ),
     );
+  }
+
+  DateTime getDate(){
+    DateTime now = DateTime.now();
+    List<DateTime> quaters = [DateTime(now.year,1),DateTime(now.year,4),
+      DateTime(now.year,7),DateTime(now.year,10)];
+    print(",,,,,,,,ooooo ${quaters.where((element) => element.microsecondsSinceEpoch >= now.microsecondsSinceEpoch)}");
+    return quaters.where((element) => element.microsecondsSinceEpoch >= now.microsecondsSinceEpoch).first;
   }
 }

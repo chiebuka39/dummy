@@ -814,13 +814,14 @@ class SavingService extends ABSSavingService{
         }
         else{
           print(e.toString());
-          result.errorMessage = "Sorry, We could Create your target savings";
+
+          result.errorMessage = e.response.data['message'];
         }
 
 
       }else{
         print(e.toString());
-        result.errorMessage = "Sorry, We could not complete your request";
+        result.errorMessage = "Sorry, We could not create your target savings";
       }
       result.error = true;
     }

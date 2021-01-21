@@ -35,6 +35,7 @@ class _SavingsTargetScreenState extends State<SavingsTargetScreen> {
   Widget build(BuildContext context) {
     savingViewModel = Provider.of(context);
     ABSPinViewModel pinViewModel = Provider.of(context);
+    final height = MediaQuery.of(context).size.height;
     return GestureDetector(
       onTap: (){
         FocusScope.of(context).requestFocus(new FocusNode());
@@ -78,7 +79,7 @@ class _SavingsTargetScreenState extends State<SavingsTargetScreen> {
                       "once you create this savings plan", style: TextStyle(
                       fontSize: 10,height: 1.6),),
                 ),
-                YMargin(70),
+                YMargin(height < 650 ? 25:height > 700 ? 70:40),
 
 
                 RoundedNextButton(
@@ -88,7 +89,7 @@ class _SavingsTargetScreenState extends State<SavingsTargetScreen> {
                     pinViewModel.resetAmount();
                   }:null,
                 ),
-                YMargin(65),
+                YMargin(height < 650 ? 25:height > 700 ? 65:40),
                 NumKeyboardWidget(
 
                 )
