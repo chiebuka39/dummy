@@ -173,42 +173,62 @@ class _SavingsSectionState extends State<SavingsSection> with AfterLayoutMixin<S
   }
 
   Future getSavings() async {
-    setState(() {
-      loading = true;
-      error = false;
-    });
-    
-    
-    var r1 = await savingViewModel.getSavingPlans(token: identityViewModel.user.token);
-    var r2 = await savingViewModel.getProductTypes(token: identityViewModel.user.token);
-    if(r1.error == false && r2.error == false ){
-      totalBalance = 0;
-      wealthBox =  savingViewModel.savingPlanModel.where((element) => element.productId == 1).isNotEmpty ?
-      savingViewModel.savingPlanModel.where((element) => element.productId == 1).first : null;
-      aspirePlans = savingViewModel.savingPlanModel.where((element) => element.productId == 2).toList();
-      savingViewModel.savingPlanModel.forEach((element) {
-        totalBalance = totalBalance + element.amountSaved;
-      });
-    
+
+    if(mounted){
+      print("rrrtt widget is mounted");
       setState(() {
-        loading = false;
+        loading = true;
         error = false;
       });
-    
-      if(savingViewModel.productTypes.isNotEmpty){
-        await fetchTransactions(savingViewModel.productTypes.first.id);
-      }
-    
-      //getRequiredDetailsForForm();
-    }else{
-      setState(() {
-        loading = false;
-        error = true;
-        networkAvailable = r1.networkAvailable;
-        errorMessage = r1.errorMessage;
+      var r1 = await savingViewModel.getSavingPlans(token: identityViewModel.user.token);
+      var r2 = await savingViewModel.getProductTypes(token: identityViewModel.user.token);
+      if(r1.error == false && r2.error == false ){
+        totalBalance = 0;
+        wealthBox =  savingViewModel.savingPlanModel.where((element) => element.productId == 1).isNotEmpty ?
+        savingViewModel.savingPlanModel.where((element) => element.productId == 1).first : null;
+        aspirePlans = savingViewModel.savingPlanModel.where((element) => element.productId == 2).toList();
+        savingViewModel.savingPlanModel.forEach((element) {
+          totalBalance = totalBalance + element.amountSaved;
+        });
 
-      });
+        if(mounted){
+          print("pppppp widget is mounted");
+          setState(() {
+            loading = false;
+            error = false;
+          });
+
+          if(savingViewModel.productTypes.isNotEmpty){
+            await fetchTransactions(savingViewModel.productTypes.first.id);
+          }
+        }else{
+          print("pppppp widget is not mounted");
+        }
+
+
+        //getRequiredDetailsForForm();
+      }else{
+        if(mounted){
+          print("pppppp11 widget is mounted");
+          setState(() {
+            loading = false;
+            error = true;
+            networkAvailable = r1.networkAvailable;
+            errorMessage = r1.errorMessage;
+
+          });
+        }else{
+          print("pppppp widget is not mounted");
+        }
+
+      }
+    }else{
+      print("pppppp4444 widget is not mounted");
     }
+
+    
+    
+
   }
 
   Future<void> fetchTransactions(int productId,{bool showLoader = false}) async {
