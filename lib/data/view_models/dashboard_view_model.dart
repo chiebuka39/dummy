@@ -5,6 +5,8 @@ import 'package:zimvest/locator.dart';
 import 'package:zimvest/utils/result.dart';
 
 abstract class ABSDashboardViewModel extends ChangeNotifier {
+  VoidCallback _callback;
+  VoidCallback get callback => _callback;
   DashboardModel _dashboardModel = DashboardModel();
   List<PortfolioDistribution> _portfolioDistribution = [];
   AssetDistribution _assetDistribution;
@@ -15,6 +17,7 @@ abstract class ABSDashboardViewModel extends ChangeNotifier {
       _portfolioDistribution;
 
   set dashboardModel(DashboardModel value);
+  set callback(VoidCallback value);
   set assetDistribution(AssetDistribution value);
   set portfolioDistribution(List<PortfolioDistribution> value);
 
@@ -29,6 +32,11 @@ class DashboardViewModel extends ABSDashboardViewModel {
 
   set dashboardModel(DashboardModel value) {
     _dashboardModel = value;
+    notifyListeners();
+  }
+
+  set callback(VoidCallback value) {
+    _callback = value;
     notifyListeners();
   }
 

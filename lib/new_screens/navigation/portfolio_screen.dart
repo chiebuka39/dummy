@@ -241,12 +241,11 @@ class _SavingsSectionState extends State<SavingsSection> with AfterLayoutMixin<S
     ): loading == true
         ? SavingsInvestmentLoadingWidget()
         : wealthBox == null && aspirePlans.isEmpty
-            ? SavingsInvestmentWidget()
-            : SavingsInvestmentCashWidget(
-                wealthBox: wealthBox,
-                aspirePlans: aspirePlans,
-                totalBalance: totalBalance,
-              );
+            ? SavingsInvestmentWidget():SavingsInvestmentCashWidget(
+      wealthBox: wealthBox,
+      aspirePlans: aspirePlans,
+      totalBalance: totalBalance,
+    );
   }
 }
 
@@ -257,6 +256,7 @@ class SavingsInvestmentWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    ABSDashboardViewModel dashboardViewModel = Provider.of(context);
     return SliverPadding(
       sliver: SliverList(
           delegate: SliverChildListDelegate([
@@ -284,7 +284,8 @@ class SavingsInvestmentWidget extends StatelessWidget {
             PrimaryButtonNew(
               title: "Start Saving",
               onTap: (){
-                Navigator.of(context).push(SelectGoalScreen.route());
+
+                dashboardViewModel.callback();
               },
             ),
           ],
