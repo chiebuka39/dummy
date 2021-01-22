@@ -215,7 +215,6 @@ class _SavingsSectionState extends State<SavingsSection> with AfterLayoutMixin<S
             error = true;
             networkAvailable = r1.networkAvailable;
             errorMessage = r1.errorMessage;
-
           });
         }else{
           print("pppppp widget is not mounted");
