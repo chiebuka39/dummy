@@ -214,6 +214,9 @@ class _WealthBoxDetailsScreenState extends State<WealthBoxDetailsScreen> with Af
                               child: Center(
                                 child: GestureDetector(
                                   onTap: (){
+                                    if(widget.savingsPlanModel.amountSaved == 0){
+                                        return;
+                                    }
 
                                     if(DateTime.now().day == 1 &&( DateTime.now().month == 4 || DateTime.now().month == 7 || DateTime.now().month == 10 || DateTime.now().month == 1)){
 
@@ -235,21 +238,24 @@ class _WealthBoxDetailsScreenState extends State<WealthBoxDetailsScreen> with Af
                                           isScrollControlled: true);
                                     }
                                   },
-                                  child: Container(child: Column(children: [
-                                    Container(
-                                        height:35,
-                                        width: 35,
-                                        decoration: BoxDecoration(
-                                            color: AppColors.kPrimaryColorLight,
-                                            shape: BoxShape.circle
-                                        ),
-                                        child: Center(child: SvgPicture.asset("images/new/top_up.svg",color: AppColors.kPrimaryColor,))),
-                                    YMargin(12),
-                                    Text("Withdraw", style: TextStyle(
-                                        fontSize: 12,
-                                        fontFamily: AppStrings.fontNormal
-                                    ),)
-                                  ],),),
+                                  child: Opacity(
+                                    opacity: widget.savingsPlanModel.amountSaved == 0 ? 0.5:1,
+                                    child: Container(child: Column(children: [
+                                      Container(
+                                          height:35,
+                                          width: 35,
+                                          decoration: BoxDecoration(
+                                              color: AppColors.kPrimaryColorLight,
+                                              shape: BoxShape.circle
+                                          ),
+                                          child: Center(child: SvgPicture.asset("images/new/top_up.svg",color: AppColors.kPrimaryColor,))),
+                                      YMargin(12),
+                                      Text("Withdraw", style: TextStyle(
+                                          fontSize: 12,
+                                          fontFamily: AppStrings.fontNormal
+                                      ),)
+                                    ],),),
+                                  ),
                                 ),
                               ),
                             ),

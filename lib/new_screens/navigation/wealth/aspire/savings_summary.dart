@@ -61,12 +61,6 @@ class _SavingsSummaryScreenState extends State<SavingsSummaryScreen> {
   }
 
   void startAnim(BuildContext buildContext)async{
-
-    setState(() {
-      slideUp = true;
-      loading = true;
-    });
-
     showModalBottomSheet<Null>(
         context: buildContext,
         builder: (BuildContext context) {
@@ -84,9 +78,17 @@ class _SavingsSummaryScreenState extends State<SavingsSummaryScreen> {
 
 
 
+
+
+
+
   }
 
   Future makeRemoteCall() async {
+    setState(() {
+      slideUp = true;
+      loading = true;
+    });
     var result = await savingViewModel.createTargetSavings2(
     
         cardId:paymentViewModel.selectedCard?.id ?? null,
@@ -173,7 +175,10 @@ class _SavingsSummaryScreenState extends State<SavingsSummaryScreen> {
                               offset: 10,
                               curve: Curves.easeIn,
                               key: keys[0],
-                              child: Text(errorMessage.isEmpty ? "Your Target creation was succesful":errorMessage, style: TextStyle(color: Colors.white),)),
+                              child: Padding(
+                                padding: const EdgeInsets.symmetric(horizontal: 30),
+                                child: Text(errorMessage.isEmpty ? "Your Target creation was succesful":errorMessage, style: TextStyle(color: Colors.white),textAlign: TextAlign.center,),
+                              )),
                           Spacer(),
                           ItemFader(
                             offset: 10,

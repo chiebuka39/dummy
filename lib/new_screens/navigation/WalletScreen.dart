@@ -6,6 +6,7 @@ import 'package:provider/provider.dart';
 import 'package:provider_architecture/provider_architecture.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 import 'package:zimvest/data/models/payment/wallet.dart';
+import 'package:zimvest/data/models/product_transaction.dart';
 import 'package:zimvest/data/view_models/identity_view_model.dart';
 import 'package:zimvest/data/view_models/investment_view_model.dart';
 import 'package:zimvest/data/view_models/wallets_view_model.dart';
@@ -846,6 +847,7 @@ Widget walletTransactionsCredit(
               .toList()
               .length,
           itemBuilder: (context, index) => TransactionItemWidget(
+            trans: ProductTransaction(status: 3),
             symbol: walletTransaction[index].currency == "NGN"
                 ? AppStrings.nairaSymbol
                 : AppStrings.dollarSymbol,
@@ -906,6 +908,7 @@ Widget walletTransactionsDollarCredit(
               .toList().where((element) => element.currency == "USD")
               .length,
           itemBuilder: (context, index) => TransactionItemWidget(
+            trans: ProductTransaction(status: 3),
             symbol: walletTransaction[index].currency == "NGN"
                 ? AppStrings.nairaSymbol
                 : AppStrings.dollarSymbol,

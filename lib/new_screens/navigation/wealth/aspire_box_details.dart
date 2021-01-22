@@ -256,6 +256,9 @@ class _AspireDetailsScreenState extends State<AspireDetailsScreen> with
                           child: Center(
                             child: GestureDetector(
                               onTap: (){
+                                if(widget.goal.savingsAmount == 0){
+                                  return;
+                                }
                                 DateTime time = DateTime.now();
                                 if(time.day == widget.goal.maturityDate.day && time.month == widget.goal.maturityDate.month && time.year == widget.goal.maturityDate.year){
 
@@ -277,21 +280,24 @@ class _AspireDetailsScreenState extends State<AspireDetailsScreen> with
                                       isScrollControlled: true);
                                 }
                               },
-                              child: Container(child: Column(children: [
-                                Container(
-                                    height:35,
-                                    width: 35,
-                                    decoration: BoxDecoration(
-                                        color: AppColors.kPrimaryColorLight,
-                                        shape: BoxShape.circle
-                                    ),
-                                    child: Center(child: SvgPicture.asset("images/new/withdraw.svg", color: AppColors.kPrimaryColor))),
-                                YMargin(12),
-                                Text("Withdraw", style: TextStyle(
-                                    fontSize: 12,
-                                    fontFamily: AppStrings.fontNormal
-                                ),)
-                              ],),),
+                              child: Opacity(
+                                opacity: widget.goal.savingsAmount == 0 ? 0.4:1,
+                                child: Container(child: Column(children: [
+                                  Container(
+                                      height:35,
+                                      width: 35,
+                                      decoration: BoxDecoration(
+                                          color: AppColors.kPrimaryColorLight,
+                                          shape: BoxShape.circle
+                                      ),
+                                      child: Center(child: SvgPicture.asset("images/new/withdraw.svg", color: AppColors.kPrimaryColor))),
+                                  YMargin(12),
+                                  Text("Withdraw", style: TextStyle(
+                                      fontSize: 12,
+                                      fontFamily: AppStrings.fontNormal
+                                  ),)
+                                ],),),
+                              ),
                             ),
                           ),
                         ),

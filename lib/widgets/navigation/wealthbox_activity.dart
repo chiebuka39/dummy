@@ -35,8 +35,24 @@ class WealthBoxActivity extends StatelessWidget {
             ),)
           ],),
         Spacer(),
-        Text(AppStrings.nairaSymbol,style: TextStyle(fontSize: 12,)),
-        Text("${productTransaction.amount}".split(".").first.convertWithComma(), style: TextStyle(fontSize: 12, fontFamily: AppStrings.fontNormal),)
+        Column(
+          crossAxisAlignment: CrossAxisAlignment.end,
+          children: [
+          Row(children: [
+            Text(AppStrings.nairaSymbol,style: TextStyle(fontSize: 12,)),
+            Text("${productTransaction.amount}".split(".").first.convertWithComma(),
+              style: TextStyle(fontSize: 12, fontFamily: AppStrings.fontNormal),)
+          ],),
+          YMargin(5),
+          Container(
+            padding: EdgeInsets.symmetric(horizontal: 10,vertical: 5),
+              decoration: BoxDecoration(
+                  color: productTransaction.status == 3
+                      ?AppColors.kGreen.withOpacity(0.1)
+                      :AppColors.kRed.withOpacity(0.1), borderRadius: BorderRadius.circular(7)),
+              child: Text(productTransaction.status == 3? "Successful":'Failed',style: TextStyle(color:productTransaction.status == 3?AppColors.kGreen:AppColors.kRed,fontSize: 10),))
+        ],)
+
       ],),
     );
   }

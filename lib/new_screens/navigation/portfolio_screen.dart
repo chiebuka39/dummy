@@ -259,6 +259,7 @@ class SavingsInvestmentWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    ABSDashboardViewModel dashboardViewModel = Provider.of(context);
     return SliverPadding(
       sliver: SliverList(
           delegate: SliverChildListDelegate([
@@ -286,7 +287,7 @@ class SavingsInvestmentWidget extends StatelessWidget {
             PrimaryButtonNew(
               title: "Start Saving",
               onTap: () {
-                Navigator.of(context).push(SelectGoalScreen.route());
+                dashboardViewModel.callback();
               },
             ),
           ],
@@ -442,7 +443,7 @@ class SavingsInvestmentCashWidget extends StatelessWidget {
                 )),
             XMargin(2),
             Text(
-              dashboardViewModel.dashboardModel.nairaSavings
+              dashboardViewModel.dashboardModel.nairaPortfolio == "0.00" ? '0':dashboardViewModel.dashboardModel.nairaSavings
                   .substring(1)
                   .split(".")
                   .first,
@@ -501,11 +502,16 @@ class SavingsInvestmentCashWidget extends StatelessWidget {
                                     color: AppColors.kGreyText),
                               ),
                               YMargin(10),
-                              Text(
-                                "${AppStrings.nairaSymbol}${wealthBox.amountSaved}",
-                                style: TextStyle(
-                                    color: AppColors.kGreyText,
-                                    fontFamily: AppStrings.fontMedium),
+                              Row(
+                                children: [
+                                  Text(AppStrings.nairaSymbol, style: TextStyle(fontSize: 12),),
+                                  Text(
+                                    "${wealthBox.amountSaved}".split(".").first.convertWithComma(),
+                                    style: TextStyle(
+                                        color: AppColors.kGreyText,
+                                        fontFamily: AppStrings.fontMedium),
+                                  ),
+                                ],
                               )
                             ],
                           ),

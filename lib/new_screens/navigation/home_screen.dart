@@ -58,6 +58,7 @@ class _HomeScreenState extends State<HomeScreen> {
     dashboardViewModel = Provider.of(context);
     savingViewModel = Provider.of(context);
     settingsViewModel = Provider.of(context);
+    print(".pppppp ${dashboardViewModel.dashboardModel.nairaPortfolio}");
     return Scaffold(
       body: SafeArea(
         child: SingleChildScrollView(
@@ -123,7 +124,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                   )),
                               XMargin(2),
                               Text(
-                                dashboardViewModel.dashboardModel.nairaPortfolio
+                                dashboardViewModel.dashboardModel.nairaPortfolio == "0.00" ? '0':dashboardViewModel.dashboardModel.nairaPortfolio
                                     .substring(1)
                                     .split(".")
                                     .first,
