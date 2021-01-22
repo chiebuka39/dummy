@@ -3,6 +3,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:provider_architecture/_viewmodel_provider.dart';
 import 'package:zimvest/data/view_models/base_model.dart';
+import 'package:zimvest/new_screens/navigation/investments/widgets/util_widgt.dart';
 import 'package:zimvest/new_screens/navigation/wealth/liquidat_asset/initial_review.dart';
 import 'package:zimvest/styles/colors.dart';
 import 'package:zimvest/utils/margin.dart';
@@ -44,29 +45,7 @@ class _WithdrawWealthScreenState extends State<WithdrawWealthScreen> {
       viewModelBuilder: () => BaseViewModel(),
       onModelReady: (model) => model.getUserBank(),
       builder: (context, model, _) => Scaffold(
-        appBar: AppBar(
-          centerTitle: true,
-          elevation: 0,
-          iconTheme: IconThemeData(color: Colors.black87),
-          leading: IconButton(
-            icon: Icon(
-              Icons.arrow_back_ios_outlined,
-              size: 20,
-              color: AppColors.kPrimaryColor,
-            ),
-            onPressed: () {
-              Navigator.pop(context);
-            },
-          ),
-          backgroundColor: Colors.transparent,
-          title: Text(
-            "Withdraw",
-            style: TextStyle(
-                color: AppColors.kTextColor,
-                fontSize: 14,
-                fontFamily: AppStrings.fontMedium),
-          ),
-        ),
+        appBar: appBar(context),
         body: Container(
           padding: const EdgeInsets.symmetric(horizontal: 20),
           child: Column(

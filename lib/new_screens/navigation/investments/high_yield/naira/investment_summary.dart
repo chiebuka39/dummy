@@ -331,11 +331,36 @@ class _InvestmentSummaryScreenNairaState
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        BackButton(
-                          color: AppColors.kPrimaryColor,
-                          onPressed: () {
-                            Navigator.pop(context);
-                          },
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            BackButton(
+                              color: AppColors.kPrimaryColor,
+                              onPressed: () {
+                                Navigator.pop(context);
+                              },
+                            ),
+                            Padding(
+                              padding: const EdgeInsets.only(right: 20.0),
+                              child: InkWell(
+                                onTap: () => Navigator.pushAndRemoveUntil(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) => TabsContainer()),
+                                    (Route<dynamic> route) => false),
+                                child: Text(
+                                  "Cancel",
+                                  style: TextStyle(
+                                    color: AppColors.kPrimaryColor,
+                                    fontSize: 11,
+                                    fontFamily: AppStrings.fontNormal,
+                                    fontWeight: FontWeight.w400,
+                                  ),
+                                ),
+                              ),
+                            ),
+                            // XMargin(1),
+                          ],
                         ),
                         YMargin(70),
                         Padding(

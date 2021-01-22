@@ -5,6 +5,7 @@ import 'package:zimvest/data/models/payment/card.dart';
 import 'package:zimvest/data/view_models/investment_view_model.dart';
 import 'package:zimvest/new_screens/navigation/investments/high_yield/naira/investment_summary.dart';
 import 'package:zimvest/new_screens/navigation/investments/widgets/card_widget.dart';
+import 'package:zimvest/new_screens/navigation/investments/widgets/util_widgt.dart';
 import 'package:zimvest/styles/colors.dart';
 import 'package:zimvest/utils/margin.dart';
 import 'package:zimvest/utils/margins.dart';
@@ -67,25 +68,7 @@ class _HighYieldInvestmentPurchaseSourceState
     return ViewModelProvider<InvestmentHighYieldViewModel>.withConsumer(
       viewModelBuilder: () => InvestmentHighYieldViewModel(),
       builder: (context, model, _) => Scaffold(
-        appBar: AppBar(
-          backgroundColor: Colors.transparent,
-          title: Text(
-            "Invest",
-            style: TextStyle(
-              fontSize: 13,
-              fontFamily: AppStrings.fontMedium,
-              color: AppColors.kTextColor,
-            ),
-          ),
-          elevation: 0,
-          centerTitle: true,
-          leading: IconButton(
-              icon: Icon(
-                Icons.arrow_back_ios,
-                color: AppColors.kPrimaryColor,
-              ),
-              onPressed: () => Navigator.pop(context)),
-        ),
+        appBar: appBar(context),
         body: Builder(
           builder: (context) => Column(
             crossAxisAlignment: CrossAxisAlignment.start,

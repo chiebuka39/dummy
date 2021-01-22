@@ -739,7 +739,9 @@ class InvestmentItemWidget extends StatelessWidget {
     this.annualReturns,
     this.topPadding = 25.0,
     this.transactionId,
-    this.instrumentId, this.isMatured, this.withDrawableBalance,
+    this.instrumentId,
+    this.isMatured,
+    this.withDrawableBalance,
   }) : super(key: key);
 
   @override
@@ -798,12 +800,24 @@ class InvestmentItemWidget extends StatelessWidget {
                           color: AppColors.kTextColor),
                     ),
                     YMargin(8),
-                    Text(
-                      balance,
-                      style: TextStyle(
-                          fontSize: 11,
-                          fontFamily: AppStrings.fontMedium,
-                          color: AppColors.kTextColor),
+                    Row(
+                      children: [
+                        Text(
+                          AppStrings.nairaSymbol,
+                          style: TextStyle(
+                              fontSize: 11,
+                              fontFamily: AppStrings.fontMedium,
+                              color: AppColors.kTextColor),
+                        ),
+                        Text(
+                          StringUtils(balance.substring(1).split(".").first)
+                              .convertWithComma(),
+                          style: TextStyle(
+                              fontSize: 11,
+                              fontFamily: AppStrings.fontMedium,
+                              color: AppColors.kTextColor),
+                        ),
+                      ],
                     ),
                   ],
                 ),
@@ -1156,8 +1170,10 @@ Widget nairaPortfolio(BuildContext context) {
                             itemBuilder: (context, index) => Padding(
                               padding: const EdgeInsets.all(8.0),
                               child: InvestmentItemWidget(
-                                withDrawableBalance: model.nairaTransaction[index].withdrawableValue,
-                                isMatured:  model.nairaTransaction[index].isMatured,
+                                withDrawableBalance: model
+                                    .nairaTransaction[index].withdrawableValue,
+                                isMatured:
+                                    model.nairaTransaction[index].isMatured,
                                 transactionId:
                                     model.nairaTransaction[index].transactionId,
                                 instrumentId:

@@ -6,6 +6,7 @@ import 'package:zimvest/data/view_models/investment_view_model.dart';
 import 'package:zimvest/new_screens/navigation/investments/high_yield/naira/high_yield_investment_naira_purchase_source.dart';
 import 'package:zimvest/new_screens/navigation/investments/high_yield/naira/investment_duration.dart';
 import 'package:zimvest/new_screens/navigation/investments/widgets/text_field.dart';
+import 'package:zimvest/new_screens/navigation/investments/widgets/util_widgt.dart';
 import 'package:zimvest/styles/colors.dart';
 import 'package:zimvest/utils/margin.dart';
 import 'package:zimvest/utils/strings.dart';
@@ -13,16 +14,16 @@ import 'package:zimvest/widgets/buttons.dart';
 import 'package:zimvest/utils/app_utils.dart';
 import 'package:zimvest/widgets/number_keyboard.dart';
 
+import '../../../../tabs.dart';
+
 class InvestmentHighYieldNairaAmountInput extends StatefulWidget {
   final double minimumAmount;
   final String uniqueName;
 
-  const InvestmentHighYieldNairaAmountInput({Key key, this.minimumAmount, this.uniqueName})
+  const InvestmentHighYieldNairaAmountInput(
+      {Key key, this.minimumAmount, this.uniqueName})
       : super(key: key);
-  static Route<dynamic> route({
-    double minimumAmount,
-    String uniqueName
-  }) {
+  static Route<dynamic> route({double minimumAmount, String uniqueName}) {
     return MaterialPageRoute(
       builder: (_) => InvestmentHighYieldNairaAmountInput(
         minimumAmount: minimumAmount,
@@ -50,25 +51,7 @@ class _InvestmentHighYieldNairaAmountInputState
     return ViewModelProvider<InvestmentHighYieldViewModel>.withConsumer(
       viewModelBuilder: () => InvestmentHighYieldViewModel(),
       builder: (context, model, _) => Scaffold(
-        appBar: AppBar(
-          backgroundColor: Colors.transparent,
-          title: Text(
-            "Invest",
-            style: TextStyle(
-              fontSize: 13,
-              fontFamily: AppStrings.fontMedium,
-              color: AppColors.kTextColor,
-            ),
-          ),
-          elevation: 0,
-          centerTitle: true,
-          leading: IconButton(
-              icon: Icon(
-                Icons.arrow_back_ios,
-                color: AppColors.kPrimaryColor,
-              ),
-              onPressed: () => Navigator.pop(context)),
-        ),
+        appBar: appBar(context),
         body: Builder(
           builder: (context) => Column(
             crossAxisAlignment: CrossAxisAlignment.start,
