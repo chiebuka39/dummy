@@ -57,7 +57,7 @@ class SelectBankAccount extends StatefulWidget {
 class _SelectBankAccountState extends State<SelectBankAccount> {
   @override
   Widget build(BuildContext context) {
-    // ABSPaymentViewModel paymentViewModel = Provider.of(context);
+    ABSPaymentViewModel paymentViewModel = Provider.of(context);
     return Scaffold(
       appBar: AppBar(
         elevation: 0,
@@ -92,9 +92,9 @@ class _SelectBankAccountState extends State<SelectBankAccount> {
             ),
             Expanded(
               child: ListView.builder(
-                itemCount: widget.banks.length,
+                itemCount: paymentViewModel.userBanks == null ? 0 :paymentViewModel.userBanks .length,
                 itemBuilder: (context, index) => BankItemWidget(
-                  bank: widget.banks[index],
+                  bank: paymentViewModel.userBanks[index],
                   isLiquidate: widget.isLiquidate,
                 ),
               ),

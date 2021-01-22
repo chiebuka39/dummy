@@ -11,9 +11,11 @@ import 'package:zimvest/locator.dart';
 import 'package:zimvest/new_screens/profile/verif_code_screen.dart';
 import 'package:zimvest/new_screens/tabs.dart';
 import 'package:zimvest/styles/colors.dart';
+import 'package:zimvest/utils/app_utils.dart';
 import 'package:zimvest/utils/margin.dart';
 import 'package:zimvest/utils/strings.dart';
 import 'package:zimvest/widgets/buttons.dart';
+import 'package:zimvest/widgets/navigation/delete_wealthbox.dart';
 
 class SelectWallet extends StatelessWidget {
   const SelectWallet({
@@ -41,7 +43,8 @@ class SelectWallet extends StatelessWidget {
           Text("Wallet", style: TextStyle(color: AppColors.kWhite,
               fontSize: 13,fontFamily: AppStrings.fontNormal),),
           Spacer(),
-          Text("${AppStrings.nairaSymbol} ${paymentViewModel.wallet.where((element) => element.currency == "NGN").first.balance}", style: TextStyle(color: AppColors.kWhite,
+          Text(AppStrings.nairaSymbol, style: TextStyle(fontSize: 12, color: AppColors.kWhite),),
+          Text(" ${paymentViewModel.wallet == null ? '0.0':paymentViewModel.wallet.where((element) => element.currency == "NGN").first.balance.toString().split(".").first.convertWithComma()}", style: TextStyle(color: AppColors.kWhite,
               fontSize: 13,fontFamily: AppStrings.fontNormal),),
           XMargin(5),
           Icon(Icons.navigate_next_rounded,color: AppColors.kWhite,)
@@ -90,12 +93,13 @@ class DollarWallet extends StatelessWidget {
 
 class ZimAppBar extends StatelessWidget implements PreferredSizeWidget {
   const ZimAppBar({
-    Key key, this.icon = Icons.clear,@required this.callback, this.text = "Top Up",
+    Key key, this.icon = Icons.clear,@required this.callback, this.text = "Top Up", this.showCancel = false,
   }) : super(key: key);
 
   final IconData icon;
   final String text;
   final VoidCallback callback;
+  final bool showCancel;
 
   @override
   Widget build(BuildContext context) {
@@ -108,6 +112,23 @@ class ZimAppBar extends StatelessWidget implements PreferredSizeWidget {
         onPressed: callback,
       ),
       backgroundColor: Colors.transparent,
+      actions: [
+        showCancel ?Transform.translate(
+          offset: Offset(10,0),
+          child: FlatButton(
+            child: Text("Cancel", style: TextStyle(fontSize: 12,
+                fontFamily: AppStrings.fontMedium,color: AppColors.kPrimaryColor),),
+            onPressed: (){
+              showModalBottomSheet<Null>(
+                  context: context,
+                  builder: (BuildContext context) {
+                    return CancelAction();
+                  },
+                  isScrollControlled: true);
+            },
+          ),
+        ): SizedBox()
+      ],
       title: Text(text,
         style: TextStyle(color: Colors.black87,fontSize: 14,fontFamily: AppStrings.fontMedium),),
     );
@@ -216,7 +237,7 @@ class EnableFaceIdWidget extends StatelessWidget {
                     borderRadius: BorderRadius.circular(17),
                     color: AppColors.kGrey
                 ),
-                child: Center(child: SvgPicture.asset("images/icon_face.svg"),),
+                child: Center(child: SvgPicture.asset("images/new/face_id.svg"),),
               ),
               YMargin(27),
               Text("Enable Face ID", style: TextStyle(
@@ -565,14 +586,15 @@ class SecuritySwitchWidget extends StatelessWidget {
                 fontFamily: AppStrings.fontNormal),),
             Spacer(),
             FlutterSwitch(
-              width: 50.0,
-              height: 30.0,
-              toggleSize: 20.0,
+              width: 40.0,
+              height: 22.0,
+              toggleSize: 15.0,
               value: status,
               borderRadius: 30.0,
+
               padding: 2.0,
               activeToggleColor: AppColors.kWhite,
-              inactiveToggleColor: AppColors.kWhite,
+              inactiveToggleColor: AppColors.kPrimaryColor,
               activeSwitchBorder: Border.all(
                 color: Color(0xFF3C1E70),
                 width: 0.0,
@@ -586,11 +608,12 @@ class SecuritySwitchWidget extends StatelessWidget {
               activeIcon: Icon(
                 Icons.check,
                 color: AppColors.kPrimaryColor,
-                size: 15,
+                size: 11,
               ),
               inactiveIcon: Icon(
-                Icons.wb_sunny,
-                color: Colors.transparent,
+                Icons.clear,
+                color: Colors.white,
+                size: 11,
               ),
               onToggle: (val) {
                 toggle(val);
@@ -602,3 +625,5 @@ class SecuritySwitchWidget extends StatelessWidget {
     );
   }
 }
+
+

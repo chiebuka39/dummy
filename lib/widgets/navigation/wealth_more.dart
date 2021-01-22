@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:zimvest/data/models/saving_plan.dart';
 import 'package:zimvest/styles/colors.dart';
+import 'package:zimvest/utils/app_utils.dart';
 import 'package:zimvest/utils/margin.dart';
 import 'package:zimvest/utils/strings.dart';
 import 'package:zimvest/widgets/buttons.dart';
@@ -10,10 +11,11 @@ import 'package:zimvest/widgets/navigation/wealthbox_activity.dart';
 
 class WealthMore extends StatelessWidget {
   const WealthMore({
-    Key key, this.savingPlanModel,
+    Key key, this.savingPlanModel, this.delete = true,
   }) : super(key: key);
 
   final SavingPlanModel savingPlanModel;
+  final bool delete;
 
   @override
   Widget build(BuildContext context) {
@@ -63,7 +65,7 @@ class WealthMore extends StatelessWidget {
                             ),
                             YMargin(10),
                             Text(
-                              "April 12, 2020",
+                              AppUtils.getReadableDate2(savingPlanModel.startDate),
                               style: TextStyle(
                                   fontSize: 12,
                                   fontFamily: AppStrings.fontMedium,
@@ -84,7 +86,7 @@ class WealthMore extends StatelessWidget {
                             ),
                             YMargin(10),
                             Text(
-                              "Feb 12, 2020",
+                              AppUtils.getReadableDate2(savingPlanModel?.maturityDate ?? getDate()),
                               style: TextStyle(
                                   fontSize: 12,
                                   fontFamily: AppStrings.fontMedium,
@@ -112,7 +114,7 @@ class WealthMore extends StatelessWidget {
                             ),
                             YMargin(10),
                             Text(
-                              "Active",
+                              savingPlanModel.isPaused ? 'Paused':'Active',
                               style: TextStyle(
                                   fontSize: 12,
                                   fontFamily: AppStrings.fontMedium,
@@ -123,6 +125,37 @@ class WealthMore extends StatelessWidget {
                       ],
                     ),
                   ),
+                  Spacer(),
+                  delete ? GestureDetector(
+                    onTap: () {
+                      Navigator.pop(context);
+                      showModalBottomSheet<Null>(
+                          context: context,
+                          builder: (BuildContext context) {
+                            return DeleteWealthbox(savingPlanModel: savingPlanModel,);
+                          },
+                          isScrollControlled: true);
+                    },
+                    child: Container(
+                      padding: EdgeInsets.symmetric(horizontal: 20),
+                      child: Row(
+                        children: [
+                          SvgPicture.asset('images/new/delete_plan.svg'),
+                          XMargin(15),
+                          Text(
+                            "Close Plan",
+                            style: TextStyle(fontFamily: AppStrings.fontNormal),
+                          ),
+                          Spacer(),
+                          Icon(
+                            Icons.navigate_next_rounded,
+                            color: AppColors.kPrimaryColor,
+                          )
+                        ],
+                      ),
+                    ),
+                  ):SizedBox(),
+                  YMargin(30),
                 ],
               ),
             ),
@@ -130,5 +163,13 @@ class WealthMore extends StatelessWidget {
         ],
       ),
     );
+  }
+
+  DateTime getDate(){
+    DateTime now = DateTime.now();
+    List<DateTime> quaters = [DateTime(now.year,1),DateTime(now.year,4),
+      DateTime(now.year,7),DateTime(now.year,10)];
+    print(",,,,,,,,ooooo ${quaters.where((element) => element.microsecondsSinceEpoch >= now.microsecondsSinceEpoch)}");
+    return quaters.where((element) => element.microsecondsSinceEpoch >= now.microsecondsSinceEpoch).first;
   }
 }

@@ -150,8 +150,10 @@ class _HomeScreenState extends State<HomeScreen> {
                             children: [
                               Icon(Icons.arrow_drop_up_outlined,
                                   color: AppColors.kFixed),
+                              Text(AppStrings.nairaSymbol,style: TextStyle(
+                                  fontSize: 12,color: AppColors.kFixed)),
                               Text(
-                                "${AppStrings.nairaSymbol}0",
+                                "0",
                                 style: TextStyle(
                                     fontFamily: AppStrings.fontMedium,
                                     color: AppColors.kFixed),
@@ -223,8 +225,8 @@ class _HomeScreenState extends State<HomeScreen> {
                                   )),
                               XMargin(2),
                               Text(
-                                dashboardViewModel
-                                    .dashboardModel.dollarPortfolio
+                                 dashboardViewModel
+                                    .dashboardModel.dollarPortfolio.substring(1)
                                     .split(".")
                                     .first,
                                 style: TextStyle(

@@ -28,7 +28,9 @@ class _AutomateSavingsScreenState extends State<AutomateSavingsScreen> {
   Widget build(BuildContext context) {
     savingViewModel = Provider.of(context);
     return Scaffold(
-        appBar: ZimAppBar(callback: (){
+        appBar: ZimAppBar(
+          showCancel: true,
+          callback: (){
           Navigator.pop(context);
         },icon: Icons.arrow_back_ios_outlined,text: "Create Zimvest Aspire",),
       body: Padding(

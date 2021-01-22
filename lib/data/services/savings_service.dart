@@ -18,7 +18,7 @@ abstract class ABSSavingService{
   Future<Result<void>> pauseSaving({String token,int savingModelId});
   Future<Result<void>> continueSaving({String token,int savingModelId});
   Future<Result<void>> withdrawFund({String token,int customerSavingId,
-    double amount, int customerBankId, String password,int withdrawalChannel});
+    double amount, int customerBankId, String pin,int withdrawalChannel});
 
   ///Get Customer's Savings information
   Future<Result<List<SavingPlanModel>>> getSavingPlans({String token});
@@ -103,7 +103,7 @@ class SavingService extends ABSSavingService{
         result.errorMessage =  "Sorry, We could not complete your request";
       }else{
         print(e.toString());
-        result.errorMessage = "Sorry, We could not complete your request";
+        result.errorMessage = e.response.data['message'];
       }
       result.error = true;
     }
@@ -553,7 +553,7 @@ class SavingService extends ABSSavingService{
 
       }else{
         print(e.toString());
-        result.errorMessage = "Sorry, We could not complete your request";
+        result.errorMessage = "Your savings was not successful";
       }
       result.error = true;
     }
@@ -753,7 +753,18 @@ class SavingService extends ABSSavingService{
     var headers = {
       HttpHeaders.authorizationHeader: "Bearer $token"
     };
-    var body = FormData.fromMap({
+    var body = image == null ?{
+      "cardId": cardId,
+      'isAutoSave':autoSave,
+      "frequency": frequency,
+      "fundingChannel": fundingChannel,
+      "maturityDate": maturityDate.toIso8601String(),
+      "startDate": startDate.toIso8601String(),
+      "targetAmount": targetAmount,
+      "productId": productId,
+      "planName": planName,
+      "savingsAmount": savingsAmount,
+    } : FormData.fromMap({
       "cardId": cardId,
       'isAutoSave':autoSave,
       "frequency": frequency,
@@ -768,7 +779,8 @@ class SavingService extends ABSSavingService{
     });
 
 
-    var url = "${AppStrings.baseUrl}zimvest.services.savings/api/v2/Savings/TargetSavingsForm";
+    var url = image == null ?"${AppStrings.baseUrl}zimvest.services.savings/api/v2/Savings/TargetSavings":
+    "${AppStrings.baseUrl}zimvest.services.savings/api/v2/Savings/TargetSavingsForm";
     print("url $url");
     print("body $body");
     try{
@@ -793,27 +805,23 @@ class SavingService extends ABSSavingService{
       }
 
     }on DioError catch(e){
-      print("errrrrrrrr ${e.response.data.runtimeType}");
+      print("errrrrrrrr ${e.response.data}");
       print("error $e}");
 
       if(e.response != null ){
         if(e.response.data is String){
           result.errorMessage = "Sorry, We could not complete your request";
-
-        }else if(e.response?.data ?? '' is Map){
-          if(e.response.data['message'] is String){
-            result.errorMessage = e.response.data['message'];
-          }
         }
         else{
           print(e.toString());
-          result.errorMessage = "Sorry, We could not complete your request";
+
+          result.errorMessage = e.response.data['message'];
         }
 
 
       }else{
         print(e.toString());
-        result.errorMessage = "Sorry, We could not complete your request";
+        result.errorMessage = "Sorry, We could not create your target savings";
       }
       result.error = true;
     }
@@ -929,7 +937,7 @@ class SavingService extends ABSSavingService{
 
   @override
   Future<Result<void>> withdrawFund({String token, int customerSavingId,
-    double amount, int customerBankId, String password,int withdrawalChannel}) async{
+    double amount, int customerBankId, String pin,int withdrawalChannel}) async{
     Result<void> result = Result(error: false);
 
 
@@ -941,7 +949,8 @@ class SavingService extends ABSSavingService{
       "customerSavingId": customerSavingId,
       "amount": amount,
       "customerBankId": customerBankId,
-      "password": password,
+      "pin": pin,
+      'requestChannel':2
     };
 
 

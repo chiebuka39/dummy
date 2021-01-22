@@ -42,6 +42,7 @@ class _AutomateSavingsScreenState extends State<AutomateSavingsScreen> with
     savingViewModel = Provider.of(context);
     return Scaffold(
       appBar: ZimAppBar(
+        showCancel: true,
         icon: Icons.arrow_back_ios_outlined,
         text: 'Create Zimvest WealthBox',
         callback: (){

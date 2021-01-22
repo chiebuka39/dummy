@@ -35,8 +35,8 @@ class _NameYourGoalScreenState extends State<NameYourGoalScreen> {
 
   ABSSavingViewModel savingViewModel;
 
-  Future getImage() async {
-    final pickedFile = await picker.getImage(source: ImageSource.gallery);
+  Future getImage(ImageSource source) async {
+    final pickedFile = await picker.getImage(source: source);
 
     setState(() {
       if (pickedFile != null) {
@@ -53,93 +53,108 @@ class _NameYourGoalScreenState extends State<NameYourGoalScreen> {
     super.initState();
   }
 
+
   @override
   Widget build(BuildContext context) {
     savingViewModel = Provider.of(context);
     final width = MediaQuery.of(context).size.width;
     return Scaffold(
-      appBar: ZimAppBar(callback: (){
+      appBar: ZimAppBar(
+        showCancel: true,
+        callback: (){
         Navigator.pop(context);
       },icon: Icons.arrow_back_ios_outlined,text: "Create Zimvest Aspire",),
       body: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 20),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-          YMargin(20),
-          GestureDetector(
-            onTap: getImage,
-            child: Container(
-              height: 154,
-              width: (width /2) - 20,
-              decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(10)),
-              child: Stack(
-                children: [
-                  ClipRRect(
-                    borderRadius: BorderRadius.circular(10),
-                    child: _image == null ? CachedNetworkImage(imageUrl: 'https://firebasestorage.googleapis.com/v0/b/tick-bc0e3.appspot.com/o/pexels-anete-lusina-5723322.'
-                        'jpg?alt=media&token=4858ef91-820b-4ff3-aae7-a02ce3507c6d',
-                      height: 154,fit: BoxFit.fill,):Image.file(_image,height: 154,fit: BoxFit.fill),
-                  ),
-                  Container(
-                    height: 154,
-                    decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(10),
-                        color: Colors.black.withOpacity(0.4)
+        child: SingleChildScrollView(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+            YMargin(20),
+            GestureDetector(
+              onTap: (){
+                showModalBottomSheet < Null > (context: context, builder: (BuildContext context) {
+                  return ImageUploadWidget(onCamera: (){
+                    Navigator.pop(context);
+                    getImage(ImageSource.camera);
+                  },onGallery: (){
+                    Navigator.pop(context);
+                    getImage(ImageSource.gallery);
+                  },);
+                }, isScrollControlled: true);
+              },
+              child: Container(
+                height: 154,
+                width: (width /2) - 20,
+                decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(10)),
+                child: Stack(
+                  children: [
+                    ClipRRect(
+                      borderRadius: BorderRadius.circular(10),
+                      child: _image == null ? CachedNetworkImage(imageUrl: 'https://firebasestorage.googleapis.com/v0/b/tick-bc0e3.appspot.com/o/pexels-anete-lusina-5723322.'
+                          'jpg?alt=media&token=4858ef91-820b-4ff3-aae7-a02ce3507c6d',
+                        height: 154,fit: BoxFit.fill,):Image.file(_image,height: 154,fit: BoxFit.fill,width: (width /2) - 20,),
                     ),
-                  ),
-                  Center(
-                    child: Container(
-                      height: 40,
-                      width: 40,
+                    Container(
+                      height: 154,
                       decoration: BoxDecoration(
-                        color: AppColors.kWhite,
-                        shape: BoxShape.circle
+                          borderRadius: BorderRadius.circular(10),
+                          color: Colors.black.withOpacity(0.4)
                       ),
-                      child: Center(child: SvgPicture.asset('images/cam.svg'),),
                     ),
-                  ),
+                    Center(
+                      child: Container(
+                        height: 40,
+                        width: 40,
+                        decoration: BoxDecoration(
+                          color: AppColors.kWhite,
+                          shape: BoxShape.circle
+                        ),
+                        child: Center(child: SvgPicture.asset('images/cam.svg'),),
+                      ),
+                    ),
 
 
 
-                ],
-              ),
-            ),
-          ),
-          YMargin(57),
-          Text("Name Your goal", style: TextStyle(fontSize: 15, fontFamily: AppStrings.fontBold),),
-            YMargin(35),
-            Container(
-              alignment: Alignment.centerLeft,
-              width: double.infinity,
-              height: 60,
-              padding: EdgeInsets.only(left: 20),
-              decoration: BoxDecoration(
-                color: AppColors.kGreyBg,
-                borderRadius: BorderRadius.circular(12)
-              ),
-              child: TextFormField(
-                initialValue: goalName,
-                onChanged: (value){
-                  setState(() {
-                    goalName = value;
-                  });
-                },
-                decoration: InputDecoration(
-                  border: InputBorder.none
+                  ],
                 ),
               ),
             ),
-            YMargin(35),
-            RoundedNextButton(
-              onTap: ((goalName?.length ?? 0) >1 && _image != null) ?  (){
-                savingViewModel.goalName = goalName;
-                savingViewModel.image = _image;
-                Navigator.push(context, SavingsTargetScreen.route());
-              }:null,
-            )
-        ],),
+            YMargin(57),
+            Text("Name Your goal", style: TextStyle(fontSize: 15, fontFamily: AppStrings.fontBold),),
+              YMargin(35),
+              Container(
+                alignment: Alignment.centerLeft,
+                width: double.infinity,
+                height: 60,
+                padding: EdgeInsets.only(left: 20),
+                decoration: BoxDecoration(
+                  color: AppColors.kGreyBg,
+                  borderRadius: BorderRadius.circular(12)
+                ),
+                child: TextFormField(
+                  initialValue: goalName,
+                  onChanged: (value){
+                    setState(() {
+                      goalName = value;
+                    });
+                  },
+                  decoration: InputDecoration(
+                    border: InputBorder.none
+                  ),
+                ),
+              ),
+              YMargin(35),
+              RoundedNextButton(
+                onTap: ((goalName?.length ?? 0) >1 ) ?  (){
+                  savingViewModel.goalName = goalName;
+                  savingViewModel.image = _image;
+                  Navigator.push(context, SavingsTargetScreen.route());
+                }:null,
+              )
+          ],),
+        ),
       ),
     );
   }

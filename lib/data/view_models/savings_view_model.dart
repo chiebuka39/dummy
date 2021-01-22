@@ -102,7 +102,7 @@ abstract class ABSSavingViewModel extends ChangeNotifier{
   Future<Result<void>> pauseSaving({String token,int savingModelId});
   Future<Result<void>> continueSaving({String token,int savingModelId});
   Future<Result<void>> withdrawFund({String token,int customerSavingId,
-    double amount, int customerBankId, String password, int withdrawalChannel});
+    double amount, int customerBankId, String pin, int withdrawalChannel});
 }
 
 class SavingViewModel extends ABSSavingViewModel{
@@ -355,13 +355,13 @@ class SavingViewModel extends ABSSavingViewModel{
 
   @override
   Future<Result<void>> withdrawFund({String token, double amount, int customerSavingId,
-    int customerBankId, String password,int withdrawalChannel}) {
+    int customerBankId, String pin,int withdrawalChannel}) {
     return _savingService.withdrawFund(token: token,
         amount: amount,
       customerBankId: customerBankId,
       withdrawalChannel: withdrawalChannel,
       customerSavingId: customerSavingId,
-      password: password
+        pin: pin
     );
   }
 

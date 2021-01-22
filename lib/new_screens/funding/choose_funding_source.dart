@@ -51,6 +51,7 @@ class _ChooseFundingScreenState extends State<ChooseFundingScreen> {
           callback: (){
             Navigator.of(context).pop();
           },
+          showCancel: true,
           text: "Top Up",
           icon: Icons.arrow_back_ios_outlined,
         ),
@@ -330,8 +331,9 @@ class CardItemWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     ABSPaymentViewModel paymentViewModel = Provider.of(context);
     ABSSavingViewModel savingViewModel = Provider.of(context);
-    return GestureDetector(
+    return InkWell(
       onTap: (){
+        print("jjjjjjj");
         // savingViewModel.selectedChannel = savingViewModel
         //     .fundingChannels.firstWhere((element) => element.name == "Wallet");
         paymentViewModel.selectedCard = card;

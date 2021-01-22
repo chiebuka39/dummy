@@ -2,10 +2,12 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:provider/provider.dart';
+import 'package:zimvest/animations/loading.dart';
 import 'package:zimvest/data/view_models/identity_view_model.dart';
 import 'package:zimvest/data/view_models/payment_view_model.dart';
 import 'package:zimvest/data/view_models/savings_view_model.dart';
 import 'package:zimvest/new_screens/funding/top_up_successful.dart';
+import 'package:zimvest/new_screens/navigation/investments/widgets/terms_and_conditions_box.dart';
 import 'package:zimvest/new_screens/tabs.dart';
 import 'package:zimvest/styles/colors.dart';
 import 'package:zimvest/utils/app_utils.dart';
@@ -50,6 +52,8 @@ class _SavingsSummaryScreenState extends State<SavingsSummaryScreen> {
   bool slideUp = false;
   bool error = false;
 
+  String errorMessage = "Error Occured";
+
   @override
   void initState() {
     keys = List.generate(2, (index) => GlobalKey<ItemFaderState>());
@@ -57,12 +61,30 @@ class _SavingsSummaryScreenState extends State<SavingsSummaryScreen> {
     super.initState();
   }
 
-  void startAnim()async{
+  void startAnim(BuildContext buildContext)async{
 
     setState(() {
       slideUp = true;
       loading = true;
     });
+    showModalBottomSheet<Null>(
+        context: buildContext,
+        builder: (BuildContext context) {
+          return TermsAndConditionsbox(
+            onTapNo: (){
+              Navigator.pop(context);
+              Navigator.pop(context);
+            },onTapYes: ()async{
+              Navigator.pop(context);
+              await makeRemoteCall();
+          },
+          );
+        },
+        isScrollControlled: true);
+
+  }
+
+  Future makeRemoteCall() async {
     var result = await savingViewModel.createWealthBox(
       cardId:paymentViewModel.selectedCard?.id ?? null,
       token: identityViewModel.user.token,
@@ -79,22 +101,20 @@ class _SavingsSummaryScreenState extends State<SavingsSummaryScreen> {
       setState(() {
         loading = false;
         confirmed = true;
+        if(result.errorMessage != null){
+          errorMessage = result.errorMessage;
+    
+        }
       });
       Future.delayed(1000.milliseconds).then((value) => onInit());
     }else{
       setState(() {
         loading = false;
         error = true;
+        errorMessage = result.errorMessage;
+    
       });
     }
-    // Future.delayed(Duration(seconds: 1)).then((value) {
-    //   setState(() {
-    //     confirmed = true;
-    //   });
-    //   Future.delayed(1000.milliseconds).then((value) => onInit());
-    // });
-
-
   }
 
   void onInit() async {
@@ -117,6 +137,7 @@ class _SavingsSummaryScreenState extends State<SavingsSummaryScreen> {
       body: Container(
         height: MediaQuery.of(context).size.height,
         child: Stack(children: [
+          SvgPicture.asset("images/patterns.svg", fit: BoxFit.fill,),
           Positioned.fill(
             child: confirmed ? PlayAnimation<MultiTweenValues<AniProps>>(
               tween: _tween,
@@ -141,7 +162,7 @@ class _SavingsSummaryScreenState extends State<SavingsSummaryScreen> {
                             offset: 10,
                             curve: Curves.easeIn,
                             key: keys[0],
-                            child: Text("Your Topup was succesful", style: TextStyle(color: Colors.white),)),
+                            child: Text(errorMessage.isEmpty ? "Your Wealth box creation was successful":errorMessage, style: TextStyle(color: Colors.white, fontFamily: AppStrings.fontNormal),)),
                         Spacer(),
                         ItemFader(
                           offset: 10,
@@ -184,106 +205,113 @@ class _SavingsSummaryScreenState extends State<SavingsSummaryScreen> {
                 boxShadow: AppUtils.getBoxShaddow3
               ),
               child: SafeArea(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    BackButton(
-                      color: AppColors.kPrimaryColor,
-                      onPressed: (){
-                        Navigator.pop(context);
-                      },
-                    ),
-                    YMargin(50),
-                    Padding(
-                      padding: const EdgeInsets.only(left: 20),
-                      child: Text("Savings Summary", style: TextStyle(fontFamily: AppStrings.fontMedium),),
-                    ),
-                    YMargin(20),
-                    Container(
-                      margin: EdgeInsets.symmetric(horizontal: 20),
-                      padding: EdgeInsets.symmetric(horizontal: 20,vertical: 25),
-                      height: 380,
-                      width: double.infinity,
-                      decoration: BoxDecoration(
-                        color: AppColors.kWhite,
-                        boxShadow: AppUtils.getBoxShaddow3
+                child: SingleChildScrollView(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      BackButton(
+                        color: AppColors.kPrimaryColor,
+                        onPressed: (){
+                          Navigator.pop(context);
+                        },
                       ),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                        Text("Plan name".toUpperCase(), style: TextStyle(fontSize: 12,
-                            color: AppColors.kSecondaryText,fontFamily: AppStrings.fontNormal,),),
-                          YMargin(15),
-                          Text("Zimvest WealthBox", style: TextStyle(
-                              fontFamily: AppStrings.fontMedium,
-                              fontSize: 13,color: AppColors.kGreyText
-                          ),),
-                          YMargin(40),
-                          Row(children: [
-                            Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text("Frequency".toUpperCase(), style: TextStyle(fontSize: 11,
-                                  color: AppColors.kSecondaryText,fontFamily: AppStrings.fontNormal,),),
-                                YMargin(15),
-                                Text(savingViewModel.selectedFrequency.name, style: TextStyle(
-                                    fontFamily: AppStrings.fontMedium,
-                                    fontSize: 13,color: AppColors.kGreyText
-                                ),),
-                              ],),
-                            Spacer(),
-                            Column(
-                              crossAxisAlignment: CrossAxisAlignment.end,
-                              children: [
-                                Text("amount".toUpperCase(), style: TextStyle(fontSize: 12,
-                                  color: AppColors.kSecondaryText,fontFamily: AppStrings.fontNormal,),),
-                                YMargin(15),
-                                Text("${AppStrings.nairaSymbol}${savingViewModel.amountToSave.toInt().toString().convertWithComma()}", style: TextStyle(
-                                    fontFamily: AppStrings.fontMedium,
-                                    fontSize: 13,color: AppColors.kGreyText
-                                ),),
-                              ],),
+                      YMargin(30),
+                      Padding(
+                        padding: const EdgeInsets.only(left: 20),
+                        child: Text("Savings Summary", style: TextStyle(fontFamily: AppStrings.fontMedium),),
+                      ),
+                      YMargin(20),
+                      Container(
+                        margin: EdgeInsets.symmetric(horizontal: 20),
+                        padding: EdgeInsets.symmetric(horizontal: 20,vertical: 25),
+                        height: 380,
+                        width: double.infinity,
+                        decoration: BoxDecoration(
+                          color: AppColors.kWhite,
+                          boxShadow: AppUtils.getBoxShaddow3
+                        ),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                          Text("Plan name".toUpperCase(), style: TextStyle(fontSize: 12,
+                              color: AppColors.kSecondaryText,fontFamily: AppStrings.fontNormal,),),
+                            YMargin(15),
+                            Text("Zimvest WealthBox", style: TextStyle(
+                                fontFamily: AppStrings.fontMedium,
+                                fontSize: 13,color: AppColors.kGreyText
+                            ),),
+                            YMargin(40),
+                            Row(children: [
+                              Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text("Frequency".toUpperCase(), style: TextStyle(fontSize: 11,
+                                    color: AppColors.kSecondaryText,fontFamily: AppStrings.fontNormal,),),
+                                  YMargin(15),
+                                  Text(savingViewModel.selectedFrequency.name, style: TextStyle(
+                                      fontFamily: AppStrings.fontMedium,
+                                      fontSize: 13,color: AppColors.kGreyText
+                                  ),),
+                                ],),
+                              Spacer(),
+                              Column(
+                                crossAxisAlignment: CrossAxisAlignment.end,
+                                children: [
+                                  Text("amount".toUpperCase(), style: TextStyle(fontSize: 12,
+                                    color: AppColors.kSecondaryText,fontFamily: AppStrings.fontNormal,),),
+                                  YMargin(15),
+                                  Row(
+                                    children: [
+                                      Text(AppStrings.nairaSymbol, style: TextStyle(fontSize: 12),),
+                                      Text(" ${savingViewModel.amountToSave.toInt().toString().convertWithComma()}", style: TextStyle(
+                                          fontFamily: AppStrings.fontMedium,
+                                          fontSize: 13,color: AppColors.kGreyText
+                                      ),),
+                                    ],
+                                  ),
+                                ],),
 
 
-                          ],),
-                          YMargin(40),
-                          Row(children: [
-                            Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text("start date".toUpperCase(), style: TextStyle(fontSize: 12,
-                                  color: AppColors.kSecondaryText,fontFamily: AppStrings.fontNormal,),),
-                                YMargin(15),
-                                Text(AppUtils.getReadableDate2(savingViewModel.startDate), style: TextStyle(
-                                    fontFamily: AppStrings.fontMedium,
-                                    fontSize: 13,color: AppColors.kGreyText
-                                ),),
                             ],),
-                            Spacer(),
-                            Column(
-                              crossAxisAlignment: CrossAxisAlignment.end,
-                              children: [
-                                Text("Next maturity date".toUpperCase(), style: TextStyle(fontSize: 11,
-                                  color: AppColors.kSecondaryText,fontFamily: AppStrings.fontNormal,),),
-                                YMargin(15),
-                                Text(AppUtils.getReadableDate2(savingViewModel.endDate), style: TextStyle(
-                                    fontFamily: AppStrings.fontMedium,
-                                    fontSize: 13,color: AppColors.kGreyText
-                                ),),
-                            ],)
-                          ],),
-                          YMargin(40),
-                          Text("Interest rate".toUpperCase(), style: TextStyle(fontSize: 12,
-                            color: AppColors.kSecondaryText,fontFamily: AppStrings.fontNormal,),),
-                          YMargin(15),
-                          Text("6% P.A", style: TextStyle(
-                              fontFamily: AppStrings.fontMedium,
-                              fontSize: 13,color: AppColors.kGreyText
-                          ),),
+                            YMargin(40),
+                            Row(children: [
+                              Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text("start date".toUpperCase(), style: TextStyle(fontSize: 12,
+                                    color: AppColors.kSecondaryText,fontFamily: AppStrings.fontNormal,),),
+                                  YMargin(15),
+                                  Text(AppUtils.getReadableDate2(savingViewModel.startDate), style: TextStyle(
+                                      fontFamily: AppStrings.fontMedium,
+                                      fontSize: 13,color: AppColors.kGreyText
+                                  ),),
+                              ],),
+                              Spacer(),
+                              Column(
+                                crossAxisAlignment: CrossAxisAlignment.end,
+                                children: [
+                                  Text("Next maturity date".toUpperCase(), style: TextStyle(fontSize: 11,
+                                    color: AppColors.kSecondaryText,fontFamily: AppStrings.fontNormal,),),
+                                  YMargin(15),
+                                  Text(savingViewModel.endDate == null ? 'Nill': AppUtils.getReadableDate2(savingViewModel.endDate), style: TextStyle(
+                                      fontFamily: AppStrings.fontMedium,
+                                      fontSize: 13,color: AppColors.kGreyText
+                                  ),),
+                              ],)
+                            ],),
+                            YMargin(40),
+                            Text("Interest rate".toUpperCase(), style: TextStyle(fontSize: 12,
+                              color: AppColors.kSecondaryText,fontFamily: AppStrings.fontNormal,),),
+                            YMargin(15),
+                            Text("6% P.A", style: TextStyle(
+                                fontFamily: AppStrings.fontMedium,
+                                fontSize: 13,color: AppColors.kGreyText
+                            ),),
 
-                      ],),
-                    )
-                ],),
+                        ],),
+                      )
+                  ],),
+                ),
               ),
             ),
           ),
@@ -302,7 +330,7 @@ class _SavingsSummaryScreenState extends State<SavingsSummaryScreen> {
               },
               onVerticalDragStart: (details){
                 print("dff ${details.toString()}");
-                startAnim();
+                startAnim(context);
               },
               child: Container(
                 height: 60,
@@ -321,15 +349,21 @@ class _SavingsSummaryScreenState extends State<SavingsSummaryScreen> {
           error == false ? Container(
             height: size.height,
             width: size.width,
-            child: Center(child: loading ? CircularProgressIndicator():SizedBox()
+            child: Center(child: loading ? LoadingWIdget():SizedBox()
               ,),
           ):Container(
             height: size.height,
             width: size.width,
             child: Center(child:Column(children: [
               Spacer(),
-              Text("Error Occured", style: TextStyle(color: AppColors.kWhite),),
-              YMargin(20),
+              SvgPicture.asset("images/new/error2.svg"),
+              YMargin(40),
+              SizedBox(
+                  width: 250,
+                  child: Text(errorMessage,
+                    style: TextStyle(color: AppColors.kWhite,
+                        fontFamily: AppStrings.fontNormal,height: 1.7),textAlign: TextAlign.center,)),
+              Spacer(),
               PrimaryButtonNew(
                 title: "Back to Home",
                 onTap: (){
@@ -347,7 +381,7 @@ class _SavingsSummaryScreenState extends State<SavingsSummaryScreen> {
                   });
                 },
               ),
-              Spacer(),
+              YMargin(40)
             ],)
               ,),
           ),

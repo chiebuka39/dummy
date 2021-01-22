@@ -196,7 +196,7 @@ class _InvestmentHighYieldDollarAmountInputState
                       context,
                       InvestmentDurationPeriod.route(
                         amount: amount,
-                        instrument: model.nairaInstrument.data,
+                        instrument: model.dollarInstrument.data,
                         uniqueName: widget.uniqueName,
                       ),
                     );

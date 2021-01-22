@@ -42,6 +42,7 @@ class _TransactionsScreenState extends State<TransactionsScreen> {
           slivers: [
             SliverList(
                 delegate: SliverChildListDelegate([
+                  YMargin(15),
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 20),
                 child: Row(

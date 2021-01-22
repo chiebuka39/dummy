@@ -63,6 +63,12 @@ class _TabsContainerState extends State<TabsContainer>
         _currentIndex = 4;
       });
     },);
+    dashboardViewModel.callback = (){
+
+      setState(() {
+        _currentIndex = 1;
+      });
+    };
     setState(() {
 
     });

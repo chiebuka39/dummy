@@ -131,7 +131,7 @@ class IdentityWidget extends StatelessWidget {
           color: AppColors.kSecondaryColor
         ),
         child: Row(children: [
-          Text(title, style: TextStyle(color: AppColors.kWhite),),
+          Text(title, style: TextStyle(color: AppColors.kWhite, fontFamily: AppStrings.fontNormal, fontSize: 12),),
           Spacer(),
           Icon(Icons.navigate_next, color: AppColors.kWhite,)
         ],),

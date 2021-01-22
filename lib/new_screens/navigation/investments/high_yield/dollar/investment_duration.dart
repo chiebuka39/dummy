@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider_architecture/_viewmodel_provider.dart';
 import 'package:zimvest/data/models/investment/term_instruments.dart';
 import 'package:zimvest/data/view_models/wallets_view_model.dart';
+import 'package:zimvest/new_screens/navigation/investments/high_yield/dollar/high_yield_investment_dollar_purchase_source.dart';
 import 'package:zimvest/new_screens/navigation/investments/widgets/util_widgt.dart';
 import 'package:zimvest/styles/colors.dart';
 import 'package:zimvest/utils/margin.dart';
@@ -42,7 +43,6 @@ class _InvestmentDurationPeriodState extends State<InvestmentDurationPeriod> {
     List<TermInstrument> instrument = widget.instrument
         ?.where((element) => element.minAmount == widget.amount)
         ?.toList();
-    // print(instrument.length);
     int selectedIndex;
     return ViewModelProvider<WalletViewModel>.withConsumer(
       viewModelBuilder: () => WalletViewModel(),
@@ -170,18 +170,18 @@ class _InvestmentDurationPeriodState extends State<InvestmentDurationPeriod> {
                         child: RoundedNextButton(
                           onTap: () {
                             print(selectedIndex);
-                            // Navigator.push(
-                            //   context,
-                            //   HighYieldInvestmentPurchaseSource.route(
-                            //     amount: widget.amount,
-                            //     cards: model.cards,
-                            //     productId: instrument[selectedIndex].id,
-                            //     rate: instrument[selectedIndex].rate,
-                            //     maturityDate: instrument[selectedIndex].maturityDate,
-                            //     uniqueName: widget.uniqueName,
-                            //     duration: instrument[selectedIndex].maturityPeriod,
-                            //   ),
-                            // );
+                            Navigator.push(
+                              context,
+                              HighYieldInvestmentDollarPurchaseSource.route(
+                                // amount: widget.amount,
+                                // cards: model.cards,
+                                // productId: instrument[selectedIndex].id,
+                                // rate: instrument[selectedIndex].rate,
+                                // maturityDate: instrument[selectedIndex].maturityDate,
+                                // uniqueName: widget.uniqueName,
+                                // duration: instrument[selectedIndex].maturityPeriod,
+                              ),
+                            );
                           },
                         ),
                       ),

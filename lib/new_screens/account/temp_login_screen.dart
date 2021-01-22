@@ -4,6 +4,7 @@ import 'package:after_layout/after_layout.dart';
 import 'package:flushbar/flushbar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:local_auth/local_auth.dart';
 import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
@@ -220,13 +221,9 @@ class _TempLoginScreenState extends State<TempLoginScreen> with AfterLayoutMixin
   }
 
   Future login(BuildContext context) async {
-    setState(() {
-      loading = true;
-    });
+    EasyLoading.show(status: "");
     var result = await identityViewModel.login(_localStorage.getSecondaryState().email, password);
-    setState(() {
-      loading = false;
-    });
+    EasyLoading.dismiss();
     if(result.error == true){
     
       AppUtils.showError(context);

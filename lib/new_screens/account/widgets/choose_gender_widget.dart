@@ -32,7 +32,7 @@ class _ChooseGenderWidgetState extends State<ChooseGenderWidget> {
                   gender = 'male';
                 });
               },
-              child: SelectGenderWidget(emoji: "🤵🏽",title: "Male",gender: gender,),
+              child: SelectGenderWidget(emoji: "male",title: "Male",gender: gender,),
             ),
             Spacer(),
             GestureDetector(
@@ -41,7 +41,7 @@ class _ChooseGenderWidgetState extends State<ChooseGenderWidget> {
                   gender = 'female';
                 });
               },
-              child:SelectGenderWidget(emoji:"👩🏽‍",title: "Female",gender: gender,),
+              child:SelectGenderWidget(emoji:"fem",title: "Female",gender: gender,),
             ),
           ],),
           Spacer(),
@@ -82,7 +82,7 @@ class SelectGenderWidget extends StatelessWidget {
 
         children: [
           Spacer(flex: 2,),
-        Text(emoji,style: TextStyle(fontSize: 40),),
+        Image.asset("images/$emoji.png"),
         YMargin(5),
         Text(title),
           Spacer(flex: 3,),

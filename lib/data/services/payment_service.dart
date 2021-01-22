@@ -132,13 +132,13 @@ class PaymentService extends ABSPaymentService {
 
     var url = "${AppStrings.baseUrl}zimvest.services.payment/api/Banks/customers";
 
-    //print("lll $url");
+    print("lll $url");
     try {
       var response = await dio.get(url,
           options: Options(headers: headers));
       final int statusCode = response.statusCode;
       var response1 = response.data;
-      //print("iii ${response1}");
+      print("iii ${response1}");
 
       if (statusCode != 200) {
         result.errorMessage = response1['message'];

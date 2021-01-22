@@ -357,7 +357,7 @@ extension StringUtils on String {
       }
     }
 
-    return buffer.toString();
+    return "${buffer.toString()}";
 
   }
 

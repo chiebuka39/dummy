@@ -1,6 +1,10 @@
+import 'package:after_layout/after_layout.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:provider/provider.dart';
+import 'package:zimvest/data/view_models/identity_view_model.dart';
+import 'package:zimvest/data/view_models/payment_view_model.dart';
 import 'package:zimvest/new_screens/funding/confirm_withdrawal.dart';
 import 'package:zimvest/new_screens/funding/savings_summary.dart';
 import 'package:zimvest/new_screens/funding/select_bank_account.dart';
@@ -26,13 +30,19 @@ class ChooseWealthWithdrawScreen extends StatefulWidget {
   _ChooseWealthWithdrawScreenState createState() => _ChooseWealthWithdrawScreenState();
 }
 
-class _ChooseWealthWithdrawScreenState extends State<ChooseWealthWithdrawScreen> {
+class _ChooseWealthWithdrawScreenState extends State<ChooseWealthWithdrawScreen> with AfterLayoutMixin<ChooseWealthWithdrawScreen> {
 
-
+  ABSPaymentViewModel paymentViewModel;
+  ABSIdentityViewModel identityViewModel;
+  @override
+  void afterFirstLayout(BuildContext context) {
+    paymentViewModel.getCustomerBank(identityViewModel.user.token);
+  }
 
   @override
   Widget build(BuildContext context) {
-    
+    paymentViewModel = Provider.of(context);
+    identityViewModel = Provider.of(context);
     return GestureDetector(
       onTap: (){
         FocusScope.of(context).requestFocus(new FocusNode());
@@ -43,6 +53,7 @@ class _ChooseWealthWithdrawScreenState extends State<ChooseWealthWithdrawScreen>
           callback: (){
             Navigator.pop(context);
           },
+          showCancel: true,
           text: "Withdraw",
         ),
         body: GestureDetector(

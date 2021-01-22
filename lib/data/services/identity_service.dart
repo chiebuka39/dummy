@@ -41,6 +41,7 @@ abstract class ABSIdentityService{
     String token});
   Future<Result<void>> confirmEmailOTP({String trackingId, int verificationId, String code});
   Future<Result<void>> verifyPinResetCode({String trackingId, int verificationId, String code, String token});
+  Future<Result<bool>> verifyPin({ String code, String token});
   Future<Result<void>> confirmEmail({String token, int userId});
 
 
@@ -700,6 +701,60 @@ class IdentityService extends ABSIdentityService {
         }
 
       print("lllll ${e.response?.data ?? 'false' is Map}");
+    }
+
+    return result;
+  }
+
+  @override
+  Future<Result<bool>> verifyPin({String code, String token}) async{
+    Result<bool> result = Result(error: false);
+
+    var url = "${AppStrings.baseUrl}zimvest.services.identity/api/Account/verify-pin";
+    var body = {
+    'pin':code,
+    };
+
+    var headers = {
+    "Authorization":"Bearer $token"
+    };
+
+    print("lll $url");
+    print("lll $body");
+    print("lll $token");
+    try{
+    var response = await dio.patch(url,data: body,options: Options(headers: headers));
+    final int statusCode = response.statusCode;
+    var response1 = response.data;
+    print("iii ${response1}");
+    print("iii------- ${response.statusCode}");
+
+    if (statusCode != 200) {
+    result.errorMessage = response1['message'];
+    result.error = true;
+    }else {
+    result.error = false;
+
+    }
+
+    }on DioError catch(e){
+    result.error = true;
+    print("lllliiiccc ${e.response.statusCode}");
+    print("lllliiiccc ${e.response.data}");
+    if(e.response.statusCode == 405){
+
+
+
+      result.errorMessage = "Pin Could not be verified";
+    }else{
+      print("1111 ${e.response.data}");
+      result.errorMessage = e.response.data['message'];
+    }
+
+
+
+
+
     }
 
     return result;

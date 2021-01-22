@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:percent_indicator/circular_percent_indicator.dart';
 import 'package:provider/provider.dart';
+import 'package:shimmer/shimmer.dart';
 import 'package:zimvest/data/models/product_transaction.dart';
 import 'package:zimvest/data/models/saving_plan.dart';
 import 'package:zimvest/data/view_models/identity_view_model.dart';
@@ -18,6 +19,7 @@ import 'package:zimvest/styles/colors.dart';
 import 'package:zimvest/utils/app_utils.dart';
 import 'package:zimvest/utils/margin.dart';
 import 'package:zimvest/utils/strings.dart';
+import 'package:zimvest/widgets/navigation/delete_wealthbox.dart';
 import 'package:zimvest/widgets/navigation/wealth_activites.dart';
 import 'package:zimvest/widgets/navigation/wealth_more.dart';
 import 'package:zimvest/widgets/navigation/wealthbox_activity.dart';
@@ -103,7 +105,7 @@ class _AspireDetailsScreenState extends State<AspireDetailsScreen> with
                         Spacer(),
                         IconButton(icon: Icon(Icons.more_horiz_rounded, color: AppColors.kPrimaryColor,), onPressed: (){
                           showModalBottomSheet < Null > (context: context, builder: (BuildContext context) {
-                            return WealthMore();
+                            return WealthMore(savingPlanModel: widget.goal,);
                           },isScrollControlled: true);
                         })
                       ],
@@ -135,7 +137,8 @@ class _AspireDetailsScreenState extends State<AspireDetailsScreen> with
                                   offset: Offset(-8,0),
                                   child: Row(children: [
                                     Icon(Icons.arrow_drop_up_outlined,color: AppColors.kWealthDark,),
-                                    Text("${AppStrings.nairaSymbol}${widget.goal.accruedInterest}",
+                                    Text(AppStrings.nairaSymbol,style: TextStyle(fontSize: 11,color: AppColors.kWealthDark)),
+                                    Text(" ${widget.goal.accruedInterest}",
                                       style: TextStyle(fontFamily: AppStrings.fontMedium,fontSize: 11,color: AppColors.kWealthDark),),
                                     XMargin(5),
                                     Text("Past 24h",
@@ -196,7 +199,7 @@ class _AspireDetailsScreenState extends State<AspireDetailsScreen> with
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
                                   Spacer(),
-                                  Text("${widget.goal.targetAmount}", style: TextStyle(
+                                  Text("${widget.goal.targetAmount}".split(".").first.convertWithComma(), style: TextStyle(
                                       fontFamily: AppStrings.fontMedium,color: AppColors.kGreyText
                                   ),),
                                   YMargin(8),
@@ -252,8 +255,26 @@ class _AspireDetailsScreenState extends State<AspireDetailsScreen> with
                           child: Center(
                             child: GestureDetector(
                               onTap: (){
-                                savingViewModel.selectedPlan = widget.goal;
-                                Navigator.of(context).push(AmountWithdrawScreen.route());
+                                DateTime time = DateTime.now();
+                                if(time.day == widget.goal.maturityDate.day && time.month == widget.goal.maturityDate.month && time.year == widget.goal.maturityDate.year){
+
+                                  savingViewModel.selectedPlan = widget.goal;
+                                  Navigator.of(context).push(AmountWithdrawScreen.route());
+                                }else{
+                                  showModalBottomSheet<Null>(
+                                      context: context,
+                                      builder: (BuildContext context) {
+                                        return WithdrawWealthbox(
+                                          savingPlanModel: widget.goal,
+                                          onTapYes: (){
+
+                                            savingViewModel.selectedPlan = widget.goal;
+                                            Navigator.of(context).pushReplacement(AmountWithdrawScreen.route(penaltyWithDraw: true));
+                                          },
+                                        );
+                                      },
+                                      isScrollControlled: true);
+                                }
                               },
                               child: Container(child: Column(children: [
                                 Container(
@@ -312,10 +333,57 @@ class _AspireDetailsScreenState extends State<AspireDetailsScreen> with
                         )
                       ],),
                     ),
+                    transactionsLoading ? Container(
+                      margin: EdgeInsets.symmetric(horizontal: 20),
+                      height: 400,
+                      child: Shimmer.fromColors(
+                        baseColor: Colors.grey[300],
+                        highlightColor: Colors.grey[100],
+                        child: ListView.builder(itemBuilder: (BuildContext context, int index) {
+                          if(index == 0){
+                            return  Row(
+                              children: [
+                                SizedBox(
+                                  width: 200.0,
+                                  height: 50.0,
+                                  child: Shimmer.fromColors(
+                                    baseColor: Colors.red,
+                                    highlightColor: Colors.yellow,
+                                    child: Container(
+                                      margin: EdgeInsets.only(top: 10),
+                                      width: 40.0,
+                                      height: 8.0,
+                                      color: Colors.white,
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            );
+                          }
+                          return  SizedBox(
+                            width: 200.0,
+                            height: 100.0,
+                            child: Shimmer.fromColors(
+                              baseColor: Colors.red,
+                              highlightColor: Colors.yellow,
+                              child: Container(
+                                margin: EdgeInsets.only(top: 10),
+                                width: 40.0,
+                                height: 8.0,
+                                color: Colors.white,
+                              ),
+                            ),
+                          );
+                        },itemCount: 4,
+
+                        ),
+                      ),
+                    ):SizedBox(),
                     ...List.generate(transactionsLoading ? 0:transactions.length > 4 ? 4:transactions.length, (index) {
                       ProductTransaction trans = transactions[index];
                       return WealthBoxActivity(productTransaction: trans,);
-                    })
+                    }),
+                    YMargin(50)
 
                   ],
                 ),

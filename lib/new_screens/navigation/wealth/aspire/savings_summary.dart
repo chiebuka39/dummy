@@ -2,10 +2,12 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:provider/provider.dart';
+import 'package:zimvest/animations/loading.dart';
 import 'package:zimvest/data/view_models/identity_view_model.dart';
 import 'package:zimvest/data/view_models/payment_view_model.dart';
 import 'package:zimvest/data/view_models/savings_view_model.dart';
 import 'package:zimvest/new_screens/funding/top_up_successful.dart';
+import 'package:zimvest/new_screens/navigation/investments/widgets/terms_and_conditions_box.dart';
 import 'package:zimvest/new_screens/tabs.dart';
 import 'package:zimvest/styles/colors.dart';
 import 'package:zimvest/utils/app_utils.dart';
@@ -64,23 +66,16 @@ class _SavingsSummaryScreenState extends State<SavingsSummaryScreen> {
       slideUp = true;
       loading = true;
     });
-    // var result = await savingViewModel.createTargetSavings(
-    //   maturityDate: savingViewModel.endDate,
-    //   autoSave: savingViewModel.autoSave,
-    //   targetAmount: savingViewModel.amountToSave,
-    //   planName: savingViewModel.goalName ,
-    //   productId: 2,
-    //   cardId:paymentViewModel.selectedCard?.id ?? null,
-    //   token: identityViewModel.user.token,
-    //   frequency: savingViewModel.selectedFrequency.id,
-    //   startDate: savingViewModel.startDate,
-    //   fundingChannel: paymentViewModel.selectedCard == null ?
-    //       savingViewModel.fundingChannels.firstWhere((element) => element.name == "Wallet").id:
-    //   savingViewModel.fundingChannels.firstWhere((element) => element.name == "Card").id,
-    //   savingsAmount: getSavingsAmount()
-    // );
-    var result = await savingViewModel.createTargetSavings2(
 
+    await makeRemoteCall();
+
+
+
+  }
+
+  Future makeRemoteCall() async {
+    var result = await savingViewModel.createTargetSavings2(
+    
         cardId:paymentViewModel.selectedCard?.id ?? null,
         token: identityViewModel.user.token,
         fundingChannel: paymentViewModel.selectedCard == null ?
@@ -94,18 +89,18 @@ class _SavingsSummaryScreenState extends State<SavingsSummaryScreen> {
       setState(() {
         loading = false;
         confirmed = true;
-
+    
         if(result.errorMessage != null){
-
+    
           errorMessage = result.errorMessage;
-
+    
         }
-
+    
       });
-
+    
         Future.delayed(1000.milliseconds).then((value) => onInit());
-
-
+    
+    
     }else{
       setState(() {
         loading= false;
@@ -114,9 +109,6 @@ class _SavingsSummaryScreenState extends State<SavingsSummaryScreen> {
       });
       print(";;;;;;;; ${result.errorMessage}");
     }
-
-
-
   }
 
   void onInit() async {
@@ -143,6 +135,7 @@ class _SavingsSummaryScreenState extends State<SavingsSummaryScreen> {
         body: Container(
           height: MediaQuery.of(context).size.height,
           child: Stack(children: [
+            SvgPicture.asset("images/patterns.svg", fit: BoxFit.fill,),
             Positioned.fill(
               child: confirmed ? PlayAnimation<MultiTweenValues<AniProps>>(
                 tween: _tween,
@@ -206,11 +199,11 @@ class _SavingsSummaryScreenState extends State<SavingsSummaryScreen> {
             AnimatedPositioned(
               duration: Duration(milliseconds: 500),
               //top: -(MediaQuery.of(context).size.height - 200),
-              top: slideUp ?-(MediaQuery.of(context).size.height - 200): 0,
+              top: slideUp ?-containerHeight(size, context): 0,
               left: 0,right: 0,
               child: Container(
                 width: double.infinity,
-                height: MediaQuery.of(context).size.height - 200,
+                height: containerHeight(size, context),
                 decoration: BoxDecoration(
                   color: Colors.white,
                   borderRadius: BorderRadius.only(bottomLeft: Radius.circular(25),
@@ -233,7 +226,7 @@ class _SavingsSummaryScreenState extends State<SavingsSummaryScreen> {
                           },
                         ),
                       ),
-                      YMargin(50),
+                      YMargin(size.height < 650 ? 15:size.height > 700 ? 70:40),
                       Padding(
                         padding: const EdgeInsets.only(left: 20),
                         child: Text("Savings Summary", style: TextStyle(fontFamily: AppStrings.fontMedium),),
@@ -242,7 +235,7 @@ class _SavingsSummaryScreenState extends State<SavingsSummaryScreen> {
                       Container(
                         margin: EdgeInsets.symmetric(horizontal: 20),
                         padding: EdgeInsets.symmetric(horizontal: 20,vertical: 25),
-                        height: 380,
+                        height: size.height < 650 ? 320:size.height > 700 ? 380:340,
                         width: double.infinity,
                         decoration: BoxDecoration(
                           color: AppColors.kWhite,
@@ -253,12 +246,12 @@ class _SavingsSummaryScreenState extends State<SavingsSummaryScreen> {
                           children: [
                           Text("Plan name".toUpperCase(), style: TextStyle(fontSize: 12,
                               color: AppColors.kSecondaryText,fontFamily: AppStrings.fontNormal,),),
-                            YMargin(15),
+                            Spacer(),
                             Text(savingViewModel.goalName, style: TextStyle(
                                 fontFamily: AppStrings.fontMedium,
                                 fontSize: 13,color: AppColors.kGreyText
                             ),),
-                            YMargin(40),
+                            YMargin(size.height < 650 ? 20:size.height > 700 ? 40:30),
                             Row(children: [
                               Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -287,7 +280,7 @@ class _SavingsSummaryScreenState extends State<SavingsSummaryScreen> {
 
 
                             ],),
-                            YMargin(40),
+                            YMargin(size.height < 650 ? 20:size.height > 700 ? 40:30),
                             Row(children: [
                               Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -295,10 +288,15 @@ class _SavingsSummaryScreenState extends State<SavingsSummaryScreen> {
                                   Text("${savingViewModel.selectedFrequency.name} amount".toUpperCase(), style: TextStyle(fontSize: 12,
                                     color: AppColors.kSecondaryText,fontFamily: AppStrings.fontNormal,),),
                                   YMargin(15),
-                                  Text(getFrequencyAmount(), style: TextStyle(
-                                      fontFamily: AppStrings.fontMedium,
-                                      fontSize: 13,color: AppColors.kGreyText
-                                  ),),
+                                  Row(
+                                    children: [
+                                      Text(AppStrings.nairaSymbol),
+                                      Text(getFrequencyAmount(), style: TextStyle(
+                                          fontFamily: AppStrings.fontMedium,
+                                          fontSize: 13,color: AppColors.kGreyText
+                                      ),),
+                                    ],
+                                  ),
                               ],),
                               Spacer(),
 
@@ -309,13 +307,18 @@ class _SavingsSummaryScreenState extends State<SavingsSummaryScreen> {
                                   Text("target amount".toUpperCase(), style: TextStyle(fontSize: 11,
                                     color: AppColors.kSecondaryText,fontFamily: AppStrings.fontNormal,),),
                                   YMargin(15),
-                                  Text("${AppStrings.nairaSymbol}${getAmount(savingViewModel.amountToSave.toInt())}", style: TextStyle(
-                                      fontFamily: AppStrings.fontMedium,
-                                      fontSize: 13,color: AppColors.kGreyText
-                                  ),),
+                                  Row(
+                                    children: [
+                                      Text(AppStrings.nairaSymbol),
+                                      Text(" ${getAmount(savingViewModel.amountToSave.toInt())}", style: TextStyle(
+                                          fontFamily: AppStrings.fontMedium,
+                                          fontSize: 13,color: AppColors.kGreyText
+                                      ),),
+                                    ],
+                                  ),
                               ],)
                             ],),
-                            YMargin(40),
+                            YMargin(size.height < 650 ? 20:size.height > 700 ? 40:30),
                             Row(children: [
                               Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -341,6 +344,7 @@ class _SavingsSummaryScreenState extends State<SavingsSummaryScreen> {
                                   ),),
                               ],)
                             ],),
+                            Spacer(),
 
 
                         ],),
@@ -383,18 +387,20 @@ class _SavingsSummaryScreenState extends State<SavingsSummaryScreen> {
             error == false ? Container(
               height: size.height,
               width: size.width,
-              child: Center(child: loading ? CircularProgressIndicator():SizedBox()
+              child: Center(child: loading ? LoadingWIdget():SizedBox()
                 ,),
             ):Container(
               height: size.height,
               width: size.width,
               child: Center(child:Column(children: [
                 Spacer(),
+                SvgPicture.asset("images/new/error2.svg"),
+                YMargin(40),
                 SizedBox(
-                  width: 270,
+                  width: 250,
                     child: Text(errorMessage == null ? "Error Occured": errorMessage.isEmpty ? "Error Occured": errorMessage, style: TextStyle(color: AppColors.kWhite, fontFamily: AppStrings.fontNormal,height: 1.7),
                       textAlign: TextAlign.center,)),
-                YMargin(20),
+                Spacer(),
                 PrimaryButtonNew(
                   title: "Back to Home",
                   onTap: (){
@@ -404,7 +410,7 @@ class _SavingsSummaryScreenState extends State<SavingsSummaryScreen> {
                             (Route<dynamic> route) => false);
                   },
                 ),
-                Spacer(),
+                YMargin(40)
               ],)
                 ,),
             ),
@@ -414,19 +420,29 @@ class _SavingsSummaryScreenState extends State<SavingsSummaryScreen> {
     );
   }
 
+  double containerHeight(Size size, BuildContext context) => size.height < 650 ? MediaQuery.of(context).size.height * 0.8:size.height > 700 ? MediaQuery.of(context).size.height * 0.8:MediaQuery.of(context).size.height * 0.7;
+
   getFrequencyAmount() {
     if(savingViewModel.selectedFrequency.id == 2){
-      return "${AppStrings.nairaSymbol}${getAmount(savingViewModel.amountToSave ~/
+      return " ${getAmount(savingViewModel.amountToSave ~/
           (savingViewModel.endDate.difference(savingViewModel.startDate).inDays) )}";
     }else if(savingViewModel.selectedFrequency.id == 3){
-      return "${AppStrings.nairaSymbol}${getAmount(savingViewModel.amountToSave ~/
+      return " ${getAmount(savingViewModel.amountToSave ~/
           (savingViewModel.endDate.difference(savingViewModel.startDate).inDays) * 7 ) }";
     }
     else if(savingViewModel.selectedFrequency.id == 4){
-      return "${AppStrings.nairaSymbol}${getAmount(savingViewModel.amountToSave ~/
+      return " ${getAmount(savingViewModel.amountToSave ~/
           (savingViewModel.endDate.difference(savingViewModel.startDate).inDays) * 30 ) }";
     }
-    return "${AppStrings.nairaSymbol}${getAmount(savingViewModel.amountToSave.toInt())}";
+    else if(savingViewModel.selectedFrequency.id == 5){
+      return " ${getAmount(savingViewModel.amountToSave ~/
+          (savingViewModel.endDate.difference(savingViewModel.startDate).inDays) * 120 ) }";
+    }
+    else if(savingViewModel.selectedFrequency.id == 6){
+      return " ${getAmount(savingViewModel.amountToSave ~/
+          (savingViewModel.endDate.difference(savingViewModel.startDate).inDays) * 183 ) }";
+    }
+    return " ${getAmount(savingViewModel.amountToSave.toInt())}";
   }
 
   int getSavingsAmount(){

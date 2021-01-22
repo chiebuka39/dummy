@@ -159,13 +159,9 @@ class _LoginScreenState extends State<LoginScreen> {
                     if(_emailError || _password == null){
                       return;
                     }
-                    setState(() {
-                      loading = true;
-                    });
+                    EasyLoading.show(status: "");
                     var result = await _identityViewModel.login(_email, _password);
-                    setState(() {
-                      loading = false;
-                    });
+                    EasyLoading.dismiss();
                     if(result.error == true){
 
                       AppUtils.showError(context);

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:zimvest/animations/loading.dart';
 import 'package:zimvest/data/models/saving_plan.dart';
 import 'package:zimvest/new_screens/funding/top_up_successful.dart';
 import 'package:zimvest/new_screens/tabs.dart';
@@ -131,9 +132,7 @@ class _SavingsSummaryScreenState extends State<SavingsSummaryScreen> {
     savingViewModel = Provider.of(context);
     paymentViewModel = Provider.of(context);
 
-    SavingPlanModel wealthBox = widget.savingsPlan
-        .where((element) => element.productId == 1)
-        .first;
+
     var size = MediaQuery.of(context).size;
     return WillPopScope(
       onWillPop: () async {
@@ -145,6 +144,7 @@ class _SavingsSummaryScreenState extends State<SavingsSummaryScreen> {
           height: MediaQuery.of(context).size.height,
           child: Stack(
             children: [
+              SvgPicture.asset("images/patterns.svg", fit: BoxFit.fill,),
               Positioned.fill(
                 child: confirmed
                     ? PlayAnimation<MultiTweenValues<AniProps>>(
@@ -230,7 +230,7 @@ class _SavingsSummaryScreenState extends State<SavingsSummaryScreen> {
                             Navigator.pop(context);
                           },
                         ),
-                        YMargin(70),
+                        YMargin(size.height < 650 ? 15:size.height > 700 ? 70:40),
                         Padding(
                           padding: const EdgeInsets.only(left: 20),
                           child: Text(
@@ -243,7 +243,7 @@ class _SavingsSummaryScreenState extends State<SavingsSummaryScreen> {
                           margin: EdgeInsets.symmetric(horizontal: 20),
                           padding: EdgeInsets.symmetric(
                               horizontal: 20, vertical: 25),
-                          height: 280,
+                          height: size.height < 650 ? 220:size.height > 700 ? 280:240,
                           width: double.infinity,
                           decoration: BoxDecoration(
                               color: AppColors.kWhite,
@@ -259,15 +259,16 @@ class _SavingsSummaryScreenState extends State<SavingsSummaryScreen> {
                                   fontFamily: AppStrings.fontNormal,
                                 ),
                               ),
-                              YMargin(15),
+                              YMargin(size.height < 650 ? 7:size.height > 700 ? 15:10),
                               Text(
-                                wealthBox.planName,
+                                savingViewModel.selectedPlan.planName,
                                 style: TextStyle(
                                     fontFamily: AppStrings.fontMedium,
                                     fontSize: 13,
                                     color: AppColors.kGreyText),
                               ),
-                              YMargin(40),
+                              //YMargin(40),
+                              YMargin(size.height < 650 ? 18:size.height > 700 ? 40:30),
                               Row(
                                 children: [
                                   Column(
@@ -283,12 +284,17 @@ class _SavingsSummaryScreenState extends State<SavingsSummaryScreen> {
                                         ),
                                       ),
                                       YMargin(15),
-                                      Text(
-                                        "${AppStrings.nairaSymbol}${widget.amount.toString().convertWithComma()}",
-                                        style: TextStyle(
-                                            fontFamily: AppStrings.fontMedium,
-                                            fontSize: 13,
-                                            color: AppColors.kGreyText),
+                                      Row(
+                                        children: [
+                                          Text(AppStrings.nairaSymbol,style: TextStyle(fontSize: 12),),
+                                          Text(
+                                            "${savingViewModel.amountToSave.toString().split(".").first.convertWithComma()}",
+                                            style: TextStyle(
+                                                fontFamily: AppStrings.fontMedium,
+                                                fontSize: 13,
+                                                color: AppColors.kGreyText),
+                                          ),
+                                        ],
                                       ),
                                     ],
                                   ),
@@ -306,7 +312,8 @@ class _SavingsSummaryScreenState extends State<SavingsSummaryScreen> {
                                       ),
                                       YMargin(15),
                                       Text(
-                                         wealthBox.maturityDate.toString(),
+                                        savingViewModel.selectedPlan.maturityDate == null
+                                            ? "Nill":AppUtils.getReadableDate2(savingViewModel.selectedPlan.maturityDate),
                                         style: TextStyle(
                                             fontFamily: AppStrings.fontMedium,
                                             fontSize: 13,
@@ -316,7 +323,7 @@ class _SavingsSummaryScreenState extends State<SavingsSummaryScreen> {
                                   )
                                 ],
                               ),
-                              YMargin(40),
+                              YMargin(size.height < 650 ? 18:size.height > 700 ? 40:30),
                               Text(
                                 "Interest rate".toUpperCase(),
                                 style: TextStyle(
@@ -325,9 +332,9 @@ class _SavingsSummaryScreenState extends State<SavingsSummaryScreen> {
                                   fontFamily: AppStrings.fontNormal,
                                 ),
                               ),
-                              YMargin(15),
+                              YMargin(size.height < 650 ? 7:size.height > 700 ? 15:10),
                               Text(
-                                "${wealthBox.interestRate}% P.A",
+                                "${savingViewModel.selectedPlan.interestRate}% P.A",
                                 style: TextStyle(
                                     fontFamily: AppStrings.fontMedium,
                                     fontSize: 13,
@@ -388,7 +395,7 @@ class _SavingsSummaryScreenState extends State<SavingsSummaryScreen> {
                       width: size.width,
                       child: Center(
                         child:
-                            loading ? CircularProgressIndicator() : SizedBox(),
+                            loading ? LoadingWIdget() : SizedBox(),
                       ),
                     )
                   : Container(

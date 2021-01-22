@@ -33,16 +33,24 @@ class _EarnFreeCashScreenState extends State<EarnFreeCashScreen> {
           Spacer(),
           SvgPicture.asset("images/new/gift1.svg"),
           YMargin(45),
-          Text("Get free ₦1000", style: TextStyle(fontSize: 21,
-              fontFamily: AppStrings.fontMedium),),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Text("Get free ", style: TextStyle(fontSize: 21,
+                  fontFamily: AppStrings.fontMedium),),
+              Text(AppStrings.nairaSymbol, style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),),
+              Text("1000", style: TextStyle(fontSize: 21,
+                  fontFamily: AppStrings.fontMedium))
+            ],
+          ),
           YMargin(26),
           SizedBox(
             width: 300,
             child: Text("Share your code to give your friends ₦1000 in rewards, "
                 "after they sign up, you’ll also get ₦1000  in rewards  ",
               style: TextStyle(fontSize: 12,
-                  fontFamily: AppStrings.fontLight,
-                  height: 1.6),),
+                  fontWeight: FontWeight.w100,
+                  height: 1.6),textAlign: TextAlign.center,),
           ),
           YMargin(40),
           Container(

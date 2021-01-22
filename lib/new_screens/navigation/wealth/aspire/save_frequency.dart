@@ -42,56 +42,65 @@ class _SaveFrequencyScreenState extends State<SaveFrequencyScreen> with
     savingViewModel = Provider.of(context);
 
     return Scaffold(
-      appBar: ZimAppBar(callback: (){
+      appBar: ZimAppBar(
+        showCancel: true,
+        callback: (){
         Navigator.pop(context);
       },icon: Icons.arrow_back_ios_outlined,text: "Create Zimvest Aspire",),
       body: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 20),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-          YMargin(42),
-          Text("How often would you like to save?",
-            style: TextStyle(fontSize: 15,
-                fontFamily: AppStrings.fontBold),),
-          YMargin(35),
-            ...List.generate( 3, (index) {
-              var freq = savingViewModel.savingFrequency[index];
-              return InkWell(
-                onTap: (){
-                  print("lll ${freq.id}");
-                  savingViewModel.selectedFrequency = freq;
-                },
-                child: Container(
-                  height: 50,
-                  child: Row(
-                    children: [
-                      Text(freq.name, style: TextStyle(fontSize: 13),),
-                      Spacer(),
-                      AnimatedSwitcher(
-                          duration: Duration(milliseconds: 600),
-                          child: (savingViewModel.selectedFrequency?.id ?? 99) == freq.id ? check:checkEmpty)
-                    ],
+        child: SingleChildScrollView(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+            YMargin(42),
+            Text("How often would you like to save?",
+              style: TextStyle(fontSize: 15,
+                  fontFamily: AppStrings.fontBold),),
+            YMargin(35),
+              ...List.generate( buildLength(), (index) {
+                var freq = savingViewModel.savingFrequency[index];
+                return InkWell(
+                  onTap: (){
+                    print("lll ${freq.id}");
+                    savingViewModel.selectedFrequency = freq;
+                  },
+                  child: Container(
+                    height: 50,
+                    child: Row(
+                      children: [
+                        Text(freq.name, style: TextStyle(fontSize: 13),),
+                        Spacer(),
+                        AnimatedSwitcher(
+                            duration: Duration(milliseconds: 600),
+                            child: (savingViewModel.selectedFrequency?.id ?? 99) == freq.id ? check:checkEmpty)
+                      ],
+                    ),
                   ),
-                ),
-              );
-            }),
-            YMargin(110),
-            RoundedNextButton(
-              onTap: savingViewModel.selectedFrequency == null ? null: (){
-                Navigator.push(context, AutomateSavingsScreen.route());
-              },
-            )
-        ],),
+                );
+              }),
+              YMargin(110),
+              RoundedNextButton(
+                onTap: savingViewModel.selectedFrequency == null ? null: (){
+                  Navigator.push(context, AutomateSavingsScreen.route());
+                },
+              )
+          ],),
+        ),
       ),
     );
   }
 
   int buildLength() {
     print("ooooo ${savingViewModel.endDate.difference(savingViewModel.startDate).inDays}");
-    if(savingViewModel.endDate.difference(savingViewModel.startDate).inDays < 180){
+    if(savingViewModel.endDate.difference(savingViewModel.startDate).inDays < 185){
+      print("jjjjj11 ${savingViewModel.endDate.difference(savingViewModel.startDate).inDays}");
       return savingViewModel.savingFrequency.length -2;
-    }else{
+    }else if(savingViewModel.endDate.difference(savingViewModel.startDate).inDays < 366){
+      print("jjjjj22 ${savingViewModel.endDate.difference(savingViewModel.startDate).inDays}");
+      return savingViewModel.savingFrequency.length -1;
+    }
+    else{
       return savingViewModel.savingFrequency.length;
     }
 
