@@ -94,7 +94,7 @@ class TransactionService implements ABSTransactionService {
         return null;
       }
     } on DioError catch (e) {
-      print(e.response.statusMessage);
+      print(e.response.statusCode);
       throw Exception(e.response.statusMessage.toString());
     }
     return null;

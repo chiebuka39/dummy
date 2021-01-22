@@ -94,7 +94,7 @@ class _InvestmentHighYieldNairaAmountInputState
               Padding(
                 padding: const EdgeInsets.only(left: 20.0, right: 20),
                 child: Text(
-                  "Minimum of ${AppStrings.nairaSymbol}${StringUtils(widget.minimumAmount.toString()).convertWithComma()}",
+                  "Minimum of ${AppStrings.nairaSymbol}${widget.minimumAmount.toString().split('.')[0].convertWithComma()}",
                   style: TextStyle(
                     fontSize: 10,
                     fontFamily: AppStrings.fontNormal,
@@ -157,7 +157,7 @@ class _InvestmentHighYieldNairaAmountInputState
                       ),
                       backgroundColor: AppColors.kRed3,
                       messageText: Text(
-                        "Minimum purchase amount is ${AppStrings.nairaSymbol}${StringUtils(widget.minimumAmount.toString()).convertWithComma()}",
+                        "Minimum purchase amount is ${AppStrings.nairaSymbol}${widget.minimumAmount.toString().split('.')[0].convertWithComma()}",
                         style: TextStyle(
                           fontSize: 11,
                           fontFamily: AppStrings.fontLight,

@@ -6,6 +6,7 @@ import 'package:zimvest/data/services/dashboard_service.dart';
 import 'package:zimvest/data/services/fixed_income_investment_service.dart';
 import 'package:zimvest/data/services/identity_service.dart';
 import 'package:zimvest/data/services/investment_service.dart';
+import 'package:zimvest/data/services/liquidate_asset_service.dart';
 
 import 'package:zimvest/data/services/payment_service.dart';
 import 'package:zimvest/data/services/savings_service.dart';
@@ -34,4 +35,5 @@ void setUpLocator(){
   locator.registerLazySingleton<ABSFixedIncomeInvestmentService>(() => FixedIncomeInvestmentService());
   locator.registerLazySingleton<ABSWalletService>(() => WalletService());
   locator.registerLazySingleton<ABSTransactionService>(() => TransactionService());
+  locator.registerLazySingleton<ABSLiquidateAssets>(() => LiquidateAssets());
 }

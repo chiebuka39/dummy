@@ -123,7 +123,7 @@ class _WealthScreenState extends State<WealthScreen> {
                     builder: (context) => ViewModelProvider<
                         InvestmentHighYieldViewModel>.withConsumer(
                       viewModelBuilder: () => InvestmentHighYieldViewModel(),
-                      builder: (context, model, _) => Container(
+                      builder: (context, model, _) =>  Container(
                         height: 400,
                         width: double.infinity,
                         color: Colors.transparent,
@@ -203,9 +203,9 @@ class _WealthScreenState extends State<WealthScreen> {
                                                   const EdgeInsets.all(12.0),
                                               child: Container(
                                                 height: 40,
-                                                width: 150,
+                                                // width: 150,
                                                 child: Text(
-                                                  "Invest in high yield naira based instruments",
+                                                  "Invest in our naira denominated fixed deposit product and watch you Naira grow.",
                                                   style: TextStyle(
                                                     fontSize: 11,
                                                     fontWeight: FontWeight.w400,
@@ -262,9 +262,9 @@ class _WealthScreenState extends State<WealthScreen> {
                                                   const EdgeInsets.all(12.0),
                                               child: Container(
                                                 height: 40,
-                                                width: 150,
+                                                // width: 150,
                                                 child: Text(
-                                                  "Invest in high yield dollar based instruments",
+                                                  "Invest in our USD denominated fixed deposit and hedge against exchange rate risk, plus appreciable returns on your dollar investment.  ",
                                                   style: TextStyle(
                                                     fontSize: 11,
                                                     fontWeight: FontWeight.w400,

@@ -729,6 +729,8 @@ class InvestmentItemWidget extends StatelessWidget {
   final double topPadding;
   final int transactionId;
   final int instrumentId;
+  final bool isMatured;
+  final double withDrawableBalance;
   const InvestmentItemWidget({
     Key key,
     this.investmentName,
@@ -737,7 +739,7 @@ class InvestmentItemWidget extends StatelessWidget {
     this.annualReturns,
     this.topPadding = 25.0,
     this.transactionId,
-    this.instrumentId,
+    this.instrumentId, this.isMatured, this.withDrawableBalance,
   }) : super(key: key);
 
   @override
@@ -747,6 +749,8 @@ class InvestmentItemWidget extends StatelessWidget {
         Navigator.push(
           context,
           InvestmentDetailsScreen.route(
+            withDrawableBalance: withDrawableBalance,
+            isMatured: isMatured,
             investmentName: investmentName,
             investmentType: investmentType,
             balance: balance,
@@ -1152,6 +1156,8 @@ Widget nairaPortfolio(BuildContext context) {
                             itemBuilder: (context, index) => Padding(
                               padding: const EdgeInsets.all(8.0),
                               child: InvestmentItemWidget(
+                                withDrawableBalance: model.nairaTransaction[index].withdrawableValue,
+                                isMatured:  model.nairaTransaction[index].isMatured,
                                 transactionId:
                                     model.nairaTransaction[index].transactionId,
                                 instrumentId:
@@ -1162,7 +1168,7 @@ Widget nairaPortfolio(BuildContext context) {
                                 investmentType: model
                                     .nairaTransaction[index].instrumentName,
                                 balance:
-                                    "${AppStrings.nairaSymbol}${model.nairaTransaction[index].withdrawableValue.toString()}",
+                                    "${AppStrings.nairaSymbol}${model.nairaTransaction[index].withdrawableValue.toString() + "0"}",
                                 annualReturns:
                                     "${model.nairaTransaction[index].percentageInterest.toString()}",
                               ),

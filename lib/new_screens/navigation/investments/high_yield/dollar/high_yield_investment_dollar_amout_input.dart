@@ -67,8 +67,8 @@ class _InvestmentHighYieldDollarAmountInputState
     extends State<InvestmentHighYieldDollarAmountInput> {
   // static String amountController.text;
   var amountController =
-      MoneyMaskedTextController(thousandSeparator: ",", decimalSeparator: ".");
-
+      MoneyMaskedTextController(thousandSeparator: ",", decimalSeparator: ".",);
+  // TextEditingController amountController = TextEditingController();
   @override
   Widget build(BuildContext context) {
     return ViewModelProvider<InvestmentHighYieldViewModel>.withConsumer(
@@ -111,15 +111,15 @@ class _InvestmentHighYieldDollarAmountInputState
               ),
               YMargin(36),
               InvestmentTextField(
+                  formatters: [CustomTextInputFormatter()],
                   showCursor: false,
-                  // initalValue: "1",
                   controller: amountController,
                   hintText: "Enter amount"),
               YMargin(10),
               Padding(
                 padding: const EdgeInsets.only(left: 20.0, right: 20),
                 child: Text(
-                  "Minimum of ${AppStrings.dollarSymbol}${StringUtils(widget.minimumAmount.toString()).convertWithComma()}",
+                  "Minimum of ${AppStrings.dollarSymbol}${widget.minimumAmount.toString().split('.')[0].convertWithComma()}",
                   style: TextStyle(
                     fontSize: 10,
                     fontFamily: AppStrings.fontNormal,
@@ -145,12 +145,14 @@ class _InvestmentHighYieldDollarAmountInputState
               RoundedNextButton(
                 loading: model.busy,
                 onTap: () async {
+                  print(amountController.text);
                   double amount =
                       double.tryParse(amountController.text.split(',').join());
                   if (amount == null) {
                     Flushbar(
                       icon: ImageIcon(
-                        AssetImage("images/failed.png"),
+                        AssetImage(
+                            "images/faCustomTextInputFormatter()iled.png"),
                         color: AppColors.kRed,
                         size: 70,
                       ),
@@ -176,7 +178,7 @@ class _InvestmentHighYieldDollarAmountInputState
                       ),
                       duration: Duration(seconds: 3),
                     ).show(context);
-                  } else if (amount < AppNums.oneMillionAmount) {
+                  } else if (amount < widget.minimumAmount) {
                     Flushbar(
                       icon: ImageIcon(
                         AssetImage("images/failed.png"),
@@ -196,7 +198,7 @@ class _InvestmentHighYieldDollarAmountInputState
                       ),
                       backgroundColor: AppColors.kRed3,
                       messageText: Text(
-                        "Minimum purchase amount is \$${StringUtils(widget.minimumAmount.toString()).convertWithComma()}",
+                        "Minimum purchase amount is \$${widget.minimumAmount.toString().split('.')[0].convertWithComma()}",
                         style: TextStyle(
                           fontSize: 11,
                           fontFamily: AppStrings.fontLight,
@@ -240,11 +242,8 @@ class _InvestmentHighYieldDollarAmountInputState
   }
 
   _onKeyboardTap(String value) {
-    // NumberFormat().format(double.tryParse(amountController.text));
     setState(() {
       amountController.text = amountController.text + value;
-      // amountController.text = NumberFormat("#,##0").format(double.tryParse(amountController.text));
-      // print(amountController.text);
     });
   }
 }

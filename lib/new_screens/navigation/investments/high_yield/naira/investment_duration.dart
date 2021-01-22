@@ -84,6 +84,23 @@ class _InvestmentDurationPeriodState extends State<InvestmentDurationPeriod> {
                 ),
               ),
             ),
+            YMargin(10),
+            YMargin(10),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 20.0),
+              child: Container(
+                width: 250,
+                child: Text(
+                  "Choose from the list a tenor that is best suited for your financial goals",
+                  style: TextStyle(
+                    fontSize: 11,
+                    fontWeight: FontWeight.w400,
+                    fontFamily: AppStrings.fontNormal,
+                    color: AppColors.kTextColor,
+                  ),
+                ),
+              ),
+            ),
             YMargin(15),
             instrument == null
                 ? Padding(
@@ -109,77 +126,82 @@ class _InvestmentDurationPeriodState extends State<InvestmentDurationPeriod> {
                         ),
                       )
                     : Expanded(
-                    child: ListView.builder(
-                      itemCount: instrument.length,
-                      itemBuilder: (context, index) => Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 20.0),
-                        child: InkWell(
-                          onTap: () {
-                            model.check();
-                            selectedIndex = index;
-                          },
-                          child: Container(
-                            height: 40,
-                            width: double.infinity,
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                Row(
+                        child: ListView.builder(
+                          itemCount: instrument.length,
+                          itemBuilder: (context, index) => Padding(
+                            padding:
+                                const EdgeInsets.symmetric(horizontal: 20.0),
+                            child: InkWell(
+                              onTap: () {
+                                model.check();
+                                selectedIndex = index;
+                              },
+                              child: Container(
+                                height: 40,
+                                width: double.infinity,
+                                child: Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
                                   children: [
-                                    Text(
-                                      instrument[index].instrumentName,
-                                      style: TextStyle(
-                                        fontSize: 13,
-                                        fontFamily: AppStrings.fontNormal,
-                                        color: AppColors.kTextColor,
-                                      ),
+                                    Row(
+                                      children: [
+                                        Text(
+                                          instrument[index].instrumentName,
+                                          style: TextStyle(
+                                            fontSize: 13,
+                                            fontFamily: AppStrings.fontNormal,
+                                            color: AppColors.kTextColor,
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                    Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.start,
+                                      children: [
+                                        Text(
+                                          "(${instrument[index].rate.toString()}%)",
+                                          style: TextStyle(
+                                            fontSize: 13,
+                                            fontFamily: AppStrings.fontNormal,
+                                            color: AppColors.kFixed,
+                                          ),
+                                        ),
+                                        XMargin(8),
+                                        AnimatedSwitcher(
+                                          duration: Duration(milliseconds: 600),
+                                          child:
+                                              model.select ? check : checkEmpty,
+                                        ),
+                                      ],
                                     ),
                                   ],
                                 ),
-                                Row(
-                                  mainAxisAlignment: MainAxisAlignment.start,
-                                  children: [
-                                    Text(
-                                      "(${instrument[index].rate.toString()}%)",
-                                      style: TextStyle(
-                                        fontSize: 13,
-                                        fontFamily: AppStrings.fontNormal,
-                                        color: AppColors.kFixed,
-                                      ),
-                                    ),
-                                    XMargin(8),
-                                    AnimatedSwitcher(
-                                      duration: Duration(milliseconds: 600),
-                                      child: model.select ? check : checkEmpty,
-                                    ),
-                                  ],
-                                ),
-                              ],
+                              ),
                             ),
                           ),
                         ),
                       ),
-                    ),
-                  ),
-                        instrument == null
+            instrument == null
                 ? SizedBox()
                 : instrument.length == 0
                     ? SizedBox()
                     : RoundedNextButton(onTap: () {
-              print(selectedIndex);
-              Navigator.push(
-                context,
-                HighYieldInvestmentPurchaseSource.route(
-                  amount: widget.amount,
-                  cards: model.cards,
-                  productId: instrument[selectedIndex].id,
-                  rate: instrument[selectedIndex].rate,
-                  maturityDate: instrument[selectedIndex].maturityDate,
-                  uniqueName: widget.uniqueName,
-                  duration: instrument[selectedIndex].maturityPeriod,
-                ),
-              );
-            }),
+                        print(selectedIndex);
+                        Navigator.push(
+                          context,
+                          HighYieldInvestmentPurchaseSource.route(
+                            amount: widget.amount,
+                            cards: model.cards,
+                            productId: instrument[selectedIndex].id,
+                            rate: instrument[selectedIndex].rate,
+                            maturityDate:
+                                instrument[selectedIndex].maturityDate,
+                            uniqueName: widget.uniqueName,
+                            duration: instrument[selectedIndex].maturityPeriod,
+                          ),
+                        );
+                      }),
           ],
         ),
       ),
