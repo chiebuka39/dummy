@@ -32,7 +32,7 @@ class _InvestmentTextFieldState extends State<InvestmentTextField> {
           borderRadius: BorderRadius.circular(10),
           color: AppColors.kTextBg,
         ),
-        height: screenHeight(context) / 12.5,
+        height: screenHeight(context) / 14,
         child: Center(
           child: TextFormField(
             inputFormatters: widget.formatters,
@@ -92,7 +92,7 @@ class _InvestmentTextFieldDollarState extends State<InvestmentTextFieldDollar> {
             controller: widget.controller,
             decoration: InputDecoration(
               border: UnderlineInputBorder(borderSide: BorderSide.none),
-              hintText: widget.hintText,
+              hintText:widget.hintText,
               hintStyle: TextStyle(
                 fontSize: 13,
                 fontFamily: AppStrings.fontLight,
@@ -103,5 +103,35 @@ class _InvestmentTextFieldDollarState extends State<InvestmentTextFieldDollar> {
         ),
       ),
     );
+  }
+}
+
+
+
+class CustomTextInputFormatter extends TextInputFormatter {
+  @override
+  TextEditingValue formatEditUpdate(
+      TextEditingValue oldValue, TextEditingValue newValue) {
+    if (newValue.text.length == 0) {
+      return newValue.copyWith(text: '');
+    } else if (newValue.text.compareTo(oldValue.text) != 0) {
+      int selectionIndexFromTheRight =
+          newValue.text.length - newValue.selection.extentOffset;
+      List<String> chars = newValue.text.replaceAll(' ', '').split('');
+      String newString = '';
+      for (int i = 0; i < chars.length; i++) {
+        if (i % 3 == 0 && i != 0) newString += ' ';
+        newString += chars[i];
+      }
+
+      return TextEditingValue(
+        text: newString,
+        selection: TextSelection.collapsed(
+          offset: newString.length - selectionIndexFromTheRight,
+        ),
+      );
+    } else {
+      return newValue;
+    }
   }
 }

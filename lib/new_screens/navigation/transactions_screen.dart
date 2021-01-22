@@ -371,20 +371,23 @@ class _PortfolioInvestmentWidgetState extends State<PortfolioInvestmentWidget> {
                             )),
                         Spacer(),
                         GestureDetector(
-                            onTap: () {
-                              setState(() {
-                                topUp = false;
-                              });
-                            },
-                            child: Text("Withdrawals",
-                                style: TextStyle(
-                                    color: topUp
-                                        ? AppColors.kTextColor
-                                        : AppColors.kPrimaryColor,
-                                    fontSize: 12,
-                                    fontFamily: topUp
-                                        ? AppStrings.fontNormal
-                                        : AppStrings.fontMedium))),
+                          onTap: () {
+                            setState(() {
+                              topUp = false;
+                            });
+                          },
+                          child: Text(
+                            "Withdrawals",
+                            style: TextStyle(
+                                color: topUp
+                                    ? AppColors.kTextColor
+                                    : AppColors.kPrimaryColor,
+                                fontSize: 12,
+                                fontFamily: topUp
+                                    ? AppStrings.fontNormal
+                                    : AppStrings.fontMedium),
+                          ),
+                        ),
                       ],
                     ),
                     AnimatedPositioned(

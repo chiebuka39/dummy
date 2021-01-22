@@ -717,6 +717,10 @@ class InvestmentItemWidget extends StatelessWidget {
   final String balance;
   final String annualReturns;
   final double topPadding;
+  final int transactionId;
+  final int instrumentId;
+  final bool isMatured;
+  final double withDrawableBalance;
   const InvestmentItemWidget({
     Key key,
     this.investmentName,
@@ -724,18 +728,27 @@ class InvestmentItemWidget extends StatelessWidget {
     this.balance,
     this.annualReturns,
     this.topPadding = 25.0,
+    this.transactionId,
+    this.instrumentId, this.isMatured, this.withDrawableBalance,
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () {
-        Navigator.push(context, InvestmentDetailsScreen.route(
-          investmentName: investmentName,
-          investmentType: investmentType,
-          balance: balance,
-          annualReturns: annualReturns
-        ));
+        Navigator.push(
+          context,
+          InvestmentDetailsScreen.route(
+            withDrawableBalance: withDrawableBalance,
+            isMatured: isMatured,
+            investmentName: investmentName,
+            investmentType: investmentType,
+            balance: balance,
+            annualReturns: annualReturns,
+            transactionId: transactionId,
+            instrumentId: instrumentId,
+          ),
+        );
       },
       child: Container(
         margin: EdgeInsets.only(top: topPadding),
@@ -1130,13 +1143,19 @@ Widget nairaPortfolio(BuildContext context) {
                             itemBuilder: (context, index) => Padding(
                               padding: const EdgeInsets.all(8.0),
                               child: InvestmentItemWidget(
+                                withDrawableBalance: model.nairaTransaction[index].withdrawableValue,
+                                isMatured:  model.nairaTransaction[index].isMatured,
+                                transactionId:
+                                    model.nairaTransaction[index].transactionId,
+                                instrumentId:
+                                    model.nairaTransaction[index].instrumentId,
                                 topPadding: 0,
                                 investmentName:
                                     model.nairaTransaction[index].uniqueName,
-                                investmentType: model.nairaTransaction[index]
-                                    .zimvestInstrumentName,
+                                investmentType: model
+                                    .nairaTransaction[index].instrumentName,
                                 balance:
-                                    "${AppStrings.nairaSymbol}${model.nairaTransaction[index].withdrawableValue.toString()}",
+                                    "${AppStrings.nairaSymbol}${model.nairaTransaction[index].withdrawableValue.toString() + "0"}",
                                 annualReturns:
                                     "${model.nairaTransaction[index].percentageInterest.toString()}",
                               ),

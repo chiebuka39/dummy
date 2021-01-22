@@ -82,6 +82,22 @@ class _InvestmentDurationPeriodState extends State<InvestmentDurationPeriod> {
                 ),
               ),
             ),
+            YMargin(10),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 20.0),
+              child: Container(
+                width: 250,
+                child: Text(
+                  "Choose from the list a tenor that is best suited for your financial goals",
+                  style: TextStyle(
+                    fontSize: 11,
+                    fontWeight: FontWeight.w400,
+                    fontFamily: AppStrings.fontNormal,
+                    color: AppColors.kTextColor,
+                  ),
+                ),
+              ),
+            ),
             YMargin(15),
             instrument == null
                 ? Padding(

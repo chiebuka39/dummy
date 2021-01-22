@@ -10,6 +10,7 @@ import 'package:zimvest/styles/colors.dart';
 import 'package:zimvest/utils/margin.dart';
 import 'package:zimvest/utils/strings.dart';
 import 'package:zimvest/widgets/buttons.dart';
+import 'package:zimvest/utils/app_utils.dart';
 import 'package:zimvest/widgets/number_keyboard.dart';
 
 class InvestmentHighYieldNairaAmountInput extends StatefulWidget {
@@ -93,7 +94,7 @@ class _InvestmentHighYieldNairaAmountInputState
               Padding(
                 padding: const EdgeInsets.only(left: 20.0, right: 20),
                 child: Text(
-                  "Minimum of ${AppStrings.nairaSymbol}${widget.minimumAmount}",
+                  "Minimum of ${AppStrings.nairaSymbol}${widget.minimumAmount.toString().split('.')[0].convertWithComma()}",
                   style: TextStyle(
                     fontSize: 10,
                     fontFamily: AppStrings.fontNormal,
@@ -156,7 +157,7 @@ class _InvestmentHighYieldNairaAmountInputState
                       ),
                       backgroundColor: AppColors.kRed3,
                       messageText: Text(
-                        "Minimum purchase amount is ${AppStrings.nairaSymbol}${widget.minimumAmount}",
+                        "Minimum purchase amount is ${AppStrings.nairaSymbol}${widget.minimumAmount.toString().split('.')[0].convertWithComma()}",
                         style: TextStyle(
                           fontSize: 11,
                           fontFamily: AppStrings.fontLight,

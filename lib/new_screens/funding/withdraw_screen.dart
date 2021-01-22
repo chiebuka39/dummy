@@ -3,22 +3,33 @@ import 'package:flutter/services.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:provider_architecture/_viewmodel_provider.dart';
 import 'package:zimvest/data/view_models/base_model.dart';
-import 'package:zimvest/new_screens/funding/select_bank_account.dart';
-import 'package:zimvest/new_screens/withdrawals/choose_wealth_withdraw_source.dart';
-
-import 'package:zimvest/payment/input_formaters.dart';
+import 'package:zimvest/new_screens/navigation/wealth/liquidat_asset/initial_review.dart';
 import 'package:zimvest/styles/colors.dart';
 import 'package:zimvest/utils/margin.dart';
 import 'package:zimvest/utils/strings.dart';
 import 'package:zimvest/widgets/new/new_widgets.dart';
 
 class WithdrawWealthScreen extends StatefulWidget {
+  final String name;
+  final double withDrawable;
+  final int transactionId;
+  final int instrumentId;
   const WithdrawWealthScreen({
     Key key,
+    this.name,
+    this.withDrawable,
+    this.transactionId,
+    this.instrumentId,
   }) : super(key: key);
-  static Route<dynamic> route() {
+  static Route<dynamic> route(
+      {String name, double withDrawable, int transactionId, int instrumentId}) {
     return MaterialPageRoute(
-        builder: (_) => WithdrawWealthScreen(),
+        builder: (_) => WithdrawWealthScreen(
+              name: name,
+              withDrawable: withDrawable,
+              transactionId: transactionId,
+              instrumentId: instrumentId,
+            ),
         settings: RouteSettings(name: WithdrawWealthScreen().toStringShort()));
   }
 
@@ -73,8 +84,17 @@ class _WithdrawWealthScreenState extends State<WithdrawWealthScreen> {
               YMargin(52),
               GestureDetector(
                 onTap: () {
-                  Navigator.push(context,
-                      SelectBankAccount.route(banks: model.banks.data));
+                  Navigator.push(
+                    context,
+                    InitialReviewScreen.route(
+                      name: widget.name,
+                      withDrawable: widget.withDrawable,
+                      transactionId: widget.transactionId,
+                      instrumentId: widget.instrumentId,
+                      isBank: true,
+                      banks: model.banks.data,
+                    ),
+                  );
                 },
                 child: Container(
                   padding: EdgeInsets.symmetric(horizontal: 20),
@@ -104,7 +124,20 @@ class _WithdrawWealthScreenState extends State<WithdrawWealthScreen> {
                 ),
               ),
               YMargin(25),
-              SelectWallet(onPressed: null),
+              SelectWallet(
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    InitialReviewScreen.route(
+                      name: widget.name,
+                      withDrawable: widget.withDrawable,
+                      transactionId: widget.transactionId,
+                      instrumentId: widget.instrumentId,
+                      isBank: false
+                    ),
+                  );
+                },
+              ),
             ],
           ),
         ),

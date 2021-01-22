@@ -295,7 +295,8 @@ class _InvestmentSummaryScreenDollarState
               AnimatedPositioned(
                 duration: Duration(milliseconds: 500),
                 top: slideUp ? -(MediaQuery.of(context).size.height - 200) : 0,
-                left: 0, right: 0,
+                left: 0,
+                right: 0,
                 child: Container(
                   width: double.infinity,
                   height: MediaQuery.of(context).size.height - 200,
@@ -445,7 +446,7 @@ class _InvestmentSummaryScreenDollarState
                                             ),
                                           ),
                                           Text(
-                                            "${AppStrings.nairaSymbol}${widget.amount}",
+                                            "${AppStrings.nairaSymbol}${StringUtils(widget.minimumAmount.toString()).convertWithComma()}",
                                             style: TextStyle(
                                               fontSize: 11,
                                               fontFamily: AppStrings.fontBold,
@@ -534,15 +535,13 @@ class _InvestmentSummaryScreenDollarState
                 left: 0,
                 right: 0,
                 child: GestureDetector(
-                  onPanUpdate: (details) {
-                    if (details.delta.dy == -0.5 || details.delta.dy == -1.0 || details.delta.dy == -1.5 || details.delta.dy == -2.0) {
-                      startAnim();
-                      model.buyDollarInstrument(
-                          amount: widget.amount,
-                          productId: widget.productId,
-                          uniqueName: widget.uniqueName,
-                          fundingChannel: widget.channelId);
-                    }
+                  onVerticalDragStart: (details) {
+                    startAnim();
+                    model.buyDollarInstrument(
+                        amount: widget.amount,
+                        productId: widget.productId,
+                        uniqueName: widget.uniqueName,
+                        fundingChannel: widget.channelId);
                   },
                   // onVerticalDragStart: (details) {
                   //   print("dff ${details.toString()}");

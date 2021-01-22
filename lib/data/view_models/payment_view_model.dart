@@ -9,8 +9,7 @@ import 'package:zimvest/data/services/payment_service.dart';
 import 'package:zimvest/locator.dart';
 import 'package:zimvest/utils/result.dart';
 
-abstract class ABSPaymentViewModel extends ChangeNotifier{
-
+abstract class ABSPaymentViewModel extends ChangeNotifier {
   PaymentCard _selectedCard;
   Bank _selectedBank;
   PaymentCard get selectedCard => _selectedCard;
@@ -20,6 +19,16 @@ abstract class ABSPaymentViewModel extends ChangeNotifier{
   List<PaymentCard> _userCards = [];
   List<Bank> get userBanks => _userBanks;
   List<PaymentCard> get userCards => _userCards;
+  String _investmentName;
+  String get investmentName => _investmentName;
+  double _withdrawableAmount;
+  double get withdrawableAmount => _withdrawableAmount;
+  int _transactionId;
+  int get transactionId => _transactionId;
+  int _instrumentId;
+  int get instrumentId => _instrumentId;
+  int _amountAvailable;
+  int get amountAvailable => _amountAvailable;
 
   List<Wallet> _wallet;
   List<Wallet> get wallet => _wallet;
@@ -31,84 +40,101 @@ abstract class ABSPaymentViewModel extends ChangeNotifier{
   set selectedCard(PaymentCard value);
   set selectedBank(Bank value);
   set userCards(List<PaymentCard> value);
+  set investmentName(String value);
+  set withdrawableAmount(double value);
+  set transactionId(int value);
+  set instrumentId(int value);
+  set availableAmount(int value);
 
   Future<Result<List<Bank>>> getBanks(String token);
-  Future<Result<List<String>>> validateBank({String token, int customerId,
-    String accountNum, String bankCode});
+  Future<Result<List<String>>> validateBank(
+      {String token, int customerId, String accountNum, String bankCode});
   Future<Result<List<Bank>>> getCustomerBank(String token);
   Future<Result<List<PaymentCard>>> getUserCards(String token);
   Future<Result<List<Wallet>>> getWallet(String token);
   Future<Result<List<WalletTransaction>>> getWalletTransactions(String token);
   Future<Result<Bank>> addBank(
       {String token,
-        int bankId,
-        String bankName,
-        String accountName,
-        String accountNum});
+      int bankId,
+      String bankName,
+      String accountName,
+      String accountNum});
   Future<Result<void>> deleteBank(String token, int bankId);
-  Future<Result<Bank>> addCard({String token, String cardNumber,
-    String expiryDate, String cvv, String pin});
+  Future<Result<Bank>> addCard(
+      {String token,
+      String cardNumber,
+      String expiryDate,
+      String cvv,
+      String pin});
   Future<Result<CardPayload>> registerNewCard(String token);
   Future<Result<void>> paymentConfirmation(String token, String trnasactionRef);
-
 }
 
-class PaymentViewModel extends ABSPaymentViewModel{
+class PaymentViewModel extends ABSPaymentViewModel {
   ABSPaymentService _paymentService = locator<ABSPaymentService>();
 
-  set userBanks(List<Bank> value){
+  set userBanks(List<Bank> value) {
     _userBanks = value;
     notifyListeners();
   }
 
-  set selectedCard(PaymentCard value){
+  set selectedCard(PaymentCard value) {
     _selectedCard = value;
     notifyListeners();
   }
 
-  set selectedBank(Bank value){
+  set selectedBank(Bank value) {
     _selectedBank = value;
     notifyListeners();
   }
 
-  set walletTransaction(List<WalletTransaction> value){
+  set walletTransaction(List<WalletTransaction> value) {
     _walletTransactions = value;
     notifyListeners();
   }
 
-  set userCards(List<PaymentCard> value){
+  set userCards(List<PaymentCard> value) {
     _userCards = value;
     notifyListeners();
   }
 
-  set wallet(List<Wallet> value){
+  set wallet(List<Wallet> value) {
     _wallet = value;
     notifyListeners();
   }
 
-
   @override
-  Future<Result<List<Bank>>> getBanks(String token)async {
-     var result =await _paymentService.getBanks(token);
+  Future<Result<List<Bank>>> getBanks(String token) async {
+    var result = await _paymentService.getBanks(token);
 
-     return result;
+    return result;
   }
 
   @override
-  Future<Result<List<String>>> validateBank({String token, int customerId,
-    String accountNum, String bankCode}) {
-    return _paymentService.validateBank(token: token,customerId: customerId,
-        accountNum: accountNum,bankCode: bankCode);
+  Future<Result<List<String>>> validateBank(
+      {String token, int customerId, String accountNum, String bankCode}) {
+    return _paymentService.validateBank(
+        token: token,
+        customerId: customerId,
+        accountNum: accountNum,
+        bankCode: bankCode);
   }
 
   @override
-  Future<Result<Bank>> addBank({String token, int bankId, String bankName,
-    String accountName, String accountNum}) async{
+  Future<Result<Bank>> addBank(
+      {String token,
+      int bankId,
+      String bankName,
+      String accountName,
+      String accountNum}) async {
+    var result = await _paymentService.addBank(
+        token: token,
+        bankName: bankName,
+        accountNum: accountNum,
+        bankId: bankId,
+        accountName: accountName);
 
-    var result = await _paymentService.addBank(token: token,bankName: bankName,
-        accountNum: accountNum,bankId: bankId, accountName: accountName);
-
-    if(result.error == false){
+    if (result.error == false) {
       List<Bank> banks = userBanks;
       banks.add(result.data);
       userBanks = banks;
@@ -117,19 +143,19 @@ class PaymentViewModel extends ABSPaymentViewModel{
   }
 
   @override
-  Future<Result<List<Bank>>> getCustomerBank(String token)async {
+  Future<Result<List<Bank>>> getCustomerBank(String token) async {
     var result = await _paymentService.getCustomerBank(token);
-    if(result.error == false){
+    if (result.error == false) {
       userBanks = result.data;
     }
     return result;
   }
 
   @override
-  Future<Result<void>> deleteBank(String token, int bankId)async {
-    var result =  await _paymentService.deleteBank(token,bankId);
+  Future<Result<void>> deleteBank(String token, int bankId) async {
+    var result = await _paymentService.deleteBank(token, bankId);
 
-    if(result.error == false){
+    if (result.error == false) {
       List<Bank> banks = userBanks;
       banks.removeWhere((element) => element.id == bankId);
       userBanks = banks;
@@ -138,27 +164,32 @@ class PaymentViewModel extends ABSPaymentViewModel{
   }
 
   @override
-  Future<Result<List<PaymentCard>>> getUserCards(String token)async {
-    var result =  await _paymentService.getUserCards(token);
+  Future<Result<List<PaymentCard>>> getUserCards(String token) async {
+    var result = await _paymentService.getUserCards(token);
 
-    if(result.error == false){
+    if (result.error == false) {
       userCards = result.data;
     }
     return result;
   }
 
   @override
-  Future<Result<List<Wallet>>> getWallet(String token) async{
-    var result =  await _paymentService.getWallet(token);
+  Future<Result<List<Wallet>>> getWallet(String token) async {
+    var result = await _paymentService.getWallet(token);
 
-    if(result.error == false){
+    if (result.error == false) {
       wallet = result.data;
     }
     return result;
   }
 
   @override
-  Future<Result<Bank>> addCard({String token, String cardNumber, String expiryDate, String cvv, String pin}) {
+  Future<Result<Bank>> addCard(
+      {String token,
+      String cardNumber,
+      String expiryDate,
+      String cvv,
+      String pin}) {
     // TODO: implement addCard
     throw UnimplementedError();
   }
@@ -169,18 +200,49 @@ class PaymentViewModel extends ABSPaymentViewModel{
   }
 
   @override
-  Future<Result<List<WalletTransaction>>> getWalletTransactions(String token) async{
-    var result =  await _paymentService.getWalletTransactions(token);
+  Future<Result<List<WalletTransaction>>> getWalletTransactions(
+      String token) async {
+    var result = await _paymentService.getWalletTransactions(token);
 
-    if(result.error == false){
+    if (result.error == false) {
       walletTransaction = result.data;
     }
     return result;
   }
 
   @override
-  Future<Result<void>> paymentConfirmation(String token, String trnasactionRef) {
+  Future<Result<void>> paymentConfirmation(
+      String token, String trnasactionRef) {
     return _paymentService.paymentConfirmation(token, trnasactionRef);
   }
 
+  @override
+  set instrumentId(int value) {
+    _instrumentId = value;
+    notifyListeners();
+  }
+
+  @override
+  set investmentName(String value) {
+    _investmentName = value;
+    notifyListeners();
+  }
+
+  @override
+  set transactionId(int value) {
+    _transactionId = value;
+    notifyListeners();
+  }
+
+  @override
+  set withdrawableAmount(double value) {
+    _withdrawableAmount = value;
+    notifyListeners();
+  }
+
+  @override
+  set availableAmount(int value) {
+    _amountAvailable = value;
+    notifyListeners();
+  }
 }

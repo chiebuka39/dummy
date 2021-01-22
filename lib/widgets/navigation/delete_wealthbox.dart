@@ -11,6 +11,7 @@ import 'package:zimvest/data/view_models/savings_view_model.dart';
 import 'package:zimvest/locator.dart';
 import 'package:zimvest/new_screens/account/login_screen.dart';
 import 'package:zimvest/new_screens/funding/top_up_successful.dart';
+import 'package:zimvest/new_screens/funding/withdraw_screen.dart';
 import 'package:zimvest/new_screens/tabs.dart';
 import 'package:zimvest/styles/colors.dart';
 import 'package:zimvest/utils/margin.dart';

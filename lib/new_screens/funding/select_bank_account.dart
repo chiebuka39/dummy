@@ -14,12 +14,39 @@ import 'package:zimvest/utils/strings.dart';
 import 'package:zimvest/widgets/buttons.dart';
 
 class SelectBankAccount extends StatefulWidget {
+  final String name;
+  final double withDrawable;
+  final int transactionId;
+  final int instrumentId;
+  final bool isLiquidate;
   final List<Bank> banks;
 
-  const SelectBankAccount({Key key, this.banks}) : super(key: key);
-  static Route<dynamic> route({List<Bank> banks}) {
+  const SelectBankAccount(
+      {Key key,
+      this.banks,
+      this.name,
+      this.withDrawable,
+      this.transactionId,
+      this.instrumentId,
+      this.isLiquidate})
+      : super(key: key);
+  static Route<dynamic> route({
+    List<Bank> banks,
+    String name,
+    double withDrawable,
+    int transactionId,
+    int instrumentId,
+    bool isLiquidate
+  }) {
     return MaterialPageRoute(
-        builder: (_) => SelectBankAccount(banks: banks),
+        builder: (_) => SelectBankAccount(
+              banks: banks,
+              name: name,
+              withDrawable: withDrawable,
+              transactionId: transactionId,
+              instrumentId: instrumentId,
+              isLiquidate: isLiquidate,
+            ),
         settings: RouteSettings(name: SelectBankAccount().toStringShort()));
   }
 
@@ -68,6 +95,7 @@ class _SelectBankAccountState extends State<SelectBankAccount> {
                 itemCount: paymentViewModel.userBanks == null ? 0 :paymentViewModel.userBanks .length,
                 itemBuilder: (context, index) => BankItemWidget(
                   bank: paymentViewModel.userBanks[index],
+                  isLiquidate: widget.isLiquidate,
                 ),
               ),
             ),
@@ -91,18 +119,23 @@ class _SelectBankAccountState extends State<SelectBankAccount> {
 class BankItemWidget extends StatelessWidget {
   const BankItemWidget({
     Key key,
-    this.bank,
+    this.bank, this.isLiquidate,
   }) : super(key: key);
 
   final Bank bank;
-
+  final bool isLiquidate;
   @override
   Widget build(BuildContext context) {
     ABSPaymentViewModel paymentViewModel = Provider.of(context);
     return GestureDetector(
       onTap: () {
         paymentViewModel.selectedBank = bank;
-        Navigator.push(context, ReviewBankTransfer.route());
+        if(isLiquidate){
+          Navigator.push(context, ReviewBankTransferLiquidation.route());
+        }
+        else{
+          Navigator.push(context, ReviewBankTransfer.route());
+        }
       },
       child: Container(
         padding: EdgeInsets.symmetric(horizontal: 20),

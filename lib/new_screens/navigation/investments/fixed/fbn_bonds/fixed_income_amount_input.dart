@@ -11,6 +11,7 @@ import 'package:zimvest/utils/margin.dart';
 import 'package:zimvest/utils/strings.dart';
 import 'package:zimvest/widgets/buttons.dart';
 import 'package:zimvest/widgets/number_keyboard.dart';
+import 'package:zimvest/utils/app_utils.dart';
 
 class FixedIncomeAmountInput extends StatefulWidget {
   final String uniqueName;
@@ -120,7 +121,7 @@ class _FixedIncomeAmountInputState extends State<FixedIncomeAmountInput> {
               Padding(
                 padding: const EdgeInsets.only(left: 20.0, right: 76),
                 child: Text(
-                  "How much do you want to invest",
+                  "Minimum of ${AppStrings.nairaSymbol}${StringUtils(widget.minimumAmount.toString()).convertWithComma()}",
                   style: TextStyle(
                     fontSize: 12,
                     fontFamily: AppStrings.fontBold,
@@ -153,7 +154,7 @@ class _FixedIncomeAmountInputState extends State<FixedIncomeAmountInput> {
                       ),
                       backgroundColor: AppColors.kRed3,
                       messageText: Text(
-                        "Minimum purchase amount is ₦${widget.minimumAmount}",
+                        "Minimum purchase amount is ₦${StringUtils(widget.minimumAmount.toString()).convertWithComma()}",
                         style: TextStyle(
                           fontSize: 11,
                           fontFamily: AppStrings.fontLight,

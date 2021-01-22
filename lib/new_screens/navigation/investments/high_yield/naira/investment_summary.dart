@@ -177,11 +177,13 @@ class _InvestmentSummaryScreenNairaState
                                             ? value.get(AniProps.opacity1)
                                             : 0.0,
                                         child: Padding(
-                                          padding: const EdgeInsets.symmetric(horizontal: 20.0),
+                                          padding: const EdgeInsets.symmetric(
+                                              horizontal: 20.0),
                                           child: Text(
                                             "You Have Successfully Invested In Zimvest High Yield Naira",
                                             textAlign: TextAlign.center,
-                                            style: TextStyle(color: Colors.white),
+                                            style:
+                                                TextStyle(color: Colors.white),
                                           ),
                                         ),
                                       ),
@@ -286,15 +288,14 @@ class _InvestmentSummaryScreenNairaState
                                                     : 0.0,
                                                 child: PrimaryButtonNew(
                                                   onTap: () {
-                                                    model.buyNairaInstrument(
-                                                    cardId: paymentViewModel.selectedCard?.id??null,
-                                                        amount: widget.amount,
-                                                        productId:
-                                                            widget.productId,
-                                                        uniqueName:
-                                                            widget.uniqueName,
-                                                        fundingChannel:
-                                                            widget.channelId);
+                                                    Navigator.pushAndRemoveUntil(
+                                                        context,
+                                                        MaterialPageRoute(
+                                                            builder: (context) =>
+                                                                TabsContainer()),
+                                                        (Route<dynamic>
+                                                                route) =>
+                                                            false);
                                                   },
                                                   textColor: Colors.white,
                                                   title: "Retry",
@@ -409,7 +410,7 @@ class _InvestmentSummaryScreenNairaState
                                             ),
                                           ),
                                           Text(
-                                            "${AppStrings.nairaSymbol}${widget.amount}",
+                                            "${AppStrings.nairaSymbol}${widget.minimumAmount.toString().split('.')[0].convertWithComma()}",
                                             style: TextStyle(
                                               fontSize: 11,
                                               fontFamily: AppStrings.fontBold,
@@ -556,7 +557,7 @@ class _InvestmentSummaryScreenNairaState
                                             ),
                                           ),
                                           Text(
-                                            "${AppStrings.nairaSymbol}${widget.amount}",
+                                            "${AppStrings.nairaSymbol}${StringUtils(widget.minimumAmount.toString()).convertWithComma()}",
                                             style: TextStyle(
                                               fontSize: 11,
                                               fontFamily: AppStrings.fontBold,
@@ -586,19 +587,14 @@ class _InvestmentSummaryScreenNairaState
                 left: 0,
                 right: 0,
                 child: GestureDetector(
-                  onPanUpdate: (details) {
-                    if (details.delta.dy == -0.5 ||
-                        details.delta.dy == -1.0 ||
-                        details.delta.dy == -1.5 ||
-                        details.delta.dy == -2.0) {
-                      startAnim();
-                      model.buyNairaInstrument(
-                        cardId: paymentViewModel.selectedCard?.id??null,
-                          amount: widget.amount,
-                          productId: widget.productId,
-                          uniqueName: widget.uniqueName,
-                          fundingChannel: widget.channelId);
-                    }
+                  onVerticalDragStart: (details) {
+                    startAnim();
+                    model.buyNairaInstrument(
+                        cardId: paymentViewModel.selectedCard?.id ?? null,
+                        amount: widget.amount,
+                        productId: widget.productId,
+                        uniqueName: widget.uniqueName,
+                        fundingChannel: widget.channelId);
                   },
                   // onVerticalDragStart: (details) {
                   //   print("dff ${details.toString()}");
