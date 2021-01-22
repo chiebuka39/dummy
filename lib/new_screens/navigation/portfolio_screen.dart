@@ -715,6 +715,7 @@ class InvestmentItemWidget extends StatelessWidget {
   final String investmentName;
   final String investmentType;
   final String balance;
+  final String symbol;
   final String annualReturns;
   final double topPadding;
   final int transactionId;
@@ -729,7 +730,7 @@ class InvestmentItemWidget extends StatelessWidget {
     this.annualReturns,
     this.topPadding = 25.0,
     this.transactionId,
-    this.instrumentId, this.isMatured, this.withDrawableBalance,
+    this.instrumentId, this.isMatured, this.withDrawableBalance, this.symbol,
   }) : super(key: key);
 
   @override
@@ -788,12 +789,17 @@ class InvestmentItemWidget extends StatelessWidget {
                           color: AppColors.kTextColor),
                     ),
                     YMargin(8),
-                    Text(
-                      balance,
-                      style: TextStyle(
-                          fontSize: 11,
-                          fontFamily: AppStrings.fontMedium,
-                          color: AppColors.kTextColor),
+                    Row(
+                      children: [
+                        Text(symbol,style: TextStyle(fontSize: 10),),
+                        Text(
+                          balance.split(".").first.convertWithComma(),
+                          style: TextStyle(
+                              fontSize: 11,
+                              fontFamily: AppStrings.fontMedium,
+                              color: AppColors.kTextColor),
+                        ),
+                      ],
                     ),
                   ],
                 ),
@@ -1006,8 +1012,9 @@ Widget dollarPortfolio(BuildContext context) {
                                     model.dollarTransaction[index].uniqueName,
                                 investmentType: model.dollarTransaction[index]
                                     .zimvestInstrumentName,
+                                symbol: AppStrings.dollarSymbol,
                                 balance:
-                                    "${AppStrings.dollarSymbol}${model.dollarTransaction[index].withdrawableValue.toString()}",
+                                    "${model.dollarTransaction[index].withdrawableValue.toString()}",
                                 annualReturns:
                                     "${model.dollarTransaction[index].percentageInterest.toString()}",
                               ),
@@ -1154,8 +1161,9 @@ Widget nairaPortfolio(BuildContext context) {
                                     model.nairaTransaction[index].uniqueName,
                                 investmentType: model
                                     .nairaTransaction[index].instrumentName,
+                                symbol: AppStrings.nairaSymbol,
                                 balance:
-                                    "${AppStrings.nairaSymbol}${model.nairaTransaction[index].withdrawableValue.toString() + "0"}",
+                                    "${model.nairaTransaction[index].withdrawableValue.toString() + "0"}",
                                 annualReturns:
                                     "${model.nairaTransaction[index].percentageInterest.toString()}",
                               ),

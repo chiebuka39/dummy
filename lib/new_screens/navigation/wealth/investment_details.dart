@@ -14,6 +14,7 @@ import 'package:zimvest/utils/margin.dart';
 import 'package:zimvest/utils/margins.dart';
 import 'package:zimvest/utils/app_utils.dart';
 import 'package:zimvest/utils/strings.dart';
+import 'package:zimvest/widgets/buttons.dart';
 import 'package:zimvest/widgets/navigation/delete_wealthbox.dart';
 import 'package:zimvest/widgets/navigation/wealth_activites.dart';
 import 'package:zimvest/widgets/navigation/wealth_more.dart';
@@ -210,8 +211,9 @@ class _InvestmentDetailsScreenState extends State<InvestmentDetailsScreen> {
                                       child: Row(
                                         children: [
                                           Icon(Icons.arrow_drop_up_outlined),
+                                          Text(AppStrings.nairaSymbol, style: TextStyle(fontSize: 10,color: AppColors.kWealthDark, fontWeight: FontWeight.bold),),
                                           Text(
-                                            "${AppStrings.nairaSymbol}2,000",
+                                            "2,000",
                                             style: TextStyle(
                                                 fontFamily:
                                                     AppStrings.fontMedium,
@@ -798,5 +800,101 @@ class _InvestmentDetailsScreenState extends State<InvestmentDetailsScreen> {
               ),
             ),
           );
+  }
+}
+
+class ConfirmAssetLiquidation extends StatelessWidget {
+  const ConfirmAssetLiquidation({
+    Key key,
+    this.name,
+    this.withDrawable,
+    this.transactionId,
+    this.instrumentId,
+  }) : super(key: key);
+  final String name;
+  final double withDrawable;
+  final int transactionId;
+  final int instrumentId;
+  @override
+  Widget build(BuildContext context) {
+    final buttonWidth = (MediaQuery.of(context).size.width - 110) / 2;
+    return Container(
+      height: 320,
+      decoration: BoxDecoration(
+        color: Colors.transparent,
+      ),
+      child: Column(
+        children: [
+          YMargin(10),
+          Center(
+            child: Container(
+              width: 30,
+              height: 5,
+              decoration: BoxDecoration(
+                  color: Colors.white, borderRadius: BorderRadius.circular(5)),
+            ),
+          ),
+          YMargin(20),
+          Expanded(
+              child: Container(
+                width: double.infinity,
+                margin: EdgeInsets.symmetric(horizontal: 20),
+                padding: EdgeInsets.symmetric(horizontal: 25),
+                decoration: BoxDecoration(
+                    color: Colors.white, borderRadius: BorderRadius.circular(25)),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    YMargin(20),
+                    Text(
+                      "Liquidate $name",
+                      style:
+                      TextStyle(fontSize: 15, fontFamily: AppStrings.fontBold),
+                    ),
+                    YMargin(25),
+                    Text(
+                      "You would be charged 15% of your accrued interest for liquidating before investment maturity, 10% WHT Applies Would you like to proceed ?",
+                      style: TextStyle(
+                          fontSize: 11, height: 1.6, color: AppColors.kGreyText),
+                    ),
+                    YMargin(45),
+                    Row(
+                      children: [
+                        PrimaryButtonNew(
+                          textColor: AppColors.kPrimaryColor,
+                          bg: AppColors.kPrimaryColorLight,
+                          width: buttonWidth,
+                          title: "No",
+                          onTap: () async {
+                            Navigator.of(context).pop();
+                          },
+                        ),
+                        XMargin(
+                          20,
+                        ),
+                        PrimaryButtonNew(
+                          onTap: () {
+                            Navigator.of(context).push(
+                              WithdrawWealthScreen.route(
+                                  name: name,
+                                  withDrawable: withDrawable,
+                                  transactionId: transactionId,
+                                  instrumentId: instrumentId),
+                            );
+                          },
+                          textColor: AppColors.kWhite,
+                          bg: AppColors.kPrimaryColor,
+                          width: buttonWidth,
+                          title: "Yes",
+                        )
+                      ],
+                    )
+                  ],
+                ),
+              )),
+          YMargin(30)
+        ],
+      ),
+    );
   }
 }

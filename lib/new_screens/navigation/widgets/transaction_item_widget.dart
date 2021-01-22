@@ -22,7 +22,7 @@ class TransactionItemWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () {
-        //Navigator.push(context, InvestmentDetailsScreen.route());
+        // Navigator.push(context, InvestmentDetailsScreen.route());
       },
       child: Container(
         margin: EdgeInsets.only(top: 25),

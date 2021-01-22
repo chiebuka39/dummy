@@ -72,8 +72,8 @@ dependencies:
   connectivity: ^2.0.2
   flutter_statusbar_manager: ^2.0.0
   pin_code_fields: ^6.1.0
-  # firebase_analytics: ^6.3.0
-  # firebase_messaging: ^7.0.3
+  firebase_analytics: ^6.3.0
+  firebase_messaging: ^7.0.3
 
 
 
