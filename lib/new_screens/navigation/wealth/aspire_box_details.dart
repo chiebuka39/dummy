@@ -184,7 +184,8 @@ class _AspireDetailsScreenState extends State<AspireDetailsScreen> with
                                 radius: 70.0,
                                 lineWidth: 7.0,
                                 animation: true,
-                                percent:( double.parse(widget.goal.successRate.replaceAll("%", ""))/100) > 1 ? 0.5:
+                                backgroundColor: AppColors.kPrimaryColor.withOpacity(0.2),
+                                percent:( double.parse(widget.goal.successRate.replaceAll("%", ""))/100) > 1 ? 1.0:
                                 ( double.parse(widget.goal.successRate.replaceAll("%", ""))/100),
                                 center: new Text(
                                   "${widget.goal.successRate}",
@@ -322,14 +323,15 @@ class _AspireDetailsScreenState extends State<AspireDetailsScreen> with
                             fontFamily: AppStrings.fontMedium, color: AppColors.kGreyText),),
                         transactionsLoading ? CupertinoActivityIndicator():SizedBox(),
                         Spacer(),
-                        GestureDetector(
+                        transactions == null ? SizedBox(): transactions.length < 4 ?
+                        SizedBox():GestureDetector(
                           onTap: (){
                             showModalBottomSheet < Null > (context: context, builder: (BuildContext context) {
                               return WealthBoxActivities(transactions: transactions,);
                             },isScrollControlled: true);
                           },
                           child: Text("See all", style: TextStyle(fontSize: 11,
-                              fontFamily: AppStrings.fontMedium, color: AppColors.kGreyText)),
+                              fontFamily: AppStrings.fontMedium, color: AppColors.kPrimaryColor)),
                         )
                       ],),
                     ),

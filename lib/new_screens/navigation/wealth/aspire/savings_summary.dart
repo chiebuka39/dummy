@@ -60,14 +60,27 @@ class _SavingsSummaryScreenState extends State<SavingsSummaryScreen> {
     super.initState();
   }
 
-  void startAnim()async{
+  void startAnim(BuildContext buildContext)async{
 
     setState(() {
       slideUp = true;
       loading = true;
     });
 
-    await makeRemoteCall();
+    showModalBottomSheet<Null>(
+        context: buildContext,
+        builder: (BuildContext context) {
+          return TermsAndConditionsbox(
+            onTapNo: (){
+              Navigator.pop(context);
+              Navigator.pop(context);
+            },onTapYes: ()async{
+            Navigator.pop(context);
+            await makeRemoteCall();
+          },
+          );
+        },
+        isScrollControlled: true);
 
 
 
@@ -368,7 +381,7 @@ class _SavingsSummaryScreenState extends State<SavingsSummaryScreen> {
                 },
                 onVerticalDragStart: (details){
                   print("dff ${details.toString()}");
-                  startAnim();
+                  startAnim(context);
                 },
                 child: Container(
                   height: 60,

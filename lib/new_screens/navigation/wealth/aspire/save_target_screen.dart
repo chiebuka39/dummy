@@ -45,6 +45,7 @@ class _SavingsTargetScreenState extends State<SavingsTargetScreen> {
           showCancel: true,
           callback: (){
           Navigator.pop(context);
+          pinViewModel.resetAmount();
         },icon: Icons.arrow_back_ios_outlined,text: "Create Zimvest Aspire",),
         body: GestureDetector(
           onTap: (){

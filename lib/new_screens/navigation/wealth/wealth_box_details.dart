@@ -292,10 +292,10 @@ class _WealthBoxDetailsScreenState extends State<WealthBoxDetailsScreen> with Af
                             Text("Activities", style: TextStyle(fontSize: 14,
                                 fontFamily: AppStrings.fontMedium, color: AppColors.kGreyText),),
                             Spacer(),
-                            GestureDetector(
+                            transactions == null ? SizedBox() : transactions.length < 4?SizedBox(): GestureDetector(
                               onTap: (){
                                 showModalBottomSheet < Null > (context: context, builder: (BuildContext context) {
-                                  return WealthBoxActivities(transactions:savingViewModel.savingsTransactions[savingsPlanModel.productId],);
+                                  return WealthBoxActivities(transactions:transactions,);
                                 },isScrollControlled: true);
                               },
                               child: Text("See all", style: TextStyle(fontSize: 11,

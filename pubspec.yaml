@@ -96,7 +96,7 @@ dev_dependencies:
 
 flutter_native_splash:
   color: "#010833"  # required parameter
-  image: images/new/zim.png  # optional parameter
+  image: images/splash.png  # optional parameter
 
 flutter_icons:
   android: "launcher_icon"
