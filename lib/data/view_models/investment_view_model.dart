@@ -391,7 +391,6 @@ class InvestmentHighYieldViewModel extends ChangeNotifier {
     final dollar = await _investmentService.getDollarTermInstrumentsFilter(
         token: token, amountFilter: number);
     this.dollarInstrument = dollar;
-    print(this.dollarInstrument);
     setBusy(false);
     notifyListeners();
   }

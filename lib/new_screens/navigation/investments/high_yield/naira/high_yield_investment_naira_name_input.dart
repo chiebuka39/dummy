@@ -5,11 +5,13 @@ import 'package:flutter/material.dart';
 import 'package:provider_architecture/_viewmodel_provider.dart';
 import 'package:zimvest/data/view_models/investment_view_model.dart';
 import 'package:zimvest/new_screens/navigation/investments/widgets/text_field.dart';
+import 'package:zimvest/new_screens/navigation/investments/widgets/util_widgt.dart';
 import 'package:zimvest/styles/colors.dart';
 import 'package:zimvest/utils/margin.dart';
 import 'package:zimvest/utils/strings.dart';
 import 'package:zimvest/widgets/buttons.dart';
 
+import '../../../../tabs.dart';
 import 'high_yield_investment_naira_amount_input.dart';
 
 class HighYieldInvestmentNairaUniqueName extends StatefulWidget {
@@ -36,25 +38,8 @@ class _HighYieldInvestmentNairaUniqueNameState
       viewModelBuilder: () => InvestmentHighYieldViewModel(),
       onModelReady: (model) => model.getNairaTermInstruments(),
       builder: (context, model, _) => Scaffold(
-        appBar: AppBar(
-          backgroundColor: Colors.transparent,
-          title: Text(
-            "Invest",
-            style: TextStyle(
-              fontSize: 13,
-              fontFamily: AppStrings.fontMedium,
-              color: AppColors.kTextColor,
-            ),
-          ),
-          elevation: 0,
-          centerTitle: true,
-          leading: IconButton(
-              icon: Icon(
-                Icons.arrow_back_ios,
-                color: AppColors.kPrimaryColor,
-              ),
-              onPressed: () => Navigator.pop(context)),
-        ),
+        // appBar: ,
+        appBar: appBar(context),
         body: SingleChildScrollView(
           child: Column(
             children: [

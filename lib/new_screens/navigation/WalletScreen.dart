@@ -37,7 +37,10 @@ class _WalletScreenState extends State<WalletScreen> {
   Widget build(BuildContext context) {
     identityViewModel = Provider.of(context);
     double tabWidth = MediaQuery.of(context).size.width - 40;
-    return Scaffold(
+    return ViewModelProvider<WalletViewModel>.withConsumer(
+    viewModelBuilder: () => WalletViewModel(),
+    onModelReady: (model) => model.getWallets(),
+    builder: (context, model, _) => Scaffold(
       body: Stack(
         children: [
           Container(
@@ -78,153 +81,298 @@ class _WalletScreenState extends State<WalletScreen> {
               ),
             ),
           ),
-          Container(
-            height: MediaQuery.of(context).size.height,
-            child: DraggableScrollableSheet(
-              initialChildSize: 0.55,
-              minChildSize: 0.55,
-              maxChildSize: 0.8,
-              builder: (BuildContext context, myscrollController) {
-                return Container(
-                  padding: EdgeInsets.symmetric(horizontal: 20),
-                  decoration: BoxDecoration(
-                      color: AppColors.kWhite,
-                      borderRadius: BorderRadius.only(
-                          topLeft: Radius.circular(20),
-                          topRight: Radius.circular(20))),
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    children: [
-                      YMargin(12),
-                      Container(
-                        height: 5,
-                        width: 40,
-                        color: AppColors.kGrey,
-                        margin: EdgeInsets.symmetric(horizontal: 140),
-                      ),
-                      Expanded(
-                        child: ListView(
-                          physics: BouncingScrollPhysics(),
-                          controller: myscrollController,
-                          children: [
-                            Row(
-                              children: <Widget>[
-                                Spacer(),
-                                Container(
-                                  width: tabWidth,
-                                  height: 40,
-                                  decoration: BoxDecoration(
-                                      color: AppColors.kPrimaryColorLight,
-                                      borderRadius: BorderRadius.circular(13)),
-                                  child: Stack(
-                                    children: <Widget>[
-                                      AnimatedPositioned(
-                                        left: showTopUp == false
-                                            ? tabWidth / 2
-                                            : 0,
-                                        duration: Duration(milliseconds: 300),
-                                        child: Container(
-                                          width: tabWidth / 2,
-                                          height: 40,
-                                          decoration: BoxDecoration(
-                                              color: AppColors.kPrimaryColor,
-                                              borderRadius:
-                                                  BorderRadius.circular(13)),
-                                        ),
-                                      ),
-                                      Container(
-                                        child: Row(
-                                          children: <Widget>[
-                                            Expanded(
-                                              child: InkWell(
-                                                onTap: () {
-                                                  setState(() {
-                                                    showTopUp = true;
-                                                  });
-                                                },
-                                                child: Container(
-                                                  child: Center(
-                                                    child: Text(
-                                                      "Top Ups",
-                                                      style: TextStyle(
-                                                          fontSize: 12,
-                                                          color: showTopUp ==
-                                                                  true
-                                                              ? Colors.white
-                                                              : AppColors
-                                                                  .kPrimaryColor),
+          PageView(
+            controller: controller,
+            children: [
+              Container(
+                height: MediaQuery.of(context).size.height,
+                child: DraggableScrollableSheet(
+                  initialChildSize: 0.55,
+                  minChildSize: 0.55,
+                  maxChildSize: 0.8,
+                  builder: (BuildContext context, myscrollController) {
+                    return Container(
+                      padding: EdgeInsets.symmetric(horizontal: 20),
+                      decoration: BoxDecoration(
+                          color: AppColors.kWhite,
+                          borderRadius: BorderRadius.only(
+                              topLeft: Radius.circular(20),
+                              topRight: Radius.circular(20))),
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        children: [
+                          YMargin(12),
+                          Container(
+                            height: 5,
+                            width: 40,
+                            color: AppColors.kGrey,
+                            margin: EdgeInsets.symmetric(horizontal: 140),
+                          ),
+                          Expanded(
+                            child: ListView(
+                              physics: BouncingScrollPhysics(),
+                              controller: myscrollController,
+                              children: [
+                                Row(
+                                  children: <Widget>[
+                                    Spacer(),
+                                    Container(
+                                      width: tabWidth,
+                                      height: 40,
+                                      decoration: BoxDecoration(
+                                          color: AppColors.kPrimaryColorLight,
+                                          borderRadius: BorderRadius.circular(13)),
+                                      child: Stack(
+                                        children: <Widget>[
+                                          AnimatedPositioned(
+                                            left: showTopUp == false
+                                                ? tabWidth / 2
+                                                : 0,
+                                            duration: Duration(milliseconds: 300),
+                                            child: Container(
+                                              width: tabWidth / 2,
+                                              height: 40,
+                                              decoration: BoxDecoration(
+                                                  color: AppColors.kPrimaryColor,
+                                                  borderRadius:
+                                                      BorderRadius.circular(13)),
+                                            ),
+                                          ),
+                                          Container(
+                                            child: Row(
+                                              children: <Widget>[
+                                                Expanded(
+                                                  child: InkWell(
+                                                    onTap: () {
+                                                      setState(() {
+                                                        showTopUp = true;
+                                                      });
+                                                    },
+                                                    child: Container(
+                                                      child: Center(
+                                                        child: Text(
+                                                          "Top Ups",
+                                                          style: TextStyle(
+                                                              fontSize: 12,
+                                                              color: showTopUp ==
+                                                                      true
+                                                                  ? Colors.white
+                                                                  : AppColors
+                                                                      .kPrimaryColor),
+                                                        ),
+                                                      ),
                                                     ),
                                                   ),
                                                 ),
-                                              ),
-                                            ),
-                                            Expanded(
-                                              child: InkWell(
-                                                onTap: () {
-                                                  setState(() {
-                                                    showTopUp = false;
-                                                  });
-                                                },
-                                                child: Container(
-                                                  child: Center(
-                                                    child: Text(
-                                                      "Withdrawals",
-                                                      style: TextStyle(
-                                                          fontSize: 12,
-                                                          color: showTopUp ==
-                                                                  false
-                                                              ? Colors.white
-                                                              : AppColors
-                                                                  .kPrimaryColor),
+                                                Expanded(
+                                                  child: InkWell(
+                                                    onTap: () {
+                                                      setState(() {
+                                                        showTopUp = false;
+                                                      });
+                                                    },
+                                                    child: Container(
+                                                      child: Center(
+                                                        child: Text(
+                                                          "Withdrawals",
+                                                          style: TextStyle(
+                                                              fontSize: 12,
+                                                              color: showTopUp ==
+                                                                      false
+                                                                  ? Colors.white
+                                                                  : AppColors
+                                                                      .kPrimaryColor),
+                                                        ),
+                                                      ),
                                                     ),
                                                   ),
                                                 ),
-                                              ),
+                                              ],
                                             ),
-                                          ],
-                                        ),
+                                          ),
+                                        ],
                                       ),
-                                    ],
+                                    ),
+                                    // Spacer(),
+                                  ],
+                                ),
+                                ViewModelProvider<WalletViewModel>.withConsumer(
+                                  onModelReady: (model) =>
+                                      model.getWalletTransactions(),
+                                  viewModelBuilder: () => WalletViewModel(),
+                                  builder: (context, model, _) => Padding(
+                                    padding: const EdgeInsets.only(bottom: 100.0),
+                                    child: Container(
+                                      height: screenHeight(context),
+                                      width: screenWidth(context),
+                                      child: showTopUp
+                                          ? walletTransactionsCredit(
+                                              context, model.walletTransaction)
+                                          : walletTransactionsDebit(
+                                              context,
+                                              model.walletTransaction,
+                                            ),
+                                    ),
                                   ),
                                 ),
-                                // Spacer(),
                               ],
                             ),
-                            ViewModelProvider<WalletViewModel>.withConsumer(
-                              onModelReady: (model) =>
-                                  model.getWalletTransactions(),
-                              viewModelBuilder: () => WalletViewModel(),
-                              builder: (context, model, _) => Padding(
-                                padding: const EdgeInsets.only(bottom: 100.0),
-                                child: Container(
-                                  height: screenHeight(context),
-                                  width: screenWidth(context),
-                                  child: showTopUp
-                                      ? walletTransactionsCredit(
-                                          context, model.walletTransaction)
-                                      : walletTransactionsDebit(
-                                          context,
-                                          model.walletTransaction,
-                                        ),
-                                ),
-                              ),
-                            ),
-                          ],
-                        ),
+                          ),
+                        ],
                       ),
-                    ],
-                  ),
-                );
-              },
-            ),
+                    );
+                  },
+                ),
+              ),
+              Container(
+                height: MediaQuery.of(context).size.height,
+                child: DraggableScrollableSheet(
+                  initialChildSize: 0.55,
+                  minChildSize: 0.55,
+                  maxChildSize: 0.8,
+                  builder: (BuildContext context, myscrollController) {
+                    return Container(
+                      padding: EdgeInsets.symmetric(horizontal: 20),
+                      decoration: BoxDecoration(
+                          color: AppColors.kWhite,
+                          borderRadius: BorderRadius.only(
+                              topLeft: Radius.circular(20),
+                              topRight: Radius.circular(20))),
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        children: [
+                          YMargin(12),
+                          Container(
+                            height: 5,
+                            width: 40,
+                            color: AppColors.kGrey,
+                            margin: EdgeInsets.symmetric(horizontal: 140),
+                          ),
+                          Expanded(
+                            child: ListView(
+                              physics: BouncingScrollPhysics(),
+                              controller: myscrollController,
+                              children: [
+                                Row(
+                                  children: <Widget>[
+                                    Spacer(),
+                                    Container(
+                                      width: tabWidth,
+                                      height: 40,
+                                      decoration: BoxDecoration(
+                                          color: AppColors.kPrimaryColorLight,
+                                          borderRadius: BorderRadius.circular(13)),
+                                      child: Stack(
+                                        children: <Widget>[
+                                          AnimatedPositioned(
+                                            left: showTopUp == false
+                                                ? tabWidth / 2
+                                                : 0,
+                                            duration: Duration(milliseconds: 300),
+                                            child: Container(
+                                              width: tabWidth / 2,
+                                              height: 40,
+                                              decoration: BoxDecoration(
+                                                  color: AppColors.kPrimaryColor,
+                                                  borderRadius:
+                                                      BorderRadius.circular(13)),
+                                            ),
+                                          ),
+                                          Container(
+                                            child: Row(
+                                              children: <Widget>[
+                                                Expanded(
+                                                  child: InkWell(
+                                                    onTap: () {
+                                                      setState(() {
+                                                        showTopUp = true;
+                                                      });
+                                                    },
+                                                    child: Container(
+                                                      child: Center(
+                                                        child: Text(
+                                                          "Top Ups",
+                                                          style: TextStyle(
+                                                              fontSize: 12,
+                                                              color: showTopUp ==
+                                                                      true
+                                                                  ? Colors.white
+                                                                  : AppColors
+                                                                      .kPrimaryColor),
+                                                        ),
+                                                      ),
+                                                    ),
+                                                  ),
+                                                ),
+                                                Expanded(
+                                                  child: InkWell(
+                                                    onTap: () {
+                                                      setState(() {
+                                                        showTopUp = false;
+                                                      });
+                                                    },
+                                                    child: Container(
+                                                      child: Center(
+                                                        child: Text(
+                                                          "Withdrawals",
+                                                          style: TextStyle(
+                                                              fontSize: 12,
+                                                              color: showTopUp ==
+                                                                      false
+                                                                  ? Colors.white
+                                                                  : AppColors
+                                                                      .kPrimaryColor),
+                                                        ),
+                                                      ),
+                                                    ),
+                                                  ),
+                                                ),
+                                              ],
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                    // Spacer(),
+                                  ],
+                                ),
+                                ViewModelProvider<WalletViewModel>.withConsumer(
+                                  onModelReady: (model) =>
+                                      model.getWalletTransactions(),
+                                  viewModelBuilder: () => WalletViewModel(),
+                                  builder: (context, model, _) => Padding(
+                                    padding: const EdgeInsets.only(bottom: 100.0),
+                                    child: Container(
+                                      height: screenHeight(context),
+                                      width: screenWidth(context),
+                                      child: showTopUp
+                                          ? walletTransactionsDollarCredit(
+                                              context, model.walletTransaction)
+                                          : walletTransactionsDollarDebit(
+                                              context,
+                                              model.walletTransaction,
+                                            ),
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ],
+                      ),
+                    );
+                  },
+                ),
+              ),
+            ],
           ),
         ],
       ),
-    );
+    ),);
   }
 }
 
-Widget _walletCards(BuildContext context, String name) {
+Widget _walletCards(BuildContext context, String name,) {
   return ViewModelProvider<WalletViewModel>.withConsumer(
     viewModelBuilder: () => WalletViewModel(),
     onModelReady: (model) => model.getWallets(),
@@ -236,6 +384,7 @@ Widget _walletCards(BuildContext context, String name) {
               child: Container()
             )
           : PageView(
+            // controller: controller,
               children: [
                 Container(
                   child: Column(
@@ -737,4 +886,62 @@ Widget walletTransactionsDebit(
         );
 }
 
-// model.
+Widget walletTransactionsDollarCredit(
+    BuildContext context, List<WalletTransaction> walletTransaction) {
+  return walletTransaction
+              .where((element) => element.movementType == "Credit")
+              .toList().where((element) => element.currency == "USD")
+              .length ==
+          0
+      ? Padding(
+          padding: const EdgeInsets.only(top: 100.0),
+          child: Text(
+            "No Transactions Yet",
+            textAlign: TextAlign.center,
+          ),
+        )
+      : ListView.builder(
+          itemCount: walletTransaction
+              .where((element) => element.movementType == "Credit")
+              .toList().where((element) => element.currency == "USD")
+              .length,
+          itemBuilder: (context, index) => TransactionItemWidget(
+            symbol: walletTransaction[index].currency == "NGN"
+                ? AppStrings.nairaSymbol
+                : AppStrings.dollarSymbol,
+            amount: walletTransaction[index].amount,
+            date: walletTransaction[index].date,
+            narration: walletTransaction[index].narration,
+          ),// model.Dollar
+        );
+}
+
+Widget walletTransactionsDollarDebit(
+    BuildContext context, List<WalletTransaction> walletTransaction) {
+  return walletTransaction
+              .where((element) => element.movementType == "Debit")
+              .toList().where((element) => element.currency == "USD")
+              .length ==
+          0
+      ? Padding(
+          padding: const EdgeInsets.only(top: 100.0),
+          child: Text(
+            "No Transactions Yet",
+            textAlign: TextAlign.center,
+          ),
+        )
+      : ListView.builder(
+          itemCount: walletTransaction
+              .where((element) => element.movementType == "Debit")
+              .toList().where((element) => element.currency == "USD")
+              .length,
+          itemBuilder: (context, index) => TransactionItemWidgetWithdrawal(
+            symbol: walletTransaction[index].currency == "NGN"
+                ? AppStrings.nairaSymbol
+                : AppStrings.dollarSymbol,
+            amount: walletTransaction[index].amount,
+            date: walletTransaction[index].date,
+            narration: walletTransaction[index].narration,
+          ),
+        );
+}

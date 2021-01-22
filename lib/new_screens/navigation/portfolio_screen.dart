@@ -153,7 +153,8 @@ class SavingsSection extends StatefulWidget {
   _SavingsSectionState createState() => _SavingsSectionState();
 }
 
-class _SavingsSectionState extends State<SavingsSection> with AfterLayoutMixin<SavingsSection> {
+class _SavingsSectionState extends State<SavingsSection>
+    with AfterLayoutMixin<SavingsSection> {
   ABSSavingViewModel savingViewModel;
   ABSIdentityViewModel identityViewModel;
 
@@ -173,98 +174,81 @@ class _SavingsSectionState extends State<SavingsSection> with AfterLayoutMixin<S
   }
 
   Future getSavings() async {
+    setState(() {
+      loading = true;
+      error = false;
+    });
 
-    if(mounted){
-      print("rrrtt widget is mounted");
+    var r1 = await savingViewModel.getSavingPlans(
+        token: identityViewModel.user.token);
+    var r2 = await savingViewModel.getProductTypes(
+        token: identityViewModel.user.token);
+    if (r1.error == false && r2.error == false) {
+      totalBalance = 0;
+      wealthBox = savingViewModel.savingPlanModel
+              .where((element) => element.productId == 1)
+              .isNotEmpty
+          ? savingViewModel.savingPlanModel
+              .where((element) => element.productId == 1)
+              .first
+          : null;
+      aspirePlans = savingViewModel.savingPlanModel
+          .where((element) => element.productId == 2)
+          .toList();
+      savingViewModel.savingPlanModel.forEach((element) {
+        totalBalance = totalBalance + element.amountSaved;
+      });
+
       setState(() {
-        loading = true;
+        loading = false;
         error = false;
       });
-      var r1 = await savingViewModel.getSavingPlans(token: identityViewModel.user.token);
-      var r2 = await savingViewModel.getProductTypes(token: identityViewModel.user.token);
-      if(r1.error == false && r2.error == false ){
-        totalBalance = 0;
-        wealthBox =  savingViewModel.savingPlanModel.where((element) => element.productId == 1).isNotEmpty ?
-        savingViewModel.savingPlanModel.where((element) => element.productId == 1).first : null;
-        aspirePlans = savingViewModel.savingPlanModel.where((element) => element.productId == 2).toList();
-        savingViewModel.savingPlanModel.forEach((element) {
-          totalBalance = totalBalance + element.amountSaved;
-        });
 
-        if(mounted){
-          print("pppppp widget is mounted");
-          setState(() {
-            loading = false;
-            error = false;
-          });
-
-          if(savingViewModel.productTypes.isNotEmpty){
-            await fetchTransactions(savingViewModel.productTypes.first.id);
-          }
-        }else{
-          print("pppppp widget is not mounted");
-        }
-
-
-        //getRequiredDetailsForForm();
-      }else{
-        if(mounted){
-          print("pppppp11 widget is mounted");
-          setState(() {
-            loading = false;
-            error = true;
-            networkAvailable = r1.networkAvailable;
-            errorMessage = r1.errorMessage;
-          });
-        }else{
-          print("pppppp widget is not mounted");
-        }
-
+      if (savingViewModel.productTypes.isNotEmpty) {
+        await fetchTransactions(savingViewModel.productTypes.first.id);
       }
-    }else{
-      print("pppppp4444 widget is not mounted");
+
+      //getRequiredDetailsForForm();
+    } else {
+      setState(() {
+        loading = false;
+        error = true;
+        networkAvailable = r1.networkAvailable;
+        errorMessage = r1.errorMessage;
+      });
     }
-
-    
-    
-
   }
 
-  Future<void> fetchTransactions(int productId,{bool showLoader = false}) async {
-    if(showLoader == true){
-
+  Future<void> fetchTransactions(int productId,
+      {bool showLoader = false}) async {
+    if (showLoader == true) {
       await savingViewModel.getTransactionForProductType(
-          token: identityViewModel.user.token,
-          productId: productId);
-
-
-
-
-    }else{
+          token: identityViewModel.user.token, productId: productId);
+    } else {
       var result = await savingViewModel.getTransactionForProductType(
-          token: identityViewModel.user.token,
-          productId: productId);
-
+          token: identityViewModel.user.token, productId: productId);
     }
-
   }
 
   @override
   Widget build(BuildContext context) {
     savingViewModel = Provider.of(context);
     identityViewModel = Provider.of(context);
-    return error == true ? SavingsInvestmentErrorWidget(
-      retry: getSavings,
-      networkAvailable: networkAvailable,
-      message: errorMessage,
-    ): loading == true
-        ? SavingsInvestmentLoadingWidget()
-        : wealthBox == null && aspirePlans.isEmpty
-            ? SavingsInvestmentWidget():SavingsInvestmentCashWidget(
-      wealthBox: wealthBox,
-      aspirePlans: aspirePlans,
-      totalBalance: totalBalance,
-    );
+    return error == true
+        ? SavingsInvestmentErrorWidget(
+            retry: getSavings,
+            networkAvailable: networkAvailable,
+            message: errorMessage,
+          )
+        : loading == true
+            ? SavingsInvestmentLoadingWidget()
+            : wealthBox == null && aspirePlans.isEmpty
+                ? SavingsInvestmentWidget()
+                : SavingsInvestmentCashWidget(
+                    wealthBox: wealthBox,
+                    aspirePlans: aspirePlans,
+                    totalBalance: totalBalance,
+                  );
   }
 }
 
@@ -275,12 +259,11 @@ class SavingsInvestmentWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    ABSDashboardViewModel dashboardViewModel = Provider.of(context);
     return SliverPadding(
       sliver: SliverList(
           delegate: SliverChildListDelegate([
         YMargin(MediaQuery.of(context).size.height > 700 ? 200 : 100),
-            SvgPicture.asset("images/new/savings_illus.svg"),
+        SvgPicture.asset("images/new/savings_illus.svg"),
         Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
@@ -302,9 +285,8 @@ class SavingsInvestmentWidget extends StatelessWidget {
           children: [
             PrimaryButtonNew(
               title: "Start Saving",
-              onTap: (){
-
-                dashboardViewModel.callback();
+              onTap: () {
+                Navigator.of(context).push(SelectGoalScreen.route());
               },
             ),
           ],
@@ -314,6 +296,7 @@ class SavingsInvestmentWidget extends StatelessWidget {
     );
   }
 }
+
 class SavingsInvestmentLoadingWidget extends StatelessWidget {
   const SavingsInvestmentLoadingWidget({
     Key key,
@@ -324,59 +307,64 @@ class SavingsInvestmentLoadingWidget extends StatelessWidget {
     return SliverPadding(
       sliver: SliverList(
           delegate: SliverChildListDelegate([
-            Container(
-              height: 400,
-              child: Shimmer.fromColors(
-                baseColor: Colors.grey[300],
-                highlightColor: Colors.grey[100],
-                child: ListView.builder(itemBuilder: (BuildContext context, int index) {
-                  if(index == 0){
-                    return  Row(
-                      children: [
-                        SizedBox(
-                          width: 200.0,
-                          height: 50.0,
-                          child: Shimmer.fromColors(
-                            baseColor: Colors.red,
-                            highlightColor: Colors.yellow,
-                            child: Container(
-                              margin: EdgeInsets.only(top: 10),
-                              width: 40.0,
-                              height: 8.0,
-                              color: Colors.white,
-                            ),
+        Container(
+          height: 400,
+          child: Shimmer.fromColors(
+            baseColor: Colors.grey[300],
+            highlightColor: Colors.grey[100],
+            child: ListView.builder(
+              itemBuilder: (BuildContext context, int index) {
+                if (index == 0) {
+                  return Row(
+                    children: [
+                      SizedBox(
+                        width: 200.0,
+                        height: 50.0,
+                        child: Shimmer.fromColors(
+                          baseColor: Colors.red,
+                          highlightColor: Colors.yellow,
+                          child: Container(
+                            margin: EdgeInsets.only(top: 10),
+                            width: 40.0,
+                            height: 8.0,
+                            color: Colors.white,
                           ),
                         ),
-                      ],
-                    );
-                  }
-                  return  SizedBox(
-                    width: 200.0,
-                    height: 100.0,
-                    child: Shimmer.fromColors(
-                      baseColor: Colors.red,
-                      highlightColor: Colors.yellow,
-                      child: Container(
-                        margin: EdgeInsets.only(top: 10),
-                        width: 40.0,
-                        height: 8.0,
-                        color: Colors.white,
                       ),
-                    ),
+                    ],
                   );
-                },itemCount: 4,
-
-                ),
-              ),
-            )
+                }
+                return SizedBox(
+                  width: 200.0,
+                  height: 100.0,
+                  child: Shimmer.fromColors(
+                    baseColor: Colors.red,
+                    highlightColor: Colors.yellow,
+                    child: Container(
+                      margin: EdgeInsets.only(top: 10),
+                      width: 40.0,
+                      height: 8.0,
+                      color: Colors.white,
+                    ),
+                  ),
+                );
+              },
+              itemCount: 4,
+            ),
+          ),
+        )
       ])),
       padding: EdgeInsets.symmetric(horizontal: 20),
     );
   }
 }
+
 class SavingsInvestmentErrorWidget extends StatelessWidget {
   const SavingsInvestmentErrorWidget({
-    Key key, this.retry, this.networkAvailable, this.message,
+    Key key,
+    this.retry,
+    this.networkAvailable,
+    this.message,
   }) : super(key: key);
 
   final VoidCallback retry;
@@ -388,34 +376,41 @@ class SavingsInvestmentErrorWidget extends StatelessWidget {
     return SliverPadding(
       sliver: SliverList(
           delegate: SliverChildListDelegate([
-            Container(
-              height: 400,
-              child: Column(
-                children: [
-                  YMargin(30),
-                  SvgPicture.asset("images/new/error3.svg"),
-                  YMargin(20),
-                  SizedBox(
-                    width: 300,
-                      child: Text(message,style:TextStyle(fontFamily: AppStrings.fontNormal,height: 1.7),textAlign: TextAlign.center,)),
-                  YMargin(30),
-                  PrimaryButtonNew(
-                    title: 'Retry',
-                    onTap: retry,
-                  )
-                ],
-              ),
-            )
+        Container(
+          height: 400,
+          child: Column(
+            children: [
+              YMargin(30),
+              SvgPicture.asset("images/new/error3.svg"),
+              YMargin(20),
+              SizedBox(
+                  width: 300,
+                  child: Text(
+                    message,
+                    style: TextStyle(
+                        fontFamily: AppStrings.fontNormal, height: 1.7),
+                    textAlign: TextAlign.center,
+                  )),
+              YMargin(30),
+              PrimaryButtonNew(
+                title: 'Retry',
+                onTap: retry,
+              )
+            ],
+          ),
+        )
       ])),
       padding: EdgeInsets.symmetric(horizontal: 20),
     );
   }
 }
 
-
 class SavingsInvestmentCashWidget extends StatelessWidget {
   const SavingsInvestmentCashWidget({
-    Key key, this.wealthBox, this.aspirePlans, this.totalBalance,
+    Key key,
+    this.wealthBox,
+    this.aspirePlans,
+    this.totalBalance,
   }) : super(key: key);
 
   final SavingPlanModel wealthBox;
@@ -424,8 +419,8 @@ class SavingsInvestmentCashWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    List<SavingPlanModel> goals = [...aspirePlans,SavingPlanModel()];
-    List<SavingPlanModel> goals1 = [...aspirePlans,SavingPlanModel()];
+    List<SavingPlanModel> goals = [...aspirePlans, SavingPlanModel()];
+    List<SavingPlanModel> goals1 = [...aspirePlans, SavingPlanModel()];
     ABSDashboardViewModel dashboardViewModel = Provider.of(context);
     return SliverPadding(
       sliver: SliverList(
@@ -436,97 +431,111 @@ class SavingsInvestmentCashWidget extends StatelessWidget {
               color: AppColors.kGreyText, fontFamily: AppStrings.fontMedium),
         ),
         YMargin(12),
-            Row(children: [
-              Transform.translate(
-                  offset:Offset(0,-4),
-                  child: Text(AppStrings.nairaSymbol, style: TextStyle(fontSize: 14,color: AppColors.kSecondaryBoldText),)),
-              XMargin(2),
-              Text(dashboardViewModel.dashboardModel.nairaSavings.substring(1).split(".").first,
-                style: TextStyle(fontSize: 25, fontFamily: AppStrings.fontMedium,
-                    color: AppColors.kSecondaryBoldText),),
-              XMargin(3),
-              Transform.translate(
-                offset:Offset(0,-4),
-                child: Text(".${dashboardViewModel.dashboardModel.nairaSavings.split(".").last}",
-                  style: TextStyle(fontSize: 14, fontFamily: AppStrings.fontMedium,color: AppColors.kSecondaryBoldText),),
+        Row(
+          children: [
+            Transform.translate(
+                offset: Offset(0, -4),
+                child: Text(
+                  AppStrings.nairaSymbol,
+                  style: TextStyle(
+                      fontSize: 14, color: AppColors.kSecondaryBoldText),
+                )),
+            XMargin(2),
+            Text(
+              dashboardViewModel.dashboardModel.nairaSavings
+                  .substring(1)
+                  .split(".")
+                  .first,
+              style: TextStyle(
+                  fontSize: 25,
+                  fontFamily: AppStrings.fontMedium,
+                  color: AppColors.kSecondaryBoldText),
+            ),
+            XMargin(3),
+            Transform.translate(
+              offset: Offset(0, -4),
+              child: Text(
+                ".${dashboardViewModel.dashboardModel.nairaSavings.split(".").last}",
+                style: TextStyle(
+                    fontSize: 14,
+                    fontFamily: AppStrings.fontMedium,
+                    color: AppColors.kSecondaryBoldText),
               ),
-            ],),
-        YMargin(25),
-        wealthBox == null ? SizedBox(): GestureDetector(
-          onTap: (){
-            Navigator.push(context, WealthBoxDetailsScreen.route(wealthBox));
-          },
-          child: Container(
-            height: 154,
-            margin: EdgeInsets.only(bottom: 30),
-            width: double.infinity,
-            padding: EdgeInsets.symmetric(horizontal: 15, vertical: 15),
-            decoration: BoxDecoration(
-              color: AppColors.kWhite,
-              boxShadow: AppUtils.getBoxShaddow,
-              borderRadius: BorderRadius.circular(11),
             ),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                YMargin(3),
-                Text(wealthBox.planName),
-                Spacer(),
-                Row(
-                  children: [
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          "Balance",
-                          style: TextStyle(
-                              fontSize: 12,
-                              fontFamily: AppStrings.fontNormal,
-                              color: AppColors.kGreyText),
-                        ),
-                        YMargin(10),
-
-                        Row(
-                          children: [
-                            Text(AppStrings.nairaSymbol,style: TextStyle(
-                                color: AppColors.kGreyText,fontSize: 12)),
-                            Text(
-                              "${wealthBox.amountSaved}".split(".").first.convertWithComma(),
-                              style: TextStyle(
-                                  color: AppColors.kGreyText,
-                                  fontFamily: AppStrings.fontMedium),
-                            ),
-                          ],
-                        )
-                      ],
-                    ),
-                    Spacer(),
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.end,
-                      children: [
-                        Text(
-                          "Interest P.A",
-                          style: TextStyle(
-                              fontSize: 12,
-                              fontFamily: AppStrings.fontNormal,
-                              color: AppColors.kGreyText),
-                        ),
-                        YMargin(10),
-                        Text(
-                          "${wealthBox.interestRate}%",
-                          textAlign: TextAlign.end,
-                          style: TextStyle(
-                              color: AppColors.kGreyText,
-                              fontFamily: AppStrings.fontMedium),
-                        )
-                      ],
-                    ),
-                  ],
-                )
-              ],
-            ),
-          ),
+          ],
         ),
+        YMargin(25),
+        wealthBox == null
+            ? SizedBox()
+            : GestureDetector(
+                onTap: () {
+                  Navigator.push(
+                      context, WealthBoxDetailsScreen.route(wealthBox));
+                },
+                child: Container(
+                  height: 154,
+                  margin: EdgeInsets.only(bottom: 30),
+                  width: double.infinity,
+                  padding: EdgeInsets.symmetric(horizontal: 15, vertical: 15),
+                  decoration: BoxDecoration(
+                    color: AppColors.kWhite,
+                    boxShadow: AppUtils.getBoxShaddow,
+                    borderRadius: BorderRadius.circular(11),
+                  ),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      YMargin(3),
+                      Text(wealthBox.planName),
+                      Spacer(),
+                      Row(
+                        children: [
+                          Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                "Balance",
+                                style: TextStyle(
+                                    fontSize: 12,
+                                    fontFamily: AppStrings.fontNormal,
+                                    color: AppColors.kGreyText),
+                              ),
+                              YMargin(10),
+                              Text(
+                                "${AppStrings.nairaSymbol}${wealthBox.amountSaved}",
+                                style: TextStyle(
+                                    color: AppColors.kGreyText,
+                                    fontFamily: AppStrings.fontMedium),
+                              )
+                            ],
+                          ),
+                          Spacer(),
+                          Column(
+                            crossAxisAlignment: CrossAxisAlignment.end,
+                            children: [
+                              Text(
+                                "Interest P.A",
+                                style: TextStyle(
+                                    fontSize: 12,
+                                    fontFamily: AppStrings.fontNormal,
+                                    color: AppColors.kGreyText),
+                              ),
+                              YMargin(10),
+                              Text(
+                                "${wealthBox.interestRate}%",
+                                textAlign: TextAlign.end,
+                                style: TextStyle(
+                                    color: AppColors.kGreyText,
+                                    fontFamily: AppStrings.fontMedium),
+                              )
+                            ],
+                          ),
+                        ],
+                      )
+                    ],
+                  ),
+                ),
+              ),
         Row(
           children: [
             Text(
@@ -571,7 +580,8 @@ class SavingsInvestmentCashWidget extends StatelessWidget {
               ),
             );
           }
-          if (goals.length.isEven && ((goals.length / 2).round() - 1) == index) {
+          if (goals.length.isEven &&
+              ((goals.length / 2).round() - 1) == index) {
             SavingPlanModel goal = goals1.removeAt(0);
             return Padding(
               padding: const EdgeInsets.only(top: 20),
@@ -715,7 +725,6 @@ class InvestmentItemWidget extends StatelessWidget {
   final String investmentName;
   final String investmentType;
   final String balance;
-  final String symbol;
   final String annualReturns;
   final double topPadding;
   final int transactionId;
@@ -730,7 +739,9 @@ class InvestmentItemWidget extends StatelessWidget {
     this.annualReturns,
     this.topPadding = 25.0,
     this.transactionId,
-    this.instrumentId, this.isMatured, this.withDrawableBalance, this.symbol,
+    this.instrumentId,
+    this.isMatured,
+    this.withDrawableBalance,
   }) : super(key: key);
 
   @override
@@ -791,9 +802,16 @@ class InvestmentItemWidget extends StatelessWidget {
                     YMargin(8),
                     Row(
                       children: [
-                        Text(symbol,style: TextStyle(fontSize: 10),),
                         Text(
-                          balance.split(".").first.convertWithComma(),
+                          AppStrings.nairaSymbol,
+                          style: TextStyle(
+                              fontSize: 11,
+                              fontFamily: AppStrings.fontMedium,
+                              color: AppColors.kTextColor),
+                        ),
+                        Text(
+                          StringUtils(balance.substring(1).split(".").first)
+                              .convertWithComma(),
                           style: TextStyle(
                               fontSize: 11,
                               fontFamily: AppStrings.fontMedium,
@@ -853,37 +871,40 @@ class _EmptyInvstmentWidgetState extends State<EmptyInvstmentWidget>
 
   @override
   Widget build(BuildContext context) {
-
-    return Column(children: [
-      YMargin(MediaQuery.of(context).size.height > 700 ? 100 : 50),
-      SvgPicture.asset("images/new/empty3.svg",),
-      YMargin(20),
-      Row(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          SizedBox(
-              width: 200,
-              child: Text(
-                "You currently don’t have an Investment plan",
-                textAlign: TextAlign.center,
-                style: TextStyle(
-                    fontFamily: AppStrings.fontNormal,
-                    color: AppColors.kGreyText,
-                    height: 1.6),
-              )),
-        ],
-      ),
-      YMargin(40),
-      Row(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          PrimaryButtonNew(
-            onTap: (){},
-            title: "Start Investing",
-          ),
-        ],
-      ),
-    ],);
+    return Column(
+      children: [
+        YMargin(MediaQuery.of(context).size.height > 700 ? 100 : 50),
+        SvgPicture.asset(
+          "images/new/empty3.svg",
+        ),
+        YMargin(20),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            SizedBox(
+                width: 200,
+                child: Text(
+                  "You currently don’t have an Investment plan",
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                      fontFamily: AppStrings.fontNormal,
+                      color: AppColors.kGreyText,
+                      height: 1.6),
+                )),
+          ],
+        ),
+        YMargin(40),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            PrimaryButtonNew(
+              onTap: () {},
+              title: "Start Investing",
+            ),
+          ],
+        ),
+      ],
+    );
   }
 }
 
@@ -1012,19 +1033,18 @@ Widget dollarPortfolio(BuildContext context) {
                                     model.dollarTransaction[index].uniqueName,
                                 investmentType: model.dollarTransaction[index]
                                     .zimvestInstrumentName,
-                                symbol: AppStrings.dollarSymbol,
                                 balance:
-                                    "${model.dollarTransaction[index].withdrawableValue.toString()}",
+                                    "${AppStrings.dollarSymbol}${model.dollarTransaction[index].withdrawableValue.toString()}",
                                 annualReturns:
                                     "${model.dollarTransaction[index].percentageInterest.toString()}",
                               ),
                             ),
                           ),
                   ),
-          ),
-          YMargin(104),
-        ],
-      ),
+                ),
+                YMargin(104),
+              ],
+            ),
     ),
   );
 }
@@ -1150,8 +1170,10 @@ Widget nairaPortfolio(BuildContext context) {
                             itemBuilder: (context, index) => Padding(
                               padding: const EdgeInsets.all(8.0),
                               child: InvestmentItemWidget(
-                                withDrawableBalance: model.nairaTransaction[index].withdrawableValue,
-                                isMatured:  model.nairaTransaction[index].isMatured,
+                                withDrawableBalance: model
+                                    .nairaTransaction[index].withdrawableValue,
+                                isMatured:
+                                    model.nairaTransaction[index].isMatured,
                                 transactionId:
                                     model.nairaTransaction[index].transactionId,
                                 instrumentId:
@@ -1161,9 +1183,8 @@ Widget nairaPortfolio(BuildContext context) {
                                     model.nairaTransaction[index].uniqueName,
                                 investmentType: model
                                     .nairaTransaction[index].instrumentName,
-                                symbol: AppStrings.nairaSymbol,
                                 balance:
-                                    "${model.nairaTransaction[index].withdrawableValue.toString() + "0"}",
+                                    "${AppStrings.nairaSymbol}${model.nairaTransaction[index].withdrawableValue.toString() + "0"}",
                                 annualReturns:
                                     "${model.nairaTransaction[index].percentageInterest.toString()}",
                               ),
