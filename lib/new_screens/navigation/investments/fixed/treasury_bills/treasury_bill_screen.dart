@@ -126,15 +126,14 @@ class _TreasuryBillPageState extends State<TreasuryBillPage> {
                                                           e.instrumentId,
                                                       minimumAmount:
                                                           e.minimumAmount,
-                                                      investmentMaturityDate: e
-                                                          .investmentMaturityDate,
+                                                      investmentMaturityDate: e.maturityDate,
                                                     ),
                                                   ),
                                                   child: FixedIncomeCard(
                                                     bondName:
                                                         e.treasuryBillName,
                                                     maturityDate: e
-                                                        .investmentMaturityDate,
+                                                        .maturityDate,
                                                     minimumAmount:
                                                         e.minimumAmount,
                                                     rate: e.rate,

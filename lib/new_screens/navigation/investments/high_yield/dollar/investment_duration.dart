@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:provider_architecture/_viewmodel_provider.dart';
 import 'package:zimvest/data/models/investment/term_instruments.dart';
+import 'package:zimvest/data/view_models/payment_view_model.dart';
 import 'package:zimvest/data/view_models/wallets_view_model.dart';
 import 'package:zimvest/new_screens/navigation/investments/high_yield/dollar/high_yield_investment_dollar_purchase_source.dart';
 import 'package:zimvest/new_screens/navigation/investments/widgets/util_widgt.dart';
@@ -43,7 +45,7 @@ class _InvestmentDurationPeriodState extends State<InvestmentDurationPeriod> {
     List<TermInstrument> instrument = widget.instrument
         ?.where((element) => element.minAmount == widget.amount)
         ?.toList();
-    int selectedIndex;
+    ABSPaymentViewModel paymentViewModel = Provider.of(context);
     return ViewModelProvider<WalletViewModel>.withConsumer(
       viewModelBuilder: () => WalletViewModel(),
       onModelReady: (model) => model.getCards(),
@@ -70,7 +72,7 @@ class _InvestmentDurationPeriodState extends State<InvestmentDurationPeriod> {
               child: Container(
                 width: 250,
                 child: Text(
-                  "Choose from the list a tenor that is best suited for your financial goals",
+                  "Choose from the list a tenure that is best suited for your financial goals",
                   style: TextStyle(
                     fontSize: 11,
                     fontWeight: FontWeight.w400,
@@ -113,7 +115,8 @@ class _InvestmentDurationPeriodState extends State<InvestmentDurationPeriod> {
                             child: InkWell(
                               onTap: () {
                                 model.check();
-                                selectedIndex = index;
+                                // selectedIndex = index;
+                                paymentViewModel.pickDollarInstrument = instrument[index];
                               },
                               child: Container(
                                 height: 40,
@@ -169,7 +172,6 @@ class _InvestmentDurationPeriodState extends State<InvestmentDurationPeriod> {
                     Expanded(
                         child: RoundedNextButton(
                           onTap: () {
-                            print(selectedIndex);
                             Navigator.push(
                               context,
                               HighYieldInvestmentDollarPurchaseSource.route(

@@ -17,23 +17,24 @@ class GottenRate {
   }
 }
 
-class ConvertedDollarRate {
-  num amountUSD;
-  num amountNGN;
+class ConvertedRate {
+  num sourceAmount;
+  num destinationAmount;
   String conversationRate;
 
-  ConvertedDollarRate({this.amountUSD, this.amountNGN, this.conversationRate});
+  ConvertedRate(
+      {this.sourceAmount, this.destinationAmount, this.conversationRate});
 
-  ConvertedDollarRate.fromJson(Map<String, dynamic> json) {
-    amountUSD = json['amountUSD'];
-    amountNGN = json['amountNGN'];
+  ConvertedRate.fromJson(Map<String, dynamic> json) {
+    sourceAmount = json['sourceAmount'];
+    destinationAmount = json['destinationAmount'];
     conversationRate = json['conversationRate'];
   }
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['amountUSD'] = this.amountUSD;
-    data['amountNGN'] = this.amountNGN;
+    data['sourceAmount'] = this.sourceAmount;
+    data['destinationAmount'] = this.destinationAmount;
     data['conversationRate'] = this.conversationRate;
     return data;
   }

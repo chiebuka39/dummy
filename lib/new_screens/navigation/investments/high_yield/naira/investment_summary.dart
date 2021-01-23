@@ -3,6 +3,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:provider/provider.dart';
 import 'package:provider_architecture/provider_architecture.dart';
 import 'package:simple_animations/simple_animations.dart';
+import 'package:zimvest/animations/loading.dart';
 import 'package:zimvest/data/view_models/investment_view_model.dart';
 import 'package:zimvest/data/view_models/payment_view_model.dart';
 import 'package:zimvest/new_screens/funding/top_up_successful.dart';
@@ -143,6 +144,10 @@ class _InvestmentSummaryScreenNairaState
           height: MediaQuery.of(context).size.height,
           child: Stack(
             children: [
+              SvgPicture.asset(
+                "images/patterns.svg",
+                fit: BoxFit.fill,
+              ),
               Positioned.fill(
                 child: model.status
                     ? PlayAnimation<MultiTweenValues<AniProps>>(
@@ -223,7 +228,7 @@ class _InvestmentSummaryScreenNairaState
                         },
                       )
                     : model.busy
-                        ? Center(child: CircularProgressIndicator())
+                        ? Center(child: LoadingWIdget())
                         : model.status
                             ? Text(
                                 model.status.toString(),
@@ -401,7 +406,7 @@ class _InvestmentSummaryScreenNairaState
                                         ),
                                       ),
                                       Text(
-                                        "${widget.uniqueName}",
+                                        "${paymentViewModel.investmentName}",
                                         style: TextStyle(
                                           fontSize: 11,
                                           fontFamily: AppStrings.fontBold,
@@ -435,7 +440,7 @@ class _InvestmentSummaryScreenNairaState
                                             ),
                                           ),
                                           Text(
-                                            "${AppStrings.nairaSymbol}${widget.minimumAmount.toString().split('.')[0].convertWithComma()}",
+                                            "${AppStrings.nairaSymbol}${paymentViewModel.investmentAmount.toString().split('.')[0].convertWithComma()}",
                                             style: TextStyle(
                                               fontSize: 11,
                                               fontFamily: AppStrings.fontBold,
@@ -460,7 +465,7 @@ class _InvestmentSummaryScreenNairaState
                                             ),
                                           ),
                                           Text(
-                                            "${AppStrings.nairaSymbol}${(widget.amount - widget.duration * (widget.rate / 100))}",
+                                            "${AppStrings.nairaSymbol}${(paymentViewModel.investmentAmount - paymentViewModel.pickednairaInstrument.maturityPeriod * (paymentViewModel.pickednairaInstrument.rate / 100))}",
                                             style: TextStyle(
                                               fontSize: 11,
                                               fontFamily: AppStrings.fontBold,
@@ -496,7 +501,7 @@ class _InvestmentSummaryScreenNairaState
                                             ),
                                           ),
                                           Text(
-                                            "${widget.rate}% P.A",
+                                            "${paymentViewModel.pickednairaInstrument.rate}% P.A",
                                             style: TextStyle(
                                               fontSize: 11,
                                               fontFamily: AppStrings.fontBold,
@@ -521,7 +526,7 @@ class _InvestmentSummaryScreenNairaState
                                             ),
                                           ),
                                           Text(
-                                            "${widget.maturityDate}",
+                                            "${paymentViewModel.pickednairaInstrument.maturityDate}",
                                             style: TextStyle(
                                               fontSize: 11,
                                               fontFamily: AppStrings.fontBold,
@@ -557,7 +562,7 @@ class _InvestmentSummaryScreenNairaState
                                             ),
                                           ),
                                           Text(
-                                            "${AppStrings.nairaSymbol}${0.015 * widget.amount}",
+                                            "${AppStrings.nairaSymbol}${0.015 * paymentViewModel.investmentAmount}",
                                             style: TextStyle(
                                               fontSize: 11,
                                               fontFamily: AppStrings.fontBold,
@@ -582,7 +587,7 @@ class _InvestmentSummaryScreenNairaState
                                             ),
                                           ),
                                           Text(
-                                            "${AppStrings.nairaSymbol}${StringUtils(widget.minimumAmount.toString()).convertWithComma()}",
+                                            "${AppStrings.nairaSymbol}${paymentViewModel.pickednairaInstrument.minAmount.toString().split('.')[0].convertWithComma()}",
                                             style: TextStyle(
                                               fontSize: 11,
                                               fontFamily: AppStrings.fontBold,
@@ -616,15 +621,12 @@ class _InvestmentSummaryScreenNairaState
                     startAnim();
                     model.buyNairaInstrument(
                         cardId: paymentViewModel.selectedCard?.id ?? null,
-                        amount: widget.amount,
-                        productId: widget.productId,
-                        uniqueName: widget.uniqueName,
+                        amount: paymentViewModel.investmentAmount,
+                        productId: paymentViewModel.pickednairaInstrument.id,
+                        uniqueName: paymentViewModel.investmentName,
                         fundingChannel: widget.channelId);
+                    paymentViewModel.dispose();
                   },
-                  // onVerticalDragStart: (details) {
-                  //   print("dff ${details.toString()}");
-                  //   //
-                  // },
                   child: Container(
                     height: 60,
                     child: Column(
@@ -648,13 +650,6 @@ class _InvestmentSummaryScreenNairaState
                   ),
                 ),
               ),
-              // Container(
-              //   height: size.height,
-              //   width: size.width,
-              //   child: Center(
-              //     child: model.busy ? CircularProgressIndicator() : SizedBox(),
-              //   ),
-              // ),
             ],
           ),
         ),

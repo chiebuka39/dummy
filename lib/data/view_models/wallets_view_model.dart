@@ -1,4 +1,5 @@
 import 'package:zimvest/data/local/user_local.dart';
+import 'package:zimvest/data/models/investment/term_instruments.dart';
 import 'package:zimvest/data/models/payment/card.dart';
 import 'package:zimvest/data/models/payment/wallet.dart';
 import 'package:zimvest/data/models/wallets/wallets_model.dart';
@@ -24,6 +25,9 @@ class WalletViewModel extends BaseViewModel {
 
   bool _select = false;
   bool get select => _select;
+
+  // TermInstrument _nairaInstrument;
+  // TermInstrument get pickednairaInstrument => _nairaInstrument;
 
   Future<void> getWallets() async {
     setBusy(true);
@@ -53,11 +57,16 @@ class WalletViewModel extends BaseViewModel {
     notifyListeners();
   }
 
-  Future<void> fundWallet(num dollarAmount, num nairaAmount) async {
+  Future<void> fundWallet(num sourceAmount, num exchangeAmount, String currency,
+      int fundingSource) async {
     setBusy(true);
     String token = _localStorage.getUser().token;
     var fundWallet = await _walletService.fundWallet(
-        amountUSD: dollarAmount, token: token, amountNGN: nairaAmount);
+        sourceAmount: sourceAmount,
+        token: token,
+        exchangeAmount: exchangeAmount,
+        currency: currency,
+        fundingSource: fundingSource);
     print(fundWallet);
     if (fundWallet == "Successfully Processed Payment") {
       setBusy(false);

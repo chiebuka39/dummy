@@ -473,7 +473,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                               padding:
                                                   const EdgeInsets.all(12.0),
                                               child: Container(
-                                                height: 40,
+                                                // height: 40,
                                                 // width: 150,
                                                 child: Text(
                                                   "Invest in our naira denominated fixed deposit product and watch you Naira grow.",
@@ -532,7 +532,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                               padding:
                                                   const EdgeInsets.all(12.0),
                                               child: Container(
-                                                height: 40,
+                                                // height: 40,
                                                 // width: 150,
                                                 child: Text(
                                                   "Invest in our USD denominated fixed deposit and hedge against exchange rate risk, plus appreciable returns on your dollar investment.  ",

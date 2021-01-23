@@ -4,6 +4,7 @@ import 'package:provider_architecture/_viewmodel_provider.dart';
 import 'package:simple_animations/simple_animations.dart';
 import 'package:supercharged_dart/supercharged_dart.dart';
 import 'package:supercharged/supercharged.dart';
+import 'package:zimvest/animations/loading.dart';
 import 'package:zimvest/data/view_models/wallets_view_model.dart';
 import 'package:zimvest/styles/colors.dart';
 import 'package:zimvest/utils/app_utils.dart';
@@ -111,9 +112,10 @@ class _DollarFundingSummaryScreenState
           height: MediaQuery.of(context).size.height,
           child: Stack(
             children: [
+              SvgPicture.asset("images/patterns.svg", fit: BoxFit.fill,),
               Positioned.fill(
                 child: model.busy
-                    ? Center(child: CircularProgressIndicator())
+                    ? Center(child: LoadingWIdget())
                     : model.status
                         ? PlayAnimation<MultiTweenValues<AniProps>>(
                             tween: _tween,
@@ -191,7 +193,7 @@ class _DollarFundingSummaryScreenState
                             },
                           )
                         : model.busy
-                            ? Center(child: CircularProgressIndicator())
+                            ? Center(child: LoadingWIdget())
                             : model.status
                                 ? Text(
                                     model.status.toString(),
@@ -264,9 +266,9 @@ class _DollarFundingSummaryScreenState
                                                         num nairaAmount = widget
                                                                 .amount *
                                                             widget.nairaRate;
-                                                        model.fundWallet(
-                                                            widget.amount,
-                                                            nairaAmount);
+                                                        // model.fundWallet(
+                                                        //     widget.amount,
+                                                        //     nairaAmount);
                                                       },
                                                       textColor: Colors.white,
                                                       title: "Retry",
@@ -444,7 +446,7 @@ class _DollarFundingSummaryScreenState
                         details.delta.dy == -2.0) {
                       startAnim();
                       num nairaAmount = widget.amount * widget.nairaRate;
-                      model.fundWallet(widget.amount, nairaAmount);
+                      // model.fundWallet(widget.amount, nairaAmount);
                     }
                   },
                   child: Container(

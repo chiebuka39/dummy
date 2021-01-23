@@ -71,8 +71,9 @@ class _AllTreasurryBillBondsState extends State<AllTreasurryBillBonds> {
                   ),
                 ),
                 child: FixedIncomeCard(
+                  height: 5.5,
                   bondName: e.treasuryBillName,
-                  maturityDate: e.investmentMaturityDate,
+                  maturityDate: e.maturityDate,
                   minimumAmount: e.minimumAmount,
                   rate: e.rate,
                 ),

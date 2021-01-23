@@ -1,5 +1,6 @@
 import 'package:flushbar/flushbar.dart';
 import 'package:flutter/material.dart';
+import 'package:zimvest/data/models/payment/card.dart';
 import 'package:zimvest/new_screens/navigation/investments/high_yield/dollar/investment_summary_high_yield_dollar.dart';
 import 'package:zimvest/new_screens/navigation/investments/high_yield/dollar/payment_source_wired_transfer.dart';
 import 'package:zimvest/new_screens/navigation/investments/widgets/util_widgt.dart';

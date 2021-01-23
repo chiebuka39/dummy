@@ -2,8 +2,10 @@ import 'dart:math';
 
 import 'package:flushbar/flushbar.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:provider_architecture/_viewmodel_provider.dart';
 import 'package:zimvest/data/view_models/investment_view_model.dart';
+import 'package:zimvest/data/view_models/payment_view_model.dart';
 import 'package:zimvest/new_screens/navigation/investments/high_yield/dollar/high_yield_investment_dollar_amout_input.dart';
 import 'package:zimvest/new_screens/navigation/investments/widgets/text_field.dart';
 import 'package:zimvest/new_screens/navigation/investments/widgets/util_widgt.dart';
@@ -32,6 +34,7 @@ class _HighYieldInvestmentDollarUniqueNameState
   TextEditingController investmentName = TextEditingController();
   @override
   Widget build(BuildContext context) {
+    ABSPaymentViewModel paymentViewModel = Provider.of(context);
     return ViewModelProvider<InvestmentHighYieldViewModel>.withConsumer(
       viewModelBuilder: () => InvestmentHighYieldViewModel(),
       onModelReady: (model) => model.getDollarTermInstruments(),
@@ -60,7 +63,7 @@ class _HighYieldInvestmentDollarUniqueNameState
               YMargin(252),
               RoundedNextButton(
                 onTap: () {
-                  // print(model.dollarInstrument.data);
+                  paymentViewModel.investmentName = investmentName.text;
                   List<num> minimumAmount = model.dollarInstrument.data
                       .map((e) => e.minAmount)
                       .toList();

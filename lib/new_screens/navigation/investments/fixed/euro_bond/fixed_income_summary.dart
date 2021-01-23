@@ -161,6 +161,7 @@ class _SavingsSummaryScreenState extends State<SavingsSummaryScreen> {
           height: MediaQuery.of(context).size.height,
           child: Stack(
             children: [
+              SvgPicture.asset("images/patterns.svg", fit: BoxFit.fill,),
               Positioned.fill(
                 child: model.status
                     ? PlayAnimation<MultiTweenValues<AniProps>>(
@@ -484,7 +485,7 @@ class _SavingsSummaryScreenState extends State<SavingsSummaryScreen> {
                                             ),
                                           ),
                                           Text(
-                                            "${AppStrings.nairaSymbol}${StringUtils(widget.minimumAmount.toString()).convertWithComma()}",
+                                            "${AppStrings.nairaSymbol}${widget.amount.toString().split('.')[0].convertWithComma()}",
                                             style: TextStyle(
                                               fontSize: 11,
                                               fontFamily: AppStrings.fontBold,

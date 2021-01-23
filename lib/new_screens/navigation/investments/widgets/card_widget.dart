@@ -215,23 +215,27 @@ class FixedIncomeCard extends StatelessWidget {
   final double rate;
   final num minimumAmount;
   final String maturityDate;
+  final double height;
+  final double width;
 
   const FixedIncomeCard(
       {Key key,
       @required this.bondName,
       @required this.rate,
       @required this.minimumAmount,
-      @required this.maturityDate})
+      @required this.maturityDate,
+      this.height = 4,
+      this.width = 1.5})
       : super(key: key);
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.only(left: 8.0, right: 8.0),
+      padding: const EdgeInsets.symmetric(horizontal: 20),
       child: Container(
         padding: EdgeInsets.all(11),
         margin: EdgeInsets.only(top: 20),
-        height: screenHeight(context) / 4,
-        width: screenWidth(context) / 1.5,
+        height: screenHeight(context) / height,
+        width: screenWidth(context) / width,
         decoration: BoxDecoration(
           color: AppColors.kWhite,
           boxShadow: AppUtils.getBoxShaddow,
@@ -280,7 +284,7 @@ class FixedIncomeCard extends StatelessWidget {
                       ),
                     ),
                     Text(
-                      "${AppStrings.nairaSymbol} ${minimumAmount.toString()}",
+                      "${AppStrings.nairaSymbol} ${minimumAmount.toString().convertWithComma()}",
                       style: TextStyle(
                         fontSize: 11,
                         fontWeight: FontWeight.w400,

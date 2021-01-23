@@ -78,7 +78,11 @@ abstract class ABSInvestmentService {
       String uniqueName,
       String token});
 
-  Future<ConvertedDollarRate> calculateRate({num amountUsd, String token});
+  Future<ConvertedRate> calculateRate(
+      {num amount,
+      String token,
+      String sourceCurrency,
+      String destiationCurrency});
   Future<Result<GottenRate>> getRate(String token);
   Future<Result<List<TermInstrument>>> getDollarTermInstrumentsFilter(
       {String token, num amountFilter});
@@ -987,7 +991,6 @@ class InvestmentService extends ABSInvestmentService {
           },
         ),
       );
-      print("Success: ${buydollaInstrument.data}");
       if (buydollaInstrument.statusCode == 200) {
         print("Success: ${buydollaInstrument.data}");
         result.data = buydollaInstrument.data["message"];
@@ -996,7 +999,7 @@ class InvestmentService extends ABSInvestmentService {
       if (buydollaInstrument.statusCode == 400) {
         print("Failure: ${buydollaInstrument.data}");
         result.data = buydollaInstrument.data;
-        return buydollaInstrument.data["message"];
+        return null;
       }
     } on DioError catch (e) {
       result.error = true;
@@ -1062,19 +1065,19 @@ class InvestmentService extends ABSInvestmentService {
   }
 
   @override
-  Future<ConvertedDollarRate> calculateRate(
-      {num amountUsd, String token}) async {
-    var url = "${AppStrings.baseUrl}$microService/api/Calculator/calculaterate";
-
-    FormData data = FormData.fromMap({
-      "AmountUSD": amountUsd,
-    });
+  Future<ConvertedRate> calculateRate(
+      {num amount,
+      String token,
+      String sourceCurrency,
+      String destiationCurrency}) async {
+    var url =
+        "${AppStrings.baseUrl}$microService/api/Calculator/calculaterate?Amount=$amount&SourceCurrency=$sourceCurrency&DestinationCurrency=$destiationCurrency";
 
     var headers = {HttpHeaders.authorizationHeader: "Bearer $token"};
     try {
       var calculateRate = await dio.post(
         url,
-        data: data,
+        // data: data,
         options: Options(
           headers: headers,
           validateStatus: (status) {
@@ -1084,7 +1087,7 @@ class InvestmentService extends ABSInvestmentService {
       );
 
       if (calculateRate.statusCode == 200) {
-        return ConvertedDollarRate.fromJson(calculateRate.data["data"]);
+        return ConvertedRate.fromJson(calculateRate.data["data"]);
       } else if (calculateRate.statusCode == 400) {
         return calculateRate.data;
       }

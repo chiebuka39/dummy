@@ -135,9 +135,9 @@ class FixedIncomeInvestmentService implements ABSFixedIncomeInvestmentService {
       );
 
       if (buyCommercialPaper.statusCode == 200) {
-        return buyCommercialPaper.data["message"];
+        return "Success";
       } else if (buyCommercialPaper.statusCode == 400) {
-        return buyCommercialPaper.data["message"];
+        return "Payment failed!";
       } else if (buyCommercialPaper.statusCode == 500) {
         return "Payment failed!";
       }
@@ -188,9 +188,9 @@ class FixedIncomeInvestmentService implements ABSFixedIncomeInvestmentService {
       );
 
       if (buyCorporateBond.statusCode == 200) {
-        return buyCorporateBond.data["message"];
+        return "Success";
       } else if (buyCorporateBond.statusCode == 400) {
-        return buyCorporateBond.data["message"];
+        return "Payment failed!";
       } else if (buyCorporateBond.statusCode == 500) {
         return "Payment failed!";
       }
@@ -241,9 +241,9 @@ class FixedIncomeInvestmentService implements ABSFixedIncomeInvestmentService {
       );
       print(buyEuroBond.data);
       if (buyEuroBond.statusCode == 200) {
-        return buyEuroBond.data["message"];
+        return "Success";
       } else if (buyEuroBond.statusCode == 400) {
-        return buyEuroBond.data["message"];
+        return "Payment failed!";
       } else if (buyEuroBond.statusCode == 500) {
         return "Payment failed!";
       }
@@ -292,9 +292,9 @@ class FixedIncomeInvestmentService implements ABSFixedIncomeInvestmentService {
       );
       print(buyFGNBond.data);
       if (buyFGNBond.statusCode == 200) {
-        return buyFGNBond.data["message"];
+        return "Success";
       } else if (buyFGNBond.statusCode == 400) {
-        return buyFGNBond.data["message"];
+        return "Payment failed!";
       } else if (buyFGNBond.statusCode == 500) {
         return "Payment failed!";
       }
@@ -347,9 +347,9 @@ class FixedIncomeInvestmentService implements ABSFixedIncomeInvestmentService {
       );
 
       if (buyPromissoryNote.statusCode == 200) {
-        return buyPromissoryNote.data["message"];
+        return "Success";
       } else if (buyPromissoryNote.statusCode == 400) {
-        return buyPromissoryNote.data["message"];
+        return "Payment failed!";
       } else if (buyPromissoryNote.statusCode == 500) {
         return "Payment failed!";
       }
@@ -402,9 +402,9 @@ class FixedIncomeInvestmentService implements ABSFixedIncomeInvestmentService {
       );
       print("pppse ${buyTreasuryBill.statusCode}");
       if (buyTreasuryBill.statusCode == 200) {
-        return buyTreasuryBill.data["message"];
+        return "Success";
       } else if (buyTreasuryBill.statusCode == 400) {
-        return buyTreasuryBill.data["message"];
+        return "Payment failed!";
       } else if (buyTreasuryBill.statusCode == 500) {
         return "Payment failed!";
       }

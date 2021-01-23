@@ -1,5 +1,7 @@
 import 'package:flutter/foundation.dart';
+import 'package:flutter/material.dart';
 import 'package:zimvest/data/models/dashboard.dart';
+import 'package:zimvest/data/models/investment/term_instruments.dart';
 import 'package:zimvest/data/models/payment/bank.dart';
 import 'package:zimvest/data/models/payment/card.dart';
 import 'package:zimvest/data/models/payment/card_payload.dart';
@@ -7,6 +9,7 @@ import 'package:zimvest/data/models/payment/wallet.dart';
 import 'package:zimvest/data/services/dashboard_service.dart';
 import 'package:zimvest/data/services/payment_service.dart';
 import 'package:zimvest/locator.dart';
+import 'package:zimvest/utils/app_utils.dart';
 import 'package:zimvest/utils/result.dart';
 
 abstract class ABSPaymentViewModel extends ChangeNotifier {
@@ -29,6 +32,14 @@ abstract class ABSPaymentViewModel extends ChangeNotifier {
   int get instrumentId => _instrumentId;
   int _amountAvailable;
   int get amountAvailable => _amountAvailable;
+  double _investmentAmount;
+  double get investmentAmount => _investmentAmount;
+  TextEditingController amountController = TextEditingController();
+
+  TermInstrument _nairaInstrument;
+  TermInstrument get pickednairaInstrument => _nairaInstrument;
+  TermInstrument _dollarInstrument;
+  TermInstrument get pickeddollarInstrument => _dollarInstrument;
 
   List<Wallet> _wallet;
   List<Wallet> get wallet => _wallet;
@@ -45,6 +56,9 @@ abstract class ABSPaymentViewModel extends ChangeNotifier {
   set transactionId(int value);
   set instrumentId(int value);
   set availableAmount(int value);
+  set pickNairaInstrument(TermInstrument value);
+  set pickDollarInstrument(TermInstrument value);
+  set investmentAmount(double amount);
 
   Future<Result<List<Bank>>> getBanks(String token);
   Future<Result<List<String>>> validateBank(
@@ -68,6 +82,7 @@ abstract class ABSPaymentViewModel extends ChangeNotifier {
       String pin});
   Future<Result<CardPayload>> registerNewCard(String token);
   Future<Result<void>> paymentConfirmation(String token, String trnasactionRef);
+  void onKeyboardTap(String value);
 }
 
 class PaymentViewModel extends ABSPaymentViewModel {
@@ -243,6 +258,30 @@ class PaymentViewModel extends ABSPaymentViewModel {
   @override
   set availableAmount(int value) {
     _amountAvailable = value;
+    notifyListeners();
+  }
+
+  @override
+  set pickNairaInstrument(TermInstrument value) {
+    _nairaInstrument = value;
+    notifyListeners();
+  }
+
+  @override
+  set investmentAmount(double amount) {
+    _investmentAmount = amount;
+    notifyListeners();
+  }
+
+  @override
+  void onKeyboardTap(String value) {
+    amountController.text = amountController.value.text + value;
+    notifyListeners();
+  }
+
+  @override
+  set pickDollarInstrument(TermInstrument value) {
+    _dollarInstrument = value;
     notifyListeners();
   }
 }

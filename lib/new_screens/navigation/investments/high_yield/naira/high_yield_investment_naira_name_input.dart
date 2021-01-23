@@ -2,8 +2,10 @@ import 'dart:math';
 
 import 'package:flushbar/flushbar.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:provider_architecture/_viewmodel_provider.dart';
 import 'package:zimvest/data/view_models/investment_view_model.dart';
+import 'package:zimvest/data/view_models/payment_view_model.dart';
 import 'package:zimvest/new_screens/navigation/investments/widgets/text_field.dart';
 import 'package:zimvest/new_screens/navigation/investments/widgets/util_widgt.dart';
 import 'package:zimvest/styles/colors.dart';
@@ -34,6 +36,7 @@ class _HighYieldInvestmentNairaUniqueNameState
   TextEditingController investmentName = TextEditingController();
   @override
   Widget build(BuildContext context) {
+    ABSPaymentViewModel paymentViewModel = Provider.of(context);
     return ViewModelProvider<InvestmentHighYieldViewModel>.withConsumer(
       viewModelBuilder: () => InvestmentHighYieldViewModel(),
       onModelReady: (model) => model.getNairaTermInstruments(),
@@ -63,6 +66,7 @@ class _HighYieldInvestmentNairaUniqueNameState
               YMargin(252),
               RoundedNextButton(
                 onTap: () {
+                  paymentViewModel.investmentName = investmentName.text;
                   List<num> minimumAmount = model.nairaInstrument.data
                       .map((e) => e.minAmount)
                       .toList();
@@ -103,6 +107,7 @@ class _HighYieldInvestmentNairaUniqueNameState
                       duration: Duration(seconds: 3),
                     ).show(context);
                   } else {
+
                     Navigator.push(
                       context,
                       InvestmentHighYieldNairaAmountInput.route(

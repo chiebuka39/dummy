@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:provider/provider.dart';
 import 'package:provider_architecture/_viewmodel_provider.dart';
 import 'package:simple_animations/simple_animations.dart';
+import 'package:zimvest/animations/loading.dart';
 import 'package:zimvest/data/view_models/investment_view_model.dart';
+import 'package:zimvest/data/view_models/payment_view_model.dart';
 import 'package:zimvest/new_screens/funding/top_up_successful.dart';
 import 'package:zimvest/new_screens/navigation/investments/widgets/terms_and_conditions_box.dart';
 import 'package:zimvest/styles/colors.dart';
@@ -133,6 +136,8 @@ class _InvestmentSummaryScreenDollarState
 
   @override
   Widget build(BuildContext context) {
+    ABSPaymentViewModel paymentViewModel = Provider.of(context);
+    print(paymentViewModel.investmentAmount);
     return ViewModelProvider<InvestmentHighYieldViewModel>.withConsumer(
       viewModelBuilder: () => InvestmentHighYieldViewModel(),
       builder: (context, model, _) => Scaffold(
@@ -141,6 +146,10 @@ class _InvestmentSummaryScreenDollarState
           height: MediaQuery.of(context).size.height,
           child: Stack(
             children: [
+              SvgPicture.asset(
+                "images/patterns.svg",
+                fit: BoxFit.fill,
+              ),
               Positioned.fill(
                 child: model.status
                     ? PlayAnimation<MultiTweenValues<AniProps>>(
@@ -166,33 +175,46 @@ class _InvestmentSummaryScreenDollarState
                                     ),
                                   ),
                                   YMargin(40),
-                                  ItemFader(
-                                    offset: 10,
-                                    curve: Curves.easeIn,
-                                    key: keys[0],
-                                    child: Text(
-                                      "You Have Successfully Invested In Zimvest High Yield Naira",
-                                      textAlign: TextAlign.center,
-                                      style: TextStyle(color: Colors.white),
+                                  Transform.scale(
+                                    scale: value.get(AniProps.scale),
+                                    child: Transform.translate(
+                                      offset: value.get(AniProps.offset1),
+                                      child: Opacity(
+                                        opacity: slideUp
+                                            ? value.get(AniProps.opacity1)
+                                            : 0.0,
+                                        child: Text(
+                                          "You Have Successfully Invested In Zimvest High Yield Naira",
+                                          textAlign: TextAlign.center,
+                                          style: TextStyle(color: Colors.white),
+                                        ),
+                                      ),
                                     ),
                                   ),
                                   Spacer(),
-                                  ItemFader(
-                                    offset: 10,
-                                    curve: Curves.easeIn,
-                                    key: keys[1],
-                                    child: PrimaryButtonNew(
-                                      onTap: () {
-                                        Navigator.pushAndRemoveUntil(
-                                            context,
-                                            MaterialPageRoute(
-                                                builder: (context) =>
-                                                    TabsContainer()),
-                                            (Route<dynamic> route) => false);
-                                      },
-                                      textColor: Colors.white,
-                                      title: "Done",
-                                      bg: AppColors.kPrimaryColor,
+                                  Transform.scale(
+                                    scale: value.get(AniProps.scale),
+                                    child: Transform.translate(
+                                      offset: value.get(AniProps.offset1),
+                                      child: Opacity(
+                                        opacity: slideUp
+                                            ? value.get(AniProps.opacity1)
+                                            : 0.0,
+                                        child: PrimaryButtonNew(
+                                          onTap: () {
+                                            Navigator.pushAndRemoveUntil(
+                                                context,
+                                                MaterialPageRoute(
+                                                    builder: (context) =>
+                                                        TabsContainer()),
+                                                (Route<dynamic> route) =>
+                                                    false);
+                                          },
+                                          textColor: Colors.white,
+                                          title: "Done",
+                                          bg: AppColors.kPrimaryColor,
+                                        ),
+                                      ),
                                     ),
                                   ),
                                   YMargin(50)
@@ -203,7 +225,7 @@ class _InvestmentSummaryScreenDollarState
                         },
                       )
                     : model.busy
-                        ? Center(child: CircularProgressIndicator())
+                        ? Center(child: LoadingWIdget())
                         : model.status
                             ? Text(
                                 model.status.toString(),
@@ -268,14 +290,14 @@ class _InvestmentSummaryScreenDollarState
                                                     : 0.0,
                                                 child: PrimaryButtonNew(
                                                   onTap: () {
-                                                    model.buyDollarInstrument(
-                                                        amount: widget.amount,
-                                                        productId:
-                                                            widget.productId,
-                                                        uniqueName:
-                                                            widget.uniqueName,
-                                                        fundingChannel:
-                                                            widget.channelId);
+                                                    // model.buyDollarInstrument(
+                                                    //     amount: widget.amount,
+                                                    //     productId:
+                                                    //         widget.productId,
+                                                    //     uniqueName:
+                                                    //         widget.uniqueName,
+                                                    //     fundingChannel:
+                                                    //         widget.channelId);
                                                   },
                                                   textColor: Colors.white,
                                                   title: "Retry",
@@ -361,30 +383,36 @@ class _InvestmentSummaryScreenDollarState
                             height: screenHeight(context) / 2.2,
                             width: screenWidth(context),
                             child: Column(
-                              // mainAxisAlignment: MainAxisAlignment.center,
+                              crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 YMargin(27),
-                                Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Text(
-                                      "INVESTMENT NAME (Zimvest High Yield Naira ${widget.duration} Days)",
-                                      textAlign: TextAlign.start,
-                                      style: TextStyle(
-                                        fontSize: 11,
-                                        fontFamily: AppStrings.fontMedium,
-                                        color: AppColors.kLightText5,
+                                Padding(
+                                  padding: const EdgeInsets.symmetric(
+                                      horizontal: 20.0),
+                                  child: Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      Text(
+                                        "INVESTMENT NAME (Zimvest High Yield Dollar)",
+                                        textAlign: TextAlign.start,
+                                        style: TextStyle(
+                                          fontSize: 11,
+                                          fontFamily: AppStrings.fontMedium,
+                                          color: AppColors.kLightText5,
+                                        ),
                                       ),
-                                    ),
-                                    Text(
-                                      "${widget.uniqueName}",
-                                      style: TextStyle(
-                                        fontSize: 11,
-                                        fontFamily: AppStrings.fontBold,
-                                        color: AppColors.kTextColor,
+                                      YMargin(8),
+                                      Text(
+                                        "${paymentViewModel.investmentName}",
+                                        style: TextStyle(
+                                          fontSize: 11,
+                                          fontFamily: AppStrings.fontBold,
+                                          color: AppColors.kTextColor,
+                                        ),
                                       ),
-                                    ),
-                                  ],
+                                    ],
+                                  ),
                                 ),
                                 YMargin(40),
                                 Padding(
@@ -409,12 +437,13 @@ class _InvestmentSummaryScreenDollarState
                                               color: AppColors.kLightText5,
                                             ),
                                           ),
+                                          YMargin(8),
                                           Text(
-                                            "${widget.rate} P.A",
+                                            "${paymentViewModel.pickeddollarInstrument.rate}% P.A",
                                             style: TextStyle(
                                               fontSize: 11,
                                               fontFamily: AppStrings.fontBold,
-                                              color: AppColors.kTextColor,
+                                              color: AppColors.kFixed,
                                             ),
                                           ),
                                         ],
@@ -434,8 +463,9 @@ class _InvestmentSummaryScreenDollarState
                                               color: AppColors.kLightText5,
                                             ),
                                           ),
+                                          YMargin(8),
                                           Text(
-                                            "${widget.maturityDate}",
+                                            "${paymentViewModel.pickeddollarInstrument.maturityDate}",
                                             style: TextStyle(
                                               fontSize: 11,
                                               fontFamily: AppStrings.fontBold,
@@ -470,8 +500,9 @@ class _InvestmentSummaryScreenDollarState
                                               color: AppColors.kLightText5,
                                             ),
                                           ),
+                                          YMargin(8),
                                           Text(
-                                            "${AppStrings.nairaSymbol}${StringUtils(widget.minimumAmount.toString()).convertWithComma()}",
+                                            "${AppStrings.dollarSymbol}${paymentViewModel.investmentAmount.toString().split('.')[0].convertWithComma()}",
                                             style: TextStyle(
                                               fontSize: 11,
                                               fontFamily: AppStrings.fontBold,
@@ -495,8 +526,9 @@ class _InvestmentSummaryScreenDollarState
                                               color: AppColors.kLightText5,
                                             ),
                                           ),
+                                          YMargin(8),
                                           Text(
-                                            "${AppStrings.nairaSymbol}${0.015 * widget.amount}",
+                                            "${AppStrings.dollarSymbol}${0.015 * paymentViewModel.investmentAmount}",
                                             style: TextStyle(
                                               fontSize: 11,
                                               fontFamily: AppStrings.fontBold,
@@ -529,8 +561,9 @@ class _InvestmentSummaryScreenDollarState
                                               color: AppColors.kLightText5,
                                             ),
                                           ),
+                                          YMargin(8),
                                           Text(
-                                            "${AppStrings.nairaSymbol}${(0.015 * widget.amount) + widget.amount}",
+                                            "${AppStrings.dollarSymbol}${((0.015 * paymentViewModel.investmentAmount) + paymentViewModel.investmentAmount).toString().split('.')[0].convertWithComma()}",
                                             style: TextStyle(
                                               fontSize: 11,
                                               fontFamily: AppStrings.fontBold,
@@ -560,18 +593,16 @@ class _InvestmentSummaryScreenDollarState
                 left: 0,
                 right: 0,
                 child: GestureDetector(
-                  onVerticalDragStart: (details) {
+                  onVerticalDragStart: (details) async {
                     startAnim();
-                    model.buyDollarInstrument(
-                        amount: widget.amount,
-                        productId: widget.productId,
-                        uniqueName: widget.uniqueName,
+                    await model.buyDollarInstrument(
+                        amount: paymentViewModel.investmentAmount,
+                        productId: paymentViewModel.pickeddollarInstrument.id,
+                        uniqueName: paymentViewModel.investmentName,
                         fundingChannel: widget.channelId);
+
+                    paymentViewModel.dispose();
                   },
-                  // onVerticalDragStart: (details) {
-                  //   print("dff ${details.toString()}");
-                  //   //
-                  // },
                   child: Container(
                     height: 60,
                     child: Column(
@@ -595,13 +626,6 @@ class _InvestmentSummaryScreenDollarState
                   ),
                 ),
               ),
-              // Container(
-              //   height: size.height,
-              //   width: size.width,
-              //   child: Center(
-              //     child: model.busy ? CircularProgressIndicator() : SizedBox(),
-              //   ),
-              // ),
             ],
           ),
         ),

@@ -23,6 +23,7 @@ class HighYieldDetailsDollar extends StatefulWidget {
 class _HighYieldDetailsDollarState extends State<HighYieldDetailsDollar> {
   @override
   Widget build(BuildContext context) {
+
     return Scaffold(
       backgroundColor: AppColors.kHighYield,
       body: Stack(

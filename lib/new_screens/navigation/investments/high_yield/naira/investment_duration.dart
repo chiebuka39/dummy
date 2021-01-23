@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:provider_architecture/_viewmodel_provider.dart';
 import 'package:zimvest/data/models/investment/term_instruments.dart';
 import 'package:zimvest/data/models/payment/card.dart';
+import 'package:zimvest/data/view_models/payment_view_model.dart';
 import 'package:zimvest/data/view_models/wallets_view_model.dart';
 import 'package:zimvest/new_screens/navigation/investments/high_yield/naira/high_yield_investment_naira_purchase_source.dart';
 import 'package:zimvest/new_screens/navigation/investments/widgets/util_widgt.dart';
@@ -43,6 +45,7 @@ class InvestmentDurationPeriod extends StatefulWidget {
 class _InvestmentDurationPeriodState extends State<InvestmentDurationPeriod> {
   @override
   Widget build(BuildContext context) {
+    ABSPaymentViewModel paymentViewModel = Provider.of(context);
     List<TermInstrument> instrument = widget.instrument
         .where((element) => element.minAmount == widget.amount)
         .toList();
@@ -75,7 +78,7 @@ class _InvestmentDurationPeriodState extends State<InvestmentDurationPeriod> {
               child: Container(
                 width: 250,
                 child: Text(
-                  "Choose from the list a tenor that is best suited for your financial goals",
+                  "Choose from the list a tenure that is best suited for your financial goals",
                   style: TextStyle(
                     fontSize: 11,
                     fontWeight: FontWeight.w400,
@@ -103,7 +106,7 @@ class _InvestmentDurationPeriodState extends State<InvestmentDurationPeriod> {
                 : instrument.length == 0
                     ? Padding(
                         padding: const EdgeInsets.symmetric(
-                            horizontal: 20.0, vertical: 250),
+                            horizontal: 20.0, vertical: 200),
                         child: Text(
                           "There are no available investments for ${widget.amount}",
                           textAlign: TextAlign.center,
@@ -118,7 +121,8 @@ class _InvestmentDurationPeriodState extends State<InvestmentDurationPeriod> {
                             child: InkWell(
                               onTap: () {
                                 model.check();
-                                selectedIndex = index;
+                                // selectedIndex = index;
+                                paymentViewModel.pickNairaInstrument = instrument[index];
                               },
                               child: Container(
                                 height: 40,
@@ -170,22 +174,18 @@ class _InvestmentDurationPeriodState extends State<InvestmentDurationPeriod> {
                 ? SizedBox()
                 : instrument.length == 0
                     ? SizedBox()
-                    : RoundedNextButton(onTap: () {
-                        print(selectedIndex);
-                        Navigator.push(
-                          context,
-                          HighYieldInvestmentPurchaseSource.route(
-                            amount: widget.amount,
-                            cards: model.cards,
-                            productId: instrument[selectedIndex].id,
-                            rate: instrument[selectedIndex].rate,
-                            maturityDate:
-                                instrument[selectedIndex].maturityDate,
-                            uniqueName: widget.uniqueName,
-                            duration: instrument[selectedIndex].maturityPeriod,
-                          ),
-                        );
-                      }),
+                    : RoundedNextButton(
+                        onTap: () {
+                          print(selectedIndex);
+                          Navigator.push(
+                            context,
+                            HighYieldInvestmentPurchaseSource.route(
+                              amount: widget.amount,
+                              cards: model.cards,
+                            ),
+                          );
+                        },
+                      ),
           ],
         ),
       ),
