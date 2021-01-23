@@ -101,8 +101,8 @@ class AspireContainerWidget extends StatelessWidget {
             Text(
               goal.planName,
               style: TextStyle(
-                  fontSize: 10,
-                  fontFamily: AppStrings.fontNormal,
+                  fontSize: 13,
+                  fontFamily: AppStrings.fontMedium,
                   color: AppColors.kGreyText),
             ),
             YMargin(8),

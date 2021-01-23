@@ -36,7 +36,7 @@ class _IdentityUploadScreenState extends State<IdentityUploadScreen> {
     }
   }
   Future getImageFromCam() async {
-    final pickedFile = await picker.getImage(source: ImageSource.gallery);
+    final pickedFile = await picker.getImage(source: ImageSource.camera);
 
 
     if (pickedFile != null) {
@@ -67,12 +67,16 @@ class _IdentityUploadScreenState extends State<IdentityUploadScreen> {
           Text("Choose ID option", style: TextStyle(
             fontSize: 13,fontFamily: AppStrings.fontMedium
           ),),
+          YMargin(10),
+          Text("Choose one of the document option to verify your identity",
+            style: TextStyle(fontFamily: AppStrings.fontNormal),),
 
           IdentityWidget(
             onTap: (){
               settingsViewModel.selectedIdentity = 1;
               showModalBottomSheet < Null > (context: context, builder: (BuildContext context) {
-                return ImageUploadWidget(onCamera: getImageFromCam,onGallery: getImageFromGallery,);
+                return ImageUploadWidget(onCamera: getImageFromCam,
+                  onGallery: getImageFromGallery,title: "Permanent Voters Card",);
               }, isScrollControlled: true);
             },
           ),
@@ -81,7 +85,8 @@ class _IdentityUploadScreenState extends State<IdentityUploadScreen> {
             onTap: (){
               settingsViewModel.selectedIdentity = 2;
               showModalBottomSheet < Null > (context: context, builder: (BuildContext context) {
-                return ImageUploadWidget(onCamera: getImageFromCam,onGallery: getImageFromGallery,);
+                return ImageUploadWidget(onCamera: getImageFromCam,
+                  onGallery: getImageFromGallery,title:'National identity card',);
               }, isScrollControlled: true);
             },
           ),
@@ -90,7 +95,8 @@ class _IdentityUploadScreenState extends State<IdentityUploadScreen> {
             onTap: (){
               settingsViewModel.selectedIdentity = 3;
               showModalBottomSheet < Null > (context: context, builder: (BuildContext context) {
-                return ImageUploadWidget(onCamera: getImageFromCam,onGallery: getImageFromGallery,);
+                return ImageUploadWidget(onCamera: getImageFromCam,
+                  onGallery: getImageFromGallery,title: 'International passport',);
               }, isScrollControlled: true);
             },
           ),
@@ -99,7 +105,8 @@ class _IdentityUploadScreenState extends State<IdentityUploadScreen> {
             onTap: (){
               settingsViewModel.selectedIdentity = 4;
               showModalBottomSheet < Null > (context: context, builder: (BuildContext context) {
-                return ImageUploadWidget(onCamera: getImageFromCam,onGallery: getImageFromGallery,);
+                return ImageUploadWidget(onCamera: getImageFromCam,
+                  onGallery: getImageFromGallery,title: 'Driver’s license');
               }, isScrollControlled: true);
             },
           ),

@@ -46,6 +46,8 @@ class _WealthBoxDetailsScreenState extends State<WealthBoxDetailsScreen> with Af
   ABSSavingViewModel savingViewModel;
   ABSIdentityViewModel identityViewModel;
   List<ProductTransaction> transactions;
+  bool noInternet = false;
+  bool error = false;
 
   @override
   void initState() {
@@ -59,7 +61,11 @@ class _WealthBoxDetailsScreenState extends State<WealthBoxDetailsScreen> with Af
   }
 
   Future<void> fetchTransactions(int productId) async {
-
+    if(mounted){
+      setState(() {
+        error = false;
+        noInternet = false;
+      });
       var result = await savingViewModel.getTransactionForProduct(
           token: identityViewModel.user.token,
           id: productId);
@@ -67,7 +73,14 @@ class _WealthBoxDetailsScreenState extends State<WealthBoxDetailsScreen> with Af
         setState(() {
           transactions = result.data;
         });
+      }else{
+        setState(() {
+          error = result.error;
+          noInternet = !result.networkAvailable;
+        });
       }
+    }
+
 
   }
 
@@ -309,7 +322,10 @@ class _WealthBoxDetailsScreenState extends State<WealthBoxDetailsScreen> with Af
                             )
                           ],),
                         ),
-                        transactions == null ? Container(
+                        error == true ? NoInternetWidget2(message: noInternet? "Failed to connect, please connect your internet "
+                            "and try again":"We could not fetch activities, please try again", retry: (){
+                          fetchTransactions(savingsPlanModel.id);
+                        }):transactions == null ? Container(
                           margin: EdgeInsets.symmetric(horizontal: 20),
                           height: 400,
                           child: Shimmer.fromColors(

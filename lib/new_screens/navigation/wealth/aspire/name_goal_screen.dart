@@ -80,7 +80,7 @@ class _NameYourGoalScreenState extends State<NameYourGoalScreen> {
                   },onGallery: (){
                     Navigator.pop(context);
                     getImage(ImageSource.gallery);
-                  },);
+                  },title: "Custom target image",);
                 }, isScrollControlled: true);
               },
               child: Container(

@@ -484,7 +484,7 @@ class NoInternetWidget extends StatelessWidget {
 
 class ImageUploadWidget extends StatelessWidget {
   const ImageUploadWidget({
-    Key key, this.title ="Upload Utility bill", this.onCamera,
+    Key key,@required this.title , this.onCamera,
     this.onGallery,
   }) : super(key: key);
 
@@ -525,7 +525,7 @@ class ImageUploadWidget extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 YMargin(40),
-                Text("Upload Utility Bill", style: TextStyle(fontSize: 15,
+                Text("Upload $title", style: TextStyle(fontSize: 15,
                     fontFamily: AppStrings.fontBold),),
                 YMargin(37),
                 InkWell(

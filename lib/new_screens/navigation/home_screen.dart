@@ -226,7 +226,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                   )),
                               XMargin(2),
                               Text(
-                                 dashboardViewModel
+                                dashboardViewModel.dashboardModel.dollarPortfolio == "0.00" ? '0':dashboardViewModel
                                     .dashboardModel.dollarPortfolio.substring(1)
                                     .split(".")
                                     .first,

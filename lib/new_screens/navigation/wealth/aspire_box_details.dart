@@ -200,9 +200,14 @@ class _AspireDetailsScreenState extends State<AspireDetailsScreen> with
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
                                   Spacer(),
-                                  Text("${widget.goal.targetAmount}".split(".").first.convertWithComma(), style: TextStyle(
-                                      fontFamily: AppStrings.fontMedium,color: AppColors.kGreyText
-                                  ),),
+                                  Row(
+                                    children: [
+                                      Text(AppStrings.nairaSymbol),
+                                      Text("${widget.goal.targetAmount}".split(".").first.convertWithComma(), style: TextStyle(
+                                          fontFamily: AppStrings.fontMedium,color: AppColors.kGreyText
+                                      ),),
+                                    ],
+                                  ),
                                   YMargin(8),
                                   Text("Goal Amount", style: TextStyle(fontSize: 11,
                                       fontFamily: AppStrings.fontNormal,color: AppColors.kGreyText
@@ -256,7 +261,8 @@ class _AspireDetailsScreenState extends State<AspireDetailsScreen> with
                           child: Center(
                             child: GestureDetector(
                               onTap: (){
-                                if(widget.goal.savingsAmount == 0){
+
+                                if(widget.goal.amountSaved == 0){
                                   return;
                                 }
                                 DateTime time = DateTime.now();
@@ -281,7 +287,7 @@ class _AspireDetailsScreenState extends State<AspireDetailsScreen> with
                                 }
                               },
                               child: Opacity(
-                                opacity: widget.goal.savingsAmount == 0 ? 0.4:1,
+                                opacity: widget.goal.amountSaved == 0 ? 0.4:1,
                                 child: Container(child: Column(children: [
                                   Container(
                                       height:35,

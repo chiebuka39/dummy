@@ -15,6 +15,7 @@ abstract class ABSPaymentService {
   Future<Result<List<Bank>>> getBanks(String token);
   Future<Result<List<PaymentCard>>> getUserCards(String token);
   Future<Result<void>> deleteBank(String token,int bankId);
+  Future<Result<void>> deleteCard(String token,int cardId);
   Future<Result<List<Wallet>>> getWallet(String token);
   Future<Result<void>> setBankAsActive(String token,int bankId);
   Future<Result<List<Bank>>> getCustomerBank(String token);
@@ -222,6 +223,45 @@ class PaymentService extends ABSPaymentService {
 
     var url = "${AppStrings.baseUrl}zimvest.services.payment/api/"
         "Banks/$bankId";
+
+    print("lll $url");
+    try {
+      var response = await dio.delete(url, options: Options(headers: headers));
+      final int statusCode = response.statusCode;
+      var response1 = response.data;
+      print("iii ${response1}");
+
+      if (statusCode != 200) {
+        result.errorMessage = response1['message'];
+        result.error = true;
+      } else {
+        result.error = false;
+
+      }
+    } on DioError catch (e) {
+      print("error $e}");
+      if(e.response != null ){
+        print(e.response.data);
+        result.errorMessage = e.response.data['message'];
+      }else{
+        print(e.toString());
+        result.errorMessage = "Sorry, We could not complete your request";
+      }
+      result.error = true;
+    }
+
+    return result;
+  }
+
+  @override
+  Future<Result<void>> deleteCard(String token, int cardId)async {
+    Result<void> result = Result(error: false);
+
+    var headers = {"Authorization": "Bearer $token"};
+
+
+    var url = "${AppStrings.baseUrl}zimvest.services.payment/api/"
+        "Cards/$cardId";
 
     print("lll $url");
     try {

@@ -75,10 +75,10 @@ class WealthMore extends StatelessWidget {
                         ),
                         Spacer(),
                         Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
+                          crossAxisAlignment: CrossAxisAlignment.end,
                           children: [
                             Text(
-                              "Maturity Date",
+                              savingPlanModel.maturityDate == null ? "Next free withdrawal date" :"Maturity Date",
                               style: TextStyle(
                                   fontSize: 12,
                                   fontFamily: AppStrings.fontNormal,

@@ -60,6 +60,7 @@ abstract class ABSPaymentViewModel extends ChangeNotifier {
       String accountName,
       String accountNum});
   Future<Result<void>> deleteBank(String token, int bankId);
+  Future<Result<void>> deleteCard(String token, int cardId);
   Future<Result<Bank>> addCard(
       {String token,
       String cardNumber,
@@ -244,5 +245,17 @@ class PaymentViewModel extends ABSPaymentViewModel {
   set availableAmount(int value) {
     _amountAvailable = value;
     notifyListeners();
+  }
+
+  @override
+  Future<Result<void>> deleteCard(String token, int cardId) async{
+    var result = await _paymentService.deleteCard(token, cardId);
+
+    if (result.error == false) {
+      List<PaymentCard> cards = userCards;
+      cards.removeWhere((element) => element.id == cardId);
+      userCards = cards;
+    }
+    return result;
   }
 }

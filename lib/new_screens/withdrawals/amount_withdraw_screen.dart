@@ -105,7 +105,7 @@ class _SavingDailyScreenState extends State<AmountWithdrawScreen> with AfterLayo
                 RoundedNextButton(
                   onTap: pinViewModel.amount.isEmpty? null : double.parse(pinViewModel.amount) < 1000 ? null: (){
                     if(double.parse(pinViewModel.amount) > savingViewModel.selectedPlan.amountSaved){
-                        AppUtils.showError(context, message: "You don't Have up to this amount on this plan", title: "Large Amount");
+                        AppUtils.showError(context, message: "You don't Have up to this amount on this plan", title: "Insufficient Balance");
                     }else{
                       savingViewModel.amountToSave = double.parse(pinViewModel.amount);
                       Navigator.push(context, ChooseWealthWithdrawScreen.route());

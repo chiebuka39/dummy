@@ -692,14 +692,13 @@ class IdentityService extends ABSIdentityService {
     }on DioError catch(e){
 
       result.error = true;
-
-        if(e.response?.data ?? '' is Map){
-          result.errorMessage = e.response.data['message'];
-
-        }else{
+print("loooo ${e.response.data}");
+print("0oo9999 ${e.response.data.runtimeType}");
+        if(e.response.data == null){
           result.errorMessage = "An error occured";
+        }else{
+          result.errorMessage = e.response.data.runtimeType == Map ? e.response.data['message']:"pppp";
         }
-
       print("lllll ${e.response?.data ?? 'false' is Map}");
     }
 

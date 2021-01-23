@@ -83,7 +83,7 @@ class _TopUpScreenState extends State<TopUpScreen> with AfterLayoutMixin<TopUpSc
                   ),
                   child: Align(
                       alignment: Alignment.centerLeft,
-                      child: Text(convertWithComma(pinViewModel.amount), style: TextStyle(fontSize: 15),)),
+                      child:pinViewModel.amount.isEmpty ? Text("Enter Amount", style: TextStyle(fontFamily: AppStrings.fontNormal, fontSize: 14, color: AppColors.kTextColor.withOpacity(0.8)),): Text(convertWithComma(pinViewModel.amount), style: TextStyle(fontSize: 15),)),
                 ),
                 YMargin(10),
                 SizedBox(
