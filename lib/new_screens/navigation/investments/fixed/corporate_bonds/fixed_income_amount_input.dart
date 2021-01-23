@@ -1,8 +1,10 @@
 import 'package:flushbar/flushbar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_masked_text/flutter_masked_text.dart';
+import 'package:provider/provider.dart';
 import 'package:provider_architecture/provider_architecture.dart';
 import 'package:zimvest/data/view_models/investment_view_model.dart';
+import 'package:zimvest/data/view_models/payment_view_model.dart';
 import 'package:zimvest/data/view_models/wallets_view_model.dart';
 import 'package:zimvest/new_screens/navigation/investments/fixed/corporate_bonds/fixed_income_purchase.dart';
 import 'package:zimvest/new_screens/navigation/investments/widgets/text_field.dart';
@@ -72,10 +74,11 @@ class FixedIncomeAmountInput extends StatefulWidget {
 
 class _FixedIncomeAmountInputState extends State<FixedIncomeAmountInput> {
   // static String amountController.text;
-  var amountController =
-      MoneyMaskedTextController(decimalSeparator: ".", thousandSeparator: ",");
+  // var amountController =
+  //     MoneyMaskedTextController(decimalSeparator: ".", thousandSeparator: ",");
   @override
   Widget build(BuildContext context) {
+    ABSPaymentViewModel paymentViewModel = Provider.of(context);
     return ViewModelProvider<WalletViewModel>.withConsumer(
       viewModelBuilder: () => WalletViewModel(),
       onModelReady: (model) => model.getCards(),
@@ -116,14 +119,39 @@ class _FixedIncomeAmountInputState extends State<FixedIncomeAmountInput> {
                 ),
               ),
               YMargin(36),
-              InvestmentTextField(
-                  controller: amountController, hintText: "Enter amount"),
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 20.0),
+                child: Container(
+                  padding: EdgeInsets.symmetric(horizontal: 15),
+                  height: 55,
+                  width: double.infinity,
+                  decoration: BoxDecoration(
+                      color: AppColors.kTextBg,
+                      borderRadius: BorderRadius.circular(12)),
+                  child: Align(
+                    alignment: Alignment.centerLeft,
+                    child: paymentViewModel.amountController.text == ""
+                        ? Text(
+                            "Enter Amount",
+                            style: TextStyle(
+                              fontSize: 13,
+                              fontFamily: AppStrings.fontLight,
+                              color: AppColors.kLightTitleText,
+                            ),
+                          )
+                        : Text(
+                            convertWithComma(
+                                paymentViewModel.amountController.text),
+                            style: TextStyle(fontSize: 15),
+                          ),
+                  ),
+                ),
+              ),
               YMargin(10),
               Padding(
                 padding: const EdgeInsets.only(left: 20.0, right: 76),
                 child: Text(
-                                    "Minimum of ${AppStrings.nairaSymbol}${widget.minimumAmount.toString().split('.')[0].convertWithComma()}",
-
+                  "Minimum of ${AppStrings.nairaSymbol}${widget.minimumAmount.toString().split('.')[0].convertWithComma()}",
                   style: TextStyle(
                     fontSize: 12,
                     fontFamily: AppStrings.fontBold,
@@ -135,7 +163,7 @@ class _FixedIncomeAmountInputState extends State<FixedIncomeAmountInput> {
               RoundedNextButton(
                 onTap: () {
                   double amount =
-                      double.tryParse(amountController.text.split(',').join());
+                      double.tryParse(paymentViewModel.amountController.text.split(',').join());
                   if (amount < widget.minimumAmount) {
                     Flushbar(
                       icon: ImageIcon(
@@ -186,15 +214,15 @@ class _FixedIncomeAmountInputState extends State<FixedIncomeAmountInput> {
               ),
               NumericKeyboard(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                onKeyboardTap: _onKeyboardTap,
+                onKeyboardTap: paymentViewModel.onKeyboardTap,
                 rightIcon: Icon(
                   Icons.arrow_back_ios,
                   color: AppColors.kPrimaryColor,
                 ),
                 rightButtonFn: () {
                   setState(() {
-                    amountController.text = amountController.text
-                        .substring(0, amountController.text.length - 1);
+                    paymentViewModel.amountController.text = paymentViewModel.amountController.text
+                        .substring(0, paymentViewModel.amountController.text.length - 1);
                   });
                 },
               )
@@ -205,9 +233,81 @@ class _FixedIncomeAmountInputState extends State<FixedIncomeAmountInput> {
     );
   }
 
-  _onKeyboardTap(String value) {
-    setState(() {
-      amountController.text = amountController.text + value;
-    });
+  // _onKeyboardTap(String value) {
+  //   setState(() {
+  //     amountController.text = amountController.text + value;
+  //   });
+  // }
+    convertWithComma(String newValue) {
+    String value = newValue;
+    var buffer = new StringBuffer();
+
+    if (value.length == 4) {
+      buffer.write(value[0]);
+      buffer.write(',');
+      buffer.write(value[1]);
+      buffer.write(value[2]);
+      buffer.write(value[3]);
+    } else if (value.length == 5) {
+      buffer.write(value[0]);
+      buffer.write(value[1]);
+      buffer.write(',');
+      buffer.write(value[2]);
+      buffer.write(value[3]);
+      buffer.write(value[4]);
+    } else if (value.length == 6) {
+      buffer.write(value[0]);
+      buffer.write(value[1]);
+      buffer.write(value[2]);
+      buffer.write(',');
+      buffer.write(value[3]);
+      buffer.write(value[4]);
+      buffer.write(value[5]);
+    } else if (value.length == 7) {
+      buffer.write(value[0]);
+      buffer.write(',');
+      buffer.write(value[1]);
+      buffer.write(value[2]);
+      buffer.write(value[3]);
+      buffer.write(',');
+      buffer.write(value[4]);
+      buffer.write(value[5]);
+      buffer.write(value[6]);
+    } else if (value.length == 8) {
+      buffer.write(value[0]);
+      buffer.write(value[1]);
+      buffer.write(',');
+      buffer.write(value[2]);
+      buffer.write(value[3]);
+      buffer.write(value[4]);
+      buffer.write(',');
+      buffer.write(value[5]);
+      buffer.write(value[6]);
+      buffer.write(value[7]);
+    } else if (value.length == 9) {
+      buffer.write(value[0]);
+      buffer.write(value[1]);
+      buffer.write(value[2]);
+      buffer.write(',');
+      buffer.write(value[3]);
+      buffer.write(value[4]);
+      buffer.write(value[5]);
+      buffer.write(',');
+      buffer.write(value[6]);
+      buffer.write(value[7]);
+      buffer.write(value[8]);
+    } else {
+      for (int i = 0; i < value.length; i++) {
+        print('lllllf $i');
+        buffer.write(value[i]);
+        var nonZeroIndex = i + 1;
+
+        if (nonZeroIndex % 3 == 0 && nonZeroIndex != value.length) {
+          buffer.write(',');
+        }
+      }
+    }
+
+    return buffer.toString();
   }
 }

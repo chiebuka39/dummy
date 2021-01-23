@@ -30,6 +30,7 @@ class InvestmentSummaryScreenDollar extends StatefulWidget {
   final String rate;
   final double minimumAmount;
   final String maximumAmount;
+  final int walletType;
 
   const InvestmentSummaryScreenDollar(
       {Key key,
@@ -41,7 +42,7 @@ class InvestmentSummaryScreenDollar extends StatefulWidget {
       this.maturityDate,
       this.rate,
       this.minimumAmount,
-      this.maximumAmount})
+      this.maximumAmount, this.walletType})
       : super(key: key);
   static Route<dynamic> route({
     double amount,
@@ -52,7 +53,7 @@ class InvestmentSummaryScreenDollar extends StatefulWidget {
     String maturityDate,
     String rate,
     double minimumAmount,
-    String maximumAmount,
+    String maximumAmount, int walletType,
   }) {
     return MaterialPageRoute(
       builder: (_) => InvestmentSummaryScreenDollar(
@@ -63,7 +64,7 @@ class InvestmentSummaryScreenDollar extends StatefulWidget {
           maturityDate: maturityDate,
           rate: rate,
           minimumAmount: minimumAmount,
-          maximumAmount: maximumAmount),
+          maximumAmount: maximumAmount, walletType: walletType,),
       settings: RouteSettings(
         name: InvestmentSummaryScreenDollar().toStringShort(),
       ),
@@ -599,12 +600,12 @@ class _InvestmentSummaryScreenDollarState
                   onVerticalDragStart: (details) async {
                     startAnim();
                     await model.buyDollarInstrument(
+                      walletType: widget.walletType,
                         amount: paymentViewModel.investmentAmount,
                         productId: paymentViewModel.pickeddollarInstrument.id,
                         uniqueName: paymentViewModel.investmentName,
                         fundingChannel: widget.channelId);
 
-                    paymentViewModel.dispose();
                   },
                   child: Container(
                     height: 60,

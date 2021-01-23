@@ -212,7 +212,6 @@ class _InvestmentHighYieldDollarAmountInputState
                       duration: Duration(seconds: 2),
                     ).show(context);
                   } else {
-                    // paymentViewModel.dispose();
                     await model.getDollarTermInstrumentsFilter(amount);
                     Navigator.push(
                       context,

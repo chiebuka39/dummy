@@ -625,7 +625,6 @@ class _InvestmentSummaryScreenNairaState
                         productId: paymentViewModel.pickednairaInstrument.id,
                         uniqueName: paymentViewModel.investmentName,
                         fundingChannel: widget.channelId);
-                    paymentViewModel.dispose();
                   },
                   child: Container(
                     height: 60,

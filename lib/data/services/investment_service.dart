@@ -76,7 +76,7 @@ abstract class ABSInvestmentService {
       num amount,
       num nairaAmount,
       String uniqueName,
-      String token});
+      String token, int walletType});
 
   Future<ConvertedRate> calculateRate(
       {num amount,
@@ -965,7 +965,7 @@ class InvestmentService extends ABSInvestmentService {
       num amount,
       num nairaAmount,
       String uniqueName,
-      String token}) async {
+      String token, int walletType}) async {
     var url =
         "${AppStrings.baseUrl}$microService/api/ZimvestTermInstruments/buydollarterminstrument";
 
@@ -976,6 +976,7 @@ class InvestmentService extends ABSInvestmentService {
       "FundingChannel": fundingChannel,
       "Amount": amount,
       "UniqueName": uniqueName,
+      "WalletType": walletType,
       "BeneficiaryBankType": beneficiaryBankType,
     });
     Result<dynamic> result = Result(error: false);
