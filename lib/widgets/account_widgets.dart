@@ -618,49 +618,51 @@ class DropdownBorderInputWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(height: 105+bottomMargin,
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(
-            title,
-            style: TextStyle(color: textColor, fontSize: labelSize,fontFamily: AppStrings.fontMedium),
-          ),
-          YMargin(20),
-          InkWell(
-            onTap: (){
-              SelectDialog.showModal<String>(
-                context,
-                label: title,
-                constraints: BoxConstraints(
-                  maxHeight: 350,
-                  maxWidth: MediaQuery.of(context).size.width * 0.7
-                ),
-                titleStyle: TextStyle(color: Colors.brown),
-                showSearchBox: false,
-                selectedValue: source,
-                backgroundColor: Colors.white,
-                items: items,
-                onChange: (String selected) {
-                    onSelect(selected);
-                },
-              );
-            },
-            child: Container(
-              height: 65,
-              padding: EdgeInsets.symmetric(horizontal: 10),
-              decoration: BoxDecoration(
-                  color: AppColors.kGreyBg,
-                  border: Border.all(color:  AppColors.kLightText),
-                  borderRadius: BorderRadius.circular(12)),
-              child: Row(children: [
-                Text(source ?? "Select Bank", style: TextStyle(fontSize: 12, color: AppColors.kTextColor),),
-                Spacer(),
-                Icon(Icons.keyboard_arrow_down, size: 23,)
-              ],),
+      child: SingleChildScrollView(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              title,
+              style: TextStyle(color: textColor, fontSize: labelSize,fontFamily: AppStrings.fontMedium),
             ),
-          ),
-          YMargin(bottomMargin)
-        ],),);
+            YMargin(20),
+            InkWell(
+              onTap: (){
+                SelectDialog.showModal<String>(
+                  context,
+                  label: title,
+                  constraints: BoxConstraints(
+                    maxHeight: 350,
+                    maxWidth: MediaQuery.of(context).size.width * 0.7
+                  ),
+                  titleStyle: TextStyle(color: Colors.brown),
+                  showSearchBox: false,
+                  selectedValue: source,
+                  backgroundColor: Colors.white,
+                  items: items,
+                  onChange: (String selected) {
+                      onSelect(selected);
+                  },
+                );
+              },
+              child: Container(
+                height: 65,
+                padding: EdgeInsets.symmetric(horizontal: 10),
+                decoration: BoxDecoration(
+                    color: AppColors.kGreyBg,
+                    border: Border.all(color:  AppColors.kLightText),
+                    borderRadius: BorderRadius.circular(12)),
+                child: Row(children: [
+                  Text(source ?? "Select Bank", style: TextStyle(fontSize: 12, color: AppColors.kTextColor),),
+                  Spacer(),
+                  Icon(Icons.keyboard_arrow_down, size: 23,)
+                ],),
+              ),
+            ),
+            YMargin(bottomMargin)
+          ],),
+      ),);
   }
 }
 

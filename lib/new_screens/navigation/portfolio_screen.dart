@@ -259,6 +259,7 @@ class SavingsInvestmentWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    ABSDashboardViewModel dashboardViewModel = Provider.of(context);
     return SliverPadding(
       sliver: SliverList(
           delegate: SliverChildListDelegate([
@@ -286,7 +287,7 @@ class SavingsInvestmentWidget extends StatelessWidget {
             PrimaryButtonNew(
               title: "Start Saving",
               onTap: () {
-                Navigator.of(context).push(SelectGoalScreen.route());
+                dashboardViewModel.callback();
               },
             ),
           ],
@@ -376,31 +377,47 @@ class SavingsInvestmentErrorWidget extends StatelessWidget {
     return SliverPadding(
       sliver: SliverList(
           delegate: SliverChildListDelegate([
-        Container(
-          height: 400,
-          child: Column(
-            children: [
-              YMargin(30),
-              SvgPicture.asset("images/new/error3.svg"),
-              YMargin(20),
-              SizedBox(
-                  width: 300,
-                  child: Text(
-                    message,
-                    style: TextStyle(
-                        fontFamily: AppStrings.fontNormal, height: 1.7),
-                    textAlign: TextAlign.center,
-                  )),
-              YMargin(30),
-              PrimaryButtonNew(
-                title: 'Retry',
-                onTap: retry,
-              )
-            ],
-          ),
-        )
+        NoInternetWidget2(message: message, retry: retry)
       ])),
       padding: EdgeInsets.symmetric(horizontal: 20),
+    );
+  }
+}
+
+class NoInternetWidget2 extends StatelessWidget {
+  const NoInternetWidget2({
+    Key key,
+    @required this.message,
+    @required this.retry,
+  }) : super(key: key);
+
+  final String message;
+  final VoidCallback retry;
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      height: 400,
+      child: Column(
+        children: [
+          YMargin(30),
+          SvgPicture.asset("images/new/error3.svg"),
+          YMargin(20),
+          SizedBox(
+              width: 300,
+              child: Text(
+                message,
+                style: TextStyle(
+                    fontFamily: AppStrings.fontNormal, height: 1.7),
+                textAlign: TextAlign.center,
+              )),
+          YMargin(30),
+          PrimaryButtonNew(
+            title: 'Retry',
+            onTap: retry,
+          )
+        ],
+      ),
     );
   }
 }
@@ -442,7 +459,7 @@ class SavingsInvestmentCashWidget extends StatelessWidget {
                 )),
             XMargin(2),
             Text(
-              dashboardViewModel.dashboardModel.nairaSavings
+              dashboardViewModel.dashboardModel.nairaPortfolio == "0.00" ? '0':dashboardViewModel.dashboardModel.nairaSavings
                   .substring(1)
                   .split(".")
                   .first,
@@ -501,11 +518,16 @@ class SavingsInvestmentCashWidget extends StatelessWidget {
                                     color: AppColors.kGreyText),
                               ),
                               YMargin(10),
-                              Text(
-                                "${AppStrings.nairaSymbol}${wealthBox.amountSaved}",
-                                style: TextStyle(
-                                    color: AppColors.kGreyText,
-                                    fontFamily: AppStrings.fontMedium),
+                              Row(
+                                children: [
+                                  Text(AppStrings.nairaSymbol, style: TextStyle(fontSize: 12),),
+                                  Text(
+                                    "${wealthBox.amountSaved}".split(".").first.convertWithComma(),
+                                    style: TextStyle(
+                                        color: AppColors.kGreyText,
+                                        fontFamily: AppStrings.fontMedium),
+                                  ),
+                                ],
                               )
                             ],
                           ),
@@ -613,7 +635,7 @@ class SavingsInvestmentCashWidget extends StatelessWidget {
             ),
           );
         }),
-        YMargin(60),
+        YMargin(70),
       ])),
       padding: EdgeInsets.symmetric(horizontal: 20),
     );

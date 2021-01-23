@@ -190,16 +190,12 @@ class _NewPinScreenState extends State<NewPinScreen> {
   }
   void changePin() async{
 
-    setState(() {
-      loading = true;
-    });
+    EasyLoading.show(status: "");
     identityViewModel.loading = true;
     var result = await identityViewModel.changePin(newPin: "${pinViewModel.pin1}"
         "${pinViewModel.pin2}${pinViewModel.pin3}${pinViewModel.pin4}",
         currentPin: widget.currentPin);
-    setState(() {
-      loading = false;
-    });
+    EasyLoading.dismiss();
     if(result.error == true) {
       identityViewModel.loading = false;
       AppUtils.showError(context,message: result.errorMessage,title: 'Pin could not be changed');

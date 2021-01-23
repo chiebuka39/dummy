@@ -141,18 +141,14 @@ class _AddBankAccScreenState extends State<AddBankAccScreen2> {
                     if( accNumber.length != 10){
                       return;
                     }
-                    setState(() {
-                      loading = true;
-                    });
+                    EasyLoading.show(status: '');
                     var result = await paymentViewModel.validateBank(
                         token: identityViewModel.user.token,
                         accountNum: accNumber,
                         bankCode: selectedBank.code,
                         customerId: 0
                     );
-                    setState(() {
-                      loading = false;
-                    });
+                    EasyLoading.dismiss();
                     if(result.error == true){
 
                       AppUtils.showError(context,title: 'We could not add your bank',

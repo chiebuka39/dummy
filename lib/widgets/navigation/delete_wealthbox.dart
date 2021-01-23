@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:hive/hive.dart';
 import 'package:provider/provider.dart';
 import 'package:zimvest/data/local/user_local.dart';
+import 'package:zimvest/data/models/payment/bank.dart';
+import 'package:zimvest/data/models/payment/card.dart';
 import 'package:zimvest/data/models/saving_plan.dart';
 import 'package:zimvest/data/models/secondary_state.dart';
 import 'package:zimvest/data/view_models/identity_view_model.dart';
@@ -15,9 +18,11 @@ import 'package:zimvest/new_screens/funding/withdraw_screen.dart';
 import 'package:zimvest/new_screens/tabs.dart';
 import 'package:zimvest/styles/colors.dart';
 import 'package:zimvest/utils/margin.dart';
+import 'package:zimvest/utils/result.dart';
 import 'package:zimvest/utils/strings.dart';
 import 'package:zimvest/widgets/buttons.dart';
 import 'package:zimvest/widgets/navigation/wealthbox_activity.dart';
+import 'package:zimvest/widgets/new/new_widgets.dart';
 
 class DeleteWealthbox extends StatelessWidget {
   const DeleteWealthbox({
@@ -67,7 +72,7 @@ class DeleteWealthbox extends StatelessWidget {
                   fontFamily: AppStrings.fontBold
               ),),
               YMargin(25),
-              Text("Are you sure you want to delete this savings plan, your funds "
+              Text("Are you sure you want to close this savings plan, your funds "
                   "would be deposited in your wallet",
                 style: TextStyle(fontSize: 11,height: 1.6,color: AppColors.kGreyText),
               ),
@@ -99,6 +104,209 @@ class DeleteWealthbox extends StatelessWidget {
         YMargin(30)
       ],),
     );
+  }
+}
+class DeleteCardOrBank extends StatelessWidget {
+  const DeleteCardOrBank({
+    Key key, this.card, this.bank,
+  }) : super(key: key);
+
+  final PaymentCard card;
+  final Bank bank;
+
+  @override
+  Widget build(BuildContext context) {
+    ABSPaymentViewModel paymentViewModel = Provider.of(context);
+    ABSIdentityViewModel identityViewModel = Provider.of(context);
+    final buttonWidth = (MediaQuery
+        .of(context)
+        .size
+        .width - 110) / 2;
+    return Container(
+      height: 300,
+      decoration: BoxDecoration(
+        color: Colors.transparent,
+      ),
+      child: Column(children: [
+        YMargin(10),
+        Center(child: Container(
+          width: 30,
+          height: 5,
+          decoration: BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.circular(5)
+          ),
+        ),),
+        YMargin(20),
+        Expanded(child: Container(
+          width: double.infinity,
+          margin: EdgeInsets.symmetric(horizontal: 20),
+          padding: EdgeInsets.symmetric(horizontal: 25),
+          decoration: BoxDecoration(
+              color:Colors.white,
+              borderRadius: BorderRadius.circular(25)
+          ),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              YMargin(20),
+              Text("Delete ${card == null ? 'Bank account': 'Card'}", style: TextStyle(
+                  fontSize: 15,
+                  fontFamily: AppStrings.fontBold
+              ),),
+              YMargin(25),
+              Text("Are you sure you want to delete your ${card == null ? 'Bank account': 'Card'}",
+                style: TextStyle(fontSize: 11,height: 1.6,color: AppColors.kGreyText),
+              ),
+              YMargin(45),
+              Row(children: [
+                PrimaryButtonNew(
+                  width: buttonWidth,
+                  title: "Yes",
+                  onTap: ()async{
+
+                    EasyLoading.show(status: "");
+                    Result result;
+                    if(card == null){
+                      result = await paymentViewModel.deleteBank(
+                          identityViewModel.user.token, bank.id);
+                    }else{
+                      result = await paymentViewModel.deleteCard(
+                          identityViewModel.user.token, card.id);
+                    }
+                    EasyLoading.dismiss();
+
+                    if(result.error == false){
+                      showModalBottomSheet < Null > (context: context, builder: (BuildContext context) {
+                        return PasswordSuccessWidget(
+                          message: "${card != null ? 'Card':'Bank Account'} deleted Succesfully",
+                          onDone: (){
+                            Navigator.of(context).pop();
+                            Navigator.pop(context);
+                          },success: true,
+                        );
+                      },isDismissible: false);
+                    }else{
+                      showModalBottomSheet < Null > (context: context, builder: (BuildContext context) {
+                        return PasswordSuccessWidget(
+                          message: result.errorMessage,
+                          onDone: (){
+                            Navigator.of(context).pop();
+                            Navigator.pop(context);
+                          },success: false,
+                        );
+                      },isDismissible: false);
+                    }
+
+
+                  },
+                ),
+                XMargin(20,),
+                PrimaryButtonNew(
+                  onTap: (){
+                    Navigator.of(context).pop();
+                  },
+                  textColor: AppColors.kPrimaryColor,
+                  bg:AppColors.kPrimaryColor.withOpacity(0.2),
+                  width: buttonWidth,
+                  title: "No",
+                )
+              ],)
+
+
+            ],),
+        )),
+        YMargin(30)
+      ],),
+    );
+  }
+}
+class CardMore extends StatelessWidget {
+  const CardMore({
+    Key key, this.card, this.bank,
+  }) : super(key: key);
+
+  final PaymentCard card;
+  final Bank bank;
+
+  @override
+  Widget build(BuildContext context) {
+
+    return Container(
+      height: 180,
+      decoration: BoxDecoration(
+        color: Colors.transparent,
+      ),
+      child: Column(
+        children: [
+          YMargin(10),
+          Center(
+            child: Container(
+              width: 30,
+              height: 5,
+              decoration: BoxDecoration(
+                  color: Colors.white, borderRadius: BorderRadius.circular(5)),
+            ),
+          ),
+          YMargin(20),
+          Expanded(
+              child: Container(
+                width: double.infinity,
+                decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.only(
+                        topLeft: Radius.circular(25),
+                        topRight: Radius.circular(25))),
+                child: SafeArea(
+                  child: Column(
+                    children: [
+                      YMargin(40),
+                      Container(
+                        height: 70,
+                        decoration: BoxDecoration(
+                          color: Colors.transparent,
+                        ),
+                        child: Column(children: [
+                          GestureDetector(
+                            onTap: () {
+                              Navigator.pop(context);
+                              showModalBottomSheet<Null>(
+                                  context: context,
+                                  builder: (BuildContext context) {
+                                    return DeleteCardOrBank(card: card,bank: bank,);
+                                  },
+                                  isScrollControlled: true);
+                            },
+                            child: Container(
+                              padding: EdgeInsets.symmetric(horizontal: 20),
+                              child: Row(
+                                children: [
+                                  SvgPicture.asset('images/new/delete_plan.svg'),
+                                  XMargin(15),
+                                  Text(
+                                    "Delete ${bank == null ? 'Card':"Bank Account"}",
+                                    style: TextStyle(fontFamily: AppStrings.fontNormal),
+                                  ),
+                                  Spacer(),
+                                  Icon(
+                                    Icons.navigate_next_rounded,
+                                    color: AppColors.kPrimaryColor,
+                                  )
+                                ],
+                              ),
+                            ),
+                          )
+                        ],),
+                      ),
+
+                    ],
+                  ),
+                ),
+              ))
+        ],
+      ),
+    );
+
   }
 }
 class WithdrawWealthbox extends StatelessWidget {

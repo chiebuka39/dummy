@@ -52,10 +52,15 @@ class _AccountScreenState extends State<AccountScreen> with AfterLayoutMixin<Acc
 
   @override
   void initState() {
-    _dob = widget.profile.dob;
-    _phone = widget.profile.phoneNumber.substring(4);
-    _email = widget.profile.email;
-    _fullName = widget.profile.firstName + " " + widget.profile.lastName;
+    try{
+      _dob = widget.profile.dob;
+      _phone = widget.profile.phoneNumber.substring(4);
+      _email = widget.profile.email;
+      _fullName = widget.profile.firstName + " " + widget.profile.lastName;
+    }catch(e){
+
+    }
+
 
     super.initState();
   }

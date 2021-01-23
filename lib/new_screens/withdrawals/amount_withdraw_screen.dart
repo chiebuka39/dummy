@@ -8,6 +8,7 @@ import 'package:zimvest/data/view_models/pin_view_model.dart';
 import 'package:zimvest/data/view_models/savings_view_model.dart';
 import 'package:zimvest/new_screens/withdrawals/choose_wealth_withdraw_source.dart';
 import 'package:zimvest/styles/colors.dart';
+import 'package:zimvest/utils/app_utils.dart';
 import 'package:zimvest/utils/margin.dart';
 import 'package:zimvest/utils/strings.dart';
 import 'package:zimvest/widgets/buttons.dart';
@@ -103,9 +104,14 @@ class _SavingDailyScreenState extends State<AmountWithdrawScreen> with AfterLayo
 
                 RoundedNextButton(
                   onTap: pinViewModel.amount.isEmpty? null : double.parse(pinViewModel.amount) < 1000 ? null: (){
-                    savingViewModel.amountToSave = double.parse(pinViewModel.amount);
-                    Navigator.push(context, ChooseWealthWithdrawScreen.route());
-                    pinViewModel.resetAmount();
+                    if(double.parse(pinViewModel.amount) > savingViewModel.selectedPlan.amountSaved){
+                        AppUtils.showError(context, message: "You don't Have up to this amount on this plan", title: "Insufficient Balance");
+                    }else{
+                      savingViewModel.amountToSave = double.parse(pinViewModel.amount);
+                      Navigator.push(context, ChooseWealthWithdrawScreen.route());
+                      pinViewModel.resetAmount();
+                    }
+
                   },
                 ),
                 YMargin(height > 750 ? 65:25),

@@ -60,20 +60,35 @@ class _SavingsSummaryScreenState extends State<SavingsSummaryScreen> {
     super.initState();
   }
 
-  void startAnim()async{
+  void startAnim(BuildContext buildContext)async{
+    showModalBottomSheet<Null>(
+        context: buildContext,
+        builder: (BuildContext context) {
+          return TermsAndConditionsbox(
+            onTapNo: (){
+              Navigator.pop(context);
+              Navigator.pop(context);
+            },onTapYes: ()async{
+            Navigator.pop(context);
+            await makeRemoteCall();
+          },
+          );
+        },
+        isScrollControlled: true);
 
-    setState(() {
-      slideUp = true;
-      loading = true;
-    });
 
-    await makeRemoteCall();
+
+
 
 
 
   }
 
   Future makeRemoteCall() async {
+    setState(() {
+      slideUp = true;
+      loading = true;
+    });
     var result = await savingViewModel.createTargetSavings2(
     
         cardId:paymentViewModel.selectedCard?.id ?? null,
@@ -160,7 +175,10 @@ class _SavingsSummaryScreenState extends State<SavingsSummaryScreen> {
                               offset: 10,
                               curve: Curves.easeIn,
                               key: keys[0],
-                              child: Text(errorMessage.isEmpty ? "Your Target creation was succesful":errorMessage, style: TextStyle(color: Colors.white),)),
+                              child: Padding(
+                                padding: const EdgeInsets.symmetric(horizontal: 30),
+                                child: Text(errorMessage.isEmpty ? "Your Target creation was succesful":errorMessage, style: TextStyle(color: Colors.white),textAlign: TextAlign.center,),
+                              )),
                           Spacer(),
                           ItemFader(
                             offset: 10,
@@ -368,7 +386,7 @@ class _SavingsSummaryScreenState extends State<SavingsSummaryScreen> {
                 },
                 onVerticalDragStart: (details){
                   print("dff ${details.toString()}");
-                  startAnim();
+                  startAnim(context);
                 },
                 child: Container(
                   height: 60,

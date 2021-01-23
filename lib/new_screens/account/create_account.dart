@@ -62,6 +62,7 @@ class _CreateAccountScreenState extends State<CreateAccountScreen>
       child: Scaffold(
         appBar: AppBar(
           elevation: 0,
+          centerTitle: true,
           iconTheme: IconThemeData(color: Colors.black87),
           leading: IconButton(
             icon: Icon(Icons.navigate_before_rounded,size: 26,color: AppColors.kPrimaryColor,),

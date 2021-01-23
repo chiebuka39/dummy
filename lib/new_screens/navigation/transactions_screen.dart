@@ -288,6 +288,7 @@ class _SavingTransactionsWidgetState extends State<SavingTransactionsWidget>
                                     trans.dateUpdated),
                                 amount: trans.amount,
                                 symbol: AppStrings.nairaSymbol,
+                                trans: trans,
                               );
                             }),
                             YMargin(50)
@@ -306,6 +307,7 @@ class _SavingTransactionsWidgetState extends State<SavingTransactionsWidget>
                               ProductTransaction trans =
                                   savingViewModel.savingsTransactions[2][index];
                               return TransactionItemWidget(
+                                trans: trans,
                                 narration: trans.transactionDescription,
                                 date: AppUtils.getReadableDateShort(
                                     trans.dateUpdated),

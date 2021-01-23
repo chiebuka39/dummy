@@ -19,6 +19,7 @@ import 'package:zimvest/utils/app_utils.dart';
 import 'package:zimvest/utils/margin.dart';
 import 'package:zimvest/utils/strings.dart';
 import 'package:zimvest/widgets/buttons.dart';
+import 'package:zimvest/widgets/navigation/delete_wealthbox.dart';
 import 'package:zimvest/widgets/new/new_widgets.dart';
 
 class AddBankAndCards extends StatefulWidget {
@@ -145,7 +146,11 @@ class _CardWidgetState extends State<CardWidget> {
                     Transform.translate(
                       offset: Offset(10,0),
                       child: IconButton(
-                        onPressed: (){},
+                        onPressed: (){
+                          showModalBottomSheet < Null > (context: context, builder: (BuildContext context) {
+                            return CardMore(card: card,);
+                          },isScrollControlled: true);
+                        },
                         icon: Icon(Icons.more_horiz_rounded,color: AppColors.kPrimaryColor,),
                       ),
                     ),
@@ -225,7 +230,7 @@ class _CardWidgetState extends State<CardWidget> {
         if(result.error == false){
           await paymentViewModel.getUserCards(identityViewModel.user.token);
           EasyLoading.showSuccess("Card Added");
-          Navigator.pop(context);
+          //Navigator.pop(context);
         }else{
           EasyLoading.showError("Error occured");
         }
@@ -292,7 +297,11 @@ class BankWidget extends StatelessWidget {
                   Transform.translate(
                     offset: Offset(10,0),
                     child: IconButton(
-                      onPressed: (){},
+                      onPressed: (){
+                        showModalBottomSheet < Null > (context: context, builder: (BuildContext context) {
+                          return CardMore(bank: bank,);
+                        },isScrollControlled: true);
+                      },
                       icon: Icon(Icons.more_horiz_rounded,color: AppColors.kPrimaryColor,),
                     ),
                   ),

@@ -184,7 +184,8 @@ class _AspireDetailsScreenState extends State<AspireDetailsScreen> with
                                 radius: 70.0,
                                 lineWidth: 7.0,
                                 animation: true,
-                                percent:( double.parse(widget.goal.successRate.replaceAll("%", ""))/100) > 1 ? 0.5:
+                                backgroundColor: AppColors.kPrimaryColor.withOpacity(0.2),
+                                percent:( double.parse(widget.goal.successRate.replaceAll("%", ""))/100) > 1 ? 1.0:
                                 ( double.parse(widget.goal.successRate.replaceAll("%", ""))/100),
                                 center: new Text(
                                   "${widget.goal.successRate}",
@@ -199,9 +200,14 @@ class _AspireDetailsScreenState extends State<AspireDetailsScreen> with
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
                                   Spacer(),
-                                  Text("${widget.goal.targetAmount}".split(".").first.convertWithComma(), style: TextStyle(
-                                      fontFamily: AppStrings.fontMedium,color: AppColors.kGreyText
-                                  ),),
+                                  Row(
+                                    children: [
+                                      Text(AppStrings.nairaSymbol),
+                                      Text("${widget.goal.targetAmount}".split(".").first.convertWithComma(), style: TextStyle(
+                                          fontFamily: AppStrings.fontMedium,color: AppColors.kGreyText
+                                      ),),
+                                    ],
+                                  ),
                                   YMargin(8),
                                   Text("Goal Amount", style: TextStyle(fontSize: 11,
                                       fontFamily: AppStrings.fontNormal,color: AppColors.kGreyText
@@ -255,6 +261,10 @@ class _AspireDetailsScreenState extends State<AspireDetailsScreen> with
                           child: Center(
                             child: GestureDetector(
                               onTap: (){
+
+                                if(widget.goal.amountSaved == 0){
+                                  return;
+                                }
                                 DateTime time = DateTime.now();
                                 if(time.day == widget.goal.maturityDate.day && time.month == widget.goal.maturityDate.month && time.year == widget.goal.maturityDate.year){
 
@@ -276,21 +286,24 @@ class _AspireDetailsScreenState extends State<AspireDetailsScreen> with
                                       isScrollControlled: true);
                                 }
                               },
-                              child: Container(child: Column(children: [
-                                Container(
-                                    height:35,
-                                    width: 35,
-                                    decoration: BoxDecoration(
-                                        color: AppColors.kPrimaryColorLight,
-                                        shape: BoxShape.circle
-                                    ),
-                                    child: Center(child: SvgPicture.asset("images/new/withdraw.svg", color: AppColors.kPrimaryColor))),
-                                YMargin(12),
-                                Text("Withdraw", style: TextStyle(
-                                    fontSize: 12,
-                                    fontFamily: AppStrings.fontNormal
-                                ),)
-                              ],),),
+                              child: Opacity(
+                                opacity: widget.goal.amountSaved == 0 ? 0.4:1,
+                                child: Container(child: Column(children: [
+                                  Container(
+                                      height:35,
+                                      width: 35,
+                                      decoration: BoxDecoration(
+                                          color: AppColors.kPrimaryColorLight,
+                                          shape: BoxShape.circle
+                                      ),
+                                      child: Center(child: SvgPicture.asset("images/new/withdraw.svg", color: AppColors.kPrimaryColor))),
+                                  YMargin(12),
+                                  Text("Withdraw", style: TextStyle(
+                                      fontSize: 12,
+                                      fontFamily: AppStrings.fontNormal
+                                  ),)
+                                ],),),
+                              ),
                             ),
                           ),
                         ),
@@ -322,14 +335,15 @@ class _AspireDetailsScreenState extends State<AspireDetailsScreen> with
                             fontFamily: AppStrings.fontMedium, color: AppColors.kGreyText),),
                         transactionsLoading ? CupertinoActivityIndicator():SizedBox(),
                         Spacer(),
-                        GestureDetector(
+                        transactions == null ? SizedBox(): transactions.length < 4 ?
+                        SizedBox():GestureDetector(
                           onTap: (){
                             showModalBottomSheet < Null > (context: context, builder: (BuildContext context) {
                               return WealthBoxActivities(transactions: transactions,);
                             },isScrollControlled: true);
                           },
                           child: Text("See all", style: TextStyle(fontSize: 11,
-                              fontFamily: AppStrings.fontMedium, color: AppColors.kGreyText)),
+                              fontFamily: AppStrings.fontMedium, color: AppColors.kPrimaryColor)),
                         )
                       ],),
                     ),

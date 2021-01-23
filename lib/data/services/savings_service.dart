@@ -98,6 +98,12 @@ class SavingService extends ABSSavingService{
 
     }on DioError catch(e){
       print("error $e}");
+      if(e.error.runtimeType == SocketException){
+        result.error = true;
+        result.networkAvailable = false;
+        result.errorMessage =  "Sorry, We could not complete your request";
+        return result;
+      }
       if(e.response != null ){
         print(e.response.data);
         result.errorMessage =  "Sorry, We could not complete your request";
@@ -268,7 +274,8 @@ class SavingService extends ABSSavingService{
         "/Customers/$id/Transactions";
     print("url $url");
     try{
-      var response = await dio.get(url,options: Options(headers: headers));
+      var response = await dio.get(url,options: Options(headers: headers,receiveTimeout: 3000,
+          sendTimeout: 300));
       final int statusCode = response.statusCode;
       var response1 = response.data;
       print("<<<<<<<<<<<<<<<<>>>>>>>>>>>>>>>>");
@@ -289,6 +296,13 @@ class SavingService extends ABSSavingService{
       }
 
     }on DioError catch(e){
+      if(e.error.runtimeType == SocketException){
+        result.error = true;
+        result.networkAvailable = false;
+        result.errorMessage = "Sorry, We could not complete your request";
+        print("ppp[[[[[[");
+        return result;
+      }
       print("error $e}");
       if(e.response != null ){
         print(e.response.data);

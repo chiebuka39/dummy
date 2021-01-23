@@ -3,6 +3,7 @@ import 'dart:io';
 
 import 'package:connectivity/connectivity.dart';
 import 'package:device_preview/device_preview.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 // import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -120,7 +121,7 @@ class HomeApp extends StatefulWidget {
 class _HomeAppState extends State<HomeApp> with WidgetsBindingObserver {
   final ABSStateLocalStorage _localStorage = locator<ABSStateLocalStorage>();
   StreamSubscription<ConnectivityResult> _connectivitySubscription;
-  // FirebaseMessaging _firebaseMessaging = FirebaseMessaging();
+  FirebaseMessaging _firebaseMessaging = FirebaseMessaging();
 
   double _statusBarHeight = 0.0;
   StatusBarAnimation _statusBarAnimation = StatusBarAnimation.SLIDE;
@@ -146,36 +147,36 @@ class _HomeAppState extends State<HomeApp> with WidgetsBindingObserver {
     WidgetsBinding.instance.addObserver(this);
 
     initPlatformState();
-    // _setUPNotifications();
+    _setUPNotifications();
     super.initState();
   }
-  // Future<void> _setUPNotifications() async {
-  //   if (Platform.isIOS) {
-  //     _firebaseMessaging.requestNotificationPermissions(IosNotificationSettings());
-  //   }
-  //   _firebaseMessaging.configure(
-  //     onMessage: (Map<String, dynamic> message) async {
-  //       print("onMessage: $message");
+  Future<void> _setUPNotifications() async {
+    if (Platform.isIOS) {
+      _firebaseMessaging.requestNotificationPermissions(IosNotificationSettings());
+    }
+    _firebaseMessaging.configure(
+      onMessage: (Map<String, dynamic> message) async {
+        print("onMessage: $message");
 
-  //     },
-  //     onLaunch: (Map<String, dynamic> message) async {
-  //       print("onLaunch: $message");
+      },
+      onLaunch: (Map<String, dynamic> message) async {
+        print("onLaunch: $message");
 
-  //     },
-  //     onResume: (Map<String, dynamic> message) async {
-  //       print("onResume: $message");
+      },
+      onResume: (Map<String, dynamic> message) async {
+        print("onResume: $message");
 
-  //     },
+      },
 
-  //   );
-  // }
+    );
+  }
 
   @override
   void didChangeAppLifecycleState(AppLifecycleState state) {
     print("stateee $state");
     if (state == AppLifecycleState.resumed) {
       print("App Resumed");
-      if (_localStorage.getSecondaryState().lastMinimized == null) {
+      if (_localStorage.getSecondaryState().lastMinimized == null || _localStorage.getSecondaryState().email == null) {
         return;
       }
       print(

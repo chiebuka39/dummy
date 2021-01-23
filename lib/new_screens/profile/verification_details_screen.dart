@@ -128,7 +128,8 @@ class _VerificationDetailsScreenState extends State<VerificationDetailsScreen> {
               }
               settingsViewModel.selectedIdentity = null;
               showModalBottomSheet < Null > (context: context, builder: (BuildContext context) {
-                return ImageUploadWidget(onCamera: getImageFromCam,onGallery: getImageFromGallery,);
+                return ImageUploadWidget(onCamera: getImageFromCam,
+                  onGallery: getImageFromGallery,title: "Utility Bill");
               }, isScrollControlled: true);
               //Navigator.push(context, IdentityVerificationScreen.route());
             },

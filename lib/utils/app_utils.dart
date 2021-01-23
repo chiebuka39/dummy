@@ -272,7 +272,7 @@ class AppUtils{
         style: TextStyle(fontSize: 11,fontFamily: AppStrings.fontMedium, color: Color(0xFFF53232)),),
       messageText: Text(message,
         style: TextStyle(fontSize: 9,fontFamily: AppStrings.fontNormal,color: Color(0xFFF53232)),),
-      duration:  Duration(seconds: 3),
+      duration:  Duration(seconds: 6),
     )..show(context);
   }
 }

@@ -25,6 +25,7 @@ import 'package:zimvest/styles/colors.dart';
 import 'package:zimvest/utils/margin.dart';
 import 'package:zimvest/utils/strings.dart';
 import 'package:zimvest/widgets/navigation/delete_wealthbox.dart';
+import 'package:zimvest/widgets/new/new_widgets.dart';
 
 class ProfileScreen extends StatefulWidget {
   static Route<dynamic> route() {
@@ -60,6 +61,7 @@ class _ProfileScreenState extends State<ProfileScreen> with AfterLayoutMixin<Pro
     return Scaffold(
       appBar: AppBar(
         elevation: 0,
+        centerTitle: true,
         iconTheme: IconThemeData(color:AppColors.kTextColor),
         backgroundColor: Colors.transparent,
         leading: Padding(
@@ -86,11 +88,25 @@ class _ProfileScreenState extends State<ProfileScreen> with AfterLayoutMixin<Pro
           ),
           YMargin(29),
           ProfileWidget(emergency: true,title: "Account",onClick: (){
-            Navigator.push(context, AccountScreen.route(profile: settingsViewModel.profile));
+            if(settingsViewModel.profile == null){
+              showModalBottomSheet < Null > (context: context, builder: (BuildContext context) {
+                return NoInternetWidget(onDone: (){
+                  Navigator.pop(context);
+                  Navigator.pop(context);
+                },message: "",);
+              });
+            }else{
+              Navigator.push(context, AccountScreen.route(profile: settingsViewModel.profile));
+            }
+
+
           },icon: 'account',),
           ProfileWidget(title: "Notifications",
             icon: 'notif',onClick: (){
-            Navigator.push(context, NotificationsScreen.route());
+
+              Navigator.push(context, NotificationsScreen.route());
+
+
             },
           ),
           ProfileWidget(title: "Banks & Cards",icon: 'cards',

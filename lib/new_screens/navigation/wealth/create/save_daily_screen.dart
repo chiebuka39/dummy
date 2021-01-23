@@ -6,6 +6,7 @@ import 'package:zimvest/new_screens/funding/choose_funding_source.dart';
 import 'package:zimvest/new_screens/navigation/wealth/create/choose_start_screen.dart';
 import 'package:zimvest/payment/input_formaters.dart';
 import 'package:zimvest/styles/colors.dart';
+import 'package:zimvest/utils/app_utils.dart';
 import 'package:zimvest/utils/margin.dart';
 import 'package:zimvest/utils/strings.dart';
 import 'package:zimvest/widgets/buttons.dart';
@@ -72,8 +73,9 @@ class _SavingDailyScreenState extends State<SavingDailyScreen> {
                       borderRadius: BorderRadius.circular(12)
                   ),
                   child: Align(
+
                     alignment: Alignment.centerLeft,
-                      child: Text(convertWithComma(amount), style: TextStyle(fontSize: 15),)),
+                      child: Text(amount.convertWithComma(), style: TextStyle(fontSize: 15),)),
                 ),
                 YMargin(10),
                 SizedBox(
@@ -85,7 +87,7 @@ class _SavingDailyScreenState extends State<SavingDailyScreen> {
                 YMargin(3),
                 SizedBox(
                   width: 300,
-                  child: Text("N/B Savings must be at least 1000 naira", style: TextStyle(
+                  child: Text("N/B Savings must be at least 1,000 naira", style: TextStyle(
                       fontSize: 10,height: 1.6,color: AppColors.kRed),),
                 ),
                 YMargin(70),
@@ -343,79 +345,13 @@ class _SavingDailyScreenState extends State<SavingDailyScreen> {
     );
   }
 
-  convertWithComma(String newValue){
-    String value = newValue;
-    var buffer = new StringBuffer();
-
-    if(value.length == 4){
-      buffer.write(value[0]);
-      buffer.write(',');
-      buffer.write(value[1]);
-      buffer.write(value[2]);
-      buffer.write(value[3]);
-    }else if(value.length == 5){
-      buffer.write(value[0]);
-      buffer.write(value[1]);
-      buffer.write(',');
-      buffer.write(value[2]);
-      buffer.write(value[3]);
-      buffer.write(value[4]);
-    }else if(value.length == 6){
-      buffer.write(value[0]);
-      buffer.write(value[1]);
-      buffer.write(value[2]);
-      buffer.write(',');
-      buffer.write(value[3]);
-      buffer.write(value[4]);
-      buffer.write(value[5]);
-    }else if(value.length == 7){
-      buffer.write(value[0]);
-      buffer.write(',');
-      buffer.write(value[1]);
-      buffer.write(value[2]);
-      buffer.write(value[3]);
-      buffer.write(',');
-      buffer.write(value[4]);
-      buffer.write(value[5]);
-      buffer.write(value[6]);
-    }else if(value.length == 8){
-      buffer.write(value[0]);
-      buffer.write(value[1]);
-      buffer.write(',');
-      buffer.write(value[2]);
-      buffer.write(value[3]);
-      buffer.write(value[4]);
-      buffer.write(',');
-      buffer.write(value[5]);
-      buffer.write(value[6]);
-      buffer.write(value[7]);
-    }else if(value.length == 9){
-      buffer.write(value[0]);
-      buffer.write(value[1]);
-      buffer.write(value[2]);
-      buffer.write(',');
-      buffer.write(value[3]);
-      buffer.write(value[4]);
-      buffer.write(value[5]);
-      buffer.write(',');
-      buffer.write(value[6]);
-      buffer.write(value[7]);
-      buffer.write(value[8]);
-    }
-    else{
-      for (int i = 0; i < value.length; i++) {
-        print('lllllf $i');
-        buffer.write(value[i]);
-        var nonZeroIndex = i + 1;
-
-        if (nonZeroIndex % 3 == 0 && nonZeroIndex != value.length) {
-          buffer.write(',');
-        }
-
-      }
-    }
-
-    return buffer.toString();
-
+  DateTime getDate(){
+    DateTime now = DateTime.now();
+    List<DateTime> quaters = [DateTime(now.year,1),DateTime(now.year,4),
+      DateTime(now.year,7),DateTime(now.year,10)];
+    print(",,,,,,,,ooooo ${quaters.where((element) => element.microsecondsSinceEpoch >= now.microsecondsSinceEpoch)}");
+    return quaters.where((element) => element.microsecondsSinceEpoch >= now.microsecondsSinceEpoch).first;
   }
+
+
 }

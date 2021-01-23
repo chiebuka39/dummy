@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:zimvest/data/local/user_local.dart';
 import 'package:zimvest/data/view_models/identity_view_model.dart';
 import 'package:zimvest/data/view_models/settings_view_model.dart';
+import 'package:zimvest/locator.dart';
 import 'package:zimvest/new_screens/investor_profile/result_sent_screen.dart';
 import 'package:zimvest/styles/colors.dart';
 import 'package:zimvest/utils/margin.dart';
@@ -147,6 +149,7 @@ class _InvestorProfileFormState extends State<InvestorProfileForm> {
               child: Container(
                 child: PageView(
                   controller: controller,
+                  physics: NeverScrollableScrollPhysics(),
                   children: [
                     Container(
                       padding: EdgeInsets.symmetric(horizontal: 20),
@@ -506,7 +509,7 @@ class _InvestorProfileFormState extends State<InvestorProfileForm> {
                     mostConernedDuringInvestment: ips[1],
                     investmentKnowledge:ips[0],
                     instrumentCurrentlyOwned: ips[2],
-                    email: identityViewModel.email,
+                    email:locator<ABSStateLocalStorage>().getSecondaryState().email,
                     ethicalConsideration: false,
                     hypotheticalInvestmentPlan: ips[4],
                     marketAndParticularStockDrops: ips[3],

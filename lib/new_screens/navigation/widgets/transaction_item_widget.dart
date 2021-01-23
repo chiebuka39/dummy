@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:zimvest/data/models/product_transaction.dart';
 import 'package:zimvest/new_screens/navigation/wealth/investment_details.dart';
 import 'package:zimvest/styles/colors.dart';
 import 'package:zimvest/utils/app_utils.dart';
@@ -8,7 +9,7 @@ import 'package:zimvest/utils/strings.dart';
 
 class TransactionItemWidget extends StatelessWidget {
   const TransactionItemWidget({
-    Key key, this.onTap, this.narration, this.date, this.amount, this.symbol, this.topUp = true,
+    Key key, this.onTap, this.narration, this.date, this.amount, this.symbol, this.topUp = true,@required this.trans,
   }) : super(key: key);
 
   final VoidCallback onTap;
@@ -17,6 +18,7 @@ class TransactionItemWidget extends StatelessWidget {
   final num amount;
   final String symbol;
   final bool topUp;
+  final ProductTransaction trans;
 
   @override
   Widget build(BuildContext context) {
@@ -66,12 +68,25 @@ class TransactionItemWidget extends StatelessWidget {
               ],
             ),
             Spacer(),
-            Row(
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.end,
               children: [
-                Text(symbol,style: TextStyle(fontSize: 12)),
-                Text("$amount".split(".").first.convertWithComma(), style: TextStyle(fontSize: 12),),
-              ],
-            )
+                Row(
+                  children: [
+                    Text(symbol,style: TextStyle(fontSize: 12)),
+                    Text("$amount".split(".").first.convertWithComma(), style: TextStyle(fontSize: 12),),
+                  ],
+                ),
+                YMargin(5),
+                Container(
+                    padding: EdgeInsets.symmetric(horizontal: 10,vertical: 5),
+                    decoration: BoxDecoration(
+                        color: trans.status == 3
+                            ?AppColors.kGreen.withOpacity(0.1)
+                            :AppColors.kRed.withOpacity(0.1), borderRadius: BorderRadius.circular(7)),
+                    child: Text(trans.status == 3? "Successful":'Failed',style: TextStyle(color:trans.status == 3?AppColors.kGreen:AppColors.kRed,fontSize: 10),)),
+              ],)
+
           ],
         ),
       ),

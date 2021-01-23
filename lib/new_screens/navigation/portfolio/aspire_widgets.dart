@@ -64,14 +64,16 @@ class AspireContainerWidget extends StatelessWidget {
                             children: [
                               Spacer(),
                               CircularPercentIndicator(
+
                                 radius: 35.0,
                                 lineWidth: 3.0,
                                 animation: true,
+                                backgroundColor: Colors.transparent,
                                 percent: (double.parse(goal.successRate
                                                 .replaceAll("%", "")) /
                                             100) >
                                         1
-                                    ? 0.5
+                                    ? 1.0
                                     : (double.parse(goal.successRate
                                             .replaceAll("%", "")) /
                                         100),
@@ -84,7 +86,7 @@ class AspireContainerWidget extends StatelessWidget {
                                       color: AppColors.kWhite),
                                 ),
                                 circularStrokeCap: CircularStrokeCap.round,
-                                progressColor: AppColors.kPrimaryColor,
+                                progressColor: AppColors.kWhite,
                               )
                             ],
                           )
@@ -99,8 +101,8 @@ class AspireContainerWidget extends StatelessWidget {
             Text(
               goal.planName,
               style: TextStyle(
-                  fontSize: 10,
-                  fontFamily: AppStrings.fontNormal,
+                  fontSize: 13,
+                  fontFamily: AppStrings.fontMedium,
                   color: AppColors.kGreyText),
             ),
             YMargin(8),

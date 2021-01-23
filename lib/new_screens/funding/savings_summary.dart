@@ -313,7 +313,7 @@ class _SavingsSummaryScreenState extends State<SavingsSummaryScreen> {
                                       YMargin(15),
                                       Text(
                                         savingViewModel.selectedPlan.maturityDate == null
-                                            ? "Nill":AppUtils.getReadableDate2(savingViewModel.selectedPlan.maturityDate),
+                                            ? AppUtils.getReadableDate2(getDate()):AppUtils.getReadableDate2(savingViewModel.selectedPlan.maturityDate),
                                         style: TextStyle(
                                             fontFamily: AppStrings.fontMedium,
                                             fontSize: 13,
@@ -438,5 +438,12 @@ class _SavingsSummaryScreenState extends State<SavingsSummaryScreen> {
         ),
       ),
     );
+  }
+  DateTime getDate(){
+    DateTime now = DateTime.now();
+    List<DateTime> quaters = [DateTime(now.year,1),DateTime(now.year,4),
+      DateTime(now.year,7),DateTime(now.year,10)];
+    print(",,,,,,,,ooooo ${quaters.where((element) => element.microsecondsSinceEpoch >= now.microsecondsSinceEpoch)}");
+    return quaters.where((element) => element.microsecondsSinceEpoch >= now.microsecondsSinceEpoch).first;
   }
 }

@@ -63,10 +63,7 @@ class _SavingsSummaryScreenState extends State<SavingsSummaryScreen> {
 
   void startAnim(BuildContext buildContext)async{
 
-    setState(() {
-      slideUp = true;
-      loading = true;
-    });
+
     showModalBottomSheet<Null>(
         context: buildContext,
         builder: (BuildContext context) {
@@ -85,6 +82,10 @@ class _SavingsSummaryScreenState extends State<SavingsSummaryScreen> {
   }
 
   Future makeRemoteCall() async {
+    setState(() {
+      slideUp = true;
+      loading = true;
+    });
     var result = await savingViewModel.createWealthBox(
       cardId:paymentViewModel.selectedCard?.id ?? null,
       token: identityViewModel.user.token,
@@ -293,7 +294,7 @@ class _SavingsSummaryScreenState extends State<SavingsSummaryScreen> {
                                   Text("Next maturity date".toUpperCase(), style: TextStyle(fontSize: 11,
                                     color: AppColors.kSecondaryText,fontFamily: AppStrings.fontNormal,),),
                                   YMargin(15),
-                                  Text(savingViewModel.endDate == null ? 'Nill': AppUtils.getReadableDate2(savingViewModel.endDate), style: TextStyle(
+                                  Text(savingViewModel.endDate == null ? AppUtils.getReadableDate2(getDate()): AppUtils.getReadableDate2(savingViewModel.endDate), style: TextStyle(
                                       fontFamily: AppStrings.fontMedium,
                                       fontSize: 13,color: AppColors.kGreyText
                                   ),),
@@ -388,5 +389,12 @@ class _SavingsSummaryScreenState extends State<SavingsSummaryScreen> {
         ],),
       ),
     );
+  }
+  DateTime getDate(){
+    DateTime now = DateTime.now();
+    List<DateTime> quaters = [DateTime(now.year,1),DateTime(now.year,4),
+      DateTime(now.year,7),DateTime(now.year,10)];
+    print(",,,,,,,,ooooo ${quaters.where((element) => element.microsecondsSinceEpoch >= now.microsecondsSinceEpoch)}");
+    return quaters.where((element) => element.microsecondsSinceEpoch >= now.microsecondsSinceEpoch).first;
   }
 }

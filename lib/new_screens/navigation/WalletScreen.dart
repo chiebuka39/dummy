@@ -7,6 +7,7 @@ import 'package:provider_architecture/provider_architecture.dart';
 import 'package:shimmer/shimmer.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 import 'package:zimvest/data/models/payment/wallet.dart';
+import 'package:zimvest/data/models/product_transaction.dart';
 import 'package:zimvest/data/view_models/identity_view_model.dart';
 import 'package:zimvest/data/view_models/investment_view_model.dart';
 import 'package:zimvest/data/view_models/wallets_view_model.dart';
@@ -896,32 +897,21 @@ Widget walletTransactionsCredit(BuildContext context,
             ),
           ),
         )
-      : walletTransaction
-                  .where((element) => element.movementType == "Credit")
-                  .toList()
-                  .length ==
-              0
-          ? Padding(
-              padding: const EdgeInsets.only(top: 100.0),
-              child: Text(
-                "No Transactions Yet",
-                textAlign: TextAlign.center,
-              ),
-            )
-          : ListView.builder(
-              itemCount: walletTransaction
-                  .where((element) => element.movementType == "Credit")
-                  .toList()
-                  .length,
-              itemBuilder: (context, index) => TransactionItemWidget(
-                symbol: walletTransaction[index].currency == "NGN"
-                    ? AppStrings.nairaSymbol
-                    : AppStrings.dollarSymbol,
-                amount: walletTransaction[index].amount,
-                date: walletTransaction[index].date,
-                narration: walletTransaction[index].narration,
-              ),
-            );
+      : ListView.builder(
+          itemCount: walletTransaction
+              .where((element) => element.movementType == "Credit")
+              .toList()
+              .length,
+          itemBuilder: (context, index) => TransactionItemWidget(
+            trans: ProductTransaction(status: 3),
+            symbol: walletTransaction[index].currency == "NGN"
+                ? AppStrings.nairaSymbol
+                : AppStrings.dollarSymbol,
+            amount: walletTransaction[index].amount,
+            date: walletTransaction[index].date,
+            narration: walletTransaction[index].narration,
+          ),
+        );
 }
 
 Widget walletTransactionsDebit(BuildContext context,
@@ -1050,34 +1040,21 @@ Widget walletTransactionsDollarCredit(BuildContext context,
             ),
           ),
         )
-      : walletTransaction
-                  .where((element) => element.movementType == "Credit")
-                  .toList()
-                  .where((element) => element.currency == "USD")
-                  .length ==
-              0
-          ? Padding(
-              padding: const EdgeInsets.only(top: 100.0),
-              child: Text(
-                "No Transactions Yet",
-                textAlign: TextAlign.center,
-              ),
-            )
-          : ListView.builder(
-              itemCount: walletTransaction
-                  .where((element) => element.movementType == "Credit")
-                  .toList()
-                  .where((element) => element.currency == "USD")
-                  .length,
-              itemBuilder: (context, index) => TransactionItemWidget(
-                symbol: walletTransaction[index].currency == "NGN"
-                    ? AppStrings.nairaSymbol
-                    : AppStrings.dollarSymbol,
-                amount: walletTransaction[index].amount,
-                date: walletTransaction[index].date,
-                narration: walletTransaction[index].narration,
-              ), // model.Dollar
-            );
+      : ListView.builder(
+          itemCount: walletTransaction
+              .where((element) => element.movementType == "Credit")
+              .toList().where((element) => element.currency == "USD")
+              .length,
+          itemBuilder: (context, index) => TransactionItemWidget(
+            trans: ProductTransaction(status: 3),
+            symbol: walletTransaction[index].currency == "NGN"
+                ? AppStrings.nairaSymbol
+                : AppStrings.dollarSymbol,
+            amount: walletTransaction[index].amount,
+            date: walletTransaction[index].date,
+            narration: walletTransaction[index].narration,
+          ),// model.Dollar
+        );
 }
 
 Widget walletTransactionsDollarDebit(BuildContext context,

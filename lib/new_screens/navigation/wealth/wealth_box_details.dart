@@ -46,6 +46,8 @@ class _WealthBoxDetailsScreenState extends State<WealthBoxDetailsScreen> with Af
   ABSSavingViewModel savingViewModel;
   ABSIdentityViewModel identityViewModel;
   List<ProductTransaction> transactions;
+  bool noInternet = false;
+  bool error = false;
 
   @override
   void initState() {
@@ -59,7 +61,11 @@ class _WealthBoxDetailsScreenState extends State<WealthBoxDetailsScreen> with Af
   }
 
   Future<void> fetchTransactions(int productId) async {
-
+    if(mounted){
+      setState(() {
+        error = false;
+        noInternet = false;
+      });
       var result = await savingViewModel.getTransactionForProduct(
           token: identityViewModel.user.token,
           id: productId);
@@ -67,7 +73,14 @@ class _WealthBoxDetailsScreenState extends State<WealthBoxDetailsScreen> with Af
         setState(() {
           transactions = result.data;
         });
+      }else{
+        setState(() {
+          error = result.error;
+          noInternet = !result.networkAvailable;
+        });
       }
+    }
+
 
   }
 
@@ -214,6 +227,9 @@ class _WealthBoxDetailsScreenState extends State<WealthBoxDetailsScreen> with Af
                               child: Center(
                                 child: GestureDetector(
                                   onTap: (){
+                                    if(widget.savingsPlanModel.amountSaved == 0){
+                                        return;
+                                    }
 
                                     if(DateTime.now().day == 1 &&( DateTime.now().month == 4 || DateTime.now().month == 7 || DateTime.now().month == 10 || DateTime.now().month == 1)){
 
@@ -235,21 +251,24 @@ class _WealthBoxDetailsScreenState extends State<WealthBoxDetailsScreen> with Af
                                           isScrollControlled: true);
                                     }
                                   },
-                                  child: Container(child: Column(children: [
-                                    Container(
-                                        height:35,
-                                        width: 35,
-                                        decoration: BoxDecoration(
-                                            color: AppColors.kPrimaryColorLight,
-                                            shape: BoxShape.circle
-                                        ),
-                                        child: Center(child: SvgPicture.asset("images/new/top_up.svg",color: AppColors.kPrimaryColor,))),
-                                    YMargin(12),
-                                    Text("Withdraw", style: TextStyle(
-                                        fontSize: 12,
-                                        fontFamily: AppStrings.fontNormal
-                                    ),)
-                                  ],),),
+                                  child: Opacity(
+                                    opacity: widget.savingsPlanModel.amountSaved == 0 ? 0.5:1,
+                                    child: Container(child: Column(children: [
+                                      Container(
+                                          height:35,
+                                          width: 35,
+                                          decoration: BoxDecoration(
+                                              color: AppColors.kPrimaryColorLight,
+                                              shape: BoxShape.circle
+                                          ),
+                                          child: Center(child: SvgPicture.asset("images/new/top_up.svg",color: AppColors.kPrimaryColor,))),
+                                      YMargin(12),
+                                      Text("Withdraw", style: TextStyle(
+                                          fontSize: 12,
+                                          fontFamily: AppStrings.fontNormal
+                                      ),)
+                                    ],),),
+                                  ),
                                 ),
                               ),
                             ),
@@ -292,10 +311,10 @@ class _WealthBoxDetailsScreenState extends State<WealthBoxDetailsScreen> with Af
                             Text("Activities", style: TextStyle(fontSize: 14,
                                 fontFamily: AppStrings.fontMedium, color: AppColors.kGreyText),),
                             Spacer(),
-                            GestureDetector(
+                            transactions == null ? SizedBox() : transactions.length < 4?SizedBox(): GestureDetector(
                               onTap: (){
                                 showModalBottomSheet < Null > (context: context, builder: (BuildContext context) {
-                                  return WealthBoxActivities(transactions:savingViewModel.savingsTransactions[savingsPlanModel.productId],);
+                                  return WealthBoxActivities(transactions:transactions,);
                                 },isScrollControlled: true);
                               },
                               child: Text("See all", style: TextStyle(fontSize: 11,
@@ -303,7 +322,10 @@ class _WealthBoxDetailsScreenState extends State<WealthBoxDetailsScreen> with Af
                             )
                           ],),
                         ),
-                        transactions == null ? Container(
+                        error == true ? NoInternetWidget2(message: noInternet? "Failed to connect, please connect your internet "
+                            "and try again":"We could not fetch activities, please try again", retry: (){
+                          fetchTransactions(savingsPlanModel.id);
+                        }):transactions == null ? Container(
                           margin: EdgeInsets.symmetric(horizontal: 20),
                           height: 400,
                           child: Shimmer.fromColors(

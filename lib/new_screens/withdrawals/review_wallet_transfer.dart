@@ -256,7 +256,7 @@ class _ReviewBankTransferState extends State<ReviewWalletTransfer> {
                               Row(
                                 children: [
                                   Text(AppStrings.nairaSymbol, style: TextStyle(fontSize: 12),),
-                                  Text("${savingViewModel.selectedPlan.savingsAmount.toInt().toString().convertWithComma()}", style: TextStyle(
+                                  Text("${savingViewModel.amountToSave.toInt().toString().convertWithComma()}", style: TextStyle(
                                       fontFamily: AppStrings.fontMedium,
                                       fontSize: 13,color: AppColors.kGreyText
                                   ),),
