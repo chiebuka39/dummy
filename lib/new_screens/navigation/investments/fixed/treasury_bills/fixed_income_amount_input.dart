@@ -122,7 +122,7 @@ class _FixedIncomeAmountInputState extends State<FixedIncomeAmountInput> {
               Padding(
                 padding: const EdgeInsets.only(left: 20.0, right: 76),
                 child: Text(
-                  "Minimum of ${AppStrings.nairaSymbol}${StringUtils(widget.minimumAmount.toString()).convertWithComma()}",
+                  "Minimum of ${AppStrings.nairaSymbol}${widget.minimumAmount.toString().split('.')[0].convertWithComma()}",
                   style: TextStyle(
                     fontSize: 12,
                     fontFamily: AppStrings.fontNormal,

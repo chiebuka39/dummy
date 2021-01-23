@@ -494,15 +494,15 @@ class InvestmentHighYieldViewModel extends ChangeNotifier {
       String token}) async {
     setBusy(true);
     String token = _localStorage.getUser().token;
-    var getAmount =
-        await _investmentService.calculateRate(token: token, amount: amount.toInt(), sourceCurrency: "NGN", destiationCurrency: "USD");
-    this.dollarConversion = getAmount;
+    // var getAmount =
+    //     await _investmentService.calculateRate(token: token, amount: amount.toInt(), sourceCurrency: "NGN", destiationCurrency: "USD");
+    // this.dollarConversion = getAmount;
     var purchaseRes = await _investmentService.buyDollarnstrument(
       productId: productId,
       beneficiaryBankType: beneficiaryBankType,
       fundingChannel: fundingChannel,
-      amount: getAmount.destinationAmount,
-      nairaAmount: getAmount.sourceAmount,
+      amount: amount,
+      // nairaAmount: getAmount.sourceAmount,
       uniqueName: uniqueName,
       token: token,
     );

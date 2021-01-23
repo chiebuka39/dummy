@@ -183,10 +183,13 @@ class _InvestmentSummaryScreenDollarState
                                         opacity: slideUp
                                             ? value.get(AniProps.opacity1)
                                             : 0.0,
-                                        child: Text(
-                                          "You Have Successfully Invested In Zimvest High Yield Naira",
-                                          textAlign: TextAlign.center,
-                                          style: TextStyle(color: Colors.white),
+                                        child: Padding(
+                                          padding: const EdgeInsets.symmetric(horizontal: 20.0),
+                                          child: Text(
+                                            "You Have Successfully Invested In Zimvest High Yield Dollar",
+                                            textAlign: TextAlign.center,
+                                            style: TextStyle(color: Colors.white),
+                                          ),
                                         ),
                                       ),
                                     ),
