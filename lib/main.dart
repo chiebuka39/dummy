@@ -95,6 +95,7 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
         ),
         ChangeNotifierProvider<ConnectionProvider>(
             create: (_) => ConnectionProvider()),
+
       ],
       child: MaterialApp(
         title: 'Zimvest',

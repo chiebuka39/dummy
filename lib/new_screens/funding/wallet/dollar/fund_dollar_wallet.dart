@@ -103,7 +103,7 @@ class _FundDollarWalletState extends State<FundDollarWallet> {
               child: Text(
                 paymentViewModel.amountController.text == ""
                     ? ""
-                    : "₦ ${(double.tryParse(paymentViewModel.amountController.text.split(',').join()) * 390).toString().split('.')[0].convertWithComma()} (1 USD = 390.0 NGN)",
+                    : "₦ ${(double.tryParse(paymentViewModel.amountController.text.split(',').join()) * widget.rate).toString().split('.')[0].convertWithComma()} (1 USD = ${widget.rate.toString().split(".").first.convertWithComma()} NGN)",
                 style: TextStyle(
                   fontSize: 12,
                   fontFamily: AppStrings.fontNormal,

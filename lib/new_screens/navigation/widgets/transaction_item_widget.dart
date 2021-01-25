@@ -136,7 +136,7 @@ class TransactionItemWidgetWithdrawal extends StatelessWidget {
                 Container(
                   width: 130,
                   child: Text(
-                    narration,
+                    narration ?? '',
                     overflow: TextOverflow.ellipsis,
                     softWrap: true,
                     style: TextStyle(fontSize: 13, fontFamily: AppStrings.fontMedium),
@@ -154,7 +154,12 @@ class TransactionItemWidgetWithdrawal extends StatelessWidget {
               ],
             ),
             Spacer(),
-            Text("$symbol $amount", style: TextStyle(fontSize: 12),)
+            Row(
+              children: [
+                Text(symbol, style: TextStyle(fontSize: 12),),
+                Text("$amount".split(".").first.convertWithComma(), style: TextStyle(fontSize: 12),),
+              ],
+            )
           ],
         ),
       ),

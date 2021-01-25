@@ -107,6 +107,8 @@ class _DollarFundingSummaryScreenState
   Widget build(BuildContext context) {
     ABSPaymentViewModel paymentViewModel = Provider.of(context);
     var size = MediaQuery.of(context).size;
+    print("lllll ${(widget.amount )}");
+    print("lllll111 ${( widget.nairaRate)}");
     return ViewModelProvider<WalletViewModel>.withConsumer(
       viewModelBuilder: () => WalletViewModel(),
       builder: (context, model, _) => Scaffold(

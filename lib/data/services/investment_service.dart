@@ -1074,6 +1074,7 @@ class InvestmentService extends ABSInvestmentService {
     var url =
         "${AppStrings.baseUrl}$microService/api/Calculator/calculaterate?Amount=$amount&SourceCurrency=$sourceCurrency&DestinationCurrency=$destiationCurrency";
 
+    print("pp00o $url");
     var headers = {HttpHeaders.authorizationHeader: "Bearer $token"};
     try {
       var calculateRate = await dio.post(
@@ -1086,6 +1087,7 @@ class InvestmentService extends ABSInvestmentService {
           },
         ),
       );
+      print("po0h ${calculateRate.data}");
 
       if (calculateRate.statusCode == 200) {
         return ConvertedRate.fromJson(calculateRate.data["data"]);
@@ -1102,11 +1104,12 @@ class InvestmentService extends ABSInvestmentService {
   @override
   Future<Result<GottenRate>> getRate(String token) async {
     var url = "${AppStrings.baseUrl}$microService/api/Calculator/getrate";
+    print("ppppppb ${url}");
     var headers = {HttpHeaders.authorizationHeader: "Bearer $token"};
     Result<GottenRate> result = Result(error: false);
     try {
       var response = await dio.get(url, options: Options(headers: headers));
-      print(response.data);
+      print("cvcvc ${response.data}");
       final int statusCode = response.statusCode;
       var response1 = response.data;
       if (statusCode != 200) {

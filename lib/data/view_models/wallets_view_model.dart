@@ -67,7 +67,7 @@ class WalletViewModel extends BaseViewModel {
     String token = _localStorage.getUser().token;
         var getAmount =
         await _investmentService.calculateRate(token: token, amount: sourceAmount, sourceCurrency: "USD", destiationCurrency: "NGN");
-        // print(getAmount.destinationAmount);
+        print("opppp ${getAmount.destinationAmount}");
     var fundWallet = await _walletService.fundWallet(
         sourceAmount: getAmount.sourceAmount,
         token: token,
