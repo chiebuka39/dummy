@@ -81,7 +81,7 @@ class DollarWallet extends StatelessWidget {
           Text("Wallet", style: TextStyle(color: AppColors.kWhite,
               fontSize: 13,fontFamily: AppStrings.fontNormal),),
           Spacer(),
-          Text("${AppStrings.dollarSymbol} ${paymentViewModel.wallet.where((element) => element.currency == "USD").first.balance}", style: TextStyle(color: AppColors.kWhite,
+          Text("${AppStrings.dollarSymbol} ${paymentViewModel.wallet.where((element) => element.currency == "USD").first.balance.toString().split(".").first.convertWithComma()}", style: TextStyle(color: AppColors.kWhite,
               fontSize: 13,fontFamily: AppStrings.fontNormal),),
           XMargin(5),
           Icon(Icons.navigate_next_rounded,color: AppColors.kWhite,)

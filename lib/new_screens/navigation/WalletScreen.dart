@@ -4,7 +4,6 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:provider/provider.dart';
 import 'package:provider_architecture/provider_architecture.dart';
-import 'package:shimmer/shimmer.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 import 'package:zimvest/data/models/payment/wallet.dart';
 import 'package:zimvest/data/models/product_transaction.dart';
@@ -42,361 +41,363 @@ class _WalletScreenState extends State<WalletScreen> {
     return ViewModelProvider<WalletViewModel>.withConsumer(
       viewModelBuilder: () => WalletViewModel(),
       onModelReady: (model) => model.getWallets(),
-      builder: (context, model, _) => Scaffold(
-        body: Stack(
-          children: [
-            Container(
-              padding: EdgeInsets.symmetric(horizontal: 20, vertical: 20),
-              height: MediaQuery.of(context).size.height,
-              width: MediaQuery.of(context).size.width,
-              color: AppColors.kSecondaryColor,
-              child: SafeArea(
-                child: Column(
-                  children: [
-                    Row(
-                      children: [
-                        Text(
-                          "Wallet",
-                          style: TextStyle(color: AppColors.kWhite),
-                        ),
-                      ],
-                    ),
-                    YMargin(20),
-                    Container(
-                      height: 200,
-                      width: double.infinity,
-                      child: _walletCards(
-                          context, identityViewModel.user.fullname, controller),
-                    ),
-                    YMargin(15),
-                    SmoothPageIndicator(
-                        controller: controller, // PageController
-                        count: 2,
-                        effect: WormEffect(
-                            dotWidth: 8,
-                            dotHeight: 8,
-                            activeDotColor: AppColors.kPrimaryColor,
-                            dotColor: AppColors.kPrimaryColor
-                                .withOpacity(0.35)), // your preferred effect
-                        onDotClicked: (index) {})
-                  ],
+      builder: (context, model, _) {
+        List<Wallet> wallet = model.wallets;
+        return Scaffold(
+          body: Stack(
+            children: [
+              Container(
+                padding: EdgeInsets.symmetric(horizontal: 20, vertical: 20),
+                height: MediaQuery.of(context).size.height,
+                width: MediaQuery.of(context).size.width,
+                color: AppColors.kSecondaryColor,
+                child: SafeArea(
+                  child: Column(
+                    children: [
+                      Row(
+                        children: [
+                          Text(
+                            "Wallet",
+                            style: TextStyle(color: AppColors.kWhite),
+                          ),
+                        ],
+                      ),
+                      YMargin(20),
+                      Container(
+                          height: 200,
+                          width: double.infinity,
+                          child: _walletCards(
+                              context, identityViewModel.user.fullname)),
+                      YMargin(15),
+                      SmoothPageIndicator(
+                          // controller: model.controller,
+                          controller: controller, // PageController
+                          count: 2,
+                          effect: WormEffect(
+                              dotWidth: 8,
+                              dotHeight: 8,
+                              activeDotColor: AppColors.kPrimaryColor,
+                              dotColor: AppColors.kPrimaryColor
+                                  .withOpacity(0.35)), // your preferred effect
+                          onDotClicked: (index) {})
+                    ],
+                  ),
                 ),
               ),
-            ),
-            PageView(
-              controller: controller,
-              children: [
-                Container(
-                  height: MediaQuery.of(context).size.height,
-                  child: DraggableScrollableSheet(
-                    initialChildSize: 0.55,
-                    minChildSize: 0.55,
-                    maxChildSize: 0.8,
-                    builder: (BuildContext context, myscrollController) {
-                      return Container(
-                        padding: EdgeInsets.symmetric(horizontal: 20),
-                        decoration: BoxDecoration(
-                            color: AppColors.kWhite,
-                            borderRadius: BorderRadius.only(
-                                topLeft: Radius.circular(20),
-                                topRight: Radius.circular(20))),
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          children: [
-                            YMargin(12),
-                            Container(
-                              height: 5,
-                              width: 40,
-                              color: AppColors.kGrey,
-                              margin: EdgeInsets.symmetric(horizontal: 140),
-                            ),
-                            Expanded(
-                              child: ListView(
-                                physics: BouncingScrollPhysics(),
-                                controller: myscrollController,
-                                children: [
-                                  Row(
-                                    children: <Widget>[
-                                      Spacer(),
-                                      Container(
-                                        width: tabWidth,
-                                        height: 40,
-                                        decoration: BoxDecoration(
-                                            color: AppColors.kPrimaryColorLight,
-                                            borderRadius:
-                                                BorderRadius.circular(13)),
-                                        child: Stack(
-                                          children: <Widget>[
-                                            AnimatedPositioned(
-                                              left: showTopUp == false
-                                                  ? tabWidth / 2
-                                                  : 0,
-                                              duration:
-                                                  Duration(milliseconds: 300),
-                                              child: Container(
-                                                width: tabWidth / 2,
-                                                height: 40,
-                                                decoration: BoxDecoration(
-                                                    color:
-                                                        AppColors.kPrimaryColor,
-                                                    borderRadius:
-                                                        BorderRadius.circular(
-                                                            13)),
-                                              ),
-                                            ),
-                                            Container(
-                                              child: Row(
-                                                children: <Widget>[
-                                                  Expanded(
-                                                    child: InkWell(
-                                                      onTap: () {
-                                                        setState(() {
-                                                          showTopUp = true;
-                                                        });
-                                                      },
-                                                      child: Container(
-                                                        child: Center(
-                                                          child: Text(
-                                                            "Top Ups",
-                                                            style: TextStyle(
-                                                                fontSize: 12,
-                                                                color: showTopUp ==
-                                                                        true
-                                                                    ? Colors
-                                                                        .white
-                                                                    : AppColors
-                                                                        .kPrimaryColor),
-                                                          ),
-                                                        ),
-                                                      ),
-                                                    ),
-                                                  ),
-                                                  Expanded(
-                                                    child: InkWell(
-                                                      onTap: () {
-                                                        setState(() {
-                                                          showTopUp = false;
-                                                        });
-                                                      },
-                                                      child: Container(
-                                                        child: Center(
-                                                          child: Text(
-                                                            "Withdrawals",
-                                                            style: TextStyle(
-                                                                fontSize: 12,
-                                                                color: showTopUp ==
-                                                                        false
-                                                                    ? Colors
-                                                                        .white
-                                                                    : AppColors
-                                                                        .kPrimaryColor),
-                                                          ),
-                                                        ),
-                                                      ),
-                                                    ),
-                                                  ),
-                                                ],
-                                              ),
-                                            ),
-                                          ],
-                                        ),
-                                      ),
-                                      // Spacer(),
-                                    ],
-                                  ),
-                                  ViewModelProvider<
-                                      WalletViewModel>.withConsumer(
-                                    onModelReady: (model) =>
-                                        model.getWalletTransactions(),
-                                    viewModelBuilder: () => WalletViewModel(),
-                                    builder: (context, model, _) => Padding(
-                                      padding:
-                                          const EdgeInsets.only(bottom: 100.0),
-                                      child: Container(
-                                        height: screenHeight(context),
-                                        width: screenWidth(context),
-                                        child: showTopUp
-                                            ? walletTransactionsCredit(
-                                                context,
-                                                model.walletTransaction,
-                                                model.busy)
-                                            : walletTransactionsDebit(
-                                                context,
-                                                model.walletTransaction,
-                                                model.busy),
-                                      ),
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ),
-                          ],
-                        ),
-                      );
-                    },
-                  ),
-                ),
-                Container(
-                  height: MediaQuery.of(context).size.height,
-                  child: DraggableScrollableSheet(
-                    initialChildSize: 0.55,
-                    minChildSize: 0.55,
-                    maxChildSize: 0.8,
-                    builder: (BuildContext context, myscrollController) {
-                      return Container(
-                        padding: EdgeInsets.symmetric(horizontal: 20),
-                        decoration: BoxDecoration(
-                            color: AppColors.kWhite,
-                            borderRadius: BorderRadius.only(
-                                topLeft: Radius.circular(20),
-                                topRight: Radius.circular(20))),
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          children: [
-                            YMargin(12),
-                            Container(
-                              height: 5,
-                              width: 40,
-                              color: AppColors.kGrey,
-                              margin: EdgeInsets.symmetric(horizontal: 140),
-                            ),
-                            Expanded(
-                              child: ListView(
-                                physics: BouncingScrollPhysics(),
-                                controller: myscrollController,
-                                children: [
-                                  Row(
-                                    children: <Widget>[
-                                      Spacer(),
-                                      Container(
-                                        width: tabWidth,
-                                        height: 40,
-                                        decoration: BoxDecoration(
-                                            color: AppColors.kPrimaryColorLight,
-                                            borderRadius:
-                                                BorderRadius.circular(13)),
-                                        child: Stack(
-                                          children: <Widget>[
-                                            AnimatedPositioned(
-                                              left: showTopUp == false
-                                                  ? tabWidth / 2
-                                                  : 0,
-                                              duration:
-                                                  Duration(milliseconds: 300),
-                                              child: Container(
-                                                width: tabWidth / 2,
-                                                height: 40,
-                                                decoration: BoxDecoration(
-                                                    color:
-                                                        AppColors.kPrimaryColor,
-                                                    borderRadius:
-                                                        BorderRadius.circular(
-                                                            13)),
-                                              ),
-                                            ),
-                                            Container(
-                                              child: Row(
-                                                children: <Widget>[
-                                                  Expanded(
-                                                    child: InkWell(
-                                                      onTap: () {
-                                                        setState(() {
-                                                          showTopUp = true;
-                                                        });
-                                                      },
-                                                      child: Container(
-                                                        child: Center(
-                                                          child: Text(
-                                                            "Top Ups",
-                                                            style: TextStyle(
-                                                                fontSize: 12,
-                                                                color: showTopUp ==
-                                                                        true
-                                                                    ? Colors
-                                                                        .white
-                                                                    : AppColors
-                                                                        .kPrimaryColor),
-                                                          ),
-                                                        ),
-                                                      ),
-                                                    ),
-                                                  ),
-                                                  Expanded(
-                                                    child: InkWell(
-                                                      onTap: () {
-                                                        setState(() {
-                                                          showTopUp = false;
-                                                        });
-                                                      },
-                                                      child: Container(
-                                                        child: Center(
-                                                          child: Text(
-                                                            "Withdrawals",
-                                                            style: TextStyle(
-                                                                fontSize: 12,
-                                                                color: showTopUp ==
-                                                                        false
-                                                                    ? Colors
-                                                                        .white
-                                                                    : AppColors
-                                                                        .kPrimaryColor),
-                                                          ),
-                                                        ),
-                                                      ),
-                                                    ),
-                                                  ),
-                                                ],
-                                              ),
-                                            ),
-                                          ],
-                                        ),
-                                      ),
-                                      // Spacer(),
-                                    ],
-                                  ),
-                                  ViewModelProvider<
-                                      WalletViewModel>.withConsumer(
-                                    onModelReady: (model) =>
-                                        model.getWalletTransactions(),
-                                    viewModelBuilder: () => WalletViewModel(),
-                                    builder: (context, model, _) => Padding(
-                                      padding:
-                                          const EdgeInsets.only(bottom: 100.0),
-                                      child: Container(
-                                        height: screenHeight(context),
-                                        width: screenWidth(context),
-                                        child: showTopUp
-                                            ? walletTransactionsDollarCredit(
-                                                context,
-                                                model.walletTransaction,
-                                                model.busy)
-                                            : walletTransactionsDollarDebit(
-                                                context,
-                                                model.walletTransaction,
-                                                model.busy),
-                                      ),
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ),
-                          ],
-                        ),
-                      );
-                    },
-                  ),
-                ),
-              ],
-            ),
-          ],
-        ),
-      ),
+              // PageView(
+              //   // controller: model.controller,
+              //   children: [
+              //     Container(
+              //       height: MediaQuery.of(context).size.height,
+              //       child: DraggableScrollableSheet(
+              //         initialChildSize: 0.55,
+              //         minChildSize: 0.55,
+              //         maxChildSize: 0.8,
+              //         builder: (BuildContext context, myscrollController) {
+              //           return Container(
+              //             padding: EdgeInsets.symmetric(horizontal: 20),
+              //             decoration: BoxDecoration(
+              //                 color: AppColors.kWhite,
+              //                 borderRadius: BorderRadius.only(
+              //                     topLeft: Radius.circular(20),
+              //                     topRight: Radius.circular(20))),
+              //             child: Column(
+              //               mainAxisAlignment: MainAxisAlignment.start,
+              //               children: [
+              //                 YMargin(12),
+              //                 Container(
+              //                   height: 5,
+              //                   width: 40,
+              //                   color: AppColors.kGrey,
+              //                   margin: EdgeInsets.symmetric(horizontal: 140),
+              //                 ),
+              //                 Expanded(
+              //                   child: ListView(
+              //                     physics: BouncingScrollPhysics(),
+              //                     controller: myscrollController,
+              //                     children: [
+              //                       Row(
+              //                         children: <Widget>[
+              //                           Spacer(),
+              //                           Container(
+              //                             width: tabWidth,
+              //                             height: 40,
+              //                             decoration: BoxDecoration(
+              //                                 color: AppColors.kPrimaryColorLight,
+              //                                 borderRadius:
+              //                                     BorderRadius.circular(13)),
+              //                             child: Stack(
+              //                               children: <Widget>[
+              //                                 AnimatedPositioned(
+              //                                   left: showTopUp == false
+              //                                       ? tabWidth / 2
+              //                                       : 0,
+              //                                   duration:
+              //                                       Duration(milliseconds: 300),
+              //                                   child: Container(
+              //                                     width: tabWidth / 2,
+              //                                     height: 40,
+              //                                     decoration: BoxDecoration(
+              //                                         color:
+              //                                             AppColors.kPrimaryColor,
+              //                                         borderRadius:
+              //                                             BorderRadius.circular(
+              //                                                 13)),
+              //                                   ),
+              //                                 ),
+              //                                 Container(
+              //                                   child: Row(
+              //                                     children: <Widget>[
+              //                                       Expanded(
+              //                                         child: InkWell(
+              //                                           onTap: () {
+              //                                             setState(() {
+              //                                               showTopUp = true;
+              //                                             });
+              //                                           },
+              //                                           child: Container(
+              //                                             child: Center(
+              //                                               child: Text(
+              //                                                 "Top Ups",
+              //                                                 style: TextStyle(
+              //                                                     fontSize: 12,
+              //                                                     color: showTopUp ==
+              //                                                             true
+              //                                                         ? Colors
+              //                                                             .white
+              //                                                         : AppColors
+              //                                                             .kPrimaryColor),
+              //                                               ),
+              //                                             ),
+              //                                           ),
+              //                                         ),
+              //                                       ),
+              //                                       Expanded(
+              //                                         child: InkWell(
+              //                                           onTap: () {
+              //                                             setState(() {
+              //                                               showTopUp = false;
+              //                                             });
+              //                                           },
+              //                                           child: Container(
+              //                                             child: Center(
+              //                                               child: Text(
+              //                                                 "Withdrawals",
+              //                                                 style: TextStyle(
+              //                                                     fontSize: 12,
+              //                                                     color: showTopUp ==
+              //                                                             false
+              //                                                         ? Colors
+              //                                                             .white
+              //                                                         : AppColors
+              //                                                             .kPrimaryColor),
+              //                                               ),
+              //                                             ),
+              //                                           ),
+              //                                         ),
+              //                                       ),
+              //                                     ],
+              //                                   ),
+              //                                 ),
+              //                               ],
+              //                             ),
+              //                           ),
+              //                           // Spacer(),
+              //                         ],
+              //                       ),
+              //                       ViewModelProvider<
+              //                           WalletViewModel>.withConsumer(
+              //                         onModelReady: (model) =>
+              //                             model.getWalletTransactions(),
+              //                         viewModelBuilder: () => WalletViewModel(),
+              //                         builder: (context, model, _) => Padding(
+              //                           padding:
+              //                               const EdgeInsets.only(bottom: 100.0),
+              //                           child: Container(
+              //                             height: screenHeight(context),
+              //                             width: screenWidth(context),
+              //                             child: showTopUp
+              //                                 ? walletTransactionsCredit(context,
+              //                                     model.walletTransaction)
+              //                                 : walletTransactionsDebit(
+              //                                     context,
+              //                                     model.walletTransaction,
+              //                                   ),
+              //                           ),
+              //                         ),
+              //                       ),
+              //                     ],
+              //                   ),
+              //                 ),
+              //               ],
+              //             ),
+              //           );
+              //         },
+              //       ),
+              //     ),
+              //     Container(
+              //       height: MediaQuery.of(context).size.height,
+              //       child: DraggableScrollableSheet(
+              //         initialChildSize: 0.55,
+              //         minChildSize: 0.55,
+              //         maxChildSize: 0.8,
+              //         builder: (BuildContext context, myscrollController) {
+              //           return Container(
+              //             padding: EdgeInsets.symmetric(horizontal: 20),
+              //             decoration: BoxDecoration(
+              //                 color: AppColors.kWhite,
+              //                 borderRadius: BorderRadius.only(
+              //                     topLeft: Radius.circular(20),
+              //                     topRight: Radius.circular(20))),
+              //             child: Column(
+              //               mainAxisAlignment: MainAxisAlignment.start,
+              //               children: [
+              //                 YMargin(12),
+              //                 Container(
+              //                   height: 5,
+              //                   width: 40,
+              //                   color: AppColors.kGrey,
+              //                   margin: EdgeInsets.symmetric(horizontal: 140),
+              //                 ),
+              //                 Expanded(
+              //                   child: ListView(
+              //                     physics: BouncingScrollPhysics(),
+              //                     controller: myscrollController,
+              //                     children: [
+              //                       Row(
+              //                         children: <Widget>[
+              //                           Spacer(),
+              //                           Container(
+              //                             width: tabWidth,
+              //                             height: 40,
+              //                             decoration: BoxDecoration(
+              //                                 color: AppColors.kPrimaryColorLight,
+              //                                 borderRadius:
+              //                                     BorderRadius.circular(13)),
+              //                             child: Stack(
+              //                               children: <Widget>[
+              //                                 AnimatedPositioned(
+              //                                   left: showTopUp == false
+              //                                       ? tabWidth / 2
+              //                                       : 0,
+              //                                   duration:
+              //                                       Duration(milliseconds: 300),
+              //                                   child: Container(
+              //                                     width: tabWidth / 2,
+              //                                     height: 40,
+              //                                     decoration: BoxDecoration(
+              //                                         color:
+              //                                             AppColors.kPrimaryColor,
+              //                                         borderRadius:
+              //                                             BorderRadius.circular(
+              //                                                 13)),
+              //                                   ),
+              //                                 ),
+              //                                 Container(
+              //                                   child: Row(
+              //                                     children: <Widget>[
+              //                                       Expanded(
+              //                                         child: InkWell(
+              //                                           onTap: () {
+              //                                             setState(() {
+              //                                               showTopUp = true;
+              //                                             });
+              //                                           },
+              //                                           child: Container(
+              //                                             child: Center(
+              //                                               child: Text(
+              //                                                 "Top Ups",
+              //                                                 style: TextStyle(
+              //                                                     fontSize: 12,
+              //                                                     color: showTopUp ==
+              //                                                             true
+              //                                                         ? Colors
+              //                                                             .white
+              //                                                         : AppColors
+              //                                                             .kPrimaryColor),
+              //                                               ),
+              //                                             ),
+              //                                           ),
+              //                                         ),
+              //                                       ),
+              //                                       Expanded(
+              //                                         child: InkWell(
+              //                                           onTap: () {
+              //                                             setState(() {
+              //                                               showTopUp = false;
+              //                                             });
+              //                                           },
+              //                                           child: Container(
+              //                                             child: Center(
+              //                                               child: Text(
+              //                                                 "Withdrawals",
+              //                                                 style: TextStyle(
+              //                                                     fontSize: 12,
+              //                                                     color: showTopUp ==
+              //                                                             false
+              //                                                         ? Colors
+              //                                                             .white
+              //                                                         : AppColors
+              //                                                             .kPrimaryColor),
+              //                                               ),
+              //                                             ),
+              //                                           ),
+              //                                         ),
+              //                                       ),
+              //                                     ],
+              //                                   ),
+              //                                 ),
+              //                               ],
+              //                             ),
+              //                           ),
+              //                           // Spacer(),
+              //                         ],
+              //                       ),
+              //                       ViewModelProvider<
+              //                           WalletViewModel>.withConsumer(
+              //                         onModelReady: (model) =>
+              //                             model.getWalletTransactions(),
+              //                         viewModelBuilder: () => WalletViewModel(),
+              //                         builder: (context, model, _) => Padding(
+              //                           padding:
+              //                               const EdgeInsets.only(bottom: 100.0),
+              //                           child: Container(
+              //                             height: screenHeight(context),
+              //                             width: screenWidth(context),
+              //                             child: showTopUp
+              //                                 ? walletTransactionsDollarCredit(
+              //                                     context,
+              //                                     model.walletTransaction)
+              //                                 : walletTransactionsDollarDebit(
+              //                                     context,
+              //                                     model.walletTransaction,
+              //                                   ),
+              //                           ),
+              //                         ),
+              //                       ),
+              //                     ],
+              //                   ),
+              //                 ),
+              //               ],
+              //             ),
+              //           );
+              //         },
+              //       ),
+              //     ),
+              //   ],
+              // ),
+            ],
+          ),
+        );
+      },
     );
   }
 }
 
 Widget _walletCards(
-    BuildContext context, String name, PageController controller) {
+  BuildContext context,
+  String name,
+) {
   return ViewModelProvider<WalletViewModel>.withConsumer(
     viewModelBuilder: () => WalletViewModel(),
     onModelReady: (model) => model.getWallets(),
@@ -406,7 +407,7 @@ Widget _walletCards(
       return model.busy
           ? Center(child: Container())
           : PageView(
-              // controller: controller,
+              // controller: model.controller,
               children: [
                 Container(
                   child: Column(
@@ -559,12 +560,12 @@ Widget _walletCards(
                               child: GestureDetector(
                                 onTap: () {
                                   print("Some ${model.gotRate.data}");
-                                  // Navigator.of(context).push(
-                                  //   FundDollarWallet.route(
-                                  //     wallet: wallet,
-                                  //     rate: model.gotRate.data.rate,
-                                  //   ),
-                                  // );
+                                  Navigator.of(context).push(
+                                    FundDollarWallet.route(
+                                      wallet: wallet,
+                                      rate: model.gotRate.data.rate,
+                                    ),
+                                  );
                                 },
                                 child: Container(
                                   child: Column(
@@ -848,53 +849,18 @@ void bottomSheet(BuildContext context, List<Wallet> wallets, String name) {
   );
 }
 
-Widget walletTransactionsCredit(BuildContext context,
-    List<WalletTransaction> walletTransaction, bool busy) {
-  return busy
-      ? Container(
-          height: 400,
-          child: Shimmer.fromColors(
-            baseColor: Colors.grey[300],
-            highlightColor: Colors.grey[100],
-            child: ListView.builder(
-              itemBuilder: (BuildContext context, int index) {
-                if (index == 0) {
-                  return Row(
-                    children: [
-                      SizedBox(
-                        width: 200.0,
-                        height: 50.0,
-                        child: Shimmer.fromColors(
-                          baseColor: Colors.red,
-                          highlightColor: Colors.yellow,
-                          child: Container(
-                            margin: EdgeInsets.only(top: 10),
-                            width: 40.0,
-                            height: 8.0,
-                            color: Colors.white,
-                          ),
-                        ),
-                      ),
-                    ],
-                  );
-                }
-                return SizedBox(
-                  width: 200.0,
-                  height: 100.0,
-                  child: Shimmer.fromColors(
-                    baseColor: Colors.red,
-                    highlightColor: Colors.yellow,
-                    child: Container(
-                      margin: EdgeInsets.only(top: 10),
-                      width: 40.0,
-                      height: 8.0,
-                      color: Colors.white,
-                    ),
-                  ),
-                );
-              },
-              itemCount: 4,
-            ),
+Widget walletTransactionsCredit(
+    BuildContext context, List<WalletTransaction> walletTransaction) {
+  return walletTransaction
+              .where((element) => element.movementType == "Credit")
+              .toList()
+              .length ==
+          0
+      ? Padding(
+          padding: const EdgeInsets.only(top: 100.0),
+          child: Text(
+            "No Transactions Yet",
+            textAlign: TextAlign.center,
           ),
         )
       : ListView.builder(
@@ -914,136 +880,56 @@ Widget walletTransactionsCredit(BuildContext context,
         );
 }
 
-Widget walletTransactionsDebit(BuildContext context,
-    List<WalletTransaction> walletTransaction, bool busy) {
-  return busy
-      ? Container(
-          height: 400,
-          child: Shimmer.fromColors(
-            baseColor: Colors.grey[300],
-            highlightColor: Colors.grey[100],
-            child: ListView.builder(
-              itemBuilder: (BuildContext context, int index) {
-                if (index == 0) {
-                  return Row(
-                    children: [
-                      SizedBox(
-                        width: 200.0,
-                        height: 50.0,
-                        child: Shimmer.fromColors(
-                          baseColor: Colors.red,
-                          highlightColor: Colors.yellow,
-                          child: Container(
-                            margin: EdgeInsets.only(top: 10),
-                            width: 40.0,
-                            height: 8.0,
-                            color: Colors.white,
-                          ),
-                        ),
-                      ),
-                    ],
-                  );
-                }
-                return SizedBox(
-                  width: 200.0,
-                  height: 100.0,
-                  child: Shimmer.fromColors(
-                    baseColor: Colors.red,
-                    highlightColor: Colors.yellow,
-                    child: Container(
-                      margin: EdgeInsets.only(top: 10),
-                      width: 40.0,
-                      height: 8.0,
-                      color: Colors.white,
-                    ),
-                  ),
-                );
-              },
-              itemCount: 4,
-            ),
+Widget walletTransactionsDebit(
+    BuildContext context, List<WalletTransaction> walletTransaction) {
+  return walletTransaction
+              .where((element) => element.movementType == "Debit")
+              .toList()
+              .length ==
+          0
+      ? Padding(
+          padding: const EdgeInsets.only(top: 100.0),
+          child: Text(
+            "No Transactions Yet",
+            textAlign: TextAlign.center,
           ),
         )
-      : walletTransaction
-                  .where((element) => element.movementType == "Debit")
-                  .toList()
-                  .length ==
-              0
-          ? Padding(
-              padding: const EdgeInsets.only(top: 100.0),
-              child: Text(
-                "No Transactions Yet",
-                textAlign: TextAlign.center,
-              ),
-            )
-          : ListView.builder(
-              itemCount: walletTransaction
-                  .where((element) => element.movementType == "Debit")
-                  .toList()
-                  .length,
-              itemBuilder: (context, index) => TransactionItemWidgetWithdrawal(
-                symbol: walletTransaction[index].currency == "NGN"
-                    ? AppStrings.nairaSymbol
-                    : AppStrings.dollarSymbol,
-                amount: walletTransaction[index].amount,
-                date: walletTransaction[index].date,
-                narration: walletTransaction[index].narration,
-              ),
-            );
+      : ListView.builder(
+          itemCount: walletTransaction
+              .where((element) => element.movementType == "Debit")
+              .toList()
+              .length,
+          itemBuilder: (context, index) => TransactionItemWidgetWithdrawal(
+            symbol: walletTransaction[index].currency == "NGN"
+                ? AppStrings.nairaSymbol
+                : AppStrings.dollarSymbol,
+            amount: walletTransaction[index].amount,
+            date: walletTransaction[index].date,
+            narration: walletTransaction[index].narration,
+          ),
+        );
 }
 
-Widget walletTransactionsDollarCredit(BuildContext context,
-    List<WalletTransaction> walletTransaction, bool busy) {
-  return busy
-      ? Container(
-          height: 400,
-          child: Shimmer.fromColors(
-            baseColor: Colors.grey[300],
-            highlightColor: Colors.grey[100],
-            child: ListView.builder(
-              itemBuilder: (BuildContext context, int index) {
-                if (index == 0) {
-                  return Row(
-                    children: [
-                      SizedBox(
-                        width: 200.0,
-                        height: 50.0,
-                        child: Shimmer.fromColors(
-                          baseColor: Colors.red,
-                          highlightColor: Colors.yellow,
-                          child: Container(
-                            margin: EdgeInsets.only(top: 10),
-                            width: 40.0,
-                            height: 8.0,
-                            color: Colors.white,
-                          ),
-                        ),
-                      ),
-                    ],
-                  );
-                }
-                return SizedBox(
-                  width: 200.0,
-                  height: 100.0,
-                  child: Shimmer.fromColors(
-                    baseColor: Colors.red,
-                    highlightColor: Colors.yellow,
-                    child: Container(
-                      margin: EdgeInsets.only(top: 10),
-                      width: 40.0,
-                      height: 8.0,
-                      color: Colors.white,
-                    ),
-                  ),
-                );
-              },
-              itemCount: 4,
-            ),
+Widget walletTransactionsDollarCredit(
+    BuildContext context, List<WalletTransaction> walletTransaction) {
+  return walletTransaction
+              .where((element) => element.movementType == "Credit")
+              .toList()
+              .where((element) => element.currency == "USD")
+              .length ==
+          0
+      ? Padding(
+          padding: const EdgeInsets.only(top: 100.0),
+          child: Text(
+            "No Transactions Yet",
+            textAlign: TextAlign.center,
           ),
         )
       : ListView.builder(
           itemCount: walletTransaction
               .where((element) => element.movementType == "Credit")
-              .toList().where((element) => element.currency == "USD")
+              .toList()
+              .where((element) => element.currency == "USD")
               .length,
           itemBuilder: (context, index) => TransactionItemWidget(
             trans: ProductTransaction(status: 3),
@@ -1053,85 +939,37 @@ Widget walletTransactionsDollarCredit(BuildContext context,
             amount: walletTransaction[index].amount,
             date: walletTransaction[index].date,
             narration: walletTransaction[index].narration,
-          ),// model.Dollar
+          ), // model.Dollar
         );
 }
 
-Widget walletTransactionsDollarDebit(BuildContext context,
-    List<WalletTransaction> walletTransaction, bool busy) {
-  return busy
-      ? Container(
-          height: 400,
-          child: Shimmer.fromColors(
-            baseColor: Colors.grey[300],
-            highlightColor: Colors.grey[100],
-            child: ListView.builder(
-              itemBuilder: (BuildContext context, int index) {
-                if (index == 0) {
-                  return Row(
-                    children: [
-                      SizedBox(
-                        width: 200.0,
-                        height: 50.0,
-                        child: Shimmer.fromColors(
-                          baseColor: Colors.red,
-                          highlightColor: Colors.yellow,
-                          child: Container(
-                            margin: EdgeInsets.only(top: 10),
-                            width: 40.0,
-                            height: 8.0,
-                            color: Colors.white,
-                          ),
-                        ),
-                      ),
-                    ],
-                  );
-                }
-                return SizedBox(
-                  width: 200.0,
-                  height: 100.0,
-                  child: Shimmer.fromColors(
-                    baseColor: Colors.red,
-                    highlightColor: Colors.yellow,
-                    child: Container(
-                      margin: EdgeInsets.only(top: 10),
-                      width: 40.0,
-                      height: 8.0,
-                      color: Colors.white,
-                    ),
-                  ),
-                );
-              },
-              itemCount: 4,
-            ),
+Widget walletTransactionsDollarDebit(
+    BuildContext context, List<WalletTransaction> walletTransaction) {
+  return walletTransaction
+              .where((element) => element.movementType == "Debit")
+              .toList()
+              .where((element) => element.currency == "USD")
+              .length ==
+          0
+      ? Padding(
+          padding: const EdgeInsets.only(top: 100.0),
+          child: Text(
+            "No Transactions Yet",
+            textAlign: TextAlign.center,
           ),
         )
-      : walletTransaction
-                  .where((element) => element.movementType == "Debit")
-                  .toList()
-                  .where((element) => element.currency == "USD")
-                  .length ==
-              0
-          ? Padding(
-              padding: const EdgeInsets.only(top: 100.0),
-              child: Text(
-                "No Transactions Yet",
-                textAlign: TextAlign.center,
-              ),
-            )
-          : ListView.builder(
-              itemCount: walletTransaction
-                  .where((element) => element.movementType == "Debit")
-                  .toList()
-                  .where((element) => element.currency == "USD")
-                  .length,
-              itemBuilder: (context, index) => TransactionItemWidgetWithdrawal(
-                symbol: walletTransaction[index].currency == "NGN"
-                    ? AppStrings.nairaSymbol
-                    : AppStrings.dollarSymbol,
-                amount: walletTransaction[index].amount,
-                date: walletTransaction[index].date,
-                narration: walletTransaction[index].narration,
-              ),
-            );
+      : ListView.builder(
+          itemCount: walletTransaction
+              .where((element) => element.movementType == "Debit")
+              .toList()
+              .where((element) => element.currency == "USD")
+              .length,
+          itemBuilder: (context, index) => TransactionItemWidgetWithdrawal(
+            symbol: walletTransaction[index].currency == "NGN"
+                ? AppStrings.nairaSymbol
+                : AppStrings.dollarSymbol,
+            amount: walletTransaction[index].amount,
+            date: walletTransaction[index].date,
+          ),
+        );
 }

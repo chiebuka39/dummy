@@ -1,8 +1,10 @@
+import 'package:flutter/material.dart';
 import 'package:zimvest/data/local/user_local.dart';
 import 'package:zimvest/data/models/investment/term_instruments.dart';
 import 'package:zimvest/data/models/payment/card.dart';
 import 'package:zimvest/data/models/payment/wallet.dart';
 import 'package:zimvest/data/models/wallets/wallets_model.dart';
+import 'package:zimvest/data/services/investment_service.dart';
 import 'package:zimvest/data/services/payment_service.dart';
 import 'package:zimvest/data/services/wallet_service.dart';
 import 'package:zimvest/data/view_models/base_model.dart';
@@ -16,7 +18,8 @@ class WalletViewModel extends BaseViewModel {
   List<WalletTransaction> walletTransaction = List<WalletTransaction>();
   ABSPaymentService _paymentService = locator<ABSPaymentService>();
   List<PaymentCard> cards = List<PaymentCard>();
-
+   ABSInvestmentService _investmentService = locator<ABSInvestmentService>();
+   
   bool _status = false;
   bool get status => _status;
 
@@ -28,6 +31,7 @@ class WalletViewModel extends BaseViewModel {
 
   // TermInstrument _nairaInstrument;
   // TermInstrument get pickednairaInstrument => _nairaInstrument;
+  PageController controller = PageController();
 
   Future<void> getWallets() async {
     setBusy(true);
@@ -57,18 +61,21 @@ class WalletViewModel extends BaseViewModel {
     notifyListeners();
   }
 
-  Future<void> fundWallet(num sourceAmount, num exchangeAmount, String currency,
-      int fundingSource) async {
+  Future<void> fundWallet({num sourceAmount, String currency,
+      int fundingSource}) async {
     setBusy(true);
     String token = _localStorage.getUser().token;
+        var getAmount =
+        await _investmentService.calculateRate(token: token, amount: sourceAmount, sourceCurrency: "USD", destiationCurrency: "NGN");
+        // print(getAmount.destinationAmount);
     var fundWallet = await _walletService.fundWallet(
-        sourceAmount: sourceAmount,
+        sourceAmount: getAmount.sourceAmount,
         token: token,
-        exchangeAmount: exchangeAmount,
+        exchangeAmount: getAmount.destinationAmount,
         currency: currency,
-        fundingSource: fundingSource);
+        fundingSource: 1);
     print(fundWallet);
-    if (fundWallet == "Successfully Processed Payment") {
+    if (fundWallet == "Operation Successful") {
       setBusy(false);
       _status = true;
     } else if (fundWallet == null) {

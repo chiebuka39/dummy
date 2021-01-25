@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:provider/provider.dart';
 import 'package:provider_architecture/_viewmodel_provider.dart';
 import 'package:simple_animations/simple_animations.dart';
 import 'package:supercharged_dart/supercharged_dart.dart';
 import 'package:supercharged/supercharged.dart';
 import 'package:zimvest/animations/loading.dart';
+import 'package:zimvest/data/view_models/payment_view_model.dart';
 import 'package:zimvest/data/view_models/wallets_view_model.dart';
 import 'package:zimvest/styles/colors.dart';
 import 'package:zimvest/utils/app_utils.dart';
@@ -103,6 +105,7 @@ class _DollarFundingSummaryScreenState
 
   @override
   Widget build(BuildContext context) {
+    ABSPaymentViewModel paymentViewModel = Provider.of(context);
     var size = MediaQuery.of(context).size;
     return ViewModelProvider<WalletViewModel>.withConsumer(
       viewModelBuilder: () => WalletViewModel(),
@@ -111,8 +114,12 @@ class _DollarFundingSummaryScreenState
         body: Container(
           height: MediaQuery.of(context).size.height,
           child: Stack(
+            fit: StackFit.expand,
             children: [
-              SvgPicture.asset("images/patterns.svg", fit: BoxFit.fill,),
+              SvgPicture.asset(
+                "images/patterns.svg",
+                fit: BoxFit.fill,
+              ),
               Positioned.fill(
                 child: model.busy
                     ? Center(child: LoadingWIdget())
@@ -263,12 +270,15 @@ class _DollarFundingSummaryScreenState
                                                         : 0.0,
                                                     child: PrimaryButtonNew(
                                                       onTap: () {
-                                                        num nairaAmount = widget
-                                                                .amount *
-                                                            widget.nairaRate;
-                                                        // model.fundWallet(
-                                                        //     widget.amount,
-                                                        //     nairaAmount);
+                                                        Navigator.pushAndRemoveUntil(
+                                                            context,
+                                                            MaterialPageRoute(
+                                                                builder:
+                                                                    (context) =>
+                                                                        TabsContainer()),
+                                                            (Route<dynamic>
+                                                                    route) =>
+                                                                false);
                                                       },
                                                       textColor: Colors.white,
                                                       title: "Retry",
@@ -349,8 +359,9 @@ class _DollarFundingSummaryScreenState
                                           color: AppColors.kLightText5,
                                         ),
                                       ),
+                                      YMargin(5),
                                       Text(
-                                        "\$${widget.balance}",
+                                        "\$${widget.balance.toString().split('.')[0].convertWithComma()}",
                                         style: TextStyle(
                                           fontSize: 11,
                                           fontFamily: AppStrings.fontBold,
@@ -383,8 +394,9 @@ class _DollarFundingSummaryScreenState
                                               color: AppColors.kLightText5,
                                             ),
                                           ),
+                                          YMargin(5),
                                           Text(
-                                            "\$${widget.amount}",
+                                            "\$${widget.amount.toString().split('.')[0].convertWithComma()}",
                                             style: TextStyle(
                                               fontSize: 11,
                                               fontFamily: AppStrings.fontBold,
@@ -408,8 +420,9 @@ class _DollarFundingSummaryScreenState
                                               color: AppColors.kLightText5,
                                             ),
                                           ),
+                                          YMargin(5),
                                           Text(
-                                            "${AppStrings.nairaSymbol} ${widget.amount * widget.nairaRate}",
+                                            "${AppStrings.nairaSymbol} ${(widget.amount * widget.nairaRate).toString().split('.')[0].convertWithComma()}",
                                             style: TextStyle(
                                               fontSize: 11,
                                               fontFamily: AppStrings.fontBold,
@@ -439,15 +452,12 @@ class _DollarFundingSummaryScreenState
                 left: 0,
                 right: 0,
                 child: GestureDetector(
-                  onPanUpdate: (details) {
-                    if (details.delta.dy == -0.5 ||
-                        details.delta.dy == -1.0 ||
-                        details.delta.dy == -1.5 ||
-                        details.delta.dy == -2.0) {
-                      startAnim();
-                      num nairaAmount = widget.amount * widget.nairaRate;
-                      // model.fundWallet(widget.amount, nairaAmount);
-                    }
+                  onVerticalDragStart: (details) {
+                    startAnim();
+                    // num nairaAmount = widget.amount * widget.nairaRate;
+                    model.fundWallet(
+                        sourceAmount: widget.amount, currency: "NGN");
+                    paymentViewModel.amountController.clear();
                   },
                   child: Container(
                     height: 60,

@@ -5,6 +5,7 @@ import 'package:zimvest/utils/margin.dart';
 import 'package:zimvest/utils/margins.dart';
 import 'package:zimvest/utils/strings.dart';
 import 'package:zimvest/widgets/buttons.dart';
+import 'package:zimvest/widgets/navigation/delete_wealthbox.dart';
 
 class WiredTransferScreen extends StatefulWidget {
   static Route<dynamic> route() {
@@ -25,15 +26,7 @@ class _WiredTransferScreenState extends State<WiredTransferScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: AppColors.kWhite,
-        title: Text(
-          "Invest",
-          style: TextStyle(
-            fontSize: 13,
-            fontFamily: AppStrings.fontMedium,
-            color: AppColors.kTextColor,
-          ),
-        ),
+        backgroundColor: Colors.transparent,
         elevation: 0,
         centerTitle: true,
         leading: IconButton(
@@ -42,6 +35,25 @@ class _WiredTransferScreenState extends State<WiredTransferScreen> {
               color: AppColors.kPrimaryColor,
             ),
             onPressed: () => Navigator.pop(context)),
+        actions: [
+          FlatButton(
+            child: Text(
+              "Cancel",
+              style: TextStyle(
+                  fontSize: 12,
+                  fontFamily: AppStrings.fontMedium,
+                  color: AppColors.kPrimaryColor),
+            ),
+            onPressed: () {
+              showModalBottomSheet<Null>(
+                  context: context,
+                  builder: (BuildContext context) {
+                    return CancelAction();
+                  },
+                  isScrollControlled: true);
+            },
+          ),
+        ],
       ),
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.start,

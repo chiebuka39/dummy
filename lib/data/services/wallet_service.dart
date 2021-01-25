@@ -10,9 +10,14 @@ import '../../locator.dart';
 abstract class ABSWalletService {
   Future<List<Wallet>> getWallets(String token);
   Future<List<WalletTransaction>> getWalletsTransactions(String token);
-  Future<dynamic> fundWallet({String token, num sourceAmount, num exchangeAmount, String currency, int fundingSource});
-  Future<dynamic> fundWalletWired({String token, num wiredTransferAmount,int fundingSource});
-
+  Future<dynamic> fundWallet(
+      {String token,
+      num sourceAmount,
+      num exchangeAmount,
+      String currency,
+      int fundingSource});
+  Future<dynamic> fundWalletWired(
+      {String token, num wiredTransferAmount, int fundingSource});
 }
 
 class WalletService implements ABSWalletService {
@@ -68,24 +73,37 @@ class WalletService implements ABSWalletService {
   }
 
   @override
-  Future fundWallet({String token, num sourceAmount, num exchangeAmount, String currency, int fundingSource}) async {
+  Future fundWallet(
+      {String token,
+      num sourceAmount,
+      num exchangeAmount,
+      String currency,
+      int fundingSource}) async {
     final url = "${AppStrings.baseUrl}$microService/api/Wallet/fundwallet";
     var headers = {HttpHeaders.authorizationHeader: "Bearer $token"};
+    Map<String, dynamic> data = {
+      "walletFundingSource": fundingSource,
+      "currency": currency,
+      "sourceAmount": sourceAmount,
+      "exchangeAmount": exchangeAmount
+    };
+    print(data);
+    print(url);
     try {
       final fundWallet = await dio.post(
         url,
-        data: {
-          "walletFundingSource": fundingSource,
-          "currency": currency,
-          "sourceAmount": sourceAmount,
-          "exchangeAmount": exchangeAmount
-        },
-        options: Options(headers: headers),
+        data: data,
+        options: Options(
+          headers: headers,
+          validateStatus: (status) {
+            return status < 600;
+          },
+        ),
       );
       if (fundWallet.statusCode == 200) {
         return fundWallet.data["message"];
       } else if (fundWallet.statusCode == 400) {
-        return fundWallet.data["message"];
+        return null;
       }
     } on DioError catch (e) {
       print(e.message.toString());
@@ -95,7 +113,8 @@ class WalletService implements ABSWalletService {
   }
 
   @override
-  Future fundWalletWired({String token, num wiredTransferAmount,int fundingSource}) async{
+  Future fundWalletWired(
+      {String token, num wiredTransferAmount, int fundingSource}) async {
     final url = "${AppStrings.baseUrl}$microService/api/Wallet/fundwallet";
     var headers = {HttpHeaders.authorizationHeader: "Bearer $token"};
     try {
@@ -105,7 +124,12 @@ class WalletService implements ABSWalletService {
           "walletFundingSource": fundingSource,
           "wireTransferAmount": wiredTransferAmount,
         },
-        options: Options(headers: headers),
+        options: Options(
+          headers: headers,
+          validateStatus: (status) {
+            return status < 600;
+          },
+        ),
       );
       if (fundWallet.statusCode == 200) {
         return fundWallet.data["message"];

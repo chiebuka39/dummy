@@ -6,6 +6,7 @@ import 'package:zimvest/utils/margins.dart';
 import 'package:zimvest/utils/strings.dart';
 import 'package:zimvest/widgets/buttons.dart';
 import 'package:zimvest/widgets/flushbar.dart';
+import 'package:zimvest/widgets/navigation/delete_wealthbox.dart';
 import 'package:zimvest/widgets/new/new_widgets.dart';
 
 class FundDollarWalletPaymentOption extends StatefulWidget {
@@ -53,14 +54,6 @@ class _FundDollarWalletPaymentOptionState
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.transparent,
-        title: Text(
-          "Invest",
-          style: TextStyle(
-            fontSize: 13,
-            fontFamily: AppStrings.fontMedium,
-            color: AppColors.kTextColor,
-          ),
-        ),
         elevation: 0,
         centerTitle: true,
         leading: IconButton(
@@ -69,6 +62,25 @@ class _FundDollarWalletPaymentOptionState
               color: AppColors.kPrimaryColor,
             ),
             onPressed: () => Navigator.pop(context)),
+        actions: [
+          FlatButton(
+            child: Text(
+              "Cancel",
+              style: TextStyle(
+                  fontSize: 12,
+                  fontFamily: AppStrings.fontMedium,
+                  color: AppColors.kPrimaryColor),
+            ),
+            onPressed: () {
+              showModalBottomSheet<Null>(
+                  context: context,
+                  builder: (BuildContext context) {
+                    return CancelAction();
+                  },
+                  isScrollControlled: true);
+            },
+          ),
+        ],
       ),
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -106,13 +118,19 @@ class _FundDollarWalletPaymentOptionState
                       YMargin(25),
                       Padding(
                         padding: const EdgeInsets.symmetric(horizontal: 20.0),
-                        child: SelectWallet(onPressed: () {
-                          FundDollarWalletSummaryScreen.route(
-                            amount: widget.amount,
-                            balance: widget.balance,
-                            nairaRate: widget.nairaRate,
-                          );
-                        }),
+                        child: SelectWallet(
+                          onPressed: () {
+                            Navigator.push(
+                              context,
+                              FundDollarWalletSummaryScreen.route(
+                                amount: widget.amount,
+                                balance: widget.balance,
+                                nairaRate: widget.nairaRate,
+                                isWallet: true
+                              ),
+                            );
+                          },
+                        ),
                       )
                     ],
                   ),

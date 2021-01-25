@@ -284,9 +284,9 @@ class PaymentViewModel extends ABSPaymentViewModel {
   set pickDollarInstrument(TermInstrument value) {
     _dollarInstrument = value;
     notifyListeners();
+  }
 
-}
-  Future<Result<void>> deleteCard(String token, int cardId) async{
+  Future<Result<void>> deleteCard(String token, int cardId) async {
     var result = await _paymentService.deleteCard(token, cardId);
 
     if (result.error == false) {

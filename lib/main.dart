@@ -50,9 +50,9 @@ void main() async {
   setUpLocator();
   runApp(
     // DevicePreview(
-      // builder: (context) => 
+    //   builder: (context) => 
       MyApp(),
-      // enabled: !kReleaseMode,
+    //   enabled: !kReleaseMode,
     // ),
   );
   configLoading();
