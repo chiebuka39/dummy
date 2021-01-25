@@ -1,4 +1,5 @@
 import 'package:zimvest/data/local/user_local.dart';
+import 'package:zimvest/data/models/investment/investment_transactions.dart';
 import 'package:zimvest/data/models/transactions_portfolio/dollar_model.dart';
 import 'package:zimvest/data/models/transactions_portfolio/investment_activities.dart';
 import 'package:zimvest/data/models/transactions_portfolio/naira_model.dart';
@@ -16,6 +17,7 @@ class PortfolioViewModel extends BaseViewModel {
   final ABSTransactionService _transactionService =
       locator<ABSTransactionService>();
   Activities activities = Activities();
+  List<InvestmentTransactions> transactions = List<InvestmentTransactions>();
 
   Future<void> getNairaPortfolio() async {
     setBusy(true);
@@ -59,6 +61,16 @@ class PortfolioViewModel extends BaseViewModel {
         transactionId: transactionId,
         instrumentId: instrumentId);
     this.activities = res;
+    setBusy(false);
+    notifyListeners();
+  }
+
+  Future<void> getInvestmentTransactions(int transactionType)async{
+    setBusy(true);
+    String token = _localStorage.getUser().token;
+    var res = await _transactionService.getInvestmentTransactions(transactionType: transactionType, token: token);
+    print(res);
+    this.transactions = res;
     setBusy(false);
     notifyListeners();
   }

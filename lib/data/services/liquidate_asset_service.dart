@@ -11,9 +11,9 @@ abstract class ABSLiquidateAssets {
       int instrumentId,
       int bankId,
       int withdrawalOption,
-      int amount,
+      num amount,
       String pin,
-      double withdrawableAmount,
+      num withdrawableAmount,
       String requestSource,
       String token});
   Future<dynamic> liquidateDollarInstrument(
@@ -21,9 +21,9 @@ abstract class ABSLiquidateAssets {
       int instrumentId,
       int bankId,
       int withdrawalOption,
-      int amount,
+      num amount,
       String pin,
-      double withdrawableAmount,
+      num withdrawableAmount,
       String requestSource,
       String token});
 }
@@ -40,9 +40,9 @@ class LiquidateAssets implements ABSLiquidateAssets {
       int instrumentId,
       int bankId,
       int withdrawalOption,
-      int amount,
+      num amount,
       String pin,
-      double withdrawableAmount,
+      num withdrawableAmount,
       String requestSource,
       String token}) async {
     var headers = {HttpHeaders.authorizationHeader: "Bearer $token"};
@@ -57,11 +57,19 @@ class LiquidateAssets implements ABSLiquidateAssets {
       "withdrawableAmount": withdrawableAmount,
       "requestSource": "MOBILE"
     };
+    print(body);
     String url =
         "$baseUrl$microService/api/ZimvestTermInstruments/WithdrawDollar";
+    print(url);
     try {
-      var liquidateDollar =
-          await dio.post(url, data: body, options: Options(headers: headers));
+      var liquidateDollar = await dio.post(url,
+          data: body,
+          options: Options(
+            headers: headers,
+            validateStatus: (status) {
+              return status < 600;
+            },
+          ));
       if (liquidateDollar.statusCode == 200) {
         return "Success";
       } else if (liquidateDollar.statusCode == 400) {
@@ -79,9 +87,9 @@ class LiquidateAssets implements ABSLiquidateAssets {
       int instrumentId,
       int bankId,
       int withdrawalOption,
-      int amount,
+      num amount,
       String pin,
-      double withdrawableAmount,
+      num withdrawableAmount,
       String requestSource,
       String token}) async {
     Map<String, dynamic> body = {
@@ -95,21 +103,28 @@ class LiquidateAssets implements ABSLiquidateAssets {
       "withdrawableAmount": withdrawableAmount,
       "requestSource": "MOBILE"
     };
+    print(body);
     var headers = {HttpHeaders.authorizationHeader: "Bearer $token"};
     String url =
         "$baseUrl$microService/api/ZimvestTermInstruments/WithdrawNaira";
-    print(body);
-    print(url);
     try {
-      var liquidateNaira =
-          await dio.post(url, data: body, options: Options(headers: headers));
+      var liquidateNaira = await dio.post(url,
+          data: body,
+          options: Options(
+            headers: headers,
+            validateStatus: (status) {
+              return status < 600;
+            },
+          ));
+
+      print(liquidateNaira);
       if (liquidateNaira.statusCode == 200) {
         return "Success";
       } else if (liquidateNaira.statusCode == 400) {
         return "Failed";
       }
     } on DioError catch (e) {
-      print(e.response.statusMessage);
+      print(e.response.statusCode);
       throw Exception(e.response.statusMessage);
     }
   }

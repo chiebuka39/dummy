@@ -6,9 +6,11 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 import 'package:percent_indicator/percent_indicator.dart';
 import 'package:provider/provider.dart';
+import 'package:provider_architecture/provider_architecture.dart';
 import 'package:zimvest/data/models/product_transaction.dart';
 import 'package:zimvest/data/view_models/identity_view_model.dart';
 import 'package:zimvest/data/view_models/savings_view_model.dart';
+import 'package:zimvest/data/view_models/transaction_vm.dart';
 import 'package:zimvest/new_screens/navigation/wealth/aspire_box_details.dart';
 import 'package:zimvest/new_screens/navigation/wealth/investment_details.dart';
 import 'package:zimvest/new_screens/navigation/widgets/money_title_widget.dart';
@@ -17,6 +19,7 @@ import 'package:zimvest/new_screens/navigation/widgets/transaction_item_widget.d
 import 'package:zimvest/styles/colors.dart';
 import 'package:zimvest/utils/app_utils.dart';
 import 'package:zimvest/utils/margin.dart';
+import 'package:zimvest/utils/margins.dart';
 import 'package:zimvest/utils/strings.dart';
 import 'package:zimvest/widgets/buttons.dart';
 import 'package:zimvest/widgets/home/action_box_widgets.dart';
@@ -42,7 +45,7 @@ class _TransactionsScreenState extends State<TransactionsScreen> {
           slivers: [
             SliverList(
                 delegate: SliverChildListDelegate([
-                  YMargin(15),
+              YMargin(15),
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 20),
                 child: Row(
@@ -339,96 +342,126 @@ class _PortfolioInvestmentWidgetState extends State<PortfolioInvestmentWidget> {
   bool topUp = true;
   @override
   Widget build(BuildContext context) {
-    return SliverPadding(
-      padding: EdgeInsets.symmetric(horizontal: 20),
-      sliver: SliverList(
-        delegate: SliverChildListDelegate([
-          YMargin(10),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Container(
-                width: 150,
-                height: 30,
-                child: Stack(
-                  children: [
-                    Row(
-                      children: [
-                        GestureDetector(
+    return ViewModelProvider<PortfolioViewModel>.withConsumer(
+      viewModelBuilder: () => PortfolioViewModel(),
+      onModelReady: (model) => model.getInvestmentTransactions(1),
+      builder: (context, model, _) => SliverPadding(
+        padding: EdgeInsets.symmetric(horizontal: 20),
+        sliver: SliverList(
+          delegate: SliverChildListDelegate([
+            YMargin(10),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Container(
+                  width: 150,
+                  height: 30,
+                  child: Stack(
+                    children: [
+                      Row(
+                        children: [
+                          GestureDetector(
+                              onTap: () {
+                                model.getInvestmentTransactions(1);
+                                setState(() {
+                                  topUp = true;
+                                });
+                              },
+                              child: Text(
+                                "Top Ups",
+                                style: TextStyle(
+                                    color: topUp
+                                        ? AppColors.kPrimaryColor
+                                        : AppColors.kTextColor,
+                                    fontSize: 12,
+                                    fontFamily: topUp
+                                        ? AppStrings.fontMedium
+                                        : AppStrings.fontNormal),
+                              )),
+                          Spacer(),
+                          GestureDetector(
                             onTap: () {
+                              model.getInvestmentTransactions(2);
                               setState(() {
-                                topUp = true;
+                                topUp = false;
                               });
                             },
                             child: Text(
-                              "Top Ups",
+                              "Withdrawals",
                               style: TextStyle(
                                   color: topUp
-                                      ? AppColors.kPrimaryColor
-                                      : AppColors.kTextColor,
+                                      ? AppColors.kTextColor
+                                      : AppColors.kPrimaryColor,
                                   fontSize: 12,
                                   fontFamily: topUp
-                                      ? AppStrings.fontMedium
-                                      : AppStrings.fontNormal),
-                            )),
-                        Spacer(),
-                        GestureDetector(
-                          onTap: () {
-                            setState(() {
-                              topUp = false;
-                            });
-                          },
-                          child: Text(
-                            "Withdrawals",
-                            style: TextStyle(
-                                color: topUp
-                                    ? AppColors.kTextColor
-                                    : AppColors.kPrimaryColor,
-                                fontSize: 12,
-                                fontFamily: topUp
-                                    ? AppStrings.fontNormal
-                                    : AppStrings.fontMedium),
+                                      ? AppStrings.fontNormal
+                                      : AppStrings.fontMedium),
+                            ),
+                          ),
+                        ],
+                      ),
+                      AnimatedPositioned(
+                          top: 20,
+                          left: topUp ? 5 : 90,
+                          child: Container(
+                            height: 3,
+                            width: 35,
+                            decoration:
+                                BoxDecoration(color: AppColors.kPrimaryColor),
+                          ),
+                          duration: Duration(milliseconds: 300))
+                    ],
+                  ),
+                )
+              ],
+            ),
+            topUp
+                ? Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      model.busy? ShimmerLoading(): Container(
+                        height: screenHeight(context),
+                        width: double.infinity,
+                        child: ListView.builder(
+                          itemCount: model.transactions.length,
+                          itemBuilder: (context, index) =>
+                              InvestmentTransactionItemWidget(
+                                topUp: topUp,
+                            narration: model.transactions[index].uniqueName,
+                            amount:  model.transactions[index].amount,
+                            date: model.transactions[index].date,
+                            investmentType: model.transactions[index].instrumentType,
+                            symbol: model.transactions[index].currency == "USD" ? "" : "",
                           ),
                         ),
-                      ],
-                    ),
-                    AnimatedPositioned(
-                        top: 20,
-                        left: topUp ? 5 : 90,
-                        child: Container(
-                          height: 3,
-                          width: 35,
-                          decoration:
-                              BoxDecoration(color: AppColors.kPrimaryColor),
+                      ),
+                      YMargin(50)
+                    ],
+                  )
+                : Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      model.busy? ShimmerLoading(): Container(
+                        height: screenHeight(context),
+                        width: double.infinity,
+                        child: ListView.builder(
+                          itemCount: model.transactions.length,
+                          itemBuilder: (context, index) =>
+                              InvestmentTransactionItemWidget(
+                                topUp: topUp,
+                            narration: model.transactions[index].description,
+                            amount:  model.transactions[index].amount,
+                            date: model.transactions[index].date,
+                            investmentType: model.transactions[index].instrumentType,
+                            symbol: model.transactions[index].currency == "USD" ? "" : "",
+                          ),
                         ),
-                        duration: Duration(milliseconds: 300))
-                  ],
-                ),
-              )
-            ],
-          ),
-          topUp
-              ? Center(
-                  child: Padding(
-                    padding: const EdgeInsets.only(top: 100.0),
-                    child: Text("Coming Soon"),
+                      ),
+                      YMargin(50)
+                    ],
                   ),
-                )
-              // ? EmptyInvstmentWidget(investment: true,)
-              : Center(
-                  child: Padding(
-                    padding: const EdgeInsets.only(top: 100.0),
-                    child: Text("Coming Soon"),
-                  ),
-                )
-          // Column(
-          //   crossAxisAlignment: CrossAxisAlignment.start,
-          //   children: [
-          //     ...List.generate(6, (index) => TransactionItemWidget()),
-          //     YMargin(50)
-          //   ],
-          // ),
-        ]),
+          ]),
+        ),
       ),
     );
   }

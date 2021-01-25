@@ -4,6 +4,7 @@ import 'package:provider_architecture/_viewmodel_provider.dart';
 import 'package:zimvest/data/models/payment/bank.dart';
 import 'package:zimvest/data/view_models/base_model.dart';
 import 'package:zimvest/data/view_models/payment_view_model.dart';
+import 'package:zimvest/new_screens/funding/withdraw_screen.dart';
 import 'package:zimvest/new_screens/withdrawals/add_bank_account.dart';
 import 'package:zimvest/new_screens/withdrawals/review_bank_transfer.dart';
 import 'package:zimvest/styles/colors.dart';
@@ -12,6 +13,7 @@ import 'package:zimvest/utils/margin.dart';
 import 'package:zimvest/utils/margins.dart';
 import 'package:zimvest/utils/strings.dart';
 import 'package:zimvest/widgets/buttons.dart';
+import 'package:zimvest/widgets/new/new_widgets.dart';
 
 class SelectBankAccount extends StatefulWidget {
   final String name;
@@ -30,14 +32,13 @@ class SelectBankAccount extends StatefulWidget {
       this.instrumentId,
       this.isLiquidate})
       : super(key: key);
-  static Route<dynamic> route({
-    List<Bank> banks,
-    String name,
-    double withDrawable,
-    int transactionId,
-    int instrumentId,
-    bool isLiquidate
-  }) {
+  static Route<dynamic> route(
+      {List<Bank> banks,
+      String name,
+      double withDrawable,
+      int transactionId,
+      int instrumentId,
+      bool isLiquidate}) {
     return MaterialPageRoute(
         builder: (_) => SelectBankAccount(
               banks: banks,
@@ -59,23 +60,15 @@ class _SelectBankAccountState extends State<SelectBankAccount> {
   Widget build(BuildContext context) {
     ABSPaymentViewModel paymentViewModel = Provider.of(context);
     return Scaffold(
-      appBar: AppBar(
-        elevation: 0,
-        iconTheme: IconThemeData(color: AppColors.kPrimaryColor),
-        leading: IconButton(
-          icon: Icon(
-            Icons.arrow_back_ios_rounded,
-            size: 20,
-          ),
-          onPressed: () {
-            Navigator.pop(context);
-          },
-        ),
-        backgroundColor: Colors.transparent,
-        title: Text(
-          "",
-          style: TextStyle(color: Colors.black87, fontSize: 14),
-        ),
+      
+      appBar: ZimAppBar(
+        icon: Icons.arrow_back_ios_outlined,
+        text: "",
+        showCancel: true,
+        callback: () {
+          Navigator.pop(context);
+          Navigator.pop(context);
+        }
       ),
       body: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 20),
@@ -92,9 +85,11 @@ class _SelectBankAccountState extends State<SelectBankAccount> {
             ),
             Expanded(
               child: ListView.builder(
-                itemCount: paymentViewModel.userBanks == null ? 0 :paymentViewModel.userBanks .length,
+                itemCount: widget.banks == null
+                    ? 0
+                    : widget.banks.length,
                 itemBuilder: (context, index) => BankItemWidget(
-                  bank: paymentViewModel.userBanks[index],
+                  bank: widget.banks[index],
                   isLiquidate: widget.isLiquidate,
                 ),
               ),
@@ -119,7 +114,8 @@ class _SelectBankAccountState extends State<SelectBankAccount> {
 class BankItemWidget extends StatelessWidget {
   const BankItemWidget({
     Key key,
-    this.bank, this.isLiquidate,
+    this.bank,
+    this.isLiquidate,
   }) : super(key: key);
 
   final Bank bank;
@@ -130,10 +126,9 @@ class BankItemWidget extends StatelessWidget {
     return GestureDetector(
       onTap: () {
         paymentViewModel.selectedBank = bank;
-        if(isLiquidate){
+        if (isLiquidate) {
           Navigator.push(context, ReviewBankTransferLiquidation.route());
-        }
-        else{
+        } else {
           Navigator.push(context, ReviewBankTransfer.route());
         }
       },

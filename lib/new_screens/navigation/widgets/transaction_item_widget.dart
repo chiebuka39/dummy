@@ -9,7 +9,14 @@ import 'package:zimvest/utils/strings.dart';
 
 class TransactionItemWidget extends StatelessWidget {
   const TransactionItemWidget({
-    Key key, this.onTap, this.narration, this.date, this.amount, this.symbol, this.topUp = true,@required this.trans,
+    Key key,
+    this.onTap,
+    this.narration,
+    this.date,
+    this.amount,
+    this.symbol,
+    this.topUp = true,
+    @required this.trans,
   }) : super(key: key);
 
   final VoidCallback onTap;
@@ -28,20 +35,22 @@ class TransactionItemWidget extends StatelessWidget {
       },
       child: Container(
         margin: EdgeInsets.only(top: 25),
-        padding: EdgeInsets.symmetric(horizontal: 1,vertical: 7),
-
+        padding: EdgeInsets.symmetric(horizontal: 1, vertical: 7),
         width: double.infinity,
-        decoration: BoxDecoration(
-        ),
+        decoration: BoxDecoration(),
         child: Row(
           children: [
             Container(
               height: 35,
               width: 35,
               decoration: BoxDecoration(
-                  color: AppColors.kPrimaryColorLight,
-                  shape: BoxShape.circle),
-              child: Center(child: SvgPicture.asset("images/new/${topUp ? 'top_up':'withdraw'}.svg",color: AppColors.kPrimaryColor,),),
+                  color: AppColors.kPrimaryColorLight, shape: BoxShape.circle),
+              child: Center(
+                child: SvgPicture.asset(
+                  "images/new/${topUp ? 'top_up' : 'withdraw'}.svg",
+                  color: AppColors.kPrimaryColor,
+                ),
+              ),
             ),
             XMargin(15),
             Column(
@@ -53,7 +62,8 @@ class TransactionItemWidget extends StatelessWidget {
                     narration,
                     overflow: TextOverflow.ellipsis,
                     softWrap: true,
-                    style: TextStyle(fontSize: 13, fontFamily: AppStrings.fontMedium),
+                    style: TextStyle(
+                        fontSize: 13, fontFamily: AppStrings.fontMedium),
                   ),
                 ),
                 YMargin(8),
@@ -64,7 +74,6 @@ class TransactionItemWidget extends StatelessWidget {
                       color: AppColors.kTextColor,
                       fontFamily: AppStrings.fontLight),
                 ),
-
               ],
             ),
             Spacer(),
@@ -73,20 +82,31 @@ class TransactionItemWidget extends StatelessWidget {
               children: [
                 Row(
                   children: [
-                    Text(symbol,style: TextStyle(fontSize: 12)),
-                    Text("$amount".split(".").first.convertWithComma(), style: TextStyle(fontSize: 12),),
+                    Text(symbol, style: TextStyle(fontSize: 12)),
+                    Text(
+                      "$amount".split(".").first.convertWithComma(),
+                      style: TextStyle(fontSize: 12),
+                    ),
                   ],
                 ),
                 YMargin(5),
                 Container(
-                    padding: EdgeInsets.symmetric(horizontal: 10,vertical: 5),
+                    padding: EdgeInsets.symmetric(horizontal: 10, vertical: 5),
                     decoration: BoxDecoration(
                         color: trans.status == 3
-                            ?AppColors.kGreen.withOpacity(0.1)
-                            :AppColors.kRed.withOpacity(0.1), borderRadius: BorderRadius.circular(7)),
-                    child: Text(trans.status == 3? "Successful":'Failed',style: TextStyle(color:trans.status == 3?AppColors.kGreen:AppColors.kRed,fontSize: 10),)),
-              ],)
-
+                            ? AppColors.kGreen.withOpacity(0.1)
+                            : AppColors.kRed.withOpacity(0.1),
+                        borderRadius: BorderRadius.circular(7)),
+                    child: Text(
+                      trans.status == 3 ? "Successful" : 'Failed',
+                      style: TextStyle(
+                          color: trans.status == 3
+                              ? AppColors.kGreen
+                              : AppColors.kRed,
+                          fontSize: 10),
+                    )),
+              ],
+            )
           ],
         ),
       ),
@@ -94,10 +114,14 @@ class TransactionItemWidget extends StatelessWidget {
   }
 }
 
-
 class TransactionItemWidgetWithdrawal extends StatelessWidget {
   const TransactionItemWidgetWithdrawal({
-    Key key, this.onTap, this.narration, this.date, this.amount, this.symbol,
+    Key key,
+    this.onTap,
+    this.narration,
+    this.date,
+    this.amount,
+    this.symbol,
   }) : super(key: key);
 
   final VoidCallback onTap;
@@ -114,20 +138,22 @@ class TransactionItemWidgetWithdrawal extends StatelessWidget {
       },
       child: Container(
         margin: EdgeInsets.only(top: 25),
-        padding: EdgeInsets.symmetric(horizontal: 1,vertical: 7),
-
+        padding: EdgeInsets.symmetric(horizontal: 1, vertical: 7),
         width: double.infinity,
-        decoration: BoxDecoration(
-        ),
+        decoration: BoxDecoration(),
         child: Row(
           children: [
             Container(
               height: 35,
               width: 35,
               decoration: BoxDecoration(
-                  color: AppColors.kPrimaryColorLight,
-                  shape: BoxShape.circle),
-              child: Center(child: SvgPicture.asset("images/new/withdraw.svg",color: AppColors.kPrimaryColor,),),
+                  color: AppColors.kPrimaryColorLight, shape: BoxShape.circle),
+              child: Center(
+                child: SvgPicture.asset(
+                  "images/new/withdraw.svg",
+                  color: AppColors.kPrimaryColor,
+                ),
+              ),
             ),
             XMargin(15),
             Column(
@@ -139,7 +165,8 @@ class TransactionItemWidgetWithdrawal extends StatelessWidget {
                     narration,
                     overflow: TextOverflow.ellipsis,
                     softWrap: true,
-                    style: TextStyle(fontSize: 13, fontFamily: AppStrings.fontMedium),
+                    style: TextStyle(
+                        fontSize: 13, fontFamily: AppStrings.fontMedium),
                   ),
                 ),
                 YMargin(8),
@@ -150,11 +177,103 @@ class TransactionItemWidgetWithdrawal extends StatelessWidget {
                       color: AppColors.kTextColor,
                       fontFamily: AppStrings.fontLight),
                 ),
-
               ],
             ),
             Spacer(),
-            Text("$symbol $amount", style: TextStyle(fontSize: 12),)
+            Text(
+              "$symbol $amount",
+              style: TextStyle(fontSize: 12),
+            )
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class InvestmentTransactionItemWidget extends StatelessWidget {
+  const InvestmentTransactionItemWidget({
+    Key key,
+    this.onTap,
+    this.narration,
+    this.date,
+    this.amount,
+    this.symbol,
+    this.topUp = true, this.investmentType,
+  }) : super(key: key);
+
+  final VoidCallback onTap;
+  final String narration;
+  final String date;
+  final String amount;
+  final String investmentType;
+  final String symbol;
+  final bool topUp;
+
+  @override
+  Widget build(BuildContext context) {
+    return GestureDetector(
+      onTap: () {
+        // Navigator.push(context, InvestmentDetailsScreen.route());
+      },
+      child: Container(
+        margin: EdgeInsets.only(top: 25),
+        padding: EdgeInsets.symmetric(horizontal: 1, vertical: 7),
+        width: double.infinity,
+        decoration: BoxDecoration(),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          children: [
+            Container(
+              height: 35,
+              width: 35,
+              decoration: BoxDecoration(
+                  color: AppColors.kPrimaryColorLight, shape: BoxShape.circle),
+              child: Center(
+                child: SvgPicture.asset(
+                  "images/new/${topUp ? 'top_up' : 'withdraw'}.svg",
+                  color: AppColors.kPrimaryColor,
+                ),
+              ),
+            ),
+            XMargin(15),
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Container(
+                  width: MediaQuery.of(context).size.width * 0.38,
+                  child: Text(
+                    narration,
+                    overflow: TextOverflow.ellipsis,
+                    softWrap: true,
+                    style: TextStyle(
+                        fontSize: 13, fontFamily: AppStrings.fontMedium),
+                  ),
+                ),
+                YMargin(8),
+                Text(
+                  investmentType,
+                  style: TextStyle(
+                      fontSize: 11,
+                      color: AppColors.kTextColor,
+                      fontFamily: AppStrings.fontLight),
+                ),
+              ],
+            ),
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.end,
+              children: [
+                Text(
+                  "$amount",
+                  style: TextStyle(fontSize: 12),
+                  textAlign: TextAlign.right,
+                ),
+                Text(
+                  "$date",
+                  style: TextStyle(fontSize: 12),
+                ),
+              ],
+            )
           ],
         ),
       ),

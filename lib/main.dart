@@ -18,6 +18,7 @@ import 'package:zimvest/data/services/connectivity_service.dart';
 import 'package:zimvest/data/view_models/dashboard_view_model.dart';
 import 'package:zimvest/data/view_models/identity_view_model.dart';
 import 'package:zimvest/data/view_models/investment_view_model.dart';
+import 'package:zimvest/data/view_models/liquidate_asset_vm.dart';
 import 'package:zimvest/data/view_models/others_view_model.dart';
 import 'package:zimvest/data/view_models/payment_view_model.dart';
 import 'package:zimvest/data/view_models/pin_view_model.dart';
@@ -50,8 +51,8 @@ void main() async {
   setUpLocator();
   runApp(
     // DevicePreview(
-    //   builder: (context) => 
-      MyApp(),
+    //   builder: (context) =>
+    MyApp(),
     //   enabled: !kReleaseMode,
     // ),
   );
@@ -95,6 +96,9 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
         ),
         ChangeNotifierProvider<ConnectionProvider>(
             create: (_) => ConnectionProvider()),
+        ChangeNotifierProvider<LiquidateAssetViewModel>(
+          create: (_) => LiquidateAssetViewModel(),
+        )
       ],
       child: MaterialApp(
         title: 'Zimvest',
@@ -150,24 +154,22 @@ class _HomeAppState extends State<HomeApp> with WidgetsBindingObserver {
     _setUPNotifications();
     super.initState();
   }
+
   Future<void> _setUPNotifications() async {
     if (Platform.isIOS) {
-      _firebaseMessaging.requestNotificationPermissions(IosNotificationSettings());
+      _firebaseMessaging
+          .requestNotificationPermissions(IosNotificationSettings());
     }
     _firebaseMessaging.configure(
       onMessage: (Map<String, dynamic> message) async {
         print("onMessage: $message");
-
       },
       onLaunch: (Map<String, dynamic> message) async {
         print("onLaunch: $message");
-
       },
       onResume: (Map<String, dynamic> message) async {
         print("onResume: $message");
-
       },
-
     );
   }
 
@@ -176,7 +178,8 @@ class _HomeAppState extends State<HomeApp> with WidgetsBindingObserver {
     print("stateee $state");
     if (state == AppLifecycleState.resumed) {
       print("App Resumed");
-      if (_localStorage.getSecondaryState().lastMinimized == null || _localStorage.getSecondaryState().email == null) {
+      if (_localStorage.getSecondaryState().lastMinimized == null ||
+          _localStorage.getSecondaryState().email == null) {
         return;
       }
       print(
@@ -267,5 +270,3 @@ void configLoading() {
     ..maskColor = Colors.blue.withOpacity(0.5)
     ..userInteractions = false;
 }
-
-

@@ -143,7 +143,7 @@ class _InvestmentSummaryScreenNairaState
         body: Container(
           height: MediaQuery.of(context).size.height,
           child: Stack(
-             fit: StackFit.expand,
+            fit: StackFit.expand,
             children: [
               SvgPicture.asset(
                 "images/patterns.svg",
@@ -626,6 +626,7 @@ class _InvestmentSummaryScreenNairaState
                         productId: paymentViewModel.pickednairaInstrument.id,
                         uniqueName: paymentViewModel.investmentName,
                         fundingChannel: widget.channelId);
+                    paymentViewModel.amountController.clear();
                   },
                   child: Container(
                     height: 60,

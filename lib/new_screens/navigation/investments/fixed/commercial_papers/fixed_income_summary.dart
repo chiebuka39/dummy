@@ -585,6 +585,7 @@ class _SavingsSummaryScreenState extends State<SavingsSummaryScreen> {
                         instrumentName: widget.bondName,
                         uniqueName: widget.uniqueName,
                         instrumentType: 6);
+                        paymentViewModel.amountController.clear();
                   },
                   child: Container(
                     height: 60,
