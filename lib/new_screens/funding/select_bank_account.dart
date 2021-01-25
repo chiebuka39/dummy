@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 import 'package:provider/provider.dart';
 import 'package:provider_architecture/_viewmodel_provider.dart';
 import 'package:zimvest/data/models/payment/bank.dart';
@@ -6,6 +7,8 @@ import 'package:zimvest/data/view_models/base_model.dart';
 import 'package:zimvest/data/view_models/payment_view_model.dart';
 import 'package:zimvest/new_screens/withdrawals/add_bank_account.dart';
 import 'package:zimvest/new_screens/withdrawals/review_bank_transfer.dart';
+import 'package:zimvest/new_screens/withdrawals/use_pin_widget.dart';
+import 'package:zimvest/new_screens/withdrawals/withdraw_to_%20savings.dart';
 import 'package:zimvest/styles/colors.dart';
 import 'package:zimvest/utils/app_utils.dart';
 import 'package:zimvest/utils/margin.dart';
@@ -19,6 +22,7 @@ class SelectBankAccount extends StatefulWidget {
   final int transactionId;
   final int instrumentId;
   final bool isLiquidate;
+  final bool nairaWithdrawal;
   final List<Bank> banks;
 
   const SelectBankAccount(
@@ -28,6 +32,7 @@ class SelectBankAccount extends StatefulWidget {
       this.withDrawable,
       this.transactionId,
       this.instrumentId,
+        this.nairaWithdrawal,
       this.isLiquidate})
       : super(key: key);
   static Route<dynamic> route({
@@ -36,7 +41,8 @@ class SelectBankAccount extends StatefulWidget {
     double withDrawable,
     int transactionId,
     int instrumentId,
-    bool isLiquidate
+    bool isLiquidate,
+    bool nairaWithdrawal
   }) {
     return MaterialPageRoute(
         builder: (_) => SelectBankAccount(
@@ -46,6 +52,8 @@ class SelectBankAccount extends StatefulWidget {
               transactionId: transactionId,
               instrumentId: instrumentId,
               isLiquidate: isLiquidate,
+          nairaWithdrawal: nairaWithdrawal,
+
             ),
         settings: RouteSettings(name: SelectBankAccount().toStringShort()));
   }
@@ -96,6 +104,7 @@ class _SelectBankAccountState extends State<SelectBankAccount> {
                 itemBuilder: (context, index) => BankItemWidget(
                   bank: paymentViewModel.userBanks[index],
                   isLiquidate: widget.isLiquidate,
+                  isWithdraw: widget.nairaWithdrawal,
                 ),
               ),
             ),
@@ -119,18 +128,32 @@ class _SelectBankAccountState extends State<SelectBankAccount> {
 class BankItemWidget extends StatelessWidget {
   const BankItemWidget({
     Key key,
-    this.bank, this.isLiquidate,
+    this.bank, this.isLiquidate, this.isWithdraw = false,
   }) : super(key: key);
 
   final Bank bank;
   final bool isLiquidate;
+  final bool isWithdraw;
   @override
   Widget build(BuildContext context) {
     ABSPaymentViewModel paymentViewModel = Provider.of(context);
+    print("pmnn ${bank.accountName}");
     return GestureDetector(
       onTap: () {
         paymentViewModel.selectedBank = bank;
-        if(isLiquidate){
+        if(isWithdraw){
+          showCupertinoModalBottomSheet(context: context, builder: (context){
+            return UsePinWidget(
+              buildContext: context,
+              validatePin: true,
+              onNext: (){
+                Navigator.push(context, WithdrawToSavingsScreen.route(bank: bank));
+                //Navigator.push(context, SelectBankAccount.route(nairaWithdrawal: true));
+              },
+            );
+          },isDismissible: false);
+
+        }else if(isLiquidate){
           Navigator.push(context, ReviewBankTransferLiquidation.route());
         }
         else{

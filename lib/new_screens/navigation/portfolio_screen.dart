@@ -377,7 +377,7 @@ class SavingsInvestmentErrorWidget extends StatelessWidget {
     return SliverPadding(
       sliver: SliverList(
           delegate: SliverChildListDelegate([
-        NoInternetWidget2(message: message, retry: retry)
+        NoInternetWidget2(message: message ?? "Something went wrong", retry: retry)
       ])),
       padding: EdgeInsets.symmetric(horizontal: 20),
     );

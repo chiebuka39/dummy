@@ -2,9 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:provider/provider.dart';
 import 'package:zimvest/data/view_models/identity_view_model.dart';
+import 'package:zimvest/data/view_models/payment_view_model.dart';
 import 'package:zimvest/data/view_models/pin_view_model.dart';
 import 'package:zimvest/new_screens/tabs.dart';
 import 'package:zimvest/styles/colors.dart';
+import 'package:zimvest/utils/app_utils.dart';
 import 'package:zimvest/utils/margin.dart';
 import 'package:zimvest/utils/strings.dart';
 import 'package:zimvest/widgets/buttons.dart';
@@ -13,10 +15,12 @@ import 'package:zimvest/widgets/new/keyboard_widget.dart';
 
 class UsePinWidget extends StatefulWidget {
   const UsePinWidget({
-    Key key, this.onNext,
+    Key key, this.onNext, this.validatePin, this.buildContext,
   }) : super(key: key);
 
   final VoidCallback onNext;
+  final bool validatePin;
+  final BuildContext buildContext;
 
   @override
   _UsePinWidgetState createState() => _UsePinWidgetState();
@@ -27,11 +31,13 @@ class _UsePinWidgetState extends State<UsePinWidget> {
 
 
   ABSIdentityViewModel identityViewModel;
+  ABSPaymentViewModel paymentViewModel;
   ABSPinViewModel pinViewModel;
   @override
   Widget build(BuildContext context) {
     identityViewModel = Provider.of(context);
     pinViewModel = Provider.of(context);
+    paymentViewModel = Provider.of(context);
 
     final node = FocusScope.of(context);
     return Container(
@@ -494,8 +500,37 @@ class _UsePinWidgetState extends State<UsePinWidget> {
   }
 
   void confirmCode() async{
-    Navigator.pop(context);
-    widget.onNext();
+
+    if(widget.validatePin == true){
+
+      EasyLoading.show(status: "");
+      var result = await identityViewModel.verifyPin(code:"${pinViewModel.pin1}${pinViewModel.pin2}${pinViewModel.pin3}${pinViewModel.pin4}",);
+
+      EasyLoading.dismiss();
+      if(result.error == false){
+        print("ppiunnn 12222");
+        if(result.data == true){
+          print("ppiunnn");
+          Navigator.pop(context);
+          widget.onNext();
+
+        }else{
+          Navigator.pop(context);
+          AppUtils.showError(widget.buildContext, title: "Pin Error",message: "Pin is not correct");
+
+        }
+      }else{
+        Navigator.pop(context);
+        AppUtils.showError(widget.buildContext, title: "Pin Error",message: result.errorMessage);
+
+      }
+
+    }else{
+      Navigator.pop(context);
+      widget.onNext();
+    }
+
+
   }
 }
 

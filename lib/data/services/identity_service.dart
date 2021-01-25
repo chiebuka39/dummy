@@ -733,6 +733,7 @@ print("0oo9999 ${e.response.data.runtimeType}");
     result.error = true;
     }else {
     result.error = false;
+    result.data = true;
 
     }
 
@@ -747,7 +748,7 @@ print("0oo9999 ${e.response.data.runtimeType}");
       result.errorMessage = "Pin Could not be verified";
     }else{
       print("1111 ${e.response.data}");
-      result.errorMessage = e.response.data['message'];
+      result.errorMessage = e.response.data is Map ? e.response.data['message']:"Pin Could not be verified";
     }
 
 

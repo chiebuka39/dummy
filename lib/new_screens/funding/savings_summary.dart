@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:zimvest/animations/loading.dart';
 import 'package:zimvest/data/models/saving_plan.dart';
+import 'package:zimvest/data/view_models/pin_view_model.dart';
 import 'package:zimvest/new_screens/funding/top_up_successful.dart';
 import 'package:zimvest/new_screens/tabs.dart';
 import 'package:zimvest/styles/colors.dart';
@@ -39,6 +40,7 @@ class _SavingsSummaryScreenState extends State<SavingsSummaryScreen> {
   ABSSavingViewModel savingViewModel;
   ABSIdentityViewModel identityViewModel;
   ABSPaymentViewModel paymentViewModel;
+  ABSPinViewModel pinViewModel;
   bool loading = false;
 
   final _tween = MultiTween<AniProps>()
@@ -93,9 +95,7 @@ class _SavingsSummaryScreenState extends State<SavingsSummaryScreen> {
         token: identityViewModel.user.token,
         custSavingId: savingViewModel.selectedPlan.id,
         fundingChannel: paymentViewModel.selectedCard == null
-            ? savingViewModel.fundingChannels
-                .firstWhere((element) => element.name == "Wallet")
-                .id
+            ? 5
             : savingViewModel.fundingChannels
                 .firstWhere((element) => element.name == "Card")
                 .id,
@@ -131,6 +131,7 @@ class _SavingsSummaryScreenState extends State<SavingsSummaryScreen> {
     identityViewModel = Provider.of(context);
     savingViewModel = Provider.of(context);
     paymentViewModel = Provider.of(context);
+    pinViewModel = Provider.of(context);
 
 
     var size = MediaQuery.of(context).size;
@@ -184,6 +185,7 @@ class _SavingsSummaryScreenState extends State<SavingsSummaryScreen> {
                                     child: PrimaryButtonNew(
                                       onTap: () {
                                         paymentViewModel.selectedCard = null;
+                                        pinViewModel.resetAmount();
                                         Navigator.pushAndRemoveUntil(
                                             context,
                                             MaterialPageRoute(
@@ -421,6 +423,7 @@ class _SavingsSummaryScreenState extends State<SavingsSummaryScreen> {
                             PrimaryButtonNew(
                               title: "Back to Home",
                               onTap: () {
+                                pinViewModel.resetAmount();
                                 Navigator.pushAndRemoveUntil(
                                     context,
                                     MaterialPageRoute(

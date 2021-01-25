@@ -83,6 +83,7 @@ abstract class ABSPaymentViewModel extends ChangeNotifier {
       String pin});
   Future<Result<CardPayload>> registerNewCard(String token);
   Future<Result<void>> paymentConfirmation(String token, String trnasactionRef);
+  Future<Result<void>> withdrawToBank({String token, Bank bank, double amount, String type});
   void onKeyboardTap(String value);
 }
 
@@ -295,5 +296,10 @@ class PaymentViewModel extends ABSPaymentViewModel {
       userCards = cards;
     }
     return result;
+  }
+
+  @override
+  Future<Result<void>> withdrawToBank({String token, Bank bank, double amount, String type}) {
+    return _paymentService.withdrawToBank(token, bank, amount, type);
   }
 }

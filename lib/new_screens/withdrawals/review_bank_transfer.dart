@@ -6,6 +6,7 @@ import 'package:pin_code_fields/pin_code_fields.dart';
 import 'package:provider/provider.dart';
 import 'package:provider_architecture/_viewmodel_provider.dart';
 import 'package:zimvest/animations/loading.dart';
+import 'package:zimvest/data/models/payment/bank.dart';
 import 'package:zimvest/data/view_models/identity_view_model.dart';
 import 'package:zimvest/data/view_models/liquidate_asset_vm.dart';
 import 'package:zimvest/data/view_models/payment_view_model.dart';
@@ -26,9 +27,12 @@ import 'package:zimvest/widgets/navigation/delete_wealthbox.dart';
 import 'package:zimvest/widgets/number_keyboard.dart';
 
 class ReviewBankTransfer extends StatefulWidget {
-  static Route<dynamic> route() {
+  final bool nairaWalletWithdrawal;
+  final Bank bank;
+  const ReviewBankTransfer({Key key, this.nairaWalletWithdrawal, this.bank}) : super(key: key);
+  static Route<dynamic> route({bool nairaWalletWithdrawal, Bank bank}) {
     return MaterialPageRoute(
-        builder: (_) => ReviewBankTransfer(),
+        builder: (_) => ReviewBankTransfer(nairaWalletWithdrawal: nairaWalletWithdrawal,bank: bank,),
         settings:
         RouteSettings(name: ReviewBankTransfer().toStringShort()));
   }
@@ -62,6 +66,8 @@ class _ReviewBankTransferState extends State<ReviewBankTransfer> {
 
   @override
   void initState() {
+    print("mmmmm<<<<<<<<< ${widget.nairaWalletWithdrawal}");
+    print(">>>>>>>>>>>>${widget.bank}");
     keys = List.generate(2, (index) => GlobalKey<ItemFaderState>());
 
     super.initState();
@@ -74,14 +80,19 @@ class _ReviewBankTransferState extends State<ReviewBankTransfer> {
     });
 
     //processTransaction();
-    await Future.delayed(1000.milliseconds);
-    showCupertinoModalBottomSheet(context: context, builder: (context){
-      return UsePinWidget(
-        onNext: (){
-          startAnim2(buildContext);
-        },
-      );
-    },isDismissible: false);
+    if(widget.nairaWalletWithdrawal == true){
+      startAnimForNairaWithdrawal(buildContext);
+    }else{
+      await Future.delayed(1000.milliseconds);
+      showCupertinoModalBottomSheet(context: context, builder: (context){
+        return UsePinWidget(
+          onNext: (){
+            startAnim2(buildContext);
+          },
+        );
+      },isDismissible: false);
+    }
+
   }
 
   void startAnim2(BuildContext buildContext)async{
@@ -94,6 +105,35 @@ class _ReviewBankTransferState extends State<ReviewBankTransfer> {
       amount: savingViewModel.amountToSave,
       pin: "${pinViewModel.pin1}${pinViewModel.pin2}${pinViewModel.pin3}${pinViewModel.pin4}",
         withdrawalChannel: paymentViewModel.selectedBank == null ?2: 1,
+    );
+    print("ooooo ${result.error}");
+    print("4444 ${result.errorMessage}");
+    if(result.error == false){
+      setState(() {
+        loading = false;
+        confirmed = true;
+      });
+      Future.delayed(1000.milliseconds).then((value) => onInit());
+    }else{
+      setState(() {
+        loading = false;
+        error = true;
+        if(result.errorMessage != null){
+          errorMessage = result.errorMessage;
+        }
+      });
+    }
+
+  }
+  void startAnimForNairaWithdrawal(BuildContext buildContext)async{
+
+
+    var result = await paymentViewModel.withdrawToBank(
+
+      token: identityViewModel.user.token,
+      bank:widget.bank,
+      amount: savingViewModel.amountToSave,
+      type: "NGN",
     );
     print("ooooo ${result.error}");
     print("4444 ${result.errorMessage}");
@@ -166,7 +206,10 @@ class _ReviewBankTransferState extends State<ReviewBankTransfer> {
                               offset: 10,
                               curve: Curves.easeIn,
                               key: keys[0],
-                              child: Text("Withdrawal is successful. Your Bank Account has been credit successfully", style: TextStyle(color: Colors.white),)),
+                              child: Padding(
+                                padding: const EdgeInsets.symmetric(horizontal: 30),
+                                child: Text("Withdrawal is successful. Your Bank Account has been credit successfully", style: TextStyle(color: Colors.white),textAlign: TextAlign.center,),
+                              )),
                           Spacer(),
                           ItemFader(
                             offset: 10,

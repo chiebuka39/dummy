@@ -8,6 +8,7 @@ import 'package:zimvest/new_screens/funding/top_up_screen.dart';
 import 'package:zimvest/new_screens/funding/wallet/top_up_plan_screen.dart';
 import 'package:zimvest/new_screens/navigation/portfolio/aspire_widgets.dart';
 import 'package:zimvest/new_screens/navigation/wealth/wealth_box_details.dart';
+import 'package:zimvest/new_screens/withdrawals/withdraw_to_%20savings.dart';
 import 'package:zimvest/styles/colors.dart';
 import 'package:zimvest/utils/app_utils.dart';
 import 'package:zimvest/utils/margin.dart';
@@ -79,7 +80,7 @@ class _PickSavingsPlanSceenState extends State<PickSavingsPlanSceen> {
                     : GestureDetector(
                   onTap: () {
                     Navigator.push(
-                        context, WealthBoxDetailsScreen.route(wealthBox));
+                        context, WithdrawToSavingsScreen.route(savingPlanModel: wealthBox));
                   },
                   child: Container(
                     height: 154,
@@ -178,6 +179,7 @@ class _PickSavingsPlanSceenState extends State<PickSavingsPlanSceen> {
                         children: [
                           AspireContainerWidget(
                             goal: goal,
+                            topUp: true,
                           ),
                           XMargin(20),
                           Expanded(
@@ -206,6 +208,7 @@ class _PickSavingsPlanSceenState extends State<PickSavingsPlanSceen> {
                         children: [
                           AspireContainerWidget(
                             goal: goal,
+                            topUp: true,
                           ),
                           XMargin(20),
                           Expanded(
@@ -233,10 +236,12 @@ class _PickSavingsPlanSceenState extends State<PickSavingsPlanSceen> {
                       children: [
                         AspireContainerWidget(
                           goal: goal1,
+                          topUp: true,
                         ),
                         XMargin(20),
                         AspireContainerWidget(
                           goal: goal2,
+                          topUp: true,
                         ),
                       ],
                     ),
