@@ -190,7 +190,7 @@ class _SavingsSummaryScreenState extends State<SavingsSummaryScreen> {
                                             context,
                                             MaterialPageRoute(
                                                 builder: (context) =>
-                                                    TabsContainer()),
+                                                    TabsContainer(tab: 2,)),
                                             (Route<dynamic> route) => false);
                                       },
                                       textColor: Colors.white,

@@ -80,31 +80,29 @@ class _ReviewBankTransferState extends State<ReviewBankTransfer> {
     });
 
     //processTransaction();
-    if(widget.nairaWalletWithdrawal == true){
-      showCupertinoModalBottomSheet(context: context, builder: (context){
+    if (widget.nairaWalletWithdrawal == true) {
+      showCupertinoModalBottomSheet(context: context, builder: (context) {
         return UsePinWidget(
           buildContext: context,
           validatePin: true,
-          onNext: (){
+          onNext: () {
             startAnimForNairaWithdrawal(buildContext);
           },
         );
-      },isDismissible: false);
-
-    }else{
+      }, isDismissible: false);
+    } else {
       await Future.delayed(1000.milliseconds);
-      showCupertinoModalBottomSheet(context: context, builder: (context){
+      showCupertinoModalBottomSheet(context: context, builder: (context) {
         return UsePinWidget(
-          onNext: (){
+          onNext: () {
             startAnim2(buildContext);
           },
         );
-      },isDismissible: false);
+      }, isDismissible: false);
     }
+  }
 
   void startAnim2(BuildContext buildContext)async{
-
-
     var result = await savingViewModel.withdrawFund(
       customerSavingId:savingViewModel.selectedPlan.id,
       token: identityViewModel.user.token,

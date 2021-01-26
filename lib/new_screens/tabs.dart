@@ -20,11 +20,14 @@ import 'package:zimvest/widgets/bottom_nav.dart';
 import 'package:zimvest/widgets/new/new_widgets.dart';
 
 class TabsContainer extends StatefulWidget {
-  const TabsContainer({Key key}) : super(key: key);
+  final int tab;
+  const TabsContainer({
+    Key key,
+    this.tab = 0}) : super(key: key);
   static Route<dynamic> route(
-      {bool newSignUp = false, Function handleMoreClicked}) {
+      {bool newSignUp = false, Function handleMoreClicked, int tab = 0}) {
     return MaterialPageRoute(
-      builder: (_) => TabsContainer(),
+      builder: (_) => TabsContainer(tab: tab,),
       settings: RouteSettings(
         name: TabsContainer().toStringShort(),
       ),
@@ -53,8 +56,12 @@ class _TabsContainerState extends State<TabsContainer>
     WalletScreen(),
   ];
 
+
+
   // initial index of the bottom nav
   int _currentIndex = 0;
+
+
 
   @override
   void afterFirstLayout(BuildContext context) async{
@@ -92,6 +99,7 @@ class _TabsContainerState extends State<TabsContainer>
 
   @override
   void initState() {
+    _currentIndex = widget.tab;
     super.initState();
   }
 
@@ -102,6 +110,7 @@ class _TabsContainerState extends State<TabsContainer>
     savingViewModel = Provider.of(context);
     paymentViewModel = Provider.of(context);
     settingsViewModel = Provider.of(context);
+    print("00000kkk $_currentIndex");
     return Container(
         decoration: BoxDecoration(borderRadius: BorderRadius.circular(20)),
         child: Stack(

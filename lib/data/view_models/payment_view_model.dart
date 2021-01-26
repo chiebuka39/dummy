@@ -33,6 +33,8 @@ abstract class ABSPaymentViewModel extends ChangeNotifier {
   int _amountAvailable;
   int get amountAvailable => _amountAvailable;
   double _investmentAmount;
+  double _conversionRate;
+  double get conversionRate => _conversionRate;
   double get investmentAmount => _investmentAmount;
   TextEditingController amountController = TextEditingController();
 
@@ -50,6 +52,7 @@ abstract class ABSPaymentViewModel extends ChangeNotifier {
   set wallet(List<Wallet> value);
   set selectedCard(PaymentCard value);
   set selectedBank(Bank value);
+  set conversionRate(double value);
   set userCards(List<PaymentCard> value);
   set investmentName(String value);
   set withdrawableAmount(double value);
@@ -97,6 +100,11 @@ class PaymentViewModel extends ABSPaymentViewModel {
 
   set selectedCard(PaymentCard value) {
     _selectedCard = value;
+    notifyListeners();
+  }
+
+  set conversionRate(double value) {
+    _conversionRate = value;
     notifyListeners();
   }
 

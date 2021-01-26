@@ -74,8 +74,8 @@ class WalletViewModel extends BaseViewModel {
         token: token,
         exchangeAmount: getAmount.destinationAmount,
         currency: currency,
-        fundingSource: 1);
-    print(fundWallet);
+        fundingSource: fundingSource);
+    print("p0ioi  ${fundWallet.error}");
     setResult(fundWallet);
     if (fundWallet.error == false) {
       setBusy(false);

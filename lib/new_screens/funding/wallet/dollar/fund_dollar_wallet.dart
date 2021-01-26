@@ -124,6 +124,8 @@ class _FundDollarWalletState extends State<FundDollarWallet> {
                 } else if (amount > balance) {
                   errorFlushBar(context, "Error !", "Insufficient Funds");
                 } else {
+                  paymentViewModel.investmentAmount = amount;
+                  paymentViewModel.conversionRate = widget.rate;
                   Navigator.push(
                     context,
                     FundDollarWalletPaymentOption.route(

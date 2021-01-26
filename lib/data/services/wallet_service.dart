@@ -113,6 +113,9 @@ class WalletService implements ABSWalletService {
         result.error = true;
         result.errorMessage = fundWallet.data["message"];
 
+      }else{
+        result.error = true;
+        result.errorMessage = "Wallet could not be funded";
       }
     } on DioError catch (e) {
       result.error = true;

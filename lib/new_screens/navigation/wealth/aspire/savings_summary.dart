@@ -188,7 +188,7 @@ class _SavingsSummaryScreenState extends State<SavingsSummaryScreen> {
                               onTap: (){
                                 Navigator.pushAndRemoveUntil(
                                     context,
-                                    MaterialPageRoute(builder: (context) => TabsContainer()),
+                                    MaterialPageRoute(builder: (context) => TabsContainer(tab: 2,)),
                                         (Route<dynamic> route) => false);
                                 Future.delayed(Duration(seconds: 2)).then((value) {
                                   paymentViewModel.selectedCard = null;
