@@ -5,6 +5,7 @@ import 'package:provider_architecture/_viewmodel_provider.dart';
 import 'package:zimvest/data/models/payment/bank.dart';
 import 'package:zimvest/data/view_models/base_model.dart';
 import 'package:zimvest/data/view_models/payment_view_model.dart';
+import 'package:zimvest/new_screens/funding/withdraw_screen.dart';
 import 'package:zimvest/new_screens/withdrawals/add_bank_account.dart';
 import 'package:zimvest/new_screens/withdrawals/review_bank_transfer.dart';
 import 'package:zimvest/new_screens/withdrawals/use_pin_widget.dart';
@@ -15,6 +16,7 @@ import 'package:zimvest/utils/margin.dart';
 import 'package:zimvest/utils/margins.dart';
 import 'package:zimvest/utils/strings.dart';
 import 'package:zimvest/widgets/buttons.dart';
+import 'package:zimvest/widgets/new/new_widgets.dart';
 
 class SelectBankAccount extends StatefulWidget {
   final String name;
@@ -67,23 +69,15 @@ class _SelectBankAccountState extends State<SelectBankAccount> {
   Widget build(BuildContext context) {
     ABSPaymentViewModel paymentViewModel = Provider.of(context);
     return Scaffold(
-      appBar: AppBar(
-        elevation: 0,
-        iconTheme: IconThemeData(color: AppColors.kPrimaryColor),
-        leading: IconButton(
-          icon: Icon(
-            Icons.arrow_back_ios_rounded,
-            size: 20,
-          ),
-          onPressed: () {
-            Navigator.pop(context);
-          },
-        ),
-        backgroundColor: Colors.transparent,
-        title: Text(
-          "",
-          style: TextStyle(color: Colors.black87, fontSize: 14),
-        ),
+
+      appBar: ZimAppBar(
+        icon: Icons.arrow_back_ios_outlined,
+        text: "",
+        showCancel: true,
+        callback: () {
+          Navigator.pop(context);
+          Navigator.pop(context);
+        }
       ),
       body: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 20),

@@ -18,24 +18,23 @@ class LiquidateAssetViewModel extends BaseViewModel {
       int instrumentId,
       int bankId,
       int withdrawalOption,
-      int amount,
+      num amount,
       String pin,
-      double withdrawableAmount,
+      num withdrawableAmount,
       String requestSource,
       String token}) async {
     setBusy(true);
     String token = _localStorage.getUser().token;
     var liquidateNairaInstrument =
         await _liquidateAssets.liquidateNairaInstrument(
-      transactionId: transactionId,
-      instrumentId: instrumentId,
-      bankId: bankId,
-      withdrawalOption: withdrawalOption,
-      withdrawableAmount: withdrawableAmount,
-      amount: amount,
-      token: token,
-      pin: pin
-    );
+            transactionId: transactionId,
+            instrumentId: instrumentId,
+            bankId: bankId,
+            withdrawalOption: withdrawalOption,
+            withdrawableAmount: withdrawableAmount,
+            amount: amount,
+            token: token,
+            pin: pin);
     print(liquidateNairaInstrument);
     if (liquidateNairaInstrument != "Success") {
       setBusy(false);
@@ -51,9 +50,9 @@ class LiquidateAssetViewModel extends BaseViewModel {
       int instrumentId,
       int bankId,
       int withdrawalOption,
-      int amount,
+      num amount,
       String pin,
-      double withdrawableAmount,
+      num withdrawableAmount,
       String requestSource,
       String token}) async {
     setBusy(true);

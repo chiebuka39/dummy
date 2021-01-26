@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:zimvest/data/models/product_transaction.dart';
+import 'package:zimvest/data/models/transactions_portfolio/investment_activities.dart';
 import 'package:zimvest/styles/colors.dart';
 import 'package:zimvest/utils/margin.dart';
 import 'package:zimvest/utils/strings.dart';
@@ -69,6 +70,79 @@ class WealthBoxActivities extends StatelessWidget {
                       productTransaction: transactions[index],
                     );
                   })
+                ],
+              ),
+            ),
+          )
+        ],
+      ),
+    );
+  }
+}
+
+class InvestmentActivities extends StatelessWidget {
+  const InvestmentActivities({
+    Key key,
+    this.transactionData,
+  }) : super(key: key);
+
+  final List<TransactionData> transactionData;
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      height: MediaQuery.of(context).size.height - 50,
+      decoration: BoxDecoration(
+        color: Colors.transparent,
+      ),
+      child: Column(
+        children: [
+          YMargin(10),
+          Center(
+            child: Container(
+              width: 30,
+              height: 5,
+              decoration: BoxDecoration(
+                  color: Colors.white, borderRadius: BorderRadius.circular(5)),
+            ),
+          ),
+          YMargin(20),
+          Expanded(
+            child: Container(
+              width: double.infinity,
+              decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.only(
+                      topLeft: Radius.circular(25),
+                      topRight: Radius.circular(25))),
+              child: ListView(
+                children: [
+                  YMargin(20),
+                  Row(
+                    children: [
+                      IconButton(
+                          icon: Icon(Icons.close),
+                          onPressed: () {
+                            Navigator.of(context).pop();
+                          }),
+                    ],
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.only(left: 20),
+                    child: Text(
+                      "Activities",
+                      style: TextStyle(
+                          fontSize: 16,
+                          fontFamily: AppStrings.fontBold,
+                          color: AppColors.kGreyText),
+                    ),
+                  ),
+                  ...List.generate(transactionData.length, (index) {
+                    return InvestmentActivity(
+                      productTransaction: transactionData[index],
+                    );
+                  })
+                  
                 ],
               ),
             ),

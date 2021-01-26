@@ -607,6 +607,8 @@ class _InvestmentSummaryScreenDollarState
                         uniqueName: paymentViewModel.investmentName,
                         fundingChannel: widget.channelId);
 
+                    paymentViewModel.amountController.clear();
+
                   },
                   child: Container(
                     height: 60,

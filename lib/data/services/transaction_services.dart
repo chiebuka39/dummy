@@ -1,6 +1,8 @@
+import 'dart:convert';
 import 'dart:io';
 
 import 'package:dio/dio.dart';
+import 'package:zimvest/data/models/investment/investment_transactions.dart';
 import 'package:zimvest/data/models/transactions_portfolio/dollar_model.dart';
 import 'package:zimvest/data/models/transactions_portfolio/investment_activities.dart';
 import 'package:zimvest/data/models/transactions_portfolio/naira_model.dart';
@@ -15,6 +17,7 @@ abstract class ABSTransactionService {
       {String token, String name, int transactionId, int instrumentId});
   Future<Activities> getFixedInvestmentActivities(
       {String token, String name, int transactionId, int instrumentId});
+  Future<List<InvestmentTransactions>> getInvestmentTransactions({int transactionType, String token});
 }
 
 class TransactionService implements ABSTransactionService {
@@ -115,6 +118,34 @@ class TransactionService implements ABSTransactionService {
         var result = getTransactionActivities.data["data"];
         return Activities.fromJson(result);
       } else if (getTransactionActivities.statusCode == 400) {
+        return null;
+      }
+    } on DioError catch (e) {
+      print(e.response.statusMessage);
+      throw Exception(e.response.statusMessage.toString());
+    }
+    return null;
+  }
+
+  @override
+  Future<List<InvestmentTransactions>> getInvestmentTransactions({int transactionType, String token}) async{
+        var headers = {HttpHeaders.authorizationHeader: "Bearer $token"};
+    var url =
+        "${AppStrings.baseUrl}$microService/api/Dashboards/investmenttransaction?TransactionType=$transactionType";
+    print(url);
+    try {
+      var getInvestmentTransactions = await dio.get(
+        url,
+        options: Options(headers: headers),
+      );
+      if (getInvestmentTransactions.statusCode == 200) {
+        var result = getInvestmentTransactions.data["data"];
+        List<InvestmentTransactions> investmentTransactions = List<InvestmentTransactions>();
+        (result as List).forEach((element) { 
+          investmentTransactions.add(InvestmentTransactions.fromJson(element));
+        });
+        return investmentTransactions;
+      } else if (getInvestmentTransactions.statusCode == 400) {
         return null;
       }
     } on DioError catch (e) {

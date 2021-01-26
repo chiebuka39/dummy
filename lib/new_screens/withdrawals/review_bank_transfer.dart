@@ -36,12 +36,12 @@ class ReviewBankTransfer extends StatefulWidget {
         settings:
         RouteSettings(name: ReviewBankTransfer().toStringShort()));
   }
+
   @override
   _ReviewBankTransferState createState() => _ReviewBankTransferState();
 }
 
 class _ReviewBankTransferState extends State<ReviewBankTransfer> {
-
   List<GlobalKey<ItemFaderState>> keys;
 
   ABSSavingViewModel savingViewModel;
@@ -73,7 +73,7 @@ class _ReviewBankTransferState extends State<ReviewBankTransfer> {
     super.initState();
   }
 
-  void startAnim(BuildContext buildContext) async{
+  void startAnim(BuildContext buildContext) async {
     setState(() {
       slideUp = true;
       loading = true;
@@ -101,8 +101,6 @@ class _ReviewBankTransferState extends State<ReviewBankTransfer> {
         );
       },isDismissible: false);
     }
-
-  }
 
   void startAnim2(BuildContext buildContext)async{
 
@@ -452,7 +450,6 @@ class ItemFaderState extends State<ItemFader>
 
   @override
   Widget build(BuildContext context) {
-
     return AnimatedBuilder(
       animation: _animation,
       child: widget.child,
@@ -503,6 +500,8 @@ class _ReviewBankTransferLiquidationState
   ABSSavingViewModel savingViewModel;
   ABSIdentityViewModel identityViewModel;
   ABSPaymentViewModel paymentViewModel;
+  LiquidateAssetViewModel liquidateAssetViewModel;
+  ABSPinViewModel pinViewModel;
   bool loading = false;
 
   final _tween = MultiTween<AniProps>()
@@ -547,33 +546,39 @@ class _ReviewBankTransferLiquidationState
     super.initState();
   }
 
-  void startAnim() async {
-    setState(() {
-      slideUp = true;
-      loading = true;
-    });
+  // void startAnim(BuildContext buildContext) async {
+  //   setState(() {
+  //     slideUp = true;
+  //     loading = true;
+  //   });
 
-    //processTransaction();
-    await Future.delayed(1000.milliseconds);
-    showCupertinoModalBottomSheet(
-        context: context,
-        builder: (context) {
-          return PinScreen();
-        },
-        isDismissible: false);
-  }
+  //   //processTransaction();
+  //   await Future.delayed(1000.milliseconds);
+  //   showCupertinoModalBottomSheet(
+  //       context: context,
+  //       builder: (context) {
+  //         return UsePinWidget(
+  //           onNext: () {
+  //             startAnim2(buildContext);
+  //           },
+  //         );
+  //       },
+  //       isDismissible: false);
+  // }
 
-  // void startAnim2() async {
-  //   var result = await savingViewModel.withdrawFund(
-  //     customerSavingId: savingViewModel.selectedPlan.id,
-  //     token: identityViewModel.user.token,
-  //     customerBankId: paymentViewModel.selectedBank?.id ?? null,
-  //     amount: savingViewModel.amountToSave,
-  //     password: "Zimvest26.",
-  //     withdrawalChannel: paymentViewModel.selectedBank == null ? 2 : 1,
-  //   );
-  //   print("ooooo ${result.error}");
-  //   print("4444 ${result.errorMessage}");
+  // void startAnim2(BuildContext buildContext) async {
+  //   var result = await liquidateAssetViewModel.liquidateNairaInstrument(
+  //                             transactionId: paymentViewModel.transactionId,
+  //                             instrumentId: paymentViewModel.instrumentId,
+  //                             bankId: paymentViewModel.selectedBank.id,
+  //                             withdrawalOption: 1,
+  //                             amount: paymentViewModel.withdrawableAmount,
+  //                             pin: controller.text,
+  //                             withdrawableAmount:
+  //                                 paymentViewModel.amountAvailable,
+  //                           );
+  //   // print("ooooo ${result.error}");
+  //   // print("4444 ${result.errorMessage}");
   //   if (result.error == false) {
   //     setState(() {
   //       loading = false;
@@ -589,12 +594,6 @@ class _ReviewBankTransferLiquidationState
   //       }
   //     });
   //   }
-  //   // Future.delayed(Duration(seconds: 1)).then((value) {
-  //   //   setState(() {
-  //   //     confirmed = true;
-  //   //   });
-  //   //   Future.delayed(1000.milliseconds).then((value) => onInit());
-  //   // });
   // }
 
   void onInit() async {
@@ -701,7 +700,8 @@ class _ReviewBankTransferLiquidationState
                         Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
-                            BackButton(
+                            IconButton(
+                              icon: Icon(Icons.arrow_back_ios_outlined),
                               color: AppColors.kPrimaryColor,
                               onPressed: () {
                                 Navigator.pop(context);
@@ -719,14 +719,13 @@ class _ReviewBankTransferLiquidationState
                                   "Cancel",
                                   style: TextStyle(
                                     color: AppColors.kPrimaryColor,
-                                    fontSize: 11,
+                                    fontSize: 12,
                                     fontFamily: AppStrings.fontNormal,
                                     fontWeight: FontWeight.w400,
                                   ),
                                 ),
                               ),
                             ),
-                            // XMargin(1),
                           ],
                         ),
                         YMargin(50),
@@ -857,7 +856,7 @@ class _ReviewBankTransferLiquidationState
                   // },
                   onVerticalDragStart: (details) {
                     print("dff ${details.toString()}");
-                    startAnim();
+                    // startAnim(context);
                   },
                   child: Container(
                     height: 60,
@@ -888,7 +887,7 @@ class _ReviewBankTransferLiquidationState
                       width: size.width,
                       child: Center(
                         child:
-                            loading ? CircularProgressIndicator() : SizedBox(),
+                            loading ? Center(child: LoadingWIdget(),) : SizedBox(),
                       ),
                     )
                   : Container(
@@ -935,114 +934,115 @@ class _ReviewBankTransferLiquidationState
   }
 }
 
-class PinScreen extends StatefulWidget {
-  @override
-  _PinScreenState createState() => _PinScreenState();
-}
+// class PinScreen extends StatefulWidget {
+//   @override
+//   _PinScreenState createState() => _PinScreenState();
+// }
 
-class _PinScreenState extends State<PinScreen> {
-  TextEditingController controller = TextEditingController();
-  ABSPaymentViewModel paymentViewModel;
+// class _PinScreenState extends State<PinScreen> {
+//   TextEditingController controller = TextEditingController();
+//   ABSPaymentViewModel paymentViewModel;
 
-  @override
-  Widget build(BuildContext context) {
-    paymentViewModel = Provider.of(context);
-    return ViewModelProvider<LiquidateAssetViewModel>.withConsumer(
-      viewModelBuilder: () => LiquidateAssetViewModel(),
-      builder: (context, model, _) => model.busy
-          ? Container(
-              color: AppColors.kSecondaryColor,
-              child: Center(child: LoadingWIdget()))
-          : Container(
-              height: MediaQuery.of(context).size.height * 0.85,
-              padding: const EdgeInsets.symmetric(horizontal: 20),
-              child: Scaffold(
-                body: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    YMargin(10),
-                    Transform.translate(
-                      offset: Offset(-20, 0),
-                      child: IconButton(
-                        icon: Icon(
-                          Icons.navigate_before_outlined,
-                          color: AppColors.kPrimaryColor,
-                        ),
-                        onPressed: () {
-                          Navigator.pop(context);
-                          Navigator.pop(context);
-                        },
-                      ),
-                    ),
-                    YMargin(10),
-                    Text(
-                      "Enter Zimvest Pin",
-                      style: TextStyle(fontFamily: AppStrings.fontMedium),
-                    ),
-                    YMargin(50),
-                    Container(
-                      width: 250,
-                      child: PinCodeTextField(
-                        textStyle: TextStyle(
-                            fontSize: 14, fontWeight: FontWeight.w100),
-                        enableActiveFill: true,
-                        pinTheme: PinTheme(
-                            shape: PinCodeFieldShape.box,
-                            activeColor: AppColors.kPrimaryColorLight,
-                            inactiveColor: AppColors.kTextBg,
-                            inactiveFillColor: AppColors.kTextBg,
-                            activeFillColor: AppColors.kPrimaryColorLight,
-                            borderRadius: BorderRadius.circular(8)),
-                        controller: controller,
-                        backgroundColor: Colors.transparent,
-                        appContext: context,
-                        length: 4,
-                        onChanged: (value) async {
-                          if (value.length == 4) {
-                            controller.dispose();
-                            await model.liquidateNairaInstrument(
-                              transactionId: paymentViewModel.transactionId,
-                              instrumentId: paymentViewModel.instrumentId,
-                              bankId: paymentViewModel.selectedBank.id,
-                              withdrawalOption: 1,
-                              amount: paymentViewModel.amountAvailable,
-                              pin: controller.text,
-                              withdrawableAmount:
-                                  paymentViewModel.withdrawableAmount,
-                            );
-                            Navigator.push(
-                                context, VetScreen.route(model.status));
-                          }
-                        },
-                      ),
-                    ),
-                    NumericKeyboard(
-                      onKeyboardTap: _onKeyboardTap,
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      rightIcon: Icon(
-                        Icons.arrow_back_ios,
-                        color: AppColors.kPrimaryColor,
-                      ),
-                      rightButtonFn: () {
-                        setState(() {
-                          controller.text = controller.text
-                              .substring(0, controller.text.length - 1);
-                        });
-                      },
-                    ),
-                  ],
-                ),
-              ),
-            ),
-    );
-  }
+//   @override
+//   Widget build(BuildContext context) {
+//     paymentViewModel = Provider.of(context);
+//     return ViewModelProvider<LiquidateAssetViewModel>.withConsumer(
+//       viewModelBuilder: () => LiquidateAssetViewModel(),
+//       builder: (context, model, _) => model.busy
+//           ? Container(
+//               color: AppColors.kSecondaryColor,
+//               child: Center(child: LoadingWIdget()))
+//           : Container(
+//               height: MediaQuery.of(context).size.height * 0.85,
+//               padding: const EdgeInsets.symmetric(horizontal: 20),
+//               child: Scaffold(
+//                 body: Column(
+//                   crossAxisAlignment: CrossAxisAlignment.start,
+//                   children: [
+//                     YMargin(10),
+//                     Transform.translate(
+//                       offset: Offset(-20, 0),
+//                       child: IconButton(
+//                         icon: Icon(
+//                           Icons.navigate_before_outlined,
+//                           color: AppColors.kPrimaryColor,
+//                         ),
+//                         onPressed: () {
+//                           Navigator.pop(context);
+//                           Navigator.pop(context);
+//                         },
+//                       ),
+//                     ),
+//                     YMargin(10),
+//                     Text(
+//                       "Enter Zimvest Pin",
+//                       style: TextStyle(fontFamily: AppStrings.fontMedium),
+//                     ),
+//                     YMargin(50),
+//                     Container(
+//                       width: 250,
+//                       child: PinCodeTextField(
+//                         textStyle: TextStyle(
+//                             fontSize: 14, fontWeight: FontWeight.w100),
+//                         enableActiveFill: true,
+//                         pinTheme: PinTheme(
+//                             shape: PinCodeFieldShape.box,
+//                             activeColor: AppColors.kPrimaryColorLight,
+//                             inactiveColor: AppColors.kTextBg,
+//                             inactiveFillColor: AppColors.kTextBg,
+//                             activeFillColor: AppColors.kPrimaryColorLight,
+//                             borderRadius: BorderRadius.circular(8)),
+//                         controller: controller,
+//                         backgroundColor: Colors.transparent,
+//                         appContext: context,
+//                         length: 4,
+//                         onChanged: (value) async {
+//                           if (value.length == 4) {
+//                             await model.liquidateNairaInstrument(
+//                               transactionId: paymentViewModel.transactionId,
+//                               instrumentId: paymentViewModel.instrumentId,
+//                               bankId: paymentViewModel.selectedBank.id,
+//                               withdrawalOption: 1,
+//                               amount: paymentViewModel.withdrawableAmount,
+//                               pin: controller.text,
+//                               withdrawableAmount:
+//                                   paymentViewModel.amountAvailable,
+//                             );
+//                             controller.clear();
+//                             // Navigator.push(
+//                             //     context, VetScreen.route(model.status));
+//                             Navigator.pop(context)
+//                           }
+//                         },
+//                       ),
+//                     ),
+//                     NumericKeyboard(
+//                       onKeyboardTap: _onKeyboardTap,
+//                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
+//                       rightIcon: Icon(
+//                         Icons.arrow_back_ios,
+//                         color: AppColors.kPrimaryColor,
+//                       ),
+//                       rightButtonFn: () {
+//                         setState(() {
+//                           controller.text = controller.text
+//                               .substring(0, controller.text.length - 1);
+//                         });
+//                       },
+//                     ),
+//                   ],
+//                 ),
+//               ),
+//             ),
+//     );
+//   }
 
-  _onKeyboardTap(String value) {
-    setState(() {
-      controller.text = controller.text + value;
-    });
-  }
-}
+//   _onKeyboardTap(String value) {
+//     setState(() {
+//       controller.text = controller.text + value;
+//     });
+//   }
+// }
 
 class VetScreen extends StatelessWidget {
   final bool passed;

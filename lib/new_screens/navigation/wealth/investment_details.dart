@@ -117,7 +117,7 @@ class _InvestmentDetailsScreenState extends State<InvestmentDetailsScreen> {
                               showModalBottomSheet<Null>(
                                   context: context,
                                   builder: (BuildContext context) {
-                                    return WealthMore();
+                                    return InvestmentMore(startdate: model.activities.dateJoined, maturitydate: model.activities.maturityDate,);
                                   },
                                   isScrollControlled: true);
                             },
@@ -338,7 +338,7 @@ class _InvestmentDetailsScreenState extends State<InvestmentDetailsScreen> {
                                 showModalBottomSheet<Null>(
                                     context: context,
                                     builder: (BuildContext context) {
-                                      return WealthBoxActivities();
+                                      return InvestmentActivities(transactionData: model.activities.transactionData,);
                                     },
                                     isScrollControlled: true);
                               },
@@ -440,7 +440,7 @@ class _InvestmentDetailsScreenState extends State<InvestmentDetailsScreen> {
             ),
           )
         : ViewModelProvider<PortfolioViewModel>.withConsumer(
-            onModelReady: (model) => model.getInvestmentActivities(
+            onModelReady: (model) => model.getFixedInvestmentActivities(
                 name: widget.investmentType,
                 transactionId: widget.transactionId,
                 instrumentId: widget.instrumentId),
@@ -479,7 +479,7 @@ class _InvestmentDetailsScreenState extends State<InvestmentDetailsScreen> {
                               showModalBottomSheet<Null>(
                                   context: context,
                                   builder: (BuildContext context) {
-                                    return WealthMore();
+                                    return InvestmentMore(startdate: model.activities.dateJoined, maturitydate: model.activities.maturityDate,);
                                   },
                                   isScrollControlled: true);
                             },
@@ -699,7 +699,7 @@ class _InvestmentDetailsScreenState extends State<InvestmentDetailsScreen> {
                                 showModalBottomSheet<Null>(
                                     context: context,
                                     builder: (BuildContext context) {
-                                      return WealthBoxActivities();
+                                      return InvestmentActivities(transactionData: model.activities.transactionData,);
                                     },
                                     isScrollControlled: true);
                               },
