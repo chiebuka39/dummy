@@ -248,12 +248,15 @@ class _DollarFundingSummaryScreenState
                                                         ? value.get(
                                                             AniProps.opacity1)
                                                         : 0.0,
-                                                    child: Text(
-                                                      "${model.message}",
-                                                      textAlign:
-                                                          TextAlign.center,
-                                                      style: TextStyle(
-                                                          color: Colors.white),
+                                                    child: SizedBox(
+                                                      width: 250,
+                                                      child: Text(
+                                                        "${ model.result.errorMessage == null ? "We could not fund wallet": model.result.errorMessage}",
+                                                        textAlign:
+                                                            TextAlign.center,
+                                                        style: TextStyle(
+                                                            color: Colors.white),
+                                                      ),
                                                     ),
                                                   ),
                                                 ),
@@ -272,15 +275,16 @@ class _DollarFundingSummaryScreenState
                                                         : 0.0,
                                                     child: PrimaryButtonNew(
                                                       onTap: () {
-                                                        Navigator.pushAndRemoveUntil(
-                                                            context,
-                                                            MaterialPageRoute(
-                                                                builder:
-                                                                    (context) =>
-                                                                        TabsContainer()),
-                                                            (Route<dynamic>
-                                                                    route) =>
-                                                                false);
+                                                        Navigator.pop(context);
+                                                        // Navigator.pushAndRemoveUntil(
+                                                        //     context,
+                                                        //     MaterialPageRoute(
+                                                        //         builder:
+                                                        //             (context) =>
+                                                        //                 TabsContainer()),
+                                                        //     (Route<dynamic>
+                                                        //             route) =>
+                                                        //         false);
                                                       },
                                                       textColor: Colors.white,
                                                       title: "Retry",

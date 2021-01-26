@@ -10,12 +10,14 @@ import 'package:zimvest/data/models/product_transaction.dart';
 import 'package:zimvest/data/models/saving_plan.dart';
 import 'package:zimvest/data/view_models/identity_view_model.dart';
 import 'package:zimvest/data/view_models/savings_view_model.dart';
+import 'package:zimvest/data/view_models/settings_view_model.dart';
 import 'package:zimvest/new_screens/funding/top_up_screen.dart';
 import 'package:zimvest/new_screens/funding/wallet/wallet_withdraw_to.dart';
 import 'package:zimvest/new_screens/funding/withdraw_screen.dart';
 import 'package:zimvest/new_screens/navigation/portfolio_screen.dart';
 import 'package:zimvest/new_screens/navigation/widgets/money_title_widget.dart';
 import 'package:zimvest/new_screens/withdrawals/amount_withdraw_screen.dart';
+import 'package:zimvest/new_screens/withdrawals/verification_needed.dart';
 import 'package:zimvest/styles/colors.dart';
 import 'package:zimvest/utils/app_utils.dart';
 import 'package:zimvest/utils/margin.dart';
@@ -45,6 +47,7 @@ class _WealthBoxDetailsScreenState extends State<WealthBoxDetailsScreen> with Af
 
   ABSSavingViewModel savingViewModel;
   ABSIdentityViewModel identityViewModel;
+  ABSSettingsViewModel settingsViewModel;
   List<ProductTransaction> transactions;
   bool noInternet = false;
   bool error = false;
@@ -88,6 +91,7 @@ class _WealthBoxDetailsScreenState extends State<WealthBoxDetailsScreen> with Af
   Widget build(BuildContext context) {
     savingViewModel = Provider.of(context);
     identityViewModel = Provider.of(context);
+    settingsViewModel = Provider.of(context);
     double height = MediaQuery.of(context).size.height;
     // print("ooo ${savingViewModel.savingsTransactions[1]}");
     return Scaffold(
@@ -231,25 +235,31 @@ class _WealthBoxDetailsScreenState extends State<WealthBoxDetailsScreen> with Af
                                         return;
                                     }
 
-                                    if(DateTime.now().day == 1 &&( DateTime.now().month == 4 || DateTime.now().month == 7 || DateTime.now().month == 10 || DateTime.now().month == 1)){
+                                    if(settingsViewModel.completedSections.kycValidationCheck.isKycValidated == true){
+                                      if(DateTime.now().day == 1 &&( DateTime.now().month == 4 || DateTime.now().month == 7 || DateTime.now().month == 10 || DateTime.now().month == 1)){
 
-                                      savingViewModel.selectedPlan = savingsPlanModel;
-                                      Navigator.of(context).push(AmountWithdrawScreen.route());
+                                        savingViewModel.selectedPlan = savingsPlanModel;
+                                        Navigator.of(context).push(AmountWithdrawScreen.route());
+                                      }else{
+                                        showModalBottomSheet<Null>(
+                                            context: context,
+                                            builder: (BuildContext context) {
+                                              return WithdrawWealthbox(
+                                                savingPlanModel: savingsPlanModel,
+                                                onTapYes: (){
+
+                                                  savingViewModel.selectedPlan = savingsPlanModel;
+                                                  Navigator.of(context).pushReplacement(AmountWithdrawScreen.route(penaltyWithDraw: true));
+                                                },
+                                              );
+                                            },
+                                            isScrollControlled: true);
+                                      }
                                     }else{
-                                      showModalBottomSheet<Null>(
-                                          context: context,
-                                          builder: (BuildContext context) {
-                                            return WithdrawWealthbox(
-                                              savingPlanModel: savingsPlanModel,
-                                              onTapYes: (){
-
-                                                savingViewModel.selectedPlan = savingsPlanModel;
-                                                Navigator.of(context).pushReplacement(AmountWithdrawScreen.route(penaltyWithDraw: true));
-                                              },
-                                            );
-                                          },
-                                          isScrollControlled: true);
+                                      Navigator.push(context, VerificationNeeded.route());
                                     }
+
+
                                   },
                                   child: Opacity(
                                     opacity: widget.savingsPlanModel.amountSaved == 0 ? 0.5:1,

@@ -201,15 +201,7 @@ class _FundDollarWalletSummaryScreenState
                                 ),
                               );
                             },
-                          )
-                        : model.busy
-                            ? Center(child: LoadingWIdget())
-                            : model.status
-                                ? Text(
-                                    model.status.toString(),
-                                    style: TextStyle(color: AppColors.kWhite),
-                                  )
-                                : PlayAnimation<MultiTweenValues<AniProps>>(
+                          ) : PlayAnimation<MultiTweenValues<AniProps>>(
                                     tween: _tween,
                                     duration: _tween.duration,
                                     builder: (context, child, value) {

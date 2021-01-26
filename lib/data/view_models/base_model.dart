@@ -7,7 +7,9 @@ import '../../locator.dart';
 
 class BaseViewModel extends ChangeNotifier {
   bool _busy = false;
+  Result<dynamic> _result = Result();
   bool get busy => _busy;
+  Result<dynamic> get result => _result;
 
   bool _switch = true;
   bool get swittch => _switch;
@@ -18,6 +20,11 @@ class BaseViewModel extends ChangeNotifier {
 
   void setBusy(bool value) {
     _busy = value;
+    notifyListeners();
+  }
+
+  void setResult(Result<dynamic> value) {
+    _result = value;
     notifyListeners();
   }
 

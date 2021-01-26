@@ -8,6 +8,7 @@ import 'package:zimvest/data/services/investment_service.dart';
 import 'package:zimvest/data/services/payment_service.dart';
 import 'package:zimvest/data/services/wallet_service.dart';
 import 'package:zimvest/data/view_models/base_model.dart';
+import 'package:zimvest/utils/result.dart';
 
 import '../../locator.dart';
 
@@ -61,7 +62,7 @@ class WalletViewModel extends BaseViewModel {
     notifyListeners();
   }
 
-  Future<void> fundWallet({num sourceAmount, String currency,
+  Future<Result<void>> fundWallet({num sourceAmount, String currency,
       int fundingSource}) async {
     setBusy(true);
     String token = _localStorage.getUser().token;
@@ -75,10 +76,11 @@ class WalletViewModel extends BaseViewModel {
         currency: currency,
         fundingSource: 1);
     print(fundWallet);
-    if (fundWallet == "Operation Successful") {
+    setResult(fundWallet);
+    if (fundWallet.error == false) {
       setBusy(false);
       _status = true;
-    } else if (fundWallet == null) {
+    } else if (fundWallet.error == true) {
       setBusy(false);
       _message = "Oops! Something went wrong try again later";
       _status = false;
@@ -89,6 +91,7 @@ class WalletViewModel extends BaseViewModel {
     }
     setBusy(false);
     notifyListeners();
+    return fundWallet;
   }
 
   void check() {

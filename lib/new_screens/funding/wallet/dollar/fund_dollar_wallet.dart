@@ -11,6 +11,7 @@ import 'package:zimvest/utils/strings.dart';
 import 'package:zimvest/widgets/buttons.dart';
 import 'package:zimvest/widgets/flushbar.dart';
 import 'package:zimvest/utils/app_utils.dart';
+import 'package:zimvest/widgets/new/new_widgets.dart';
 import 'package:zimvest/widgets/number_keyboard.dart';
 
 class FundDollarWallet extends StatefulWidget {
@@ -41,16 +42,13 @@ class _FundDollarWalletState extends State<FundDollarWallet> {
   Widget build(BuildContext context) {
     ABSPaymentViewModel paymentViewModel = Provider.of(context);
     return Scaffold(
-      appBar: AppBar(
-        backgroundColor: Colors.transparent,
-        elevation: 0,
-        leading: IconButton(
-          icon: Icon(
-            Icons.arrow_back_ios,
-            color: AppColors.kPrimaryColor,
-          ),
-          onPressed: () => Navigator.pop(context),
-        ),
+      appBar: ZimAppBar(
+        icon: Icons.arrow_back_ios,
+        callback: (){
+          Navigator.pop(context);
+        },
+        text: "",
+        showCancel: true,
       ),
       body: Builder(
         builder: (context) => Column(

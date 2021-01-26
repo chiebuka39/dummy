@@ -81,7 +81,16 @@ class _ReviewBankTransferState extends State<ReviewBankTransfer> {
 
     //processTransaction();
     if(widget.nairaWalletWithdrawal == true){
-      startAnimForNairaWithdrawal(buildContext);
+      showCupertinoModalBottomSheet(context: context, builder: (context){
+        return UsePinWidget(
+          buildContext: context,
+          validatePin: true,
+          onNext: (){
+            startAnimForNairaWithdrawal(buildContext);
+          },
+        );
+      },isDismissible: false);
+
     }else{
       await Future.delayed(1000.milliseconds);
       showCupertinoModalBottomSheet(context: context, builder: (context){

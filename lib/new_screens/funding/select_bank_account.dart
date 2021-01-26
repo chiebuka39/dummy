@@ -142,16 +142,8 @@ class BankItemWidget extends StatelessWidget {
       onTap: () {
         paymentViewModel.selectedBank = bank;
         if(isWithdraw){
-          showCupertinoModalBottomSheet(context: context, builder: (context){
-            return UsePinWidget(
-              buildContext: context,
-              validatePin: true,
-              onNext: (){
-                Navigator.push(context, WithdrawToSavingsScreen.route(bank: bank));
-                //Navigator.push(context, SelectBankAccount.route(nairaWithdrawal: true));
-              },
-            );
-          },isDismissible: false);
+          Navigator.push(context, WithdrawToSavingsScreen.route(bank: bank));
+
 
         }else if(isLiquidate){
           Navigator.push(context, ReviewBankTransferLiquidation.route());

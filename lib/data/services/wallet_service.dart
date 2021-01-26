@@ -3,6 +3,7 @@ import 'dart:io';
 
 import 'package:dio/dio.dart';
 import 'package:zimvest/data/models/payment/wallet.dart';
+import 'package:zimvest/utils/result.dart';
 import 'package:zimvest/utils/strings.dart';
 
 import '../../locator.dart';
@@ -10,7 +11,7 @@ import '../../locator.dart';
 abstract class ABSWalletService {
   Future<List<Wallet>> getWallets(String token);
   Future<List<WalletTransaction>> getWalletsTransactions(String token);
-  Future<dynamic> fundWallet(
+  Future<Result<void>> fundWallet(
       {String token,
       num sourceAmount,
       num exchangeAmount,
@@ -73,13 +74,15 @@ class WalletService implements ABSWalletService {
   }
 
   @override
-  Future fundWallet(
+  Future<Result<void>> fundWallet(
       {String token,
       num sourceAmount,
       num exchangeAmount,
       String currency,
       int fundingSource}) async {
+    Result<void> result = Result(error: false);
     final url = "${AppStrings.baseUrl}$microService/api/Wallet/fundwallet";
+
     var headers = {HttpHeaders.authorizationHeader: "Bearer $token"};
     Map<String, dynamic> data = {
       "walletFundingSource": fundingSource,
@@ -100,16 +103,30 @@ class WalletService implements ABSWalletService {
           },
         ),
       );
+      print("pppvg dd ${fundWallet.data}");
+      print("pppvg 1111 ${fundWallet.statusCode}");
       if (fundWallet.statusCode == 200) {
-        return fundWallet.data["message"];
+        result.error = false;
+        result.errorMessage = fundWallet.data["message"];
+
       } else if (fundWallet.statusCode == 400) {
-        return null;
+        result.error = true;
+        result.errorMessage = fundWallet.data["message"];
+
       }
     } on DioError catch (e) {
-      print(e.message.toString());
-      throw Exception(e.response.toString());
+      result.error = true;
+      if(e.response.data == null){
+        result.errorMessage = "Error Message";
+      }else{
+        if(e.response.data is Map){
+          result.errorMessage =e.response.data['message'];
+        }else{
+          result.errorMessage = "Error Message";
+        }
+      }
     }
-    return null;
+    return result;
   }
 
   @override

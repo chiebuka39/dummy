@@ -10,11 +10,13 @@ import 'package:zimvest/data/models/product_transaction.dart';
 import 'package:zimvest/data/models/saving_plan.dart';
 import 'package:zimvest/data/view_models/identity_view_model.dart';
 import 'package:zimvest/data/view_models/savings_view_model.dart';
+import 'package:zimvest/data/view_models/settings_view_model.dart';
 import 'package:zimvest/new_screens/funding/top_up_screen.dart';
 import 'package:zimvest/new_screens/funding/withdraw_screen.dart';
 import 'package:zimvest/new_screens/navigation/portfolio_screen.dart';
 import 'package:zimvest/new_screens/navigation/widgets/money_title_widget.dart';
 import 'package:zimvest/new_screens/withdrawals/amount_withdraw_screen.dart';
+import 'package:zimvest/new_screens/withdrawals/verification_needed.dart';
 import 'package:zimvest/styles/colors.dart';
 import 'package:zimvest/utils/app_utils.dart';
 import 'package:zimvest/utils/margin.dart';
@@ -43,6 +45,7 @@ class _AspireDetailsScreenState extends State<AspireDetailsScreen> with
     AfterLayoutMixin<AspireDetailsScreen> {
 
   ABSSavingViewModel savingViewModel;
+  ABSSettingsViewModel settingsViewModel;
   ABSIdentityViewModel identityViewModel;
 
 
@@ -71,6 +74,7 @@ class _AspireDetailsScreenState extends State<AspireDetailsScreen> with
   Widget build(BuildContext context) {
     identityViewModel = Provider.of(context);
     savingViewModel = Provider.of(context);
+    settingsViewModel = Provider.of(context);
     return Scaffold(
       backgroundColor: AppColors.kWealth,
 
@@ -265,26 +269,31 @@ class _AspireDetailsScreenState extends State<AspireDetailsScreen> with
                                 if(widget.goal.amountSaved == 0){
                                   return;
                                 }
-                                DateTime time = DateTime.now();
-                                if(time.day == widget.goal.maturityDate.day && time.month == widget.goal.maturityDate.month && time.year == widget.goal.maturityDate.year){
+                                if(settingsViewModel.completedSections.kycValidationCheck.isKycValidated == true){
+                                  DateTime time = DateTime.now();
+                                  if(time.day == widget.goal.maturityDate.day && time.month == widget.goal.maturityDate.month && time.year == widget.goal.maturityDate.year){
 
-                                  savingViewModel.selectedPlan = widget.goal;
-                                  Navigator.of(context).push(AmountWithdrawScreen.route());
+                                    savingViewModel.selectedPlan = widget.goal;
+                                    Navigator.of(context).push(AmountWithdrawScreen.route());
+                                  }else{
+                                    showModalBottomSheet<Null>(
+                                        context: context,
+                                        builder: (BuildContext context) {
+                                          return WithdrawWealthbox(
+                                            savingPlanModel: widget.goal,
+                                            onTapYes: (){
+
+                                              savingViewModel.selectedPlan = widget.goal;
+                                              Navigator.of(context).pushReplacement(AmountWithdrawScreen.route(penaltyWithDraw: true));
+                                            },
+                                          );
+                                        },
+                                        isScrollControlled: true);
+                                  }
                                 }else{
-                                  showModalBottomSheet<Null>(
-                                      context: context,
-                                      builder: (BuildContext context) {
-                                        return WithdrawWealthbox(
-                                          savingPlanModel: widget.goal,
-                                          onTapYes: (){
-
-                                            savingViewModel.selectedPlan = widget.goal;
-                                            Navigator.of(context).pushReplacement(AmountWithdrawScreen.route(penaltyWithDraw: true));
-                                          },
-                                        );
-                                      },
-                                      isScrollControlled: true);
+                                  Navigator.push(context, VerificationNeeded.route());
                                 }
+
                               },
                               child: Opacity(
                                 opacity: widget.goal.amountSaved == 0 ? 0.4:1,
