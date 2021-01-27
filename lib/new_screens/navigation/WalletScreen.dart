@@ -10,6 +10,7 @@ import 'package:zimvest/data/models/payment/wallet.dart';
 import 'package:zimvest/data/models/product_transaction.dart';
 import 'package:zimvest/data/view_models/identity_view_model.dart';
 import 'package:zimvest/data/view_models/investment_view_model.dart';
+import 'package:zimvest/data/view_models/payment_view_model.dart';
 import 'package:zimvest/data/view_models/wallets_view_model.dart';
 import 'package:zimvest/new_screens/funding/wallet/dollar/fund_dollar_wallet.dart';
 import 'package:zimvest/new_screens/funding/wallet/exchange/exchange_to_dollars.dart';
@@ -125,13 +126,14 @@ class _WalletScreenState extends State<WalletScreen> with AfterLayoutMixin<Walle
       BuildContext context,
       String name,
       ) {
+    ABSPaymentViewModel paymentViewModel = Provider.of(context);
     return ViewModelProvider<WalletViewModel>.withConsumer(
       viewModelBuilder: () => WalletViewModel(),
       onModelReady: (model) => model.getWallets(),
       builder: (context, model, _) {
         // int index = model.wallets.map((e) => e).toList().length;
         List<Wallet> wallet = model.wallets;
-        return model.busy
+        return paymentViewModel.wallet == null
             ? Center(child: Container())
             : PageView(
           controller: controller,
@@ -149,7 +151,7 @@ class _WalletScreenState extends State<WalletScreen> with AfterLayoutMixin<Walle
                       Spacer(),
                       MoneyTitleWidget(
                         // symbol: symbol,
-                        amount: model.wallets
+                        amount: paymentViewModel.wallet
                             .where((element) => element.currency == "NGN")
                             .first
                             .balance,
@@ -173,7 +175,7 @@ class _WalletScreenState extends State<WalletScreen> with AfterLayoutMixin<Walle
                         child: Center(
                           child: GestureDetector(
                             onTap: () =>
-                                bottomSheet(context, model.wallets, name),
+                                bottomSheet(context, paymentViewModel.wallet, name),
                             child: Container(
                               child: Column(
                                 children: [
@@ -258,7 +260,7 @@ class _WalletScreenState extends State<WalletScreen> with AfterLayoutMixin<Walle
                     children: [
                       Spacer(),
                       MoneyTitleWidgetDollar(
-                        amount: model.wallets
+                        amount: paymentViewModel.wallet
                             .where((element) => element.currency == "USD")
                             .first
                             .balance,

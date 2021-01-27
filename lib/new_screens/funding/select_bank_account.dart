@@ -42,7 +42,6 @@ class SelectBankAccount extends StatefulWidget {
       this.transactionId,
       this.instrumentId,
         this.nairaWithdrawal,
-      this.isLiquidate})
       this.isLiquidate, this.investmentType})
       : super(key: key);
   static Route<dynamic> route({
@@ -52,15 +51,10 @@ class SelectBankAccount extends StatefulWidget {
     int transactionId,
     int instrumentId,
     bool isLiquidate,
-    bool nairaWithdrawal
+    bool nairaWithdrawal,
+    int investmentType
   }) {
-  static Route<dynamic> route(
-      {List<Bank> banks,
-      String name,
-      double withDrawable,
-      int transactionId,
-      int instrumentId,
-      bool isLiquidate, int investmentType}) {
+
     return MaterialPageRoute(
         builder: (_) => SelectBankAccount(
               banks: banks,
@@ -138,9 +132,8 @@ class _SelectBankAccountState extends State<SelectBankAccount> {
 class BankItemWidget extends StatelessWidget {
   const BankItemWidget({
     Key key,
-    this.bank, this.isLiquidate, this.isWithdraw = false,
-    this.bank,
-    this.isLiquidate, this.investmentType,
+    this.isLiquidate, this.isWithdraw = false,
+    this.bank, this.investmentType,
 
   }) : super(key: key);
 
@@ -155,26 +148,37 @@ class BankItemWidget extends StatelessWidget {
     return GestureDetector(
       onTap: () {
         paymentViewModel.selectedBank = bank;
-        if(isWithdraw){
+        if (isWithdraw) {
           Navigator.push(context, WithdrawToSavingsScreen.route(bank: bank));
-
-
-        }else if(isLiquidate){
-        if (isLiquidate && investmentType == 0) {
-          Navigator.push(context, ReviewBankTransferLiquidation.route());
-        } if (isLiquidate && investmentType == 1) {
-          Navigator.push(context, ReviewBankTransferLiquidationTreasuryBills.route());
-        } if (isLiquidate && investmentType == 2) {
-          Navigator.push(context, ReviewBankTransferLiquidationCommercialPaper.route());
-        } if (isLiquidate && investmentType == 3) {
-          Navigator.push(context, ReviewBankTransferLiquidationEuroBond.route());
-        } if (isLiquidate && investmentType == 4) {
-          Navigator.push(context, ReviewBankTransferLiquidationFGNBond.route());
-        } if (isLiquidate && investmentType == 5) {
-          Navigator.push(context, ReviewBankTransferLiquidationPromissoryNote.route());
-        } if (isLiquidate && investmentType == 6) {
-          Navigator.push(context, ReviewBankTransferLiquidationCorporateBond.route());
-        } else {
+        } else if (isLiquidate) {
+          if (isLiquidate && investmentType == 0) {
+            Navigator.push(context, ReviewBankTransferLiquidation.route());
+          }
+          if (isLiquidate && investmentType == 1) {
+            Navigator.push(
+                context, ReviewBankTransferLiquidationTreasuryBills.route());
+          }
+          if (isLiquidate && investmentType == 2) {
+            Navigator.push(
+                context, ReviewBankTransferLiquidationCommercialPaper.route());
+          }
+          if (isLiquidate && investmentType == 3) {
+            Navigator.push(
+                context, ReviewBankTransferLiquidationEuroBond.route());
+          }
+          if (isLiquidate && investmentType == 4) {
+            Navigator.push(
+                context, ReviewBankTransferLiquidationFGNBond.route());
+          }
+          if (isLiquidate && investmentType == 5) {
+            Navigator.push(
+                context, ReviewBankTransferLiquidationPromissoryNote.route());
+          }
+          if (isLiquidate && investmentType == 6) {
+            Navigator.push(
+                context, ReviewBankTransferLiquidationCorporateBond.route());
+          }
+        }else {
           Navigator.push(context, ReviewBankTransfer.route());
         }
       },

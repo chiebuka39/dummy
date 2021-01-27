@@ -273,6 +273,7 @@ class InvestmentTransactionItemWidget extends StatelessWidget {
                   style: TextStyle(fontSize: 12),
                   textAlign: TextAlign.right,
                 ),
+                YMargin(5),
                 Container(
                     padding: EdgeInsets.symmetric(horizontal: 10, vertical: 5),
                     decoration: BoxDecoration(
