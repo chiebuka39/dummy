@@ -5,6 +5,12 @@ import 'package:zimvest/data/models/payment/bank.dart';
 import 'package:zimvest/data/view_models/base_model.dart';
 import 'package:zimvest/data/view_models/payment_view_model.dart';
 import 'package:zimvest/new_screens/funding/withdraw_screen.dart';
+import 'package:zimvest/new_screens/navigation/wealth/liquidate_asset/fixed_income/commercial_paper/review_liquidation_cp.dart';
+import 'package:zimvest/new_screens/navigation/wealth/liquidate_asset/fixed_income/coporate_bond/review_liquidation_cb.dart';
+import 'package:zimvest/new_screens/navigation/wealth/liquidate_asset/fixed_income/euro_bond/review_liquidation_eb.dart';
+import 'package:zimvest/new_screens/navigation/wealth/liquidate_asset/fixed_income/fgnbond/review_liquidation_fgb.dart';
+import 'package:zimvest/new_screens/navigation/wealth/liquidate_asset/fixed_income/promissorynote/review_liquidation_pn.dart';
+import 'package:zimvest/new_screens/navigation/wealth/liquidate_asset/fixed_income/treasury_bills/review_liquidation_tbills.dart';
 import 'package:zimvest/new_screens/withdrawals/add_bank_account.dart';
 import 'package:zimvest/new_screens/withdrawals/review_bank_transfer.dart';
 import 'package:zimvest/styles/colors.dart';
@@ -22,6 +28,7 @@ class SelectBankAccount extends StatefulWidget {
   final int instrumentId;
   final bool isLiquidate;
   final List<Bank> banks;
+  final int investmentType;
 
   const SelectBankAccount(
       {Key key,
@@ -30,7 +37,7 @@ class SelectBankAccount extends StatefulWidget {
       this.withDrawable,
       this.transactionId,
       this.instrumentId,
-      this.isLiquidate})
+      this.isLiquidate, this.investmentType})
       : super(key: key);
   static Route<dynamic> route(
       {List<Bank> banks,
@@ -38,7 +45,7 @@ class SelectBankAccount extends StatefulWidget {
       double withDrawable,
       int transactionId,
       int instrumentId,
-      bool isLiquidate}) {
+      bool isLiquidate, int investmentType}) {
     return MaterialPageRoute(
         builder: (_) => SelectBankAccount(
               banks: banks,
@@ -47,6 +54,7 @@ class SelectBankAccount extends StatefulWidget {
               transactionId: transactionId,
               instrumentId: instrumentId,
               isLiquidate: isLiquidate,
+              investmentType: investmentType,
             ),
         settings: RouteSettings(name: SelectBankAccount().toStringShort()));
   }
@@ -115,19 +123,33 @@ class BankItemWidget extends StatelessWidget {
   const BankItemWidget({
     Key key,
     this.bank,
-    this.isLiquidate,
+    this.isLiquidate, this.investmentType,
+    
   }) : super(key: key);
 
   final Bank bank;
   final bool isLiquidate;
+  final int investmentType;
   @override
   Widget build(BuildContext context) {
     ABSPaymentViewModel paymentViewModel = Provider.of(context);
     return GestureDetector(
       onTap: () {
         paymentViewModel.selectedBank = bank;
-        if (isLiquidate) {
+        if (isLiquidate && investmentType == 0) {
           Navigator.push(context, ReviewBankTransferLiquidation.route());
+        } if (isLiquidate && investmentType == 1) {
+          Navigator.push(context, ReviewBankTransferLiquidationTreasuryBills.route());
+        } if (isLiquidate && investmentType == 2) {
+          Navigator.push(context, ReviewBankTransferLiquidationCommercialPaper.route());
+        } if (isLiquidate && investmentType == 3) {
+          Navigator.push(context, ReviewBankTransferLiquidationEuroBond.route());
+        } if (isLiquidate && investmentType == 4) {
+          Navigator.push(context, ReviewBankTransferLiquidationFGNBond.route());
+        } if (isLiquidate && investmentType == 5) {
+          Navigator.push(context, ReviewBankTransferLiquidationPromissoryNote.route());
+        } if (isLiquidate && investmentType == 6) {
+          Navigator.push(context, ReviewBankTransferLiquidationCorporateBond.route());
         } else {
           Navigator.push(context, ReviewBankTransfer.route());
         }

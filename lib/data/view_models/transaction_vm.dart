@@ -33,6 +33,8 @@ class PortfolioViewModel extends BaseViewModel {
     String token = _localStorage.getUser().token;
     var res = await _transactionService.getDollarTransactions(token);
     this.dollarTransaction = res;
+
+    print(res.length);
     setBusy(false);
     notifyListeners();
   }

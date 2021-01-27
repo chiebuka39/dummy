@@ -429,7 +429,7 @@ class _PortfolioInvestmentWidgetState extends State<PortfolioInvestmentWidget> {
                                 topUp: topUp,
                             narration: model.transactions[index].uniqueName,
                             amount:  model.transactions[index].amount,
-                            date: model.transactions[index].date,
+                            status: model.transactions[index].status == "Failed" ? true : false,
                             investmentType: model.transactions[index].instrumentType,
                             symbol: model.transactions[index].currency == "USD" ? "" : "",
                           ),
@@ -439,6 +439,7 @@ class _PortfolioInvestmentWidgetState extends State<PortfolioInvestmentWidget> {
                     ],
                   )
                 : Column(
+                  
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       model.busy? ShimmerLoading(): Container(
@@ -451,7 +452,7 @@ class _PortfolioInvestmentWidgetState extends State<PortfolioInvestmentWidget> {
                                 topUp: topUp,
                             narration: model.transactions[index].description,
                             amount:  model.transactions[index].amount,
-                            date: model.transactions[index].date,
+                            status: model.transactions[index].status == "Payment successful" ? true : false,
                             investmentType: model.transactions[index].instrumentType,
                             symbol: model.transactions[index].currency == "USD" ? "" : "",
                           ),

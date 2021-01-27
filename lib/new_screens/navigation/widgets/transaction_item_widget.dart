@@ -196,15 +196,16 @@ class InvestmentTransactionItemWidget extends StatelessWidget {
     Key key,
     this.onTap,
     this.narration,
-    this.date,
+    this.status,
     this.amount,
     this.symbol,
-    this.topUp = true, this.investmentType,
+    this.topUp = true,
+    this.investmentType,
   }) : super(key: key);
 
   final VoidCallback onTap;
   final String narration;
-  final String date;
+  final bool status;
   final String amount;
   final String investmentType;
   final String symbol;
@@ -222,7 +223,7 @@ class InvestmentTransactionItemWidget extends StatelessWidget {
         width: double.infinity,
         decoration: BoxDecoration(),
         child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+
           children: [
             Container(
               height: 35,
@@ -241,7 +242,7 @@ class InvestmentTransactionItemWidget extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Container(
-                  width: MediaQuery.of(context).size.width * 0.38,
+                  width: MediaQuery.of(context).size.width * 0.50,
                   child: Text(
                     narration,
                     overflow: TextOverflow.ellipsis,
@@ -260,6 +261,7 @@ class InvestmentTransactionItemWidget extends StatelessWidget {
                 ),
               ],
             ),
+            Spacer(),
             Column(
               crossAxisAlignment: CrossAxisAlignment.end,
               children: [
@@ -268,10 +270,19 @@ class InvestmentTransactionItemWidget extends StatelessWidget {
                   style: TextStyle(fontSize: 12),
                   textAlign: TextAlign.right,
                 ),
-                Text(
-                  "$date",
-                  style: TextStyle(fontSize: 12),
-                ),
+                Container(
+                    padding: EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+                    decoration: BoxDecoration(
+                        color: status
+                            ? AppColors.kGreen.withOpacity(0.1)
+                            : AppColors.kRed.withOpacity(0.1),
+                        borderRadius: BorderRadius.circular(7)),
+                    child: Text(
+                      status ? "Successful" : 'Failed',
+                      style: TextStyle(
+                          color: status ? AppColors.kGreen : AppColors.kRed,
+                          fontSize: 10),
+                    )),
               ],
             )
           ],

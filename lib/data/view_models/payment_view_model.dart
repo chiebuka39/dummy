@@ -24,8 +24,8 @@ abstract class ABSPaymentViewModel extends ChangeNotifier {
   List<PaymentCard> get userCards => _userCards;
   String _investmentName;
   String get investmentName => _investmentName;
-  double _withdrawableAmount;
-  double get withdrawableAmount => _withdrawableAmount;
+  int _withdrawableAmount;
+  int get withdrawableAmount => _withdrawableAmount;
   int _transactionId;
   int get transactionId => _transactionId;
   int _instrumentId;
@@ -52,7 +52,7 @@ abstract class ABSPaymentViewModel extends ChangeNotifier {
   set selectedBank(Bank value);
   set userCards(List<PaymentCard> value);
   set investmentName(String value);
-  set withdrawableAmount(double value);
+  set withdrawableAmount(int value);
   set transactionId(int value);
   set instrumentId(int value);
   set availableAmount(int value);
@@ -251,7 +251,7 @@ class PaymentViewModel extends ABSPaymentViewModel {
   }
 
   @override
-  set withdrawableAmount(double value) {
+  set withdrawableAmount(int value) {
     _withdrawableAmount = value;
     notifyListeners();
   }

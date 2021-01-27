@@ -494,6 +494,7 @@ class _UsePinWidgetState extends State<UsePinWidget> {
   }
 
   void confirmCode() async{
+    print("Lalalshisih ${pinViewModel.pin1}${pinViewModel.pin2}${pinViewModel.pin3}${pinViewModel.pin4}");
     Navigator.pop(context);
     widget.onNext();
   }
