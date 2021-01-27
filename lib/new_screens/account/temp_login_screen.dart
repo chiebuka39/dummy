@@ -28,9 +28,9 @@ class TempLoginScreen extends StatefulWidget {
   final bool show;
 
   const TempLoginScreen({Key key, this.show = false}) : super(key: key);
-  static Route<dynamic> route() {
+  static Route<dynamic> route({bool show}) {
     return MaterialPageRoute(
-        builder: (_) => TempLoginScreen(),
+        builder: (_) => TempLoginScreen(show: show,),
         settings:
         RouteSettings(name: TempLoginScreen().toStringShort()));
   }
@@ -94,30 +94,30 @@ class _TempLoginScreenState extends State<TempLoginScreen> with AfterLayoutMixin
 
   @override
   void afterFirstLayout(BuildContext context) {
-    if(_localStorage.getSecondaryState().biometricsEnabled == true){
-      _getAvailableBiometrics().then((value) {
-        if (Platform.isIOS) {
-          if (_availableBiometrics.contains(BiometricType.face)) {
-            print("ios face");
+    Future.delayed(Duration(seconds: 1)).then((value) {
+      if(_localStorage.getSecondaryState().biometricsEnabled == true){
+        _getAvailableBiometrics().then((value) {
+          if (Platform.isIOS) {
+            if (_availableBiometrics.contains(BiometricType.face)) {
+              print("ios face");
+              if(widget.show == true){
+                _authenticate(context);
+              }
+            } else if (_availableBiometrics.contains(BiometricType.fingerprint)) {
+              if(widget.show == true){
+                _authenticate(context);
+              }
+              print("ios finger");
+            }
+          }else{
+            print("android devices");
             if(widget.show == true){
               _authenticate(context);
             }
-          } else if (_availableBiometrics.contains(BiometricType.fingerprint)) {
-            if(widget.show == true){
-              _authenticate(context);
-            }
-            print("ios finger");
           }
-        }else{
-          print("android devices");
-          if(widget.show == true){
-            _authenticate(context);
-          }
-        }
-      });
-    }
-
-
+        });
+      }
+    });
   }
 
   @override

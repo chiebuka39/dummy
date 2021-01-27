@@ -16,10 +16,12 @@ import 'package:zimvest/data/services/wallet_service.dart';
 
 import 'data/models/transactions_portfolio/naira_model.dart';
 import 'data/services/others_service.dart';
+import 'main.dart';
 
 GetIt locator = GetIt.instance;
 
 void setUpLocator(){
+  locator.registerLazySingleton(() => NavigationService());
   locator.registerLazySingleton<Dio>(() => Dio());
   locator.registerLazySingleton<ABSOthersService>(() => OthersService());
   locator.registerLazySingleton<ABSTempService>(() => TempService());
