@@ -2,9 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
-import 'package:pin_code_fields/pin_code_fields.dart';
 import 'package:provider/provider.dart';
-import 'package:provider_architecture/_viewmodel_provider.dart';
 import 'package:zimvest/animations/loading.dart';
 import 'package:zimvest/data/models/payment/bank.dart';
 import 'package:zimvest/data/view_models/identity_view_model.dart';
@@ -12,7 +10,6 @@ import 'package:zimvest/data/view_models/liquidate_asset_vm.dart';
 import 'package:zimvest/data/view_models/payment_view_model.dart';
 import 'package:zimvest/data/view_models/pin_view_model.dart';
 import 'package:zimvest/data/view_models/savings_view_model.dart';
-import 'package:zimvest/main.dart';
 import 'package:zimvest/new_screens/funding/top_up_successful.dart';
 import 'package:zimvest/new_screens/tabs.dart';
 import 'package:zimvest/new_screens/withdrawals/use_pin_widget.dart';
@@ -23,8 +20,6 @@ import 'package:zimvest/utils/strings.dart';
 import 'package:simple_animations/simple_animations.dart';
 import 'package:supercharged/supercharged.dart';
 import 'package:zimvest/widgets/buttons.dart';
-import 'package:zimvest/widgets/navigation/delete_wealthbox.dart';
-import 'package:zimvest/widgets/number_keyboard.dart';
 
 class ReviewBankTransfer extends StatefulWidget {
   final bool nairaWalletWithdrawal;
@@ -544,55 +539,57 @@ class _ReviewBankTransferLiquidationState
     super.initState();
   }
 
-  // void startAnim(BuildContext buildContext) async {
-  //   setState(() {
-  //     slideUp = true;
-  //     loading = true;
-  //   });
+  void startAnim(BuildContext buildContext) async {
+    setState(() {
+      slideUp = true;
+      loading = true;
+    });
 
-  //   //processTransaction();
-  //   await Future.delayed(1000.milliseconds);
-  //   showCupertinoModalBottomSheet(
-  //       context: context,
-  //       builder: (context) {
-  //         return UsePinWidget(
-  //           onNext: () {
-  //             startAnim2(buildContext);
-  //           },
-  //         );
-  //       },
-  //       isDismissible: false);
-  // }
+    //   //processTransaction();
+    await Future.delayed(1000.milliseconds);
+    showCupertinoModalBottomSheet(
+        context: context,
+        builder: (context) {
+          return UsePinWidget(
+            onNext: () {
+              startAnim2(buildContext);
+            },
+          );
+        },
+        isDismissible: false);
+  }
 
-  // void startAnim2(BuildContext buildContext) async {
-  //   var result = await liquidateAssetViewModel.liquidateNairaInstrument(
-  //                             transactionId: paymentViewModel.transactionId,
-  //                             instrumentId: paymentViewModel.instrumentId,
-  //                             bankId: paymentViewModel.selectedBank.id,
-  //                             withdrawalOption: 1,
-  //                             amount: paymentViewModel.withdrawableAmount,
-  //                             pin: controller.text,
-  //                             withdrawableAmount:
-  //                                 paymentViewModel.amountAvailable,
-  //                           );
-  //   // print("ooooo ${result.error}");
-  //   // print("4444 ${result.errorMessage}");
-  //   if (result.error == false) {
-  //     setState(() {
-  //       loading = false;
-  //       confirmed = true;
-  //     });
-  //     Future.delayed(1000.milliseconds).then((value) => onInit());
-  //   } else {
-  //     setState(() {
-  //       loading = false;
-  //       error = true;
-  //       if (result.errorMessage != null) {
-  //         errorMessage = result.errorMessage;
-  //       }
-  //     });
-  //   }
-  // }
+  void startAnim2(BuildContext buildContext) async {
+    
+    var result = await liquidateAssetViewModel.liquidateNairaInstrument(
+      transactionId: paymentViewModel.transactionId,
+      instrumentId: paymentViewModel.instrumentId,
+      bankId: paymentViewModel.selectedBank.id,
+      withdrawalOption: 1,
+      amount: paymentViewModel.amountAvailable.toDouble(),
+      pin:
+          "${pinViewModel.pin1}${pinViewModel.pin2}${pinViewModel.pin3}${pinViewModel.pin4}",
+      withdrawableAmount: paymentViewModel.withdrawableAmount.toInt(),
+    );
+    pinViewModel.resetPins();
+    print("ooooo ${result.error}");
+    print("4444 ${result.errorMessage}");
+    if (result.error == false) {
+      setState(() {
+        loading = false;
+        confirmed = true;
+      });
+      Future.delayed(1000.milliseconds).then((value) => onInit());
+    } else {
+      setState(() {
+        loading = false;
+        error = true;
+        if (result.errorMessage != null) {
+          errorMessage = result.errorMessage;
+        }
+      });
+    }
+  }
 
   void onInit() async {
     for (var key in keys) {
@@ -606,6 +603,8 @@ class _ReviewBankTransferLiquidationState
     identityViewModel = Provider.of(context);
     savingViewModel = Provider.of(context);
     paymentViewModel = Provider.of(context);
+    pinViewModel = Provider.of(context);
+    liquidateAssetViewModel = Provider.of(context);
     var size = MediaQuery.of(context).size;
     return WillPopScope(
       onWillPop: () async {
@@ -854,7 +853,7 @@ class _ReviewBankTransferLiquidationState
                   // },
                   onVerticalDragStart: (details) {
                     print("dff ${details.toString()}");
-                    // startAnim(context);
+                    startAnim(context);
                   },
                   child: Container(
                     height: 60,
@@ -884,8 +883,11 @@ class _ReviewBankTransferLiquidationState
                       height: size.height,
                       width: size.width,
                       child: Center(
-                        child:
-                            loading ? Center(child: LoadingWIdget(),) : SizedBox(),
+                        child: loading
+                            ? Center(
+                                child: LoadingWIdget(),
+                              )
+                            : SizedBox(),
                       ),
                     )
                   : Container(

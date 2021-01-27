@@ -1001,17 +1001,18 @@ Widget dollarPortfolio(BuildContext context) {
                     Transform.translate(
                         offset: Offset(0, -4),
                         child: Text(
-                          AppStrings.dollarSymbol,
-                          style: TextStyle(
-                              fontSize: 14,
-                              color: AppColors.kSecondaryBoldText),
+                          "\$",
+                          style: TextStyle(fontSize: 14),
                         )),
                     XMargin(2),
                     Text(
-                      dashboardViewModel.dashboardModel.dollarPortfolio
-                          .substring(1)
-                          .split(".")
-                          .first,
+                      dashboardViewModel.dashboardModel.dollarPortfolio ==
+                              "0.00"
+                          ? '0'
+                          : dashboardViewModel.dashboardModel.dollarPortfolio
+                              .substring(1)
+                              .split(".")
+                              .first,
                       style: TextStyle(
                           fontSize: 25,
                           fontFamily: AppStrings.fontMedium,
