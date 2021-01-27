@@ -183,6 +183,7 @@ class _TempLoginScreenState extends State<TempLoginScreen> with AfterLayoutMixin
                 Center(
                   child: GestureDetector(
                     onTap:_localStorage.getSecondaryState().biometricsEnabled == true ? (){
+                      print("ppp 9900");
                       _authenticate(context);
                     }:null,
                     child: SvgPicture.asset("images/new/face_id.svg",),

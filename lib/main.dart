@@ -192,7 +192,9 @@ class _HomeAppState extends State<HomeApp> with WidgetsBindingObserver {
         print("App should stop");
         SecondaryState state = SecondaryState(false,
             email: _localStorage.getSecondaryState().email,
-            password: _localStorage.getSecondaryState().password);
+            password: _localStorage.getSecondaryState().password,
+          biometricsEnabled: _localStorage.getSecondaryState().biometricsEnabled
+        );
         _localStorage.saveSecondaryState(state);
         Navigator.pushAndRemoveUntil(
             context,
