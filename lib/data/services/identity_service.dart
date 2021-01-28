@@ -7,8 +7,9 @@ import 'package:zimvest/data/models/user.dart';
 import 'package:zimvest/locator.dart';
 import 'package:zimvest/utils/result.dart';
 import 'package:zimvest/utils/strings.dart';
-
+import 'package:device_info/device_info.dart';
 import 'account_settings_service.dart';
+import 'device_info.dart';
 
 abstract class ABSIdentityService{
   Future<Result<User>> login({String email, String password});
@@ -52,6 +53,9 @@ class IdentityService extends ABSIdentityService {
   @override
   Future<Result<User>> login({String email, String password}) async{
     Result<User> result = Result(error: false);
+    var deviceInfo = await DeviceInformation.getDeviceDetails();
+    var appInfo = await DeviceInformation.getAppInfo();
+    var fcmToken = await new DeviceInformation().getFcmToken();
 
     var body = {
       'email':email,
@@ -760,4 +764,5 @@ print("0oo9999 ${e.response.data.runtimeType}");
     return result;
   }
 
+  Future<bool> getDeviceInfo() {}
 }
