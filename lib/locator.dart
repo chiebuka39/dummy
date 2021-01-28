@@ -1,4 +1,5 @@
 import 'package:dio/dio.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:get_it/get_it.dart';
 import 'package:zimvest/data/local/user_local.dart';
 import 'package:zimvest/data/services/account_settings_service.dart';
@@ -22,7 +23,18 @@ GetIt locator = GetIt.instance;
 
 void setUpLocator(){
   locator.registerLazySingleton(() => NavigationService());
-  locator.registerLazySingleton<Dio>(() => Dio());
+  locator.registerLazySingleton<Dio>(() {
+    Dio dio = Dio();
+    dio.interceptors.add(InterceptorsWrapper(
+        onRequest: (Options options){
+          options.receiveTimeout = 3000;
+          options.sendTimeout = 3000;
+          debugPrint("Omo interceptor was added");
+          return options;
+        }
+    ));
+    return dio;
+  });
   locator.registerLazySingleton<ABSOthersService>(() => OthersService());
   locator.registerLazySingleton<ABSTempService>(() => TempService());
   locator.registerLazySingleton<ABSIdentityService>(() => IdentityService());

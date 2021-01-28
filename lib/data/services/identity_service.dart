@@ -49,7 +49,8 @@ abstract class ABSIdentityService{
 }
 
 class IdentityService extends ABSIdentityService {
-  final dio = locator<Dio>();
+  final Dio dio = locator<Dio>();
+
   @override
   Future<Result<User>> login({String email, String password}) async{
     Result<User> result = Result(error: false);
@@ -57,12 +58,20 @@ class IdentityService extends ABSIdentityService {
     var appInfo = await DeviceInformation.getAppInfo();
     var fcmToken = await new DeviceInformation().getFcmToken();
 
+
+
     var body = {
-      'email':email,
-      'password':password
+      'email': email,
+      'password': password,
+      'deviceInfo': {
+        'appVersionInfo': appInfo,
+        'deviceCode': deviceInfo[2],
+        'fcmToken': fcmToken
+      }
     };
 
-    var url = "${AppStrings.baseUrl}zimvest.services.identity/api/Account/login";
+    var url =
+        "${AppStrings.baseUrl}zimvest.services.identity/api/Account/mobile/login";
     var url1 = "${AppStrings.baseUrl}api/Account/login";
     print("lll $body");
     print("lll $url");

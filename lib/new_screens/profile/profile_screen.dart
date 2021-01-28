@@ -114,10 +114,6 @@ class _ProfileScreenState extends State<ProfileScreen> with AfterLayoutMixin<Pro
               }else{
                 Navigator.push(context, NotificationsScreen.route(settingsViewModel.notification));
               }
-
-
-
-
             },
           ),
           ProfileWidget(title: "Banks & Cards",icon: 'cards',
