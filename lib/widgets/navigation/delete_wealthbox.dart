@@ -311,11 +311,12 @@ class CardMore extends StatelessWidget {
 }
 class WithdrawWealthbox extends StatelessWidget {
   const WithdrawWealthbox({
-    Key key, this.savingPlanModel, this.onTapYes,
+    Key key, this.savingPlanModel, this.onTapYes, this.prompt,
   }) : super(key: key);
 
   final SavingPlanModel savingPlanModel;
   final VoidCallback onTapYes;
+  final String prompt;
 
   @override
   Widget build(BuildContext context) {
@@ -357,11 +358,11 @@ class WithdrawWealthbox extends StatelessWidget {
                   fontSize: 15,
                   fontFamily: AppStrings.fontBold
               ),),
-              YMargin(25),
-              Text("You would be charged 10% of your accrued interest for liquidating outside of withdrawal days, Would you like to proceed",
+              YMargin(20),
+              Text(prompt ?? "You would be charged 10% of your accrued interest for liquidating outside of withdrawal days, Would you like to proceed",
                 style: TextStyle(fontSize: 11,height: 1.6,color: AppColors.kGreyText),
               ),
-              YMargin(45),
+              YMargin(25),
               Row(children: [
                 PrimaryButtonNew(
                   width: buttonWidth,

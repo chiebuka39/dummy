@@ -18,7 +18,7 @@ class TempService extends ABSTempService{
       "Authorization":"Bearer $token"
     };
 
-    var url = "${AppStrings.baseUrl}zimvest.services.investment/api/MyPlanner/"
+    var url = "zimvest.services.investment/api/MyPlanner/"
         "AssetsLiabilities?assetLiabilityType=$type";
 
     print("lll $url");

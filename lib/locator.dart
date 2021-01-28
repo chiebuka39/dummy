@@ -14,6 +14,7 @@ import 'package:zimvest/data/services/savings_service.dart';
 import 'package:zimvest/data/services/temp_service.dart';
 import 'package:zimvest/data/services/transaction_services.dart';
 import 'package:zimvest/data/services/wallet_service.dart';
+import 'package:zimvest/utils/strings.dart';
 
 import 'data/models/transactions_portfolio/naira_model.dart';
 import 'data/services/others_service.dart';
@@ -24,11 +25,16 @@ GetIt locator = GetIt.instance;
 void setUpLocator(){
   locator.registerLazySingleton(() => NavigationService());
   locator.registerLazySingleton<Dio>(() {
-    Dio dio = Dio();
+    BaseOptions options = new BaseOptions(
+        baseUrl: AppStrings.baseUrl,
+        receiveDataWhenStatusError: true,
+        connectTimeout: 5*1000, // 60 seconds
+        receiveTimeout: 5*1000 // 60 seconds
+    );
+    Dio dio = Dio(options);
     dio.interceptors.add(InterceptorsWrapper(
         onRequest: (Options options){
-          options.receiveTimeout = 3000;
-          options.sendTimeout = 3000;
+
           debugPrint("Omo interceptor was added");
           return options;
         }

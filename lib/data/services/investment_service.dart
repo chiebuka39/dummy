@@ -102,7 +102,7 @@ class InvestmentService extends ABSInvestmentService {
     var headers = {HttpHeaders.authorizationHeader: "Bearer $token"};
 
     var url =
-        "${AppStrings.baseUrl}$microService/api/Dashboards/mutualfundvaluation";
+        "$microService/api/Dashboards/mutualfundvaluation";
     print("url $url");
     try {
       var response = await dio.get(url, options: Options(headers: headers));
@@ -146,7 +146,7 @@ class InvestmentService extends ABSInvestmentService {
     var headers = {HttpHeaders.authorizationHeader: "Bearer $token"};
 
     var url =
-        "${AppStrings.baseUrl}$microService/api/Dashboards/directfixedincomevaluation";
+        "$microService/api/Dashboards/directfixedincomevaluation";
     print("url $url");
     try {
       var response = await dio.get(url, options: Options(headers: headers));
@@ -190,7 +190,7 @@ class InvestmentService extends ABSInvestmentService {
     var headers = {HttpHeaders.authorizationHeader: "Bearer $token"};
 
     var url =
-        "${AppStrings.baseUrl}$microService/api/Dashboards/terminstrumentvaluation";
+        "$microService/api/Dashboards/terminstrumentvaluation";
     print("url $url");
     try {
       var response = await dio.get(url, options: Options(headers: headers));
@@ -232,7 +232,7 @@ class InvestmentService extends ABSInvestmentService {
 
     var headers = {HttpHeaders.authorizationHeader: "Bearer $token"};
 
-    var url = "${AppStrings.baseUrl}zimvest.services.investment/api/Dashboards"
+    var url = "zimvest.services.investment/api/Dashboards"
         "/mutualfundinvestmentactivities?StartDate=&EndDate=";
     print("url $url");
     try {
@@ -275,7 +275,7 @@ class InvestmentService extends ABSInvestmentService {
 
     var headers = {HttpHeaders.authorizationHeader: "Bearer $token"};
 
-    var url = "${AppStrings.baseUrl}zimvest.services.investment/api/Dashboards"
+    var url = "zimvest.services.investment/api/Dashboards"
         "/fixedincomeinvestmentactivities?StartDate=&EndDate=";
     print("url $url");
     try {
@@ -318,7 +318,7 @@ class InvestmentService extends ABSInvestmentService {
 
     var headers = {HttpHeaders.authorizationHeader: "Bearer $token"};
 
-    var url = "${AppStrings.baseUrl}zimvest.services.investment/api/Dashboards/"
+    var url = "zimvest.services.investment/api/Dashboards/"
         "terminstrumentInvestmentactivities?StartDate=&EndDate=";
     print("url $url");
     try {
@@ -360,7 +360,7 @@ class InvestmentService extends ABSInvestmentService {
 
     var headers = {HttpHeaders.authorizationHeader: "Bearer $token"};
 
-    var url = "${AppStrings.baseUrl}zimvest.services.investment/"
+    var url = "zimvest.services.investment/"
         "api/MutualFunds/getmoneymarketfunds";
     print("url $url");
     try {
@@ -403,7 +403,7 @@ class InvestmentService extends ABSInvestmentService {
     var headers = {HttpHeaders.authorizationHeader: "Bearer $token"};
 
     var url =
-        "${AppStrings.baseUrl}zimvest.services.investment/api/MutualFunds/getdollarfunds";
+        "zimvest.services.investment/api/MutualFunds/getdollarfunds";
     print("url $url");
     try {
       var response = await dio.get(url, options: Options(headers: headers));
@@ -444,7 +444,7 @@ class InvestmentService extends ABSInvestmentService {
 
     var headers = {HttpHeaders.authorizationHeader: "Bearer $token"};
 
-    var url = "${AppStrings.baseUrl}$microService/api/CommercialPapers/grouped";
+    var url = "$microService/api/CommercialPapers/grouped";
     print("url $url");
     try {
       var response = await dio.get(url, options: Options(headers: headers));
@@ -478,7 +478,7 @@ class InvestmentService extends ABSInvestmentService {
 
     var headers = {HttpHeaders.authorizationHeader: "Bearer $token"};
 
-    var url = "${AppStrings.baseUrl}$microService/api/CorporateBonds/grouped";
+    var url = "$microService/api/CorporateBonds/grouped";
     print("url $url");
     try {
       var response = await dio.get(url, options: Options(headers: headers));
@@ -519,7 +519,7 @@ class InvestmentService extends ABSInvestmentService {
 
     var headers = {HttpHeaders.authorizationHeader: "Bearer $token"};
 
-    var url = "${AppStrings.baseUrl}$microService/api/EuroBonds/grouped";
+    var url = "$microService/api/EuroBonds/grouped";
     print("url $url");
     try {
       var response = await dio.get(url, options: Options(headers: headers));
@@ -560,7 +560,7 @@ class InvestmentService extends ABSInvestmentService {
 
     var headers = {HttpHeaders.authorizationHeader: "Bearer $token"};
 
-    var url = "${AppStrings.baseUrl}$microService/api/FGNBonds/grouped";
+    var url = "$microService/api/FGNBonds/grouped";
     print("url $url");
     try {
       var response = await dio.get(url, options: Options(headers: headers));
@@ -602,7 +602,7 @@ class InvestmentService extends ABSInvestmentService {
 
     var headers = {HttpHeaders.authorizationHeader: "Bearer $token"};
 
-    var url = "${AppStrings.baseUrl}$microService/api/PromissoryNotes/grouped";
+    var url = "$microService/api/PromissoryNotes/grouped";
     print("url $url");
     try {
       var response = await dio.get(url, options: Options(headers: headers));
@@ -643,7 +643,7 @@ class InvestmentService extends ABSInvestmentService {
 
     var headers = {HttpHeaders.authorizationHeader: "Bearer $token"};
 
-    var url = "${AppStrings.baseUrl}$microService/api/TreasuryBills/grouped";
+    var url = "$microService/api/TreasuryBills/grouped";
     print("url $url");
     try {
       var response = await dio.get(url, options: Options(headers: headers));
@@ -686,7 +686,7 @@ class InvestmentService extends ABSInvestmentService {
     var headers = {HttpHeaders.authorizationHeader: "Bearer $token"};
 
     var url =
-        "${AppStrings.baseUrl}$microService/api/ZimvestTermInstruments/getdollarterminstruments";
+        "$microService/api/ZimvestTermInstruments/getdollarterminstruments";
     print("url $url");
     try {
       var response = await dio.get(url, options: Options(headers: headers));
@@ -729,7 +729,7 @@ class InvestmentService extends ABSInvestmentService {
     var headers = {HttpHeaders.authorizationHeader: "Bearer $token"};
 
     var url =
-        "${AppStrings.baseUrl}$microService/api/ZimvestTermInstruments/getnairaterminstruments";
+        "$microService/api/ZimvestTermInstruments/getnairaterminstruments";
     print("url $url");
     try {
       var response = await dio.get(url, options: Options(headers: headers));
@@ -772,7 +772,7 @@ class InvestmentService extends ABSInvestmentService {
     var headers = {HttpHeaders.authorizationHeader: "Bearer $token"};
 
     var url =
-        "${AppStrings.baseUrl}$microService/api/Dashboards/managefund?FundId=$fundId&FundName=$fundName";
+        "$microService/api/Dashboards/managefund?FundId=$fundId&FundName=$fundName";
     print("url $url");
     try {
       var response = await dio.get(url, options: Options(headers: headers));
@@ -842,7 +842,7 @@ class InvestmentService extends ABSInvestmentService {
     }
 
     var url =
-        "${AppStrings.baseUrl}$microService/api/MutualFunds/buymoneymarketfund";
+        "$microService/api/MutualFunds/buymoneymarketfund";
     print("url $url");
     print("body ${body.fields}");
     try {
@@ -884,7 +884,7 @@ class InvestmentService extends ABSInvestmentService {
     var headers = {HttpHeaders.authorizationHeader: "Bearer $token"};
 
     var url =
-        "${AppStrings.baseUrl}$microService/api/Dashboards/managefixedincome?FixedIncomeId=$fixedIncomeId&FixedIncomeName=$fixedIncomeName";
+        "$microService/api/Dashboards/managefixedincome?FixedIncomeId=$fixedIncomeId&FixedIncomeName=$fixedIncomeName";
     print("url $url");
     try {
       var response = await dio.get(url, options: Options(headers: headers));
@@ -925,7 +925,7 @@ class InvestmentService extends ABSInvestmentService {
     var headers = {HttpHeaders.authorizationHeader: "Bearer $token"};
 
     var url =
-        "${AppStrings.baseUrl}$microService/api/Dashboards/manageterminstrument?TermInstrumentId=$termInstrumentId&TermInstrumentName=$termInstrumentName";
+        "$microService/api/Dashboards/manageterminstrument?TermInstrumentId=$termInstrumentId&TermInstrumentName=$termInstrumentName";
     print("url $url");
     try {
       var response = await dio.get(url, options: Options(headers: headers));
@@ -967,7 +967,7 @@ class InvestmentService extends ABSInvestmentService {
       String uniqueName,
       String token, int walletType}) async {
     var url =
-        "${AppStrings.baseUrl}$microService/api/ZimvestTermInstruments/buydollarterminstrument";
+        "$microService/api/ZimvestTermInstruments/buydollarterminstrument";
 
     var headers = {HttpHeaders.authorizationHeader: "Bearer $token"};
 
@@ -1020,7 +1020,7 @@ class InvestmentService extends ABSInvestmentService {
       String uniqueName,
       String token}) async {
     var url =
-        "${AppStrings.baseUrl}$microService/api/ZimvestTermInstruments/buynairaterminstrument";
+        "$microService/api/ZimvestTermInstruments/buynairaterminstrument";
     print(url);
     var headers = {HttpHeaders.authorizationHeader: "Bearer $token"};
 
@@ -1072,7 +1072,7 @@ class InvestmentService extends ABSInvestmentService {
       String sourceCurrency,
       String destiationCurrency}) async {
     var url =
-        "${AppStrings.baseUrl}$microService/api/Calculator/calculaterate?Amount=$amount&SourceCurrency=$sourceCurrency&DestinationCurrency=$destiationCurrency";
+        "$microService/api/Calculator/calculaterate?Amount=$amount&SourceCurrency=$sourceCurrency&DestinationCurrency=$destiationCurrency";
 
     print("pp00o $url");
     var headers = {HttpHeaders.authorizationHeader: "Bearer $token"};
@@ -1103,7 +1103,7 @@ class InvestmentService extends ABSInvestmentService {
 
   @override
   Future<Result<GottenRate>> getRate(String token) async {
-    var url = "${AppStrings.baseUrl}$microService/api/Calculator/getrate";
+    var url = "$microService/api/Calculator/getrate";
     print("ppppppb ${url}");
     var headers = {HttpHeaders.authorizationHeader: "Bearer $token"};
     Result<GottenRate> result = Result(error: false);
@@ -1139,7 +1139,7 @@ class InvestmentService extends ABSInvestmentService {
     var headers = {HttpHeaders.authorizationHeader: "Bearer $token"};
 
     var url =
-        "${AppStrings.baseUrl}$microService/api/ZimvestTermInstruments/getdollarterminstrumentsV2?InvestmentAmount=$amountFilter";
+        "$microService/api/ZimvestTermInstruments/getdollarterminstrumentsV2?InvestmentAmount=$amountFilter";
     print("url $url");
     try {
       var response = await dio.get(url, options: Options(headers: headers));
@@ -1182,7 +1182,7 @@ class InvestmentService extends ABSInvestmentService {
     var headers = {HttpHeaders.authorizationHeader: "Bearer $token"};
 
     var url =
-        "${AppStrings.baseUrl}$microService/api/ZimvestTermInstruments/getnairaterminstrumentsV2?InvestmentAmount=$amountFilter";
+        "$microService/api/ZimvestTermInstruments/getnairaterminstrumentsV2?InvestmentAmount=$amountFilter";
     print("url $url");
     try {
       var response = await dio.get(url, options: Options(headers: headers));

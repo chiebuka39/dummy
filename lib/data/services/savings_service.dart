@@ -9,6 +9,7 @@ import 'package:zimvest/data/models/savings/funding_channels.dart';
 import 'package:zimvest/data/models/savings/savings_frequency.dart';
 import 'package:zimvest/data/models/user.dart';
 import 'package:zimvest/locator.dart';
+import 'package:zimvest/main.dart';
 import 'package:zimvest/utils/result.dart';
 import 'package:zimvest/utils/strings.dart';
 
@@ -61,6 +62,7 @@ abstract class ABSSavingService{
     double savingsAmount});
   Future<Result<List<ProductTransaction>>> getSavingsTopup({String token});
   Future<Result<List<ProductTransaction>>> getSavingsWithdrawal({String token});
+  Future<Result<Map>> getWithdrawalSummary({String token, int productId});
 }
 
 class SavingService extends ABSSavingService{
@@ -75,7 +77,7 @@ class SavingService extends ABSSavingService{
     };
 
 
-    var url = "${AppStrings.baseUrl}zimvest.services.savings/api/Products/Types";
+    var url = "zimvest.services.savings/api/Products/Types";
     print("url $url");
     try{
       var response = await dio.get(url,options: Options(headers: headers));
@@ -128,7 +130,7 @@ class SavingService extends ABSSavingService{
     };
 
 
-    var url = "${AppStrings.baseUrl}zimvest.services.savings/api/Savings"
+    var url = "zimvest.services.savings/api/Savings"
         "/Customers/Transactions?productId=$productId";
     print("url $url");
     try{
@@ -175,7 +177,7 @@ class SavingService extends ABSSavingService{
     };
 
 
-    var url = "${AppStrings.baseUrl}zimvest.services.savings/api/Savings"
+    var url = "zimvest.services.savings/api/Savings"
         "/Customers/Transactions?TransactionType=1";
     print("url $url");
     try{
@@ -222,7 +224,7 @@ class SavingService extends ABSSavingService{
     };
 
 
-    var url = "${AppStrings.baseUrl}zimvest.services.savings/api/Savings"
+    var url = "zimvest.services.savings/api/Savings"
         "/Customers/Transactions?TransactionType=2";
     print("url $url");
     try{
@@ -270,7 +272,7 @@ class SavingService extends ABSSavingService{
     };
 
 
-    var url = "${AppStrings.baseUrl}zimvest.services.savings/api/Savings"
+    var url = "zimvest.services.savings/api/Savings"
         "/Customers/$id/Transactions";
     print("url $url");
     try{
@@ -328,7 +330,7 @@ class SavingService extends ABSSavingService{
     };
 
 
-    var url = "${AppStrings.baseUrl}zimvest.services.savings/api/Savings/Customers";
+    var url = "zimvest.services.savings/api/Savings/Customers";
     print("url $url");
     print("url $headers");
     try{
@@ -385,7 +387,7 @@ class SavingService extends ABSSavingService{
     };
 
 
-    var url = "${AppStrings.baseUrl}zimvest.services.savings/api/Products/Frequencies";
+    var url = "zimvest.services.savings/api/Products/Frequencies";
     print("url $url");
     try{
       var response = await dio.get(url,options: Options(headers: headers));
@@ -431,7 +433,7 @@ class SavingService extends ABSSavingService{
     };
 
 
-    var url = "${AppStrings.baseUrl}zimvest.services.savings/api/Products/FundingChannels";
+    var url = "zimvest.services.savings/api/Products/FundingChannels";
     print("url $url");
     try{
       var response = await dio.get(url,options: Options(headers: headers));
@@ -475,7 +477,7 @@ class SavingService extends ABSSavingService{
     };
 
 
-    var url = "${AppStrings.baseUrl}zimvest.services.savings/api/Products/WithdrawalChannels";
+    var url = "zimvest.services.savings/api/Products/WithdrawalChannels";
     print("url $url");
     try{
       var response = await dio.get(url,options: Options(headers: headers));
@@ -530,7 +532,7 @@ class SavingService extends ABSSavingService{
     };
 
 
-    var url = "${AppStrings.baseUrl}zimvest.services.savings/api/v2/Savings/ZimvestSavings";
+    var url = "zimvest.services.savings/api/v2/Savings/ZimvestSavings";
     print("url $url");
     print("body $body");
     try{
@@ -593,7 +595,7 @@ class SavingService extends ABSSavingService{
     };
 
 
-    var url = "${AppStrings.baseUrl}zimvest.services.savings/api/v2/Savings/Topup";
+    var url = "zimvest.services.savings/api/v2/Savings/Topup";
     print("url $url");
     print("body $body");
     try{
@@ -651,7 +653,7 @@ class SavingService extends ABSSavingService{
     };
 
 
-    var url = "${AppStrings.baseUrl}zimvest.services.savings/api/Savings/Calculations/TargetSavings";
+    var url = "zimvest.services.savings/api/Savings/Calculations/TargetSavings";
     print("url $url");
     print("body $body");
     try{
@@ -713,7 +715,7 @@ class SavingService extends ABSSavingService{
     };
 
 
-    var url = "${AppStrings.baseUrl}zimvest.services.savings/api/v2/Savings/TargetSavings";
+    var url = "zimvest.services.savings/api/v2/Savings/TargetSavings";
     print("url $url");
     print("body $body");
     try{
@@ -793,8 +795,8 @@ class SavingService extends ABSSavingService{
     });
 
 
-    var url = image == null ?"${AppStrings.baseUrl}zimvest.services.savings/api/v2/Savings/TargetSavings":
-    "${AppStrings.baseUrl}zimvest.services.savings/api/v2/Savings/TargetSavingsForm";
+    var url = image == null ?"zimvest.services.savings/api/v2/Savings/TargetSavings":
+    "zimvest.services.savings/api/v2/Savings/TargetSavingsForm";
     print("url $url");
     print("body $body");
     try{
@@ -856,7 +858,7 @@ class SavingService extends ABSSavingService{
     };
 
 
-    var url = "${AppStrings.baseUrl}zimvest.services.savings/api/Savings/Continue";
+    var url = "zimvest.services.savings/api/Savings/Continue";
     print("url $url");
     print("body $body");
     try{
@@ -909,7 +911,7 @@ class SavingService extends ABSSavingService{
     };
 
 
-    var url = "${AppStrings.baseUrl}zimvest.services.savings/api/Savings/Pause";
+    var url = "zimvest.services.savings/api/Savings/Pause";
     print("url $url");
     print("body $body");
     try{
@@ -968,7 +970,7 @@ class SavingService extends ABSSavingService{
     };
 
 
-    var url = "${AppStrings.baseUrl}zimvest.services.savings/api/v2/Savings/Withdrawals";
+    var url = "zimvest.services.savings/api/v2/Savings/Withdrawals";
     print("url $url");
     print("body $body");
     try{
@@ -988,6 +990,65 @@ class SavingService extends ABSSavingService{
       }
       else {
         result.error = false;
+      }
+
+    }on DioError catch(e){
+      print("error $e}");
+      if(e.response != null ){
+        print(e.response.data);
+        if(e.response.data['message'] is String){
+          result.errorMessage = e.response.data['message'];
+        }
+
+      }else{
+        print(e.toString());
+        result.errorMessage = "Sorry, We could not complete your request";
+      }
+      result.error = true;
+    }
+
+    return result;
+  }
+
+  @override
+  Future<Result<Map>> getWithdrawalSummary({String token, int productId}) async{
+    Result<Map> result = Result(error: false);
+    Map<String, dynamic> res = Map();
+
+
+    var headers = {
+      HttpHeaders.authorizationHeader: "Bearer $token"
+    };
+
+
+
+    var url = "zimvest.services.savings/api/Savings/Calculations/WithdrawalSummary/$productId";
+    print("url $url");
+
+    try{
+      var response = await dio.get(url,options: Options(headers: headers),);
+      final int statusCode = response.statusCode;
+      var response1 = response.data;
+      print("iii ${response1}");
+
+      if (statusCode != 200) {
+        result.errorMessage = response1['message'];
+        result.error = true;
+      }else if( statusCode == 201){
+        result.error = true;
+        if(response1['message'] != null){
+          result.errorMessage = response1['message'];
+        }
+      }
+      else {
+        result.error = false;
+        res['charge']= response1['data']['withdrawalCharge'];
+        res['amount'] =response1['data']['withdrawableAmount'];
+        res['prompt'] =response1['data']['promptMessage'];
+        result.data = res;
+
+
+
       }
 
     }on DioError catch(e){

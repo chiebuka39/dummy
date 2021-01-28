@@ -103,6 +103,7 @@ abstract class ABSSavingViewModel extends ChangeNotifier{
   Future<Result<void>> continueSaving({String token,int savingModelId});
   Future<Result<void>> withdrawFund({String token,int customerSavingId,
     double amount, int customerBankId, String pin, int withdrawalChannel});
+  Future<Result<Map>> getWithdrawalSummary({String token, int productId});
 }
 
 class SavingViewModel extends ABSSavingViewModel{
@@ -388,6 +389,11 @@ class SavingViewModel extends ABSSavingViewModel{
       savingPlanModel = s;
     }
     return result;
+  }
+
+  @override
+  Future<Result<Map>> getWithdrawalSummary({String token, int productId}) {
+    return _savingService.getWithdrawalSummary(token: token,productId: productId);
   }
 
 }

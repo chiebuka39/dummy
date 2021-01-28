@@ -18,7 +18,7 @@ class OthersService extends ABSOthersService{
      "Authorization":"Bearer $token"
    };
 
-    var url = "${AppStrings.baseUrl}zimvest.services.general/api/MyPlanner/"
+    var url = "zimvest.services.general/api/MyPlanner/"
         "AssetsLiabilities?assetLiabilityType=$type";
 
     print("lll $url");

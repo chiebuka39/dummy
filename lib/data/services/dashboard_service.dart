@@ -25,7 +25,7 @@ class DashboardService extends ABSDashboardService{
      "Authorization":"Bearer $token"
    };
 
-    var url = "${AppStrings.baseUrl}zimvest.services.investment/api/Dashboards/portfoliovalue";
+    var url = "zimvest.services.investment/api/Dashboards/portfoliovalue";
 
     print("lll $url");
     try{
@@ -66,7 +66,7 @@ class DashboardService extends ABSDashboardService{
       "Authorization":"Bearer $token"
     };
 
-    var url = "${AppStrings.baseUrl}zimvest.services.investment/api/Dashboards/nairaportfolio";
+    var url = "zimvest.services.investment/api/Dashboards/nairaportfolio";
 
     print("lll $url");
     try{
@@ -113,7 +113,7 @@ class DashboardService extends ABSDashboardService{
       "Authorization":"Bearer $token"
     };
 
-    var url = "${AppStrings.baseUrl}zimvest.services.investment/api/Dashboards/dollarportfolio";
+    var url = "zimvest.services.investment/api/Dashboards/dollarportfolio";
 
     print("lll $url");
     try{
@@ -159,7 +159,7 @@ class DashboardService extends ABSDashboardService{
       "Authorization":"Bearer $token"
     };
 
-    var url = "${AppStrings.baseUrl}zimvest.services.investment/api/Dashboards/assetdistribution";
+    var url = "zimvest.services.investment/api/Dashboards/assetdistribution";
 
     print("lll $url");
     try{
@@ -201,7 +201,7 @@ class DashboardService extends ABSDashboardService{
       "Authorization":"Bearer $token"
     };
 
-    var url = "${AppStrings.baseUrl}zimvest.services.investment/api/Dashboards/portfoliodistribution";
+    var url = "zimvest.services.investment/api/Dashboards/portfoliodistribution";
 
     print("lll $url");
     try{

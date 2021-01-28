@@ -30,7 +30,7 @@ class WalletService implements ABSWalletService {
 
   @override
   Future<List<Wallet>> getWallets(String token) async {
-    final url = "${AppStrings.baseUrl}$microService/api/Wallet/wallets";
+    final url = "$microService/api/Wallet/wallets";
     var headers = {HttpHeaders.authorizationHeader: "Bearer $token"};
     print(url);
     try {
@@ -54,7 +54,7 @@ class WalletService implements ABSWalletService {
   @override
   Future<List<WalletTransaction>> getWalletsTransactions(String token) async {
     final url =
-        "${AppStrings.baseUrl}$microService/api/Wallet/WalletTransaction";
+        "$microService/api/Wallet/WalletTransaction";
     var headers = {HttpHeaders.authorizationHeader: "Bearer $token"};
     print(url);
     try {
@@ -84,7 +84,7 @@ class WalletService implements ABSWalletService {
       String currency,
       int fundingSource}) async {
     Result<void> result = Result(error: false);
-    final url = "${AppStrings.baseUrl}$microService/api/Wallet/fundwallet";
+    final url = "$microService/api/Wallet/fundwallet";
 
     var headers = {HttpHeaders.authorizationHeader: "Bearer $token"};
     Map<String, dynamic> data = {
@@ -138,7 +138,7 @@ class WalletService implements ABSWalletService {
   @override
   Future fundWalletWired(
       {String token, num wiredTransferAmount, int fundingSource}) async {
-    final url = "${AppStrings.baseUrl}$microService/api/Wallet/fundwallet";
+    final url = "$microService/api/Wallet/fundwallet";
     var headers = {HttpHeaders.authorizationHeader: "Bearer $token"};
     try {
       final fundWallet = await dio.post(

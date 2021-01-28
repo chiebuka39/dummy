@@ -109,7 +109,7 @@ class FixedIncomeInvestmentService implements ABSFixedIncomeInvestmentService {
       bool upFront,
       num faceValue,
       num investmentAmount}) async {
-    var url = "${AppStrings.baseUrl}$microService/api/CorporateBonds";
+    var url = "$microService/api/CorporateBonds";
 
     FormData data = FormData.fromMap({
       "ProductId": productId,
@@ -163,7 +163,7 @@ class FixedIncomeInvestmentService implements ABSFixedIncomeInvestmentService {
       String uniqueName,
       num faceValue,
       num investmentAmount}) async {
-    var url = "${AppStrings.baseUrl}$microService/api/CorporateBonds";
+    var url = "$microService/api/CorporateBonds";
 
     FormData data = FormData.fromMap({
       "ProductId": productId,
@@ -216,7 +216,7 @@ class FixedIncomeInvestmentService implements ABSFixedIncomeInvestmentService {
       String uniqueName,
       num faceValue,
       num investmentAmount}) async {
-    var url = "${AppStrings.baseUrl}$microService/api/EuroBonds";
+    var url = "$microService/api/EuroBonds";
 
     FormData data = FormData.fromMap({
       "ProductId": productId,
@@ -268,7 +268,7 @@ class FixedIncomeInvestmentService implements ABSFixedIncomeInvestmentService {
       String uniqueName,
       num faceValue,
       num investmentAmount}) async {
-    var url = "${AppStrings.baseUrl}$microService/api/FGNBonds";
+    var url = "$microService/api/FGNBonds";
 
     FormData data = FormData.fromMap({
       "ProductId": productId,
@@ -321,7 +321,7 @@ class FixedIncomeInvestmentService implements ABSFixedIncomeInvestmentService {
       bool upFront,
       num faceValue,
       num investmentAmount}) async {
-    var url = "${AppStrings.baseUrl}$microService/api/PromissoryNotes";
+    var url = "$microService/api/PromissoryNotes";
 
     FormData data = FormData.fromMap({
       "ProductId": productId,
@@ -376,7 +376,7 @@ class FixedIncomeInvestmentService implements ABSFixedIncomeInvestmentService {
       int cardId,
       num faceValue,
       num investmentAmount}) async {
-    var url = "${AppStrings.baseUrl}$microService/api/TreasuryBills";
+    var url = "$microService/api/TreasuryBills";
     print("url $url");
     FormData data = FormData.fromMap({
       "ProductId": productId,
@@ -429,7 +429,7 @@ class FixedIncomeInvestmentService implements ABSFixedIncomeInvestmentService {
       int productId,
       bool upFront}) async {
     var url =
-        "${AppStrings.baseUrl}$microService/api/Calculator/calculateamountpayable";
+        "$microService/api/Calculator/calculateamountpayable";
     print("llll ${url}");
     FormData data = FormData.fromMap({
       "ProductId": productId,

@@ -47,7 +47,7 @@ class PaymentService extends ABSPaymentService {
 
     var headers = {"Authorization": "Bearer $token"};
 
-    var url = "${AppStrings.baseUrl}zimvest.services.payment/api/Banks";
+    var url = "zimvest.services.payment/api/Banks";
 
     print("lll $url");
     try {
@@ -93,7 +93,7 @@ class PaymentService extends ABSPaymentService {
       "accountName": accountName,
     };
 
-    var url = "${AppStrings.baseUrl}zimvest.services.payment/api/"
+    var url = "zimvest.services.payment/api/"
         "banks";
 
     try {
@@ -132,7 +132,7 @@ class PaymentService extends ABSPaymentService {
     var headers = {"Authorization": "Bearer $token"};
 
 
-    var url = "${AppStrings.baseUrl}zimvest.services.payment/api/Banks/customers";
+    var url = "zimvest.services.payment/api/Banks/customers";
 
     print("lll $url");
     try {
@@ -179,7 +179,7 @@ class PaymentService extends ABSPaymentService {
 
     var headers = {"Authorization": "Bearer $token"};
 
-    var url = "${AppStrings.baseUrl}zimvest.services.payment/api/"
+    var url = "zimvest.services.payment/api/"
         "banks/v2/validations?BankCode=$bankCode&AccountNumber=$accountNum";
 
     print("lll $url");
@@ -222,7 +222,7 @@ class PaymentService extends ABSPaymentService {
     var headers = {"Authorization": "Bearer $token"};
 
 
-    var url = "${AppStrings.baseUrl}zimvest.services.payment/api/"
+    var url = "zimvest.services.payment/api/"
         "Banks/$bankId";
 
     print("lll $url");
@@ -261,7 +261,7 @@ class PaymentService extends ABSPaymentService {
     var headers = {"Authorization": "Bearer $token"};
 
 
-    var url = "${AppStrings.baseUrl}zimvest.services.payment/api/"
+    var url = "zimvest.services.payment/api/"
         "Cards/$cardId";
 
     print("lll $url");
@@ -300,7 +300,7 @@ class PaymentService extends ABSPaymentService {
     var headers = {"Authorization": "Bearer $token"};
 
 
-    var url = "${AppStrings.baseUrl}zimvest.services.payment/api/"
+    var url = "zimvest.services.payment/api/"
         "Banks/$bankId";
 
     print("lll $url");
@@ -339,7 +339,7 @@ class PaymentService extends ABSPaymentService {
     var headers = {"Authorization": "Bearer $token"};
 
 
-    var url = "${AppStrings.baseUrl}zimvest.services.payment/api/Cards";
+    var url = "zimvest.services.payment/api/Cards";
 
     print("lll $url");
     try {
@@ -389,7 +389,7 @@ class PaymentService extends ABSPaymentService {
       "pin": pin,
     };
 
-    var url = "${AppStrings.baseUrl}zimvest.services.payment/api/cards/v2";
+    var url = "zimvest.services.payment/api/cards/v2";
 
     try {
       var response = await dio.get(url, options: Options(headers: headers));
@@ -427,7 +427,7 @@ class PaymentService extends ABSPaymentService {
     var headers = {"Authorization": "Bearer $token"};
 
 
-    var url = "${AppStrings.baseUrl}zimvest.services.wallet/api/"
+    var url = "zimvest.services.wallet/api/"
         "Wallet/wallets";
 
     print("lll $url");
@@ -475,7 +475,7 @@ class PaymentService extends ABSPaymentService {
     var headers = {"Authorization": "Bearer $token"};
 
 
-    var url = "${AppStrings.baseUrl}zimvest.services.payment/api/cards/v2";
+    var url = "zimvest.services.payment/api/cards/v2";
 
     print("lll $url");
     try {
@@ -520,7 +520,7 @@ class PaymentService extends ABSPaymentService {
     var headers = {"Authorization": "Bearer $token"};
 
 
-    var url = "${AppStrings.baseUrl}zimvest.services.wallet/api/Wallet/WalletTransaction";
+    var url = "zimvest.services.wallet/api/Wallet/WalletTransaction";
 
     print("lll $url");
     try {
@@ -566,7 +566,7 @@ class PaymentService extends ABSPaymentService {
       "transactionReference": trnasactionRef,
     };
 
-    var url = "${AppStrings.baseUrl}zimvest.services.payment/api/cards/v2/paymentconfirmations";
+    var url = "zimvest.services.payment/api/cards/v2/paymentconfirmations";
 
     try {
       var response = await dio.post(url, options: Options(headers: headers),data: body);
@@ -608,7 +608,7 @@ class PaymentService extends ABSPaymentService {
       "amount": amount,
     };
 
-    var url = "${AppStrings.baseUrl}zimvest.services.wallet/api/Wallet/walletwithdrawal";
+    var url = "zimvest.services.wallet/api/Wallet/walletwithdrawal";
     print("llllll $url");
     print("lllll444l $body");
 

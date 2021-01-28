@@ -71,8 +71,8 @@ class IdentityService extends ABSIdentityService {
     };
 
     var url =
-        "${AppStrings.baseUrl}zimvest.services.identity/api/Account/mobile/login";
-    var url1 = "${AppStrings.baseUrl}api/Account/login";
+        "zimvest.services.identity/api/Account/mobile/login";
+    var url1 = "api/Account/login";
     print("lll $body");
     print("lll $url");
     try{
@@ -145,7 +145,7 @@ class IdentityService extends ABSIdentityService {
       };
 
 
-      var url = "${AppStrings.baseUrl}zimvest.onboarding.individual/api/IndividualOnboarding/registerindividual";
+      var url = "zimvest.onboarding.individual/api/IndividualOnboarding/registerindividual";
       print("body $body");
       print("url $url");
       try{
@@ -181,7 +181,7 @@ class IdentityService extends ABSIdentityService {
   Future<Result<CompletedSections>> checkCompletedSections({String token})async {
     Result<CompletedSections> result = Result(error: false);
 
-    var url = "${AppStrings.baseUrl}zimvest.services.identity/api/IndividualOnboarding/checkcompletedsections";
+    var url = "zimvest.services.identity/api/IndividualOnboarding/checkcompletedsections";
 
     print("lll $url");
     try{
@@ -212,7 +212,7 @@ class IdentityService extends ABSIdentityService {
     var headers = {
       HttpHeaders.authorizationHeader: "Bearer $token"
     };
-    var url = "${AppStrings.baseUrl}zimvest.onboarding.individual/api/Profiles";
+    var url = "zimvest.onboarding.individual/api/Profiles";
 
     print("lll $url");
     try{
@@ -242,7 +242,7 @@ class IdentityService extends ABSIdentityService {
     Result<bool> result = Result(error: false);
 
 
-    var url = "${AppStrings.baseUrl}zimvest.services.identity/api/Account/email-availability?Email=$email";
+    var url = "zimvest.services.identity/api/Account/email-availability?Email=$email";
 
     print("lll $url");
     try{
@@ -272,7 +272,7 @@ class IdentityService extends ABSIdentityService {
     Result<bool> result = Result(error: false);
 
 
-    var url = "${AppStrings.baseUrl}zimvest.services.identity/api/Account/"
+    var url = "zimvest.services.identity/api/Account/"
         "phone-availability?PhoneNumber=${phone.length == 10 ? '0$phone':'$phone'}";
 
     print("lll $url");
@@ -303,7 +303,7 @@ class IdentityService extends ABSIdentityService {
     Result<bool> result = Result(error: false);
 
 
-    var url = "${AppStrings.baseUrl}zimvest.services.identity/api/Account/confirm-email-otp";
+    var url = "zimvest.services.identity/api/Account/confirm-email-otp";
     var body = {
       'trackingId': trackingId,
       'verificationId':verificationId,
@@ -339,7 +339,7 @@ class IdentityService extends ABSIdentityService {
     Result<bool> result = Result(error: false);
 
 
-    var url = "${AppStrings.baseUrl}zimvest.services.identity/api/Account/verify-pin-reset-code";
+    var url = "zimvest.services.identity/api/Account/verify-pin-reset-code";
     var body = {
       'trackingId': trackingId,
       'verificationId':verificationId,
@@ -376,7 +376,7 @@ class IdentityService extends ABSIdentityService {
     Result<Map<String,dynamic>> result = Result(error: false);
 
 
-    var url = "${AppStrings.baseUrl}zimvest.services.identity/api/Account/resend-email-otp";
+    var url = "zimvest.services.identity/api/Account/resend-email-otp";
     var body = {
       'trackingId': trackingId,
       'verificationId':verificationId
@@ -412,7 +412,7 @@ class IdentityService extends ABSIdentityService {
     var headers = {"Authorization": "Bearer $token"};
 
 
-    var url = "${AppStrings.baseUrl}zimvest.services.identity/api/Account/resend-pin-reset-code";
+    var url = "zimvest.services.identity/api/Account/resend-pin-reset-code";
     var body = {
       'trackingId': trackingId,
       'verificationId':verificationId
@@ -449,7 +449,7 @@ class IdentityService extends ABSIdentityService {
     Result<Map<String,dynamic>> result = Result(error: false);
 
 
-    var url = "${AppStrings.baseUrl}zimvest.services.identity/api/Account/send-email-otp";
+    var url = "zimvest.services.identity/api/Account/send-email-otp";
     var body = {
       'email': email
     };
@@ -483,7 +483,7 @@ class IdentityService extends ABSIdentityService {
     Result<Map<String,dynamic>> result = Result(error: false);
 
 
-    var url = "${AppStrings.baseUrl}zimvest.services.identity/api/Account/initiate-pin-reset";
+    var url = "zimvest.services.identity/api/Account/initiate-pin-reset";
     var headers = {"Authorization": "Bearer $token"};
 
     print("lll $url");
@@ -517,7 +517,7 @@ class IdentityService extends ABSIdentityService {
     Result<void> result = Result(error: false);
 
 
-    var url = "${AppStrings.baseUrl}zimvest.services.identity/api/Account/setup-pin";
+    var url = "zimvest.services.identity/api/Account/setup-pin";
     var body = {
       'pin': pin
     };
@@ -556,7 +556,7 @@ class IdentityService extends ABSIdentityService {
     Result<void> result = Result(error: false);
 
 
-    var url = "${AppStrings.baseUrl}zimvest.services.identity/api/Account/reset-pin";
+    var url = "zimvest.services.identity/api/Account/reset-pin";
     var body = {
       'newPin': pin,
       'trackingId': trackingId,
@@ -596,7 +596,7 @@ class IdentityService extends ABSIdentityService {
     Result<void> result = Result(error: false);
 
 
-    var url = "${AppStrings.baseUrl}zimvest.services.identity/api/Account/reset-password";
+    var url = "zimvest.services.identity/api/Account/reset-password";
     var body = {
       'email': email
     };
@@ -631,7 +631,7 @@ class IdentityService extends ABSIdentityService {
     Result<void> result = Result(error: false);
 
 
-    var url = "${AppStrings.baseUrl}zimvest.services.identity/api/Account/changepassword";
+    var url = "zimvest.services.identity/api/Account/changepassword";
     var body = {
       'currentPassword': currentPassword,
       'newPassword':newPassword,
@@ -675,7 +675,7 @@ class IdentityService extends ABSIdentityService {
     Result<void> result = Result(error: false);
 
 
-    var url = "${AppStrings.baseUrl}zimvest.services.identity/api/Account/change-pin";
+    var url = "zimvest.services.identity/api/Account/change-pin";
     var body = {
       'currentPin': currentPin,
       'newPin':newPin,
@@ -722,7 +722,7 @@ print("0oo9999 ${e.response.data.runtimeType}");
   Future<Result<bool>> verifyPin({String code, String token}) async{
     Result<bool> result = Result(error: false);
 
-    var url = "${AppStrings.baseUrl}zimvest.services.identity/api/Account/verify-pin";
+    var url = "zimvest.services.identity/api/Account/verify-pin";
     var body = {
     'pin':code,
     };
