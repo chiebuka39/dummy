@@ -11,6 +11,7 @@ import 'package:zimvest/new_screens/navigation/wealth/liquidate_asset/fixed_inco
 import 'package:zimvest/new_screens/navigation/wealth/liquidate_asset/fixed_income/fgnbond/review_liquidation_fgb.dart';
 import 'package:zimvest/new_screens/navigation/wealth/liquidate_asset/fixed_income/promissorynote/review_liquidation_pn.dart';
 import 'package:zimvest/new_screens/navigation/wealth/liquidate_asset/fixed_income/treasury_bills/review_liquidation_tbills.dart';
+import 'package:zimvest/new_screens/navigation/wealth/liquidate_asset/high_yield/dollar/review_high_yield_dollar_liduidation.dart';
 import 'package:zimvest/new_screens/withdrawals/add_bank_account.dart';
 import 'package:zimvest/new_screens/withdrawals/review_bank_transfer.dart';
 import 'package:zimvest/styles/colors.dart';
@@ -162,6 +163,10 @@ class BankItemWidget extends StatelessWidget {
         if (isLiquidate && investmentType == 6) {
           Navigator.push(
               context, ReviewBankTransferLiquidationCorporateBond.route());
+        }
+        if (isLiquidate && investmentType == 7) {
+          Navigator.push(
+              context, ReviewBankTransferHighYieldDollarLiquidation.route());
         }
         if (!isLiquidate) {
           Navigator.push(context, ReviewBankTransfer.route());
