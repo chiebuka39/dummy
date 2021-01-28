@@ -276,7 +276,7 @@ class _AspireDetailsScreenState extends State<AspireDetailsScreen> with
                             child: GestureDetector(
                               onTap: (){
 
-                                if(widget.goal.amountSaved == 0){
+                                if(widget.goal.amountSaved == 0 || withdrawlSummary == null ){
                                   return;
                                 }
                                 if(settingsViewModel.completedSections.kycValidationCheck.isKycValidated == true){
@@ -310,7 +310,7 @@ class _AspireDetailsScreenState extends State<AspireDetailsScreen> with
 
                               },
                               child: Opacity(
-                                opacity: widget.goal.amountSaved == 0 ? 0.4:1,
+                                opacity: widget.goal.amountSaved == 0 || withdrawlSummary == null ? 0.4:1,
                                 child: Container(child: Column(children: [
                                   Container(
                                       height:35,
