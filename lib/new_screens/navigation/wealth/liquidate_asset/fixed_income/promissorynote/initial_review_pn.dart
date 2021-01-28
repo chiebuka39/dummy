@@ -127,17 +127,17 @@ class _InitialReviewScreenState
   }
 
   void startAnim(BuildContext context) async {
-    widget.isBank
-        ? setState(() {
-            slideUp = true;
-            loading = true;
-          })
-        : setState(() {
-            slideUp = true;
-            loading = true;
-          });
+    setState(() {
+      slideUp = true;
+      loading = true;
+    });
+  }
 
-    //   //processTransaction();
+  void startAnimWallet(BuildContext context) async {
+    setState(() {
+      slideUp = true;
+      loading = true;
+    });
     await Future.delayed(1000.milliseconds);
     showCupertinoModalBottomSheet(
         context: context,
@@ -152,7 +152,7 @@ class _InitialReviewScreenState
   }
 
   void startAnim2(BuildContext buildContext) async {
-    var result = await liquidateAssetViewModel.liquidatePromissoryNote(
+    var result = await liquidateAssetViewModel.liquidateNairaInstrument(
       transactionId: widget.transactionId,
       instrumentId: widget.instrumentId,
       bankId: paymentViewModel.selectedBank?.id,
@@ -205,7 +205,12 @@ class _InitialReviewScreenState
               body: Container(
                 height: MediaQuery.of(context).size.height,
                 child: Stack(
+                  fit: StackFit.expand,
                   children: [
+                    SvgPicture.asset(
+                      "images/patterns.svg",
+                      fit: BoxFit.fill,
+                    ),
                     Positioned(
                       top: slideUp
                           ? -(MediaQuery.of(context).size.height - 200)
@@ -374,8 +379,9 @@ class _InitialReviewScreenState
                           Navigator.push(
                             context,
                             SelectBankAccount.route(
-                              investmentType: 5,
-                                banks: widget.banks, isLiquidate: true),
+                                investmentType: 5,
+                                banks: widget.banks,
+                                isLiquidate: true),
                           );
                         },
                         child: Container(
@@ -414,7 +420,12 @@ class _InitialReviewScreenState
                 body: Container(
                   height: MediaQuery.of(context).size.height,
                   child: Stack(
+                    fit: StackFit.expand,
                     children: [
+                      SvgPicture.asset(
+                        "images/patterns.svg",
+                        fit: BoxFit.fill,
+                      ),
                       Positioned.fill(
                         child: confirmed
                             ? PlayAnimation<MultiTweenValues<AniProps>>(
@@ -650,7 +661,7 @@ class _InitialReviewScreenState
                           // },
                           onVerticalDragStart: (details) {
                             print("dff ${details.toString()}");
-                            startAnim(context);
+                            startAnimWallet(context);
                           },
                           child: Container(
                             height: 60,

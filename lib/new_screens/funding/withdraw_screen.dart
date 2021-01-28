@@ -31,7 +31,11 @@ class WithdrawWealthScreen extends StatefulWidget {
     this.fixedInvestmentType,
   }) : super(key: key);
   static Route<dynamic> route(
-      {String name, double withDrawable, int transactionId, int instrumentId,int fixedInvestmentType}) {
+      {String name,
+      double withDrawable,
+      int transactionId,
+      int instrumentId,
+      int fixedInvestmentType}) {
     return MaterialPageRoute(
         builder: (_) => WithdrawWealthScreen(
               name: name,
@@ -50,6 +54,7 @@ class WithdrawWealthScreen extends StatefulWidget {
 class _WithdrawWealthScreenState extends State<WithdrawWealthScreen> {
   @override
   Widget build(BuildContext context) {
+    print(widget.fixedInvestmentType);
     if (widget.fixedInvestmentType == 0) {
       return ViewModelProvider<BaseViewModel>.withConsumer(
         viewModelBuilder: () => BaseViewModel(),
@@ -73,9 +78,11 @@ class _WithdrawWealthScreenState extends State<WithdrawWealthScreen> {
                 YMargin(52),
                 GestureDetector(
                   onTap: () {
+                    print("moving");
                     Navigator.push(
                       context,
                       InitialReviewScreen.route(
+                        fixedInvestmentType: widget.fixedInvestmentType,
                         name: widget.name,
                         withDrawable: widget.withDrawable,
                         transactionId: widget.transactionId,
@@ -118,6 +125,7 @@ class _WithdrawWealthScreenState extends State<WithdrawWealthScreen> {
                     Navigator.push(
                       context,
                       InitialReviewScreen.route(
+                          fixedInvestmentType: widget.fixedInvestmentType,
                           name: widget.name,
                           withDrawable: widget.withDrawable,
                           transactionId: widget.transactionId,
@@ -157,6 +165,7 @@ class _WithdrawWealthScreenState extends State<WithdrawWealthScreen> {
                     Navigator.push(
                       context,
                       InitialReviewScreenTreasuryBills.route(
+                        fixedInvestmentType: widget.fixedInvestmentType,
                         name: widget.name,
                         withDrawable: widget.withDrawable,
                         transactionId: widget.transactionId,
@@ -199,6 +208,7 @@ class _WithdrawWealthScreenState extends State<WithdrawWealthScreen> {
                     Navigator.push(
                       context,
                       InitialReviewScreenTreasuryBills.route(
+                          fixedInvestmentType: widget.fixedInvestmentType,
                           name: widget.name,
                           withDrawable: widget.withDrawable,
                           transactionId: widget.transactionId,
@@ -238,6 +248,7 @@ class _WithdrawWealthScreenState extends State<WithdrawWealthScreen> {
                     Navigator.push(
                       context,
                       InitialReviewScreenCommercialPaper.route(
+                        fixedInvestmentType: widget.fixedInvestmentType,
                         name: widget.name,
                         withDrawable: widget.withDrawable,
                         transactionId: widget.transactionId,
@@ -280,6 +291,7 @@ class _WithdrawWealthScreenState extends State<WithdrawWealthScreen> {
                     Navigator.push(
                       context,
                       InitialReviewScreenCommercialPaper.route(
+                          fixedInvestmentType: widget.fixedInvestmentType,
                           name: widget.name,
                           withDrawable: widget.withDrawable,
                           transactionId: widget.transactionId,
@@ -319,6 +331,7 @@ class _WithdrawWealthScreenState extends State<WithdrawWealthScreen> {
                     Navigator.push(
                       context,
                       InitialReviewScreenEuroBond.route(
+                        fixedInvestmentType: widget.fixedInvestmentType,
                         name: widget.name,
                         withDrawable: widget.withDrawable,
                         transactionId: widget.transactionId,
@@ -361,6 +374,7 @@ class _WithdrawWealthScreenState extends State<WithdrawWealthScreen> {
                     Navigator.push(
                       context,
                       InitialReviewScreenEuroBond.route(
+                          fixedInvestmentType: widget.fixedInvestmentType,
                           name: widget.name,
                           withDrawable: widget.withDrawable,
                           transactionId: widget.transactionId,
@@ -400,6 +414,7 @@ class _WithdrawWealthScreenState extends State<WithdrawWealthScreen> {
                     Navigator.push(
                       context,
                       InitialReviewScreenFGNBond.route(
+                        fixedInvestmentType: widget.fixedInvestmentType,
                         name: widget.name,
                         withDrawable: widget.withDrawable,
                         transactionId: widget.transactionId,
@@ -442,6 +457,7 @@ class _WithdrawWealthScreenState extends State<WithdrawWealthScreen> {
                     Navigator.push(
                       context,
                       InitialReviewScreenFGNBond.route(
+                          fixedInvestmentType: widget.fixedInvestmentType,
                           name: widget.name,
                           withDrawable: widget.withDrawable,
                           transactionId: widget.transactionId,
@@ -481,6 +497,7 @@ class _WithdrawWealthScreenState extends State<WithdrawWealthScreen> {
                     Navigator.push(
                       context,
                       InitialReviewScreenPromissoryNote.route(
+                        fixedInvestmentType: widget.fixedInvestmentType,
                         name: widget.name,
                         withDrawable: widget.withDrawable,
                         transactionId: widget.transactionId,
@@ -523,6 +540,7 @@ class _WithdrawWealthScreenState extends State<WithdrawWealthScreen> {
                     Navigator.push(
                       context,
                       InitialReviewScreenPromissoryNote.route(
+                          fixedInvestmentType: widget.fixedInvestmentType,
                           name: widget.name,
                           withDrawable: widget.withDrawable,
                           transactionId: widget.transactionId,
@@ -562,6 +580,7 @@ class _WithdrawWealthScreenState extends State<WithdrawWealthScreen> {
                     Navigator.push(
                       context,
                       InitialReviewScreenCorporateBond.route(
+                        fixedInvestmentType: widget.fixedInvestmentType,
                         name: widget.name,
                         withDrawable: widget.withDrawable,
                         transactionId: widget.transactionId,
@@ -604,6 +623,7 @@ class _WithdrawWealthScreenState extends State<WithdrawWealthScreen> {
                     Navigator.push(
                       context,
                       InitialReviewScreenCorporateBond.route(
+                          fixedInvestmentType: widget.fixedInvestmentType,
                           name: widget.name,
                           withDrawable: widget.withDrawable,
                           transactionId: widget.transactionId,

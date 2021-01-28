@@ -665,6 +665,8 @@ class _ReviewBankTransferLiquidationState
 
   @override
   Widget build(BuildContext context) {
+    print("arrived");
+    // print(paymentViewModel.withdsrawableAmount);
     identityViewModel = Provider.of(context);
     savingViewModel = Provider.of(context);
     paymentViewModel = Provider.of(context);
@@ -709,7 +711,7 @@ class _ReviewBankTransferLiquidationState
                                       curve: Curves.easeIn,
                                       key: keys[0],
                                       child: Text(
-                                        "Your Topup was succesful",
+                                        "Successfully initiated withdrawal",
                                         style: TextStyle(color: Colors.white),
                                       )),
                                   Spacer(),
@@ -867,7 +869,7 @@ class _ReviewBankTransferLiquidationState
                                       ),
                                       YMargin(15),
                                       Text(
-                                        "${AppStrings.nairaSymbol}${paymentViewModel.withdrawableAmount.toString().split('.')[0].convertWithComma()}",
+                                        "${AppStrings.nairaSymbol}${paymentViewModel.withdrawableAmount.toDouble().toString().split('.')[0].convertWithComma()}",
                                         style: TextStyle(
                                             fontFamily: AppStrings.fontMedium,
                                             fontSize: 13,

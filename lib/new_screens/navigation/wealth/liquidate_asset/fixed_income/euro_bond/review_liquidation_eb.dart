@@ -20,7 +20,6 @@ import 'package:simple_animations/simple_animations.dart';
 import 'package:supercharged/supercharged.dart';
 import 'package:zimvest/widgets/buttons.dart';
 
-
 class ItemFader extends StatefulWidget {
   final Widget child;
   final Curve curve;
@@ -173,7 +172,6 @@ class _ReviewBankTransferLiquidationState
   }
 
   void startAnim2(BuildContext buildContext) async {
-    
     var result = await liquidateAssetViewModel.liquidateEuroBond(
       transactionId: paymentViewModel.transactionId,
       instrumentId: paymentViewModel.instrumentId,
@@ -228,7 +226,12 @@ class _ReviewBankTransferLiquidationState
         body: Container(
           height: MediaQuery.of(context).size.height,
           child: Stack(
+            fit: StackFit.expand,
             children: [
+              SvgPicture.asset(
+                "images/patterns.svg",
+                fit: BoxFit.fill,
+              ),
               Positioned.fill(
                 child: confirmed
                     ? PlayAnimation<MultiTweenValues<AniProps>>(
@@ -546,4 +549,3 @@ class _ReviewBankTransferLiquidationState
     );
   }
 }
-

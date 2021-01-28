@@ -37,7 +37,8 @@ class SelectBankAccount extends StatefulWidget {
       this.withDrawable,
       this.transactionId,
       this.instrumentId,
-      this.isLiquidate, this.investmentType})
+      this.isLiquidate,
+      this.investmentType})
       : super(key: key);
   static Route<dynamic> route(
       {List<Bank> banks,
@@ -45,7 +46,8 @@ class SelectBankAccount extends StatefulWidget {
       double withDrawable,
       int transactionId,
       int instrumentId,
-      bool isLiquidate, int investmentType}) {
+      bool isLiquidate,
+      int investmentType}) {
     return MaterialPageRoute(
         builder: (_) => SelectBankAccount(
               banks: banks,
@@ -66,18 +68,17 @@ class SelectBankAccount extends StatefulWidget {
 class _SelectBankAccountState extends State<SelectBankAccount> {
   @override
   Widget build(BuildContext context) {
-    ABSPaymentViewModel paymentViewModel = Provider.of(context);
+    // print("Selecting ${widget.investmentType}");
+    // ABSPaymentViewModel paymentViewModel = Provider.of(context);
     return Scaffold(
-      
       appBar: ZimAppBar(
-        icon: Icons.arrow_back_ios_outlined,
-        text: "",
-        showCancel: true,
-        callback: () {
-          Navigator.pop(context);
-          Navigator.pop(context);
-        }
-      ),
+          icon: Icons.arrow_back_ios_outlined,
+          text: "",
+          showCancel: true,
+          callback: () {
+            Navigator.pop(context);
+            Navigator.pop(context);
+          }),
       body: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 20),
         child: Column(
@@ -93,10 +94,9 @@ class _SelectBankAccountState extends State<SelectBankAccount> {
             ),
             Expanded(
               child: ListView.builder(
-                itemCount: widget.banks == null
-                    ? 0
-                    : widget.banks.length,
+                itemCount: widget.banks == null ? 0 : widget.banks.length,
                 itemBuilder: (context, index) => BankItemWidget(
+                  investmentType: widget.investmentType,
                   bank: widget.banks[index],
                   isLiquidate: widget.isLiquidate,
                 ),
@@ -123,8 +123,8 @@ class BankItemWidget extends StatelessWidget {
   const BankItemWidget({
     Key key,
     this.bank,
-    this.isLiquidate, this.investmentType,
-    
+    this.isLiquidate,
+    this.investmentType,
   }) : super(key: key);
 
   final Bank bank;
@@ -137,20 +137,33 @@ class BankItemWidget extends StatelessWidget {
       onTap: () {
         paymentViewModel.selectedBank = bank;
         if (isLiquidate && investmentType == 0) {
+          print("Doings ${paymentViewModel.withdrawableAmount}");
           Navigator.push(context, ReviewBankTransferLiquidation.route());
-        } if (isLiquidate && investmentType == 1) {
-          Navigator.push(context, ReviewBankTransferLiquidationTreasuryBills.route());
-        } if (isLiquidate && investmentType == 2) {
-          Navigator.push(context, ReviewBankTransferLiquidationCommercialPaper.route());
-        } if (isLiquidate && investmentType == 3) {
-          Navigator.push(context, ReviewBankTransferLiquidationEuroBond.route());
-        } if (isLiquidate && investmentType == 4) {
+        }
+        if (isLiquidate && investmentType == 1) {
+          Navigator.push(
+              context, ReviewBankTransferLiquidationTreasuryBills.route());
+        }
+        if (isLiquidate && investmentType == 2) {
+          Navigator.push(
+              context, ReviewBankTransferLiquidationCommercialPaper.route());
+        }
+        if (isLiquidate && investmentType == 3) {
+          Navigator.push(
+              context, ReviewBankTransferLiquidationEuroBond.route());
+        }
+        if (isLiquidate && investmentType == 4) {
           Navigator.push(context, ReviewBankTransferLiquidationFGNBond.route());
-        } if (isLiquidate && investmentType == 5) {
-          Navigator.push(context, ReviewBankTransferLiquidationPromissoryNote.route());
-        } if (isLiquidate && investmentType == 6) {
-          Navigator.push(context, ReviewBankTransferLiquidationCorporateBond.route());
-        } else {
+        }
+        if (isLiquidate && investmentType == 5) {
+          Navigator.push(
+              context, ReviewBankTransferLiquidationPromissoryNote.route());
+        }
+        if (isLiquidate && investmentType == 6) {
+          Navigator.push(
+              context, ReviewBankTransferLiquidationCorporateBond.route());
+        }
+        if (!isLiquidate) {
           Navigator.push(context, ReviewBankTransfer.route());
         }
       },
