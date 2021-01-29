@@ -83,6 +83,19 @@ class DeleteWealthbox extends StatelessWidget {
                   title: "Yes",
                   onTap: ()async{
                     Navigator.of(context).pop();
+                    Navigator.pop(context);
+                    EasyLoading.show(status: "");
+                    var result = await savingViewModel.terminateSavings(
+                      token: identityViewModel.user.token,
+                      productId: savingPlanModel.id
+                    );
+                    if(result.error == false){
+                      EasyLoading.showSuccess("Plan was deleted successfully",
+                          duration: Duration(seconds: 3));
+                    }else{
+                      EasyLoading.showError(result.errorMessage,
+                          duration: Duration(seconds: 3));
+                    }
 
                   },
                 ),

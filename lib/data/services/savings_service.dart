@@ -63,6 +63,7 @@ abstract class ABSSavingService{
   Future<Result<List<ProductTransaction>>> getSavingsTopup({String token});
   Future<Result<List<ProductTransaction>>> getSavingsWithdrawal({String token});
   Future<Result<Map>> getWithdrawalSummary({String token, int productId});
+  Future<Result<void>> terminateSavings({String token, int productId});
 }
 
 class SavingService extends ABSSavingService{
@@ -145,7 +146,7 @@ class SavingService extends ABSSavingService{
       }else {
         result.error = false;
         List<ProductTransaction> types = [];
-        (response1['data'] as List).forEach((chaList) {
+        (response1['data']['result'] as List).forEach((chaList) {
           //initialize Chat Object
           types.add(ProductTransaction.fromJson(chaList));
         });
@@ -290,7 +291,8 @@ class SavingService extends ABSSavingService{
       }else {
         result.error = false;
         List<ProductTransaction> types = [];
-        (response1['data'] as List).forEach((chaList) {
+        print("pppppppgggg ${response1['data'].runtimeType}");
+        (response1['data']["result"] as List).forEach((chaList) {
           //initialize Chat Object
           types.add(ProductTransaction.fromJson(chaList));
         });
@@ -1049,6 +1051,62 @@ class SavingService extends ABSSavingService{
 
 
 
+      }
+
+    }on DioError catch(e){
+      print("error $e}");
+      if(e.response != null ){
+        print(e.response.data);
+        if(e.response.data['message'] is String){
+          result.errorMessage = e.response.data['message'];
+        }
+
+      }else{
+        print(e.toString());
+        result.errorMessage = "Sorry, We could not complete your request";
+      }
+      result.error = true;
+    }
+
+    return result;
+  }
+
+  @override
+  Future<Result<void>> terminateSavings({String token, int productId}) async{
+    Result<void> result = Result(error: false);
+
+
+
+    var headers = {
+      HttpHeaders.authorizationHeader: "Bearer $token"
+    };
+
+    var body = {
+      "savingsId" : productId
+    };
+
+
+
+    var url = "zimvest.services.savings/api/Savings/TargetSavings/Terminate";
+    print("url $url");
+
+    try{
+      var response = await dio.post(url,options: Options(headers: headers),data: body);
+      final int statusCode = response.statusCode;
+      var response1 = response.data;
+      print("iii ${response1}");
+
+      if (statusCode != 200) {
+        result.errorMessage = response1['message'];
+        result.error = true;
+      }else if( statusCode == 201){
+        result.error = true;
+        if(response1['message'] != null){
+          result.errorMessage = response1['message'];
+        }
+      }
+      else {
+        result.error = false;
       }
 
     }on DioError catch(e){

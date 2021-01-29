@@ -104,6 +104,7 @@ abstract class ABSSavingViewModel extends ChangeNotifier{
   Future<Result<void>> withdrawFund({String token,int customerSavingId,
     double amount, int customerBankId, String pin, int withdrawalChannel});
   Future<Result<Map>> getWithdrawalSummary({String token, int productId});
+  Future<Result<void>> terminateSavings({String token, int productId});
 }
 
 class SavingViewModel extends ABSSavingViewModel{
@@ -394,6 +395,18 @@ class SavingViewModel extends ABSSavingViewModel{
   @override
   Future<Result<Map>> getWithdrawalSummary({String token, int productId}) {
     return _savingService.getWithdrawalSummary(token: token,productId: productId);
+  }
+
+  @override
+  Future<Result<void>> terminateSavings({String token, int productId}) async{
+    var result = await _savingService.terminateSavings(
+      token: token,
+      productId: productId
+    );
+    List<SavingPlanModel> models = savingPlanModel;
+    models.removeWhere((element) => element.id == productId);
+    savingPlanModel = models;
+    return result;
   }
 
 }
