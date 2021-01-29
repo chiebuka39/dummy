@@ -3,6 +3,7 @@ import 'dart:io';
 
 import 'package:dio/dio.dart';
 import 'package:zimvest/data/models/payment/wallet.dart';
+import 'package:zimvest/data/models/wired_transfer_details_model.dart';
 import 'package:zimvest/utils/result.dart';
 import 'package:zimvest/utils/strings.dart';
 
@@ -12,7 +13,7 @@ import '../../locator.dart';
 abstract class ABSWalletService {
   Future<List<Wallet>> getWallets(String token);
   Future<List<WalletTransaction>> getWalletsTransactions(String token);
-  Future<Result<void>> fundWallet(
+  Future<Result<dynamic>> fundWallet(
       {String token,
       num sourceAmount,
       num exchangeAmount,
@@ -24,6 +25,8 @@ abstract class ABSWalletService {
       int fundingSource,
       String proofOfPayment,
       int intermediaryBankType});
+  Future<Result<List<WiredTransferDetails>>> getWiredTransferDetails(
+      String token);
 }
 
 class WalletService implements ABSWalletService {
@@ -171,5 +174,30 @@ class WalletService implements ABSWalletService {
       throw Exception(e.response.toString());
     }
     return null;
+  }
+
+  @override
+  Future<Result<List<WiredTransferDetails>>> getWiredTransferDetails(
+      String token) async {
+    Result<List<WiredTransferDetails>> result = Result(error: false);
+    final url = "${AppStrings.baseUrl}$microService/api/Options";
+    var headers = {HttpHeaders.authorizationHeader: "Bearer $token"};
+    try {
+      var getDetails = await dio.get(url, options: Options(headers: headers));
+      if (getDetails.statusCode == 200) {
+        result.error = false;
+        var res = getDetails.data["data"];
+        List<WiredTransferDetails> details = [];
+        (res as List).forEach((element) {
+          details.add(WiredTransferDetails.fromJson(element));
+        });
+        result.data = details;
+      }
+    } on DioError catch (e) {
+      print(e.toString());
+      result.errorMessage = e.response.statusMessage;
+      result.error = true;
+    }
+    return result;
   }
 }
