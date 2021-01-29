@@ -1054,15 +1054,23 @@ Widget dollarPortfolio(BuildContext context) {
                             itemBuilder: (context, index) => Padding(
                               padding: const EdgeInsets.all(8.0),
                               child: InvestmentItemWidget(
+                                withDrawableBalance: model
+                                    .nairaTransaction[index].withdrawableValue,
+                                isMatured:
+                                    model.nairaTransaction[index].isMatured,
+                                transactionId:
+                                    model.nairaTransaction[index].transactionId,
+                                instrumentId:
+                                    model.nairaTransaction[index].instrumentId,
                                 topPadding: 0,
                                 investmentName:
-                                    model.dollarTransaction[index].uniqueName,
-                                investmentType: model.dollarTransaction[index]
-                                    .zimvestInstrumentName,
+                                    model.nairaTransaction[index].uniqueName,
+                                investmentType: model
+                                    .nairaTransaction[index].instrumentName,
                                 balance:
-                                    "${AppStrings.dollarSymbol}${model.dollarTransaction[index].withdrawableValue.toString()}",
+                                    "${AppStrings.nairaSymbol}${model.nairaTransaction[index].withdrawableValue.toString() + "0"}",
                                 annualReturns:
-                                    "${model.dollarTransaction[index].percentageInterest.toString()}",
+                                    "${model.nairaTransaction[index].percentageInterest.toString()}",
                               ),
                             ),
                           ),

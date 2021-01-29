@@ -12,6 +12,7 @@ import 'package:zimvest/utils/margin.dart';
 import 'package:zimvest/utils/strings.dart';
 import 'package:zimvest/widgets/buttons.dart';
 import 'package:zimvest/widgets/navigation/checkBox.dart';
+import 'package:zimvest/widgets/new/new_widgets.dart';
 
 import '../../../../tabs.dart';
 
@@ -55,7 +56,14 @@ class _InvestmentDurationPeriodState extends State<InvestmentDurationPeriod> {
       viewModelBuilder: () => WalletViewModel(),
       onModelReady: (model) => model.getCards(),
       builder: (context, model, _) => Scaffold(
-        appBar: appBar(context),
+        appBar: ZimAppBar(
+          icon: Icons.arrow_back_ios_outlined,
+          text: "Invest",
+          showCancel: true,
+          callback: () {
+            Navigator.pop(context);
+          },
+        ),
         body: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [

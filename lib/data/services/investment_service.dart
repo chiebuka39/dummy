@@ -76,7 +76,16 @@ abstract class ABSInvestmentService {
       num amount,
       num nairaAmount,
       String uniqueName,
-      String token, int walletType});
+      String token,
+      int walletType});
+  Future<dynamic> buyDollarnstrumentWired(
+      {int productId,
+      int beneficiaryBankType,
+      int fundingChannel,
+      String proofOfPayment,
+      num amount,
+      String uniqueName,
+      String token});
 
   Future<ConvertedRate> calculateRate(
       {num amount,
@@ -965,7 +974,8 @@ class InvestmentService extends ABSInvestmentService {
       num amount,
       num nairaAmount,
       String uniqueName,
-      String token, int walletType}) async {
+      String token,
+      int walletType}) async {
     var url =
         "$microService/api/ZimvestTermInstruments/buydollarterminstrument";
 
@@ -1215,5 +1225,62 @@ class InvestmentService extends ABSInvestmentService {
     }
 
     return result;
+  }
+
+  @override
+  Future buyDollarnstrumentWired(
+      {int productId,
+      int beneficiaryBankType,
+      int fundingChannel,
+      String proofOfPayment,
+      num amount,
+      String uniqueName,
+      String token}) async {
+    var url =
+        "${AppStrings.baseUrl}$microService/api/ZimvestTermInstruments/buydollarterminstrument";
+
+    var headers = {HttpHeaders.authorizationHeader: "Bearer $token"};
+    var imgname = DateTime.now().millisecondsSinceEpoch.toString();
+    FormData data = FormData.fromMap({
+      "ProductId": productId,
+      "FundingChannel": fundingChannel,
+      "Amount": amount,
+      "UniqueName": uniqueName,
+      "ProofOfPayment.DocumentFile": await MultipartFile.fromFile(
+        proofOfPayment,
+        filename: imgname,
+      ),
+      "BeneficiaryBankType": beneficiaryBankType,
+    });
+    Result<dynamic> result = Result(error: false);
+
+    try {
+      var buydollaInstrumentWired = await dio.post(
+        url,
+        data: data,
+        options: Options(
+          headers: headers,
+          validateStatus: (status) {
+            return status < 500;
+          },
+        ),
+      );
+      if (buydollaInstrumentWired.statusCode == 200) {
+        print("Success: ${buydollaInstrumentWired.data}");
+        result.data = buydollaInstrumentWired.data["message"];
+        return result.data;
+      }
+      if (buydollaInstrumentWired.statusCode == 400) {
+        print("Failure: ${buydollaInstrumentWired.data}");
+        result.data = buydollaInstrumentWired.data["message"];
+        return null;
+      }
+    } on DioError catch (e) {
+      result.error = true;
+      print(e.message.toString());
+      result.errorMessage = e.response.statusMessage;
+      throw Exception(e.response.toString());
+    }
+    return null;
   }
 }

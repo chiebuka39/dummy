@@ -6,6 +6,7 @@ import 'package:provider_architecture/_viewmodel_provider.dart';
 import 'package:simple_animations/simple_animations.dart';
 import 'package:zimvest/animations/loading.dart';
 import 'package:zimvest/data/models/payment/bank.dart';
+import 'package:zimvest/data/services/connectivity_service.dart';
 import 'package:zimvest/data/view_models/identity_view_model.dart';
 import 'package:zimvest/data/view_models/investment_view_model.dart';
 import 'package:zimvest/data/view_models/liquidate_asset_vm.dart';
@@ -24,6 +25,7 @@ import 'package:zimvest/utils/margins.dart';
 import 'package:zimvest/utils/strings.dart';
 import 'package:zimvest/widgets/buttons.dart';
 import 'package:supercharged/supercharged.dart';
+import 'package:zimvest/widgets/flushbar.dart';
 
 import '../../../../../tabs.dart';
 
@@ -43,7 +45,8 @@ class InitialReviewScreenEuroBond extends StatefulWidget {
       this.transactionId,
       this.instrumentId,
       this.isBank,
-      this.banks, this.fixedInvestmentType})
+      this.banks,
+      this.fixedInvestmentType})
       : super(key: key);
   static Route<dynamic> route(
       {String name,
@@ -51,7 +54,8 @@ class InitialReviewScreenEuroBond extends StatefulWidget {
       int transactionId,
       int instrumentId,
       bool isBank,
-      List<Bank> banks,int fixedInvestmentType}) {
+      List<Bank> banks,
+      int fixedInvestmentType}) {
     return MaterialPageRoute(
       builder: (_) => InitialReviewScreenEuroBond(
         name: name,
@@ -124,17 +128,17 @@ class _InitialReviewScreenState extends State<InitialReviewScreenEuroBond> {
   }
 
   void startAnim(BuildContext context) async {
-    widget.isBank
-        ? setState(() {
-            slideUp = true;
-            loading = true;
-          })
-        : setState(() {
-            slideUp = true;
-            loading = true;
-          });
+    setState(() {
+      slideUp = true;
+      loading = true;
+    });
+  }
 
-    //   //processTransaction();
+  void startAnimWallet(BuildContext context) async {
+    setState(() {
+      slideUp = true;
+      loading = true;
+    });
     await Future.delayed(1000.milliseconds);
     showCupertinoModalBottomSheet(
         context: context,
@@ -149,7 +153,7 @@ class _InitialReviewScreenState extends State<InitialReviewScreenEuroBond> {
   }
 
   void startAnim2(BuildContext buildContext) async {
-    var result = await liquidateAssetViewModel.liquidateEuroBond(
+    var result = await liquidateAssetViewModel.liquidateNairaInstrument(
       transactionId: widget.transactionId,
       instrumentId: widget.instrumentId,
       bankId: paymentViewModel.selectedBank?.id,
@@ -189,7 +193,7 @@ class _InitialReviewScreenState extends State<InitialReviewScreenEuroBond> {
   Widget build(BuildContext context) {
     identityViewModel = Provider.of(context);
     savingViewModel = Provider.of(context);
-
+    ConnectionProvider network = Provider.of(context);
     pinViewModel = Provider.of(context);
     liquidateAssetViewModel = Provider.of(context);
     paymentViewModel = Provider.of(context);
@@ -202,7 +206,12 @@ class _InitialReviewScreenState extends State<InitialReviewScreenEuroBond> {
               body: Container(
                 height: MediaQuery.of(context).size.height,
                 child: Stack(
+                  fit: StackFit.expand,
                   children: [
+                    SvgPicture.asset(
+                      "images/patterns.svg",
+                      fit: BoxFit.fill,
+                    ),
                     Positioned(
                       top: slideUp
                           ? -(MediaQuery.of(context).size.height - 200)
@@ -371,8 +380,9 @@ class _InitialReviewScreenState extends State<InitialReviewScreenEuroBond> {
                           Navigator.push(
                             context,
                             SelectBankAccount.route(
-                              investmentType: 3,
-                                banks: widget.banks, isLiquidate: true),
+                                investmentType: 3,
+                                banks: widget.banks,
+                                isLiquidate: true),
                           );
                         },
                         child: Container(
@@ -411,7 +421,12 @@ class _InitialReviewScreenState extends State<InitialReviewScreenEuroBond> {
                 body: Container(
                   height: MediaQuery.of(context).size.height,
                   child: Stack(
+                    fit: StackFit.expand,
                     children: [
+                      SvgPicture.asset(
+                        "images/patterns.svg",
+                        fit: BoxFit.fill,
+                      ),
                       Positioned.fill(
                         child: confirmed
                             ? PlayAnimation<MultiTweenValues<AniProps>>(
@@ -493,137 +508,142 @@ class _InitialReviewScreenState extends State<InitialReviewScreenEuroBond> {
                               ),
                               boxShadow: AppUtils.getBoxShaddow3),
                           child: SafeArea(
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
-                                children: [
-                                  IconButton(
-                                    icon: Icon(Icons.arrow_back_ios_outlined),
-                                    color: AppColors.kPrimaryColor,
-                                    onPressed: () {
-                                      Navigator.pop(context);
-                                    },
-                                  ),
-                                  Padding(
-                                    padding: const EdgeInsets.only(right: 20.0),
-                                    child: InkWell(
-                                      onTap: () => Navigator.pushAndRemoveUntil(
-                                          context,
-                                          MaterialPageRoute(
-                                              builder: (context) =>
-                                                  TabsContainer()),
-                                          (Route<dynamic> route) => false),
-                                      child: Text(
-                                        "Cancel",
-                                        style: TextStyle(
-                                          color: AppColors.kPrimaryColor,
-                                          fontSize: 12,
-                                          fontFamily: AppStrings.fontNormal,
-                                          fontWeight: FontWeight.w400,
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    IconButton(
+                                      icon: Icon(Icons.arrow_back_ios_outlined),
+                                      color: AppColors.kPrimaryColor,
+                                      onPressed: () {
+                                        Navigator.pop(context);
+                                      },
+                                    ),
+                                    Padding(
+                                      padding:
+                                          const EdgeInsets.only(right: 20.0),
+                                      child: InkWell(
+                                        onTap: () =>
+                                            Navigator.pushAndRemoveUntil(
+                                                context,
+                                                MaterialPageRoute(
+                                                    builder: (context) =>
+                                                        TabsContainer()),
+                                                (Route<dynamic> route) =>
+                                                    false),
+                                        child: Text(
+                                          "Cancel",
+                                          style: TextStyle(
+                                            color: AppColors.kPrimaryColor,
+                                            fontSize: 12,
+                                            fontFamily: AppStrings.fontNormal,
+                                            fontWeight: FontWeight.w400,
+                                          ),
                                         ),
                                       ),
                                     ),
-                                  ),
-                                  // XMargin(1),
-                                ],
-                              ),
-                              YMargin(70),
-                              Padding(
-                                padding: const EdgeInsets.only(left: 20),
-                                child: Text(
-                                  "Review",
-                                  style: TextStyle(
-                                      fontFamily: AppStrings.fontMedium),
+                                    // XMargin(1),
+                                  ],
                                 ),
-                              ),
-                              YMargin(20),
-                              Padding(
-                                padding: const EdgeInsets.symmetric(
-                                    horizontal: 20.0),
-                                child: Container(
-                                  decoration: BoxDecoration(
-                                      color: AppColors.kWhite,
-                                      borderRadius: BorderRadius.circular(10),
-                                      boxShadow: AppUtils.getBoxShaddow),
-                                  height: screenHeight(context) / 4,
-                                  width: screenWidth(context),
-                                  child: Column(
-                                    // mainAxisAlignment: MainAxisAlignment.center,
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: [
-                                      YMargin(27),
-                                      Padding(
-                                        padding:
-                                            const EdgeInsets.only(left: 20.0),
-                                        child: Column(
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.start,
-                                          children: [
-                                            Text(
-                                              "PLAN NAME",
-                                              // textAlign: TextAlign.start,
-                                              style: TextStyle(
-                                                fontSize: 11,
-                                                fontFamily:
-                                                    AppStrings.fontMedium,
-                                                color: AppColors.kLightText5,
-                                              ),
-                                            ),
-                                            YMargin(5),
-                                            Text(
-                                              "${widget.name}",
-                                              style: TextStyle(
-                                                fontSize: 13,
-                                                fontFamily: AppStrings.fontBold,
-                                                color: AppColors.kTextColor,
-                                              ),
-                                            ),
-                                          ],
-                                        ),
-                                      ),
-                                      YMargin(40),
-                                      Padding(
-                                        padding: const EdgeInsets.only(
-                                            left: 23.0, right: 23.0),
-                                        child: Column(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.spaceBetween,
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.start,
-                                          children: [
-                                            Text(
-                                              "AMOUNT",
-                                              textAlign: TextAlign.justify,
-                                              style: TextStyle(
-                                                fontSize: 11,
-                                                fontFamily:
-                                                    AppStrings.fontMedium,
-                                                color: AppColors.kLightText5,
-                                              ),
-                                            ),
-                                            YMargin(5),
-                                            Text(
-                                              "${AppStrings.nairaSymbol}${StringUtils(widget.withDrawable.toString().split('.')[0]).convertWithComma()}",
-                                              style: TextStyle(
-                                                fontSize: 13,
-                                                fontFamily: AppStrings.fontBold,
-                                                color: AppColors.kTextColor,
-                                              ),
-                                            ),
-                                          ],
-                                        ),
-                                      ),
-                                    ],
+                                YMargin(70),
+                                Padding(
+                                  padding: const EdgeInsets.only(left: 20),
+                                  child: Text(
+                                    "Review",
+                                    style: TextStyle(
+                                        fontFamily: AppStrings.fontMedium),
                                   ),
                                 ),
-                              ),
-                            ],
+                                YMargin(20),
+                                Padding(
+                                  padding: const EdgeInsets.symmetric(
+                                      horizontal: 20.0),
+                                  child: Container(
+                                    decoration: BoxDecoration(
+                                        color: AppColors.kWhite,
+                                        borderRadius: BorderRadius.circular(10),
+                                        boxShadow: AppUtils.getBoxShaddow),
+                                    height: screenHeight(context) / 4,
+                                    width: screenWidth(context),
+                                    child: Column(
+                                      // mainAxisAlignment: MainAxisAlignment.center,
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        YMargin(27),
+                                        Padding(
+                                          padding:
+                                              const EdgeInsets.only(left: 20.0),
+                                          child: Column(
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.start,
+                                            children: [
+                                              Text(
+                                                "PLAN NAME",
+                                                // textAlign: TextAlign.start,
+                                                style: TextStyle(
+                                                  fontSize: 11,
+                                                  fontFamily:
+                                                      AppStrings.fontMedium,
+                                                  color: AppColors.kLightText5,
+                                                ),
+                                              ),
+                                              YMargin(5),
+                                              Text(
+                                                "${widget.name}",
+                                                style: TextStyle(
+                                                  fontSize: 13,
+                                                  fontFamily:
+                                                      AppStrings.fontBold,
+                                                  color: AppColors.kTextColor,
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                        ),
+                                        YMargin(40),
+                                        Padding(
+                                          padding: const EdgeInsets.only(
+                                              left: 23.0, right: 23.0),
+                                          child: Column(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.spaceBetween,
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.start,
+                                            children: [
+                                              Text(
+                                                "AMOUNT",
+                                                textAlign: TextAlign.justify,
+                                                style: TextStyle(
+                                                  fontSize: 11,
+                                                  fontFamily:
+                                                      AppStrings.fontMedium,
+                                                  color: AppColors.kLightText5,
+                                                ),
+                                              ),
+                                              YMargin(5),
+                                              Text(
+                                                "${AppStrings.nairaSymbol}${StringUtils(widget.withDrawable.toString().split('.')[0]).convertWithComma()}",
+                                                style: TextStyle(
+                                                  fontSize: 13,
+                                                  fontFamily:
+                                                      AppStrings.fontBold,
+                                                  color: AppColors.kTextColor,
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
                           ),
-                        ),
                         ),
                       ),
                       AnimatedPositioned(
@@ -635,14 +655,13 @@ class _InitialReviewScreenState extends State<InitialReviewScreenEuroBond> {
                         left: 0,
                         right: 0,
                         child: GestureDetector(
-                          // onTap: () {
-                          //   // showModalBottomSheet < Null > (context: context, builder: (BuildContext context) {
-                          //   //   return ConfirmSavings();
-                          //   // },isScrollControlled: true);
-                          // },
                           onVerticalDragStart: (details) {
-                            print("dff ${details.toString()}");
-                            startAnim(context);
+                            if (network.neTisOn) {
+                              startAnimWallet(context);
+                            } else {
+                              cautionFlushBar(context, "No Network",
+                                  "Please make sure you are connected to the internet");
+                            }
                           },
                           child: Container(
                             height: 60,

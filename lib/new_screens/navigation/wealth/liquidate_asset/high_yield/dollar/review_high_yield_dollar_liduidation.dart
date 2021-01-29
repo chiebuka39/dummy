@@ -87,12 +87,13 @@ class ItemFaderState extends State<ItemFader>
   }
 }
 
-class ReviewBankTransferLiquidationEuroBond extends StatefulWidget {
+class ReviewBankTransferHighYieldDollarLiquidation extends StatefulWidget {
   static Route<dynamic> route() {
     return MaterialPageRoute(
-        builder: (_) => ReviewBankTransferLiquidationEuroBond(),
+        builder: (_) => ReviewBankTransferHighYieldDollarLiquidation(),
         settings: RouteSettings(
-            name: ReviewBankTransferLiquidationEuroBond().toStringShort()));
+            name: ReviewBankTransferHighYieldDollarLiquidation()
+                .toStringShort()));
   }
 
   @override
@@ -101,7 +102,7 @@ class ReviewBankTransferLiquidationEuroBond extends StatefulWidget {
 }
 
 class _ReviewBankTransferLiquidationState
-    extends State<ReviewBankTransferLiquidationEuroBond> {
+    extends State<ReviewBankTransferHighYieldDollarLiquidation> {
   List<GlobalKey<ItemFaderState>> keys;
 
   ABSSavingViewModel savingViewModel;
@@ -174,7 +175,7 @@ class _ReviewBankTransferLiquidationState
   }
 
   void startAnim2(BuildContext buildContext) async {
-    var result = await liquidateAssetViewModel.liquidateEuroBond(
+    var result = await liquidateAssetViewModel.liquidateDollarInstrument(
       transactionId: paymentViewModel.transactionId,
       instrumentId: paymentViewModel.instrumentId,
       bankId: paymentViewModel.selectedBank.id,
@@ -217,8 +218,8 @@ class _ReviewBankTransferLiquidationState
     savingViewModel = Provider.of(context);
     paymentViewModel = Provider.of(context);
     pinViewModel = Provider.of(context);
-    liquidateAssetViewModel = Provider.of(context);
     ConnectionProvider network = Provider.of(context);
+    liquidateAssetViewModel = Provider.of(context);
     var size = MediaQuery.of(context).size;
     return WillPopScope(
       onWillPop: () async {

@@ -283,7 +283,10 @@ class _InvestmentDetailsScreenState extends State<InvestmentDetailsScreen> {
                                 WithdrawWealthScreen.route(
                                     fixedInvestmentType: 0,
                                     name: widget.investmentName,
-                                    withDrawable: widget.withDrawableBalance,
+                                    withDrawable: model
+                                        .activities
+                                        .transactionData[1]
+                                        .expectedWithdrawalAmount.toDouble(),
                                     transactionId: widget.transactionId,
                                     instrumentId: widget.instrumentId));
                           } else {
@@ -292,7 +295,10 @@ class _InvestmentDetailsScreenState extends State<InvestmentDetailsScreen> {
                               builder: (BuildContext context) {
                                 return ConfirmAssetLiquidation(
                                     fixedInvestmentType: 0,
-                                    withDrawable: widget.withDrawableBalance,
+                                    withDrawable: model
+                                        .activities
+                                        .transactionData[1]
+                                        .expectedWithdrawalAmount.toDouble(),
                                     transactionId: widget.transactionId,
                                     instrumentId: widget.instrumentId,
                                     name: widget.investmentName);
@@ -2528,6 +2534,379 @@ class _InvestmentDetailsScreenState extends State<InvestmentDetailsScreen> {
                                 isScrollControlled: true,
                               );
                             }
+                          }
+                        },
+                        child: Container(
+                          child: Column(
+                            children: [
+                              Container(
+                                height: 35,
+                                width: 35,
+                                decoration: BoxDecoration(
+                                    color: AppColors.kPrimaryColorLight,
+                                    shape: BoxShape.circle),
+                                child: Center(
+                                  child: SvgPicture.asset(
+                                    "images/new/withdraw1.svg",
+                                    color: AppColors.kPrimaryColor,
+                                  ),
+                                ),
+                              ),
+                              YMargin(12),
+                              Text(
+                                "Liquidate",
+                                style: TextStyle(
+                                    color: AppColors.kPrimaryColor,
+                                    fontSize: 12,
+                                    fontFamily: AppStrings.fontNormal),
+                              )
+                            ],
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                  YMargin(40),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 20),
+                    child: Row(
+                      children: [
+                        Text(
+                          "Activities",
+                          style: TextStyle(
+                              fontSize: 14,
+                              fontFamily: AppStrings.fontMedium,
+                              color: AppColors.kGreyText),
+                        ),
+                        Spacer(),
+                        GestureDetector(
+                          onTap: () {
+                            showModalBottomSheet<Null>(
+                                context: context,
+                                builder: (BuildContext context) {
+                                  return InvestmentActivities(
+                                    transactionData:
+                                        model.activities.transactionData,
+                                  );
+                                },
+                                isScrollControlled: true);
+                          },
+                          child: Text("See all",
+                              style: TextStyle(
+                                  fontSize: 11,
+                                  fontFamily: AppStrings.fontMedium,
+                                  color: AppColors.kPrimaryColor)),
+                        ),
+                      ],
+                    ),
+                  ),
+                  YMargin(10),
+                  model.busy
+                      ? Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 20.0),
+                          child: Container(
+                            height: 400,
+                            child: Shimmer.fromColors(
+                              baseColor: Colors.grey[300],
+                              highlightColor: Colors.grey[100],
+                              child: ListView.builder(
+                                itemBuilder: (BuildContext context, int index) {
+                                  if (index == 0) {
+                                    return Row(
+                                      children: [
+                                        SizedBox(
+                                          width: 200.0,
+                                          height: 50.0,
+                                          child: Shimmer.fromColors(
+                                            baseColor: Colors.red,
+                                            highlightColor: Colors.yellow,
+                                            child: Container(
+                                              margin: EdgeInsets.only(top: 10),
+                                              width: 40.0,
+                                              height: 8.0,
+                                              color: Colors.white,
+                                            ),
+                                          ),
+                                        ),
+                                      ],
+                                    );
+                                  }
+                                  return SizedBox(
+                                    width: 200.0,
+                                    height: 100.0,
+                                    child: Shimmer.fromColors(
+                                      baseColor: Colors.red,
+                                      highlightColor: Colors.yellow,
+                                      child: Container(
+                                        margin: EdgeInsets.only(top: 10),
+                                        width: 40.0,
+                                        height: 8.0,
+                                        color: Colors.white,
+                                      ),
+                                    ),
+                                  );
+                                },
+                                itemCount: 3,
+                              ),
+                            ),
+                          ),
+                        )
+                      : model.activities.transactionData.length == 0
+                          ? Padding(
+                              padding: const EdgeInsets.only(top: 120.0),
+                              child: Center(
+                                child: Text("No Activities Yet"),
+                              ),
+                            )
+                          : model.activities.transactionData == null
+                              ? Padding(
+                                  padding: const EdgeInsets.only(top: 120.0),
+                                  child: Center(
+                                    child: Text("No Activities Yet"),
+                                  ),
+                                )
+                              : Container(
+                                  height: screenHeight(context),
+                                  width: screenWidth(context),
+                                  child: ListView.builder(
+                                    itemBuilder: (context, index) =>
+                                        InvestmentActivity(
+                                      productTransaction: model
+                                          .activities.transactionData[index],
+                                    ),
+                                    itemCount:
+                                        model.activities.transactionData.length,
+                                  ),
+                                ),
+                ],
+              ),
+            ),
+          ),
+        ),
+      );
+    } else if (widget.investmentType.contains("Zimvest High Yield (Dollar)")) {
+      return ViewModelProvider<PortfolioViewModel>.withConsumer(
+        onModelReady: (model) => model.getInvestmentActivities(
+            name: widget.investmentType,
+            transactionId: widget.transactionId,
+            instrumentId: widget.instrumentId),
+        viewModelBuilder: () => PortfolioViewModel(),
+        builder: (context, model, _) => Scaffold(
+          backgroundColor: AppColors.kWhite,
+          appBar: AppBar(
+            iconTheme: IconThemeData(color: AppColors.kPrimaryColor),
+            backgroundColor: Colors.transparent,
+            elevation: 0,
+          ),
+          body: Container(
+            height: MediaQuery.of(context).size.height,
+            decoration: BoxDecoration(
+              color: AppColors.kWhite,
+            ),
+            child: SingleChildScrollView(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Row(
+                    children: [
+                      XMargin(20),
+                      Text(
+                        "${widget.investmentName}",
+                        style: TextStyle(
+                            fontSize: 15, fontFamily: AppStrings.fontBold),
+                      ),
+                      Spacer(),
+                      IconButton(
+                        icon: Icon(
+                          Icons.more_horiz_rounded,
+                          color: AppColors.kPrimaryColor,
+                        ),
+                        onPressed: () {
+                          showModalBottomSheet<Null>(
+                              context: context,
+                              builder: (BuildContext context) {
+                                return InvestmentMore(
+                                  startdate: model.activities.dateJoined,
+                                  maturitydate: model.activities.maturityDate,
+                                );
+                              },
+                              isScrollControlled: true);
+                        },
+                      )
+                    ],
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.only(left: 20, right: 10),
+                    child: Row(
+                      children: [
+                        Text(
+                          "You invested in ${widget.investmentType}",
+                          style: TextStyle(
+                              fontSize: 11,
+                              color: AppColors.kPrimaryColor,
+                              fontFamily: AppStrings.fontMedium),
+                        ),
+                        Spacer(),
+                        Icon(
+                          Icons.navigate_next_rounded,
+                          color: AppColors.kPrimaryColor,
+                        )
+                      ],
+                    ),
+                  ),
+                  YMargin(30),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 20),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          "Current Balance",
+                          style: TextStyle(
+                              fontSize: 12,
+                              fontFamily: AppStrings.fontNormal,
+                              color: AppColors.kSecondaryText),
+                        ),
+                        YMargin(10),
+                        Row(
+                          children: [
+                            Transform.translate(
+                                offset: Offset(0, -4),
+                                child: Text(
+                                  AppStrings.nairaSymbol,
+                                  style: TextStyle(
+                                      fontSize: 14,
+                                      color: AppColors.kSecondaryBoldText),
+                                )),
+                            XMargin(2),
+                            Text(
+                              StringUtils(widget.balance
+                                      .substring(1)
+                                      .split(".")
+                                      .first)
+                                  .convertWithComma(),
+                              style: TextStyle(
+                                  fontSize: 25,
+                                  fontFamily: AppStrings.fontMedium,
+                                  color: AppColors.kSecondaryBoldText),
+                            ),
+                            XMargin(3),
+                            Transform.translate(
+                              offset: Offset(0, -4),
+                              child: Text(
+                                ".${widget.balance.split(".").last.substring(0, 2)}",
+                                style: TextStyle(
+                                    fontSize: 14,
+                                    fontFamily: AppStrings.fontMedium,
+                                    color: AppColors.kSecondaryBoldText),
+                              ),
+                            ),
+                          ],
+                        ),
+                        YMargin(25),
+                        Row(
+                          children: [
+                            Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  "Accrued Interest",
+                                  style: TextStyle(
+                                      fontFamily: AppStrings.fontNormal,
+                                      color: AppColors.kGreyText,
+                                      fontSize: 11),
+                                ),
+                                YMargin(4),
+                                Transform.translate(
+                                  offset: Offset(-8, 0),
+                                  child: Row(
+                                    children: [
+                                      Icon(Icons.arrow_drop_up_outlined),
+                                      Text(
+                                        AppStrings.nairaSymbol,
+                                        style: TextStyle(
+                                            fontSize: 10,
+                                            color: AppColors.kWealthDark,
+                                            fontWeight: FontWeight.bold),
+                                      ),
+                                      Text(
+                                        "2,000",
+                                        style: TextStyle(
+                                            fontFamily: AppStrings.fontMedium,
+                                            color: AppColors.kWealthDark,
+                                            fontSize: 11),
+                                      ),
+                                      XMargin(5),
+                                      Text(
+                                        "Past 24h",
+                                        style: TextStyle(
+                                            fontSize: 11,
+                                            fontFamily: AppStrings.fontNormal),
+                                      ),
+                                    ],
+                                  ),
+                                )
+                              ],
+                            ),
+                            Spacer(),
+                            Column(
+                              crossAxisAlignment: CrossAxisAlignment.end,
+                              children: [
+                                Text(
+                                  "Interest P.A",
+                                  style: TextStyle(
+                                      fontFamily: AppStrings.fontNormal,
+                                      color: AppColors.kGreyText,
+                                      fontSize: 11),
+                                ),
+                                YMargin(4),
+                                Text(
+                                  "${widget.annualReturns}",
+                                  style: TextStyle(
+                                      fontSize: 11,
+                                      fontFamily: AppStrings.fontMedium,
+                                      color: AppColors.kWealthDark),
+                                ),
+                              ],
+                            ),
+                          ],
+                        ),
+                      ],
+                    ),
+                  ),
+                  YMargin(30),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      GestureDetector(
+                        onTap: () {
+                          print(model.activities.transactionData[1]
+                              .expectedWithdrawalAmount);
+                          paymentViewModel.availableAmount =
+                              model.activities.currentValue;
+                          paymentViewModel.withdrawableAmount = model.activities
+                              .transactionData[1].expectedWithdrawalAmount;
+                          if (widget.isMatured) {
+                            Navigator.of(context).push(
+                                WithdrawWealthScreen.route(
+                                    fixedInvestmentType: 7,
+                                    name: widget.investmentName,
+                                    withDrawable: widget.withDrawableBalance,
+                                    transactionId: widget.transactionId,
+                                    instrumentId: widget.instrumentId));
+                          } else {
+                            showModalBottomSheet<Null>(
+                              context: context,
+                              builder: (BuildContext context) {
+                                return ConfirmAssetLiquidation(
+                                    fixedInvestmentType: 7,
+                                    withDrawable: widget.withDrawableBalance,
+                                    transactionId: widget.transactionId,
+                                    instrumentId: widget.instrumentId,
+                                    name: widget.investmentName);
+                              },
+                              isScrollControlled: true,
+                            );
                           }
                         },
                         child: Container(

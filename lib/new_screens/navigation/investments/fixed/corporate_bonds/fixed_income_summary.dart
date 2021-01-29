@@ -3,6 +3,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:provider/provider.dart';
 import 'package:provider_architecture/_viewmodel_provider.dart';
 import 'package:simple_animations/simple_animations.dart';
+import 'package:zimvest/data/services/connectivity_service.dart';
 import 'package:zimvest/data/view_models/investment_view_model.dart';
 import 'package:zimvest/data/view_models/payment_view_model.dart';
 import 'package:zimvest/new_screens/funding/top_up_successful.dart';
@@ -13,6 +14,7 @@ import 'package:zimvest/utils/margins.dart';
 import 'package:zimvest/utils/strings.dart';
 import 'package:zimvest/widgets/buttons.dart';
 import 'package:supercharged/supercharged.dart';
+import 'package:zimvest/widgets/flushbar.dart';
 import 'package:zimvest/widgets/new/anim.dart';
 
 import '../../../../tabs.dart';
@@ -153,6 +155,7 @@ class _SavingsSummaryScreenState extends State<SavingsSummaryScreen> {
   @override
   Widget build(BuildContext context) {
     var size = MediaQuery.of(context).size;
+    ConnectionProvider network = Provider.of(context);
     ABSPaymentViewModel paymentViewModel = Provider.of(context);
     return ViewModelProvider<FixedIncomeViewModel>.withConsumer(
       viewModelBuilder: () => FixedIncomeViewModel(),
@@ -161,9 +164,12 @@ class _SavingsSummaryScreenState extends State<SavingsSummaryScreen> {
         body: Container(
           height: MediaQuery.of(context).size.height,
           child: Stack(
-             fit: StackFit.expand,
+            fit: StackFit.expand,
             children: [
-              SvgPicture.asset("images/patterns.svg", fit: BoxFit.fill,),
+              SvgPicture.asset(
+                "images/patterns.svg",
+                fit: BoxFit.fill,
+              ),
               Positioned.fill(
                 child: model.status
                     ? PlayAnimation<MultiTweenValues<AniProps>>(
@@ -303,19 +309,20 @@ class _SavingsSummaryScreenState extends State<SavingsSummaryScreen> {
                                                         .get(AniProps.opacity1)
                                                     : 0.0,
                                                 child: PrimaryButtonNew(
-                                          onTap: () {
-                                            Navigator.pushAndRemoveUntil(
-                                                context,
-                                                MaterialPageRoute(
-                                                    builder: (context) =>
-                                                        TabsContainer()),
-                                                (Route<dynamic> route) =>
-                                                    false);
-                                          },
-                                          textColor: Colors.white,
-                                          title: "Done",
-                                          bg: AppColors.kPrimaryColor,
-                                        ),
+                                                  onTap: () {
+                                                    Navigator.pushAndRemoveUntil(
+                                                        context,
+                                                        MaterialPageRoute(
+                                                            builder: (context) =>
+                                                                TabsContainer()),
+                                                        (Route<dynamic>
+                                                                route) =>
+                                                            false);
+                                                  },
+                                                  textColor: Colors.white,
+                                                  title: "Done",
+                                                  bg: AppColors.kPrimaryColor,
+                                                ),
                                               ),
                                             ),
                                           ),
@@ -388,6 +395,7 @@ class _SavingsSummaryScreenState extends State<SavingsSummaryScreen> {
                                           color: AppColors.kLightText5,
                                         ),
                                       ),
+                                      YMargin(8),
                                       Text(
                                         "${widget.uniqueName}",
                                         style: TextStyle(
@@ -422,6 +430,7 @@ class _SavingsSummaryScreenState extends State<SavingsSummaryScreen> {
                                               color: AppColors.kLightText5,
                                             ),
                                           ),
+                                          YMargin(8),
                                           Text(
                                             "${widget.rate} P.A",
                                             style: TextStyle(
@@ -447,6 +456,7 @@ class _SavingsSummaryScreenState extends State<SavingsSummaryScreen> {
                                               color: AppColors.kLightText5,
                                             ),
                                           ),
+                                          YMargin(8),
                                           Text(
                                             "${widget.maturityDate}",
                                             style: TextStyle(
@@ -483,6 +493,7 @@ class _SavingsSummaryScreenState extends State<SavingsSummaryScreen> {
                                               color: AppColors.kLightText5,
                                             ),
                                           ),
+                                          YMargin(8),
                                           Text(
                                             "${AppStrings.nairaSymbol}${widget.amount.toString().split('.')[0].convertWithComma()}",
                                             style: TextStyle(
@@ -508,6 +519,7 @@ class _SavingsSummaryScreenState extends State<SavingsSummaryScreen> {
                                               color: AppColors.kLightText5,
                                             ),
                                           ),
+                                          YMargin(8),
                                           Text(
                                             "${AppStrings.nairaSymbol}${0.015 * widget.amount}",
                                             style: TextStyle(
@@ -542,6 +554,7 @@ class _SavingsSummaryScreenState extends State<SavingsSummaryScreen> {
                                               color: AppColors.kLightText5,
                                             ),
                                           ),
+                                          YMargin(8),
                                           Text(
                                             "${AppStrings.nairaSymbol}${(0.015 * widget.amount) + widget.amount}",
                                             style: TextStyle(
@@ -573,19 +586,24 @@ class _SavingsSummaryScreenState extends State<SavingsSummaryScreen> {
                 right: 0,
                 child: GestureDetector(
                   onVerticalDragStart: (details) {
-                    startAnim();
-                    model.buyCorporateBond(
-                        cardId: paymentViewModel.selectedCard.id,
-                        productId: widget.investmentId,
-                        instrumentId: widget.instrumentId,
-                        fundingChannel: widget.channelId,
-                        investmentAmount: widget.amount,
-                        maturityDate: DateTime.tryParse(widget.maturityDate),
-                        rate: widget.rate,
-                        instrumentName: widget.bondName,
-                        uniqueName: widget.uniqueName,
-                        instrumentType: 8);
-                        paymentViewModel.amountController.clear();
+                    if (network.neTisOn) {
+                      startAnim();
+                      model.buyCorporateBond(
+                          cardId: paymentViewModel.selectedCard.id,
+                          productId: widget.investmentId,
+                          instrumentId: widget.instrumentId,
+                          fundingChannel: widget.channelId,
+                          investmentAmount: widget.amount,
+                          maturityDate: DateTime.tryParse(widget.maturityDate),
+                          rate: widget.rate,
+                          instrumentName: widget.bondName,
+                          uniqueName: widget.uniqueName,
+                          instrumentType: 8);
+                      paymentViewModel.amountController.clear();
+                    } else {
+                      cautionFlushBar(context, "No Network",
+                          "Please make sure you are connected to the internet");
+                    }
                   },
                   child: Container(
                     height: 60,

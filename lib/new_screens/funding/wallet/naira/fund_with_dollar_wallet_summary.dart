@@ -460,8 +460,7 @@ class _DollarFundingSummaryScreenState
                 child: GestureDetector(
                   onVerticalDragStart: (details) {
                     startAnim();
-                    // num nairaAmount = widget.amount * widget.nairaRate;
-                    model.fundWallet(
+                    model.fundWallet(fundingSource:1,
                         sourceAmount: widget.amount, currency: "NGN");
                     paymentViewModel.amountController.clear();
                   },

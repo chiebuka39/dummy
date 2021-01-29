@@ -6,6 +6,7 @@ import 'package:provider_architecture/_viewmodel_provider.dart';
 import 'package:simple_animations/simple_animations.dart';
 import 'package:zimvest/animations/loading.dart';
 import 'package:zimvest/data/models/payment/bank.dart';
+import 'package:zimvest/data/services/connectivity_service.dart';
 import 'package:zimvest/data/view_models/identity_view_model.dart';
 import 'package:zimvest/data/view_models/investment_view_model.dart';
 import 'package:zimvest/data/view_models/liquidate_asset_vm.dart';
@@ -24,6 +25,7 @@ import 'package:zimvest/utils/margins.dart';
 import 'package:zimvest/utils/strings.dart';
 import 'package:zimvest/widgets/buttons.dart';
 import 'package:supercharged/supercharged.dart';
+import 'package:zimvest/widgets/flushbar.dart';
 
 import '../../../../../tabs.dart';
 
@@ -127,17 +129,17 @@ class _InitialReviewScreenState
   }
 
   void startAnim(BuildContext context) async {
-    widget.isBank
-        ? setState(() {
-            slideUp = true;
-            loading = true;
-          })
-        : setState(() {
-            slideUp = true;
-            loading = true;
-          });
+    setState(() {
+      slideUp = true;
+      loading = true;
+    });
+  }
 
-    //   //processTransaction();
+  void startAnimWallet(BuildContext context) async {
+    setState(() {
+      slideUp = true;
+      loading = true;
+    });
     await Future.delayed(1000.milliseconds);
     showCupertinoModalBottomSheet(
         context: context,
@@ -152,7 +154,7 @@ class _InitialReviewScreenState
   }
 
   void startAnim2(BuildContext buildContext) async {
-    var result = await liquidateAssetViewModel.liquidatePromissoryNote(
+    var result = await liquidateAssetViewModel.liquidateNairaInstrument(
       transactionId: widget.transactionId,
       instrumentId: widget.instrumentId,
       bankId: paymentViewModel.selectedBank?.id,
@@ -192,7 +194,7 @@ class _InitialReviewScreenState
   Widget build(BuildContext context) {
     identityViewModel = Provider.of(context);
     savingViewModel = Provider.of(context);
-
+    ConnectionProvider network = Provider.of(context);
     pinViewModel = Provider.of(context);
     liquidateAssetViewModel = Provider.of(context);
     paymentViewModel = Provider.of(context);
@@ -205,7 +207,12 @@ class _InitialReviewScreenState
               body: Container(
                 height: MediaQuery.of(context).size.height,
                 child: Stack(
+                  fit: StackFit.expand,
                   children: [
+                    SvgPicture.asset(
+                      "images/patterns.svg",
+                      fit: BoxFit.fill,
+                    ),
                     Positioned(
                       top: slideUp
                           ? -(MediaQuery.of(context).size.height - 200)
@@ -374,8 +381,9 @@ class _InitialReviewScreenState
                           Navigator.push(
                             context,
                             SelectBankAccount.route(
-                              investmentType: 5,
-                                banks: widget.banks, isLiquidate: true),
+                                investmentType: 5,
+                                banks: widget.banks,
+                                isLiquidate: true),
                           );
                         },
                         child: Container(
@@ -414,7 +422,12 @@ class _InitialReviewScreenState
                 body: Container(
                   height: MediaQuery.of(context).size.height,
                   child: Stack(
+                    fit: StackFit.expand,
                     children: [
+                      SvgPicture.asset(
+                        "images/patterns.svg",
+                        fit: BoxFit.fill,
+                      ),
                       Positioned.fill(
                         child: confirmed
                             ? PlayAnimation<MultiTweenValues<AniProps>>(
@@ -643,14 +656,13 @@ class _InitialReviewScreenState
                         left: 0,
                         right: 0,
                         child: GestureDetector(
-                          // onTap: () {
-                          //   // showModalBottomSheet < Null > (context: context, builder: (BuildContext context) {
-                          //   //   return ConfirmSavings();
-                          //   // },isScrollControlled: true);
-                          // },
                           onVerticalDragStart: (details) {
-                            print("dff ${details.toString()}");
-                            startAnim(context);
+                            if (network.neTisOn) {
+                              startAnimWallet(context);
+                            } else {
+                              cautionFlushBar(context, "No Network",
+                                  "Please make sure you are connected to the internet");
+                            }
                           },
                           child: Container(
                             height: 60,

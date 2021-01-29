@@ -15,6 +15,7 @@ import 'package:zimvest/data/services/temp_service.dart';
 import 'package:zimvest/data/services/transaction_services.dart';
 import 'package:zimvest/data/services/wallet_service.dart';
 import 'package:zimvest/utils/strings.dart';
+import 'package:zimvest/utils/image_picker.dart';
 
 import 'data/models/transactions_portfolio/naira_model.dart';
 import 'data/services/others_service.dart';
@@ -56,4 +57,5 @@ void setUpLocator(){
   locator.registerLazySingleton<ABSWalletService>(() => WalletService());
   locator.registerLazySingleton<ABSTransactionService>(() => TransactionService());
   locator.registerLazySingleton<ABSLiquidateAssets>(() => LiquidateAssets());
+  locator.registerLazySingleton(() => PickImage());
 }

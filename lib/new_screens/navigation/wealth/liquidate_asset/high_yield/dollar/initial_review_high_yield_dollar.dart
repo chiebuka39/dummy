@@ -29,7 +29,7 @@ import 'package:zimvest/widgets/flushbar.dart';
 
 import '../../../../../tabs.dart';
 
-class InitialReviewScreenFGNBond extends StatefulWidget {
+class InitialReviewScreenHighYieldDollar extends StatefulWidget {
   final String name;
   final double withDrawable;
   final int transactionId;
@@ -38,7 +38,7 @@ class InitialReviewScreenFGNBond extends StatefulWidget {
   final List<Bank> banks;
   final int fixedInvestmentType;
 
-  const InitialReviewScreenFGNBond(
+  const InitialReviewScreenHighYieldDollar(
       {Key key,
       this.name,
       this.withDrawable,
@@ -57,7 +57,7 @@ class InitialReviewScreenFGNBond extends StatefulWidget {
       List<Bank> banks,
       int fixedInvestmentType}) {
     return MaterialPageRoute(
-      builder: (_) => InitialReviewScreenFGNBond(
+      builder: (_) => InitialReviewScreenHighYieldDollar(
         name: name,
         withDrawable: withDrawable,
         transactionId: transactionId,
@@ -67,7 +67,7 @@ class InitialReviewScreenFGNBond extends StatefulWidget {
         fixedInvestmentType: fixedInvestmentType,
       ),
       settings: RouteSettings(
-        name: InitialReviewScreenFGNBond().toStringShort(),
+        name: InitialReviewScreenHighYieldDollar().toStringShort(),
       ),
     );
   }
@@ -76,7 +76,8 @@ class InitialReviewScreenFGNBond extends StatefulWidget {
   _InitialReviewScreenState createState() => _InitialReviewScreenState();
 }
 
-class _InitialReviewScreenState extends State<InitialReviewScreenFGNBond> {
+class _InitialReviewScreenState
+    extends State<InitialReviewScreenHighYieldDollar> {
   List<GlobalKey<ItemFaderState>> keys;
 
   ABSSavingViewModel savingViewModel;
@@ -380,7 +381,7 @@ class _InitialReviewScreenState extends State<InitialReviewScreenFGNBond> {
                           Navigator.push(
                             context,
                             SelectBankAccount.route(
-                                investmentType: 4,
+                                investmentType: 1,
                                 banks: widget.banks,
                                 isLiquidate: true),
                           );
@@ -655,6 +656,11 @@ class _InitialReviewScreenState extends State<InitialReviewScreenFGNBond> {
                         left: 0,
                         right: 0,
                         child: GestureDetector(
+                          // onTap: () {
+                          //   // showModalBottomSheet < Null > (context: context, builder: (BuildContext context) {
+                          //   //   return ConfirmSavings();
+                          //   // },isScrollControlled: true);
+                          // },
                           onVerticalDragStart: (details) {
                             if (network.neTisOn) {
                               startAnimWallet(context);

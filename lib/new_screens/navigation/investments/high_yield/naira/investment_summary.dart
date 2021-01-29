@@ -4,6 +4,7 @@ import 'package:provider/provider.dart';
 import 'package:provider_architecture/provider_architecture.dart';
 import 'package:simple_animations/simple_animations.dart';
 import 'package:zimvest/animations/loading.dart';
+import 'package:zimvest/data/services/connectivity_service.dart';
 import 'package:zimvest/data/view_models/investment_view_model.dart';
 import 'package:zimvest/data/view_models/payment_view_model.dart';
 import 'package:zimvest/new_screens/funding/top_up_successful.dart';
@@ -16,6 +17,7 @@ import 'package:zimvest/utils/margins.dart';
 import 'package:zimvest/utils/strings.dart';
 import 'package:supercharged/supercharged.dart';
 import 'package:zimvest/widgets/buttons.dart';
+import 'package:zimvest/widgets/flushbar.dart';
 import 'package:zimvest/widgets/new/anim.dart';
 
 class InvestmentSummaryScreenNaira extends StatefulWidget {
@@ -135,6 +137,7 @@ class _InvestmentSummaryScreenNairaState
 
   @override
   Widget build(BuildContext context) {
+    ConnectionProvider network = Provider.of(context);
     ABSPaymentViewModel paymentViewModel = Provider.of(context);
     return ViewModelProvider<InvestmentHighYieldViewModel>.withConsumer(
       viewModelBuilder: () => InvestmentHighYieldViewModel(),
@@ -619,14 +622,19 @@ class _InvestmentSummaryScreenNairaState
                 right: 0,
                 child: GestureDetector(
                   onVerticalDragStart: (details) {
-                    startAnim();
-                    model.buyNairaInstrument(
-                        cardId: paymentViewModel.selectedCard?.id ?? null,
-                        amount: paymentViewModel.investmentAmount,
-                        productId: paymentViewModel.pickednairaInstrument.id,
-                        uniqueName: paymentViewModel.investmentName,
-                        fundingChannel: widget.channelId);
-                    paymentViewModel.amountController.clear();
+                    if (network.neTisOn) {
+                      startAnim();
+                      model.buyNairaInstrument(
+                          cardId: paymentViewModel.selectedCard?.id ?? null,
+                          amount: paymentViewModel.investmentAmount,
+                          productId: paymentViewModel.pickednairaInstrument.id,
+                          uniqueName: paymentViewModel.investmentName,
+                          fundingChannel: widget.channelId);
+                      paymentViewModel.amountController.clear();
+                    } else {
+                      cautionFlushBar(context, "No Network",
+                          "Please make sure you are connected to the internet");
+                    }
                   },
                   child: Container(
                     height: 60,

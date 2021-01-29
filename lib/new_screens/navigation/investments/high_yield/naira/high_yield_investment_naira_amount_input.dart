@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_masked_text/flutter_masked_text.dart';
 import 'package:provider/provider.dart';
 import 'package:provider_architecture/provider_architecture.dart';
+import 'package:zimvest/data/services/connectivity_service.dart';
 import 'package:zimvest/data/view_models/investment_view_model.dart';
 import 'package:zimvest/data/view_models/payment_view_model.dart';
 import 'package:zimvest/new_screens/navigation/investments/high_yield/naira/high_yield_investment_naira_purchase_source.dart';
@@ -14,6 +15,8 @@ import 'package:zimvest/utils/margin.dart';
 import 'package:zimvest/utils/strings.dart';
 import 'package:zimvest/widgets/buttons.dart';
 import 'package:zimvest/utils/app_utils.dart';
+import 'package:zimvest/widgets/flushbar.dart';
+import 'package:zimvest/widgets/new/new_widgets.dart';
 import 'package:zimvest/widgets/number_keyboard.dart';
 
 import '../../../../tabs.dart';
@@ -44,17 +47,21 @@ class InvestmentHighYieldNairaAmountInput extends StatefulWidget {
 
 class _InvestmentHighYieldNairaAmountInputState
     extends State<InvestmentHighYieldNairaAmountInput> {
-  // static String amountController.text;
-  // var amountController =
-  //     MoneyMaskedTextController(thousandSeparator: ",", decimalSeparator: ".");
-  // TextEditingController amountController = TextEditingController();
   @override
   Widget build(BuildContext context) {
     ABSPaymentViewModel paymentViewModel = Provider.of(context);
+    ConnectionProvider network = Provider.of(context);
     return ViewModelProvider<InvestmentHighYieldViewModel>.withConsumer(
       viewModelBuilder: () => InvestmentHighYieldViewModel(),
       builder: (context, model, _) => Scaffold(
-        appBar: appBar(context),
+        appBar: ZimAppBar(
+          icon: Icons.arrow_back_ios_outlined,
+          text: "Invest",
+          showCancel: true,
+          callback: () {
+            Navigator.pop(context);
+          },
+        ),
         body: Builder(
           builder: (context) => Column(
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -79,7 +86,7 @@ class _InvestmentHighYieldNairaAmountInputState
                   height: 55,
                   width: double.infinity,
                   decoration: BoxDecoration(
-                       color: AppColors.kTextBg,
+                      color: AppColors.kTextBg,
                       borderRadius: BorderRadius.circular(12)),
                   child: Align(
                     alignment: Alignment.centerLeft,
@@ -114,82 +121,36 @@ class _InvestmentHighYieldNairaAmountInputState
               ),
               YMargin(77),
               RoundedNextButton(
-                loading: model.busy,
-                onTap: () async {
-                  double amount = double.tryParse(
-                      paymentViewModel.amountController.text.split(',').join());
-                  paymentViewModel.investmentAmount = amount;
-                  if (amount == null) {
-                    Flushbar(
-                      icon: ImageIcon(
-                        AssetImage("images/failed.png"),
-                        color: AppColors.kRed,
-                        size: 70,
-                      ),
-                      margin: EdgeInsets.all(12),
-                      borderRadius: 20,
-                      flushbarPosition: FlushbarPosition.TOP,
-                      titleText: Text(
-                        "Error !",
-                        style: TextStyle(
-                          fontSize: 13,
-                          fontFamily: AppStrings.fontBold,
-                          color: AppColors.kRed4,
-                        ),
-                      ),
-                      backgroundColor: AppColors.kRed3,
-                      messageText: Text(
-                        "Field Cannot be Empty",
-                        style: TextStyle(
-                          fontSize: 11,
-                          fontFamily: AppStrings.fontLight,
-                          color: AppColors.kRed4,
-                        ),
-                      ),
-                      duration: Duration(seconds: 3),
-                    ).show(context);
-                  } else if (amount < widget.minimumAmount) {
-                    Flushbar(
-                      icon: ImageIcon(
-                        AssetImage("images/failed.png"),
-                        color: AppColors.kRed,
-                        size: 70,
-                      ),
-                      margin: EdgeInsets.all(12),
-                      borderRadius: 20,
-                      flushbarPosition: FlushbarPosition.TOP,
-                      titleText: Text(
-                        "Error !",
-                        style: TextStyle(
-                          fontSize: 13,
-                          fontFamily: AppStrings.fontBold,
-                          color: AppColors.kRed4,
-                        ),
-                      ),
-                      backgroundColor: AppColors.kRed3,
-                      messageText: Text(
-                        "Minimum purchase amount is ${AppStrings.nairaSymbol}${widget.minimumAmount.toString().split('.')[0].convertWithComma()}",
-                        style: TextStyle(
-                          fontSize: 11,
-                          fontFamily: AppStrings.fontLight,
-                          color: AppColors.kRed4,
-                        ),
-                      ),
-                      duration: Duration(seconds: 2),
-                    ).show(context);
-                  } else {
-                    await model.getNairaTermInstrumentsFilter(amount);
-                    Navigator.push(
-                      context,
-                      InvestmentDurationPeriod.route(
-                        amount: amount,
-                        instrument: model.nairaInstrument.data,
-                        uniqueName: widget.uniqueName,
-                      ),
-                    );
-                  }
-                },
-              ),
+                  loading: model.busy,
+                  onTap: () async {
+                    if (network.neTisOn) {
+                      double amount = double.tryParse(paymentViewModel
+                          .amountController.text
+                          .split(',')
+                          .join());
+                      paymentViewModel.investmentAmount = amount;
+                      if (amount == null) {
+                        errorFlushBar(
+                            context, "Error !", "Field Cannot be Empty");
+                      } else if (amount < widget.minimumAmount) {
+                        errorFlushBar(context, "Error !",
+                            "Minimum purchase amount is ${AppStrings.nairaSymbol}${widget.minimumAmount.toString().split('.')[0].convertWithComma()}");
+                      } else {
+                        await model.getNairaTermInstrumentsFilter(amount);
+                        Navigator.push(
+                          context,
+                          InvestmentDurationPeriod.route(
+                            amount: amount,
+                            instrument: model.nairaInstrument.data,
+                            uniqueName: widget.uniqueName,
+                          ),
+                        );
+                      }
+                    } else {
+                      cautionFlushBar(context, "No Network",
+                          "Please make sure you are connected to the internet");
+                    }
+                  }),
               NumericKeyboard(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 onKeyboardTap: paymentViewModel.onKeyboardTap,
@@ -211,13 +172,6 @@ class _InvestmentHighYieldNairaAmountInputState
       ),
     );
   }
-
-  // _onKeyboardTap(String value) {
-  //   setState(() {
-  //     amountController.text =  (amountController.value.text + value).convertWithComma();
-
-  //   });
-  // }
   convertWithComma(String newValue) {
     String value = newValue;
     var buffer = new StringBuffer();

@@ -7,6 +7,7 @@ import 'package:zimvest/utils/margin.dart';
 import 'package:zimvest/utils/margins.dart';
 import 'package:zimvest/utils/strings.dart';
 import 'package:zimvest/widgets/buttons.dart';
+import 'package:zimvest/widgets/new/new_widgets.dart';
 
 class FixedIncomeUniqueName extends StatefulWidget {
   final int investmentId;
@@ -66,25 +67,14 @@ class _FixedIncomeUniqueNameState extends State<FixedIncomeUniqueName> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        backgroundColor: Colors.transparent,
-        title: Text(
-          "Invest",
-          style: TextStyle(
-            fontSize: 13,
-            fontFamily: AppStrings.fontMedium,
-            color: AppColors.kTextColor,
-          ),
+      appBar: ZimAppBar(
+          icon: Icons.arrow_back_ios_outlined,
+          text: "Invest",
+          showCancel: true,
+          callback: () {
+            Navigator.pop(context);
+          },
         ),
-        elevation: 0,
-        centerTitle: true,
-        leading: IconButton(
-            icon: Icon(
-              Icons.arrow_back_ios,
-              color: AppColors.kPrimaryColor,
-            ),
-            onPressed: () => Navigator.pop(context)),
-      ),
       body: SingleChildScrollView(
         child: Column(
           children: [

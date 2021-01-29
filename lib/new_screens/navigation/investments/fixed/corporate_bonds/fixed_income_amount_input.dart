@@ -13,6 +13,7 @@ import 'package:zimvest/utils/margin.dart';
 import 'package:zimvest/utils/strings.dart';
 import 'package:zimvest/widgets/buttons.dart';
 import 'package:zimvest/utils/app_utils.dart';
+import 'package:zimvest/widgets/new/new_widgets.dart';
 import 'package:zimvest/widgets/number_keyboard.dart';
 
 class FixedIncomeAmountInput extends StatefulWidget {
@@ -83,24 +84,13 @@ class _FixedIncomeAmountInputState extends State<FixedIncomeAmountInput> {
       viewModelBuilder: () => WalletViewModel(),
       onModelReady: (model) => model.getCards(),
       builder: (context, model, _) => Scaffold(
-        appBar: AppBar(
-          backgroundColor: Colors.transparent,
-          title: Text(
-            "Invest",
-            style: TextStyle(
-              fontSize: 13,
-              fontFamily: AppStrings.fontMedium,
-              color: AppColors.kTextColor,
-            ),
-          ),
-          elevation: 0,
-          centerTitle: true,
-          leading: IconButton(
-              icon: Icon(
-                Icons.arrow_back_ios,
-                color: AppColors.kPrimaryColor,
-              ),
-              onPressed: () => Navigator.pop(context)),
+        appBar: ZimAppBar(
+          icon: Icons.arrow_back_ios_outlined,
+          text: "Invest",
+          showCancel: true,
+          callback: () {
+            Navigator.pop(context);
+          },
         ),
         body: Builder(
           builder: (context) => Column(

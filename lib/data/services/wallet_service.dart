@@ -8,9 +8,7 @@ import 'package:zimvest/utils/strings.dart';
 
 import '../../locator.dart';
 
-
-
-// TODO: Refactor to follow already existing coding pattern 
+// TODO: Refactor to follow already existing coding pattern
 abstract class ABSWalletService {
   Future<List<Wallet>> getWallets(String token);
   Future<List<WalletTransaction>> getWalletsTransactions(String token);
@@ -21,7 +19,11 @@ abstract class ABSWalletService {
       String currency,
       int fundingSource});
   Future<dynamic> fundWalletWired(
-      {String token, num wiredTransferAmount, int fundingSource});
+      {String token,
+      num wiredTransferAmount,
+      int fundingSource,
+      String proofOfPayment,
+      int intermediaryBankType});
 }
 
 class WalletService implements ABSWalletService {
@@ -87,12 +89,12 @@ class WalletService implements ABSWalletService {
     final url = "$microService/api/Wallet/fundwallet";
 
     var headers = {HttpHeaders.authorizationHeader: "Bearer $token"};
-    Map<String, dynamic> data = {
-      "walletFundingSource": fundingSource,
-      "currency": currency,
-      "sourceAmount": sourceAmount,
-      "exchangeAmount": exchangeAmount
-    };
+    FormData data = FormData.fromMap({
+      "WalletFundingSource": fundingSource,
+      "Currency": currency,
+      "SourceAmount": sourceAmount,
+      "ExchangeAmount": exchangeAmount
+    });
     print(data);
     print(url);
     try {
@@ -111,23 +113,21 @@ class WalletService implements ABSWalletService {
       if (fundWallet.statusCode == 200) {
         result.error = false;
         result.errorMessage = fundWallet.data["message"];
-
       } else if (fundWallet.statusCode == 400) {
         result.error = true;
         result.errorMessage = fundWallet.data["message"];
-
-      }else{
+      } else {
         result.error = true;
         result.errorMessage = "Wallet could not be funded";
       }
     } on DioError catch (e) {
       result.error = true;
-      if(e.response.data == null){
+      if (e.response.data == null) {
         result.errorMessage = "Error Message";
-      }else{
-        if(e.response.data is Map){
-          result.errorMessage =e.response.data['message'];
-        }else{
+      } else {
+        if (e.response.data is Map) {
+          result.errorMessage = e.response.data['message'];
+        } else {
           result.errorMessage = "Error Message";
         }
       }
@@ -137,16 +137,25 @@ class WalletService implements ABSWalletService {
 
   @override
   Future fundWalletWired(
+      {String token,
+      num wiredTransferAmount,
+      int fundingSource,
+      String proofOfPayment,
+      int intermediaryBankType}) async {
+    final url = "${AppStrings.baseUrl}$microService/api/Wallet/fundwallet";
       {String token, num wiredTransferAmount, int fundingSource}) async {
     final url = "$microService/api/Wallet/fundwallet";
     var headers = {HttpHeaders.authorizationHeader: "Bearer $token"};
+    FormData data = FormData.fromMap({
+      "WalletFundingSource": fundingSource,
+      "ProofOfPayment.DocumentFile": proofOfPayment,
+      "WireTransferAmount": wiredTransferAmount,
+      "IntermediaryBankType": intermediaryBankType,
+    });
     try {
       final fundWallet = await dio.post(
         url,
-        data: {
-          "walletFundingSource": fundingSource,
-          "wireTransferAmount": wiredTransferAmount,
-        },
+        data: data,
         options: Options(
           headers: headers,
           validateStatus: (status) {

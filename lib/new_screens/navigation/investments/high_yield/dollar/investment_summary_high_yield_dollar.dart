@@ -4,6 +4,7 @@ import 'package:provider/provider.dart';
 import 'package:provider_architecture/_viewmodel_provider.dart';
 import 'package:simple_animations/simple_animations.dart';
 import 'package:zimvest/animations/loading.dart';
+import 'package:zimvest/data/services/connectivity_service.dart';
 import 'package:zimvest/data/view_models/investment_view_model.dart';
 import 'package:zimvest/data/view_models/payment_view_model.dart';
 import 'package:zimvest/new_screens/funding/top_up_successful.dart';
@@ -15,6 +16,7 @@ import 'package:zimvest/utils/margins.dart';
 import 'package:zimvest/utils/strings.dart';
 import 'package:supercharged/supercharged.dart';
 import 'package:zimvest/widgets/buttons.dart';
+import 'package:zimvest/widgets/flushbar.dart';
 import 'package:zimvest/widgets/new/anim.dart';
 
 import '../../../../tabs.dart';
@@ -42,7 +44,8 @@ class InvestmentSummaryScreenDollar extends StatefulWidget {
       this.maturityDate,
       this.rate,
       this.minimumAmount,
-      this.maximumAmount, this.walletType})
+      this.maximumAmount,
+      this.walletType})
       : super(key: key);
   static Route<dynamic> route({
     double amount,
@@ -53,18 +56,21 @@ class InvestmentSummaryScreenDollar extends StatefulWidget {
     String maturityDate,
     String rate,
     double minimumAmount,
-    String maximumAmount, int walletType,
+    String maximumAmount,
+    int walletType,
   }) {
     return MaterialPageRoute(
       builder: (_) => InvestmentSummaryScreenDollar(
-          amount: amount,
-          productId: productId,
-          channelId: channelId,
-          uniqueName: uniqueName,
-          maturityDate: maturityDate,
-          rate: rate,
-          minimumAmount: minimumAmount,
-          maximumAmount: maximumAmount, walletType: walletType,),
+        amount: amount,
+        productId: productId,
+        channelId: channelId,
+        uniqueName: uniqueName,
+        maturityDate: maturityDate,
+        rate: rate,
+        minimumAmount: minimumAmount,
+        maximumAmount: maximumAmount,
+        walletType: walletType,
+      ),
       settings: RouteSettings(
         name: InvestmentSummaryScreenDollar().toStringShort(),
       ),
@@ -137,8 +143,9 @@ class _InvestmentSummaryScreenDollarState
 
   @override
   Widget build(BuildContext context) {
+    ConnectionProvider network = Provider.of(context);
     ABSPaymentViewModel paymentViewModel = Provider.of(context);
-    print(paymentViewModel.investmentAmount);
+
     return ViewModelProvider<InvestmentHighYieldViewModel>.withConsumer(
       viewModelBuilder: () => InvestmentHighYieldViewModel(),
       builder: (context, model, _) => Scaffold(
@@ -146,7 +153,7 @@ class _InvestmentSummaryScreenDollarState
         body: Container(
           height: MediaQuery.of(context).size.height,
           child: Stack(
-             fit: StackFit.expand,
+            fit: StackFit.expand,
             children: [
               SvgPicture.asset(
                 "images/patterns.svg",
@@ -186,11 +193,13 @@ class _InvestmentSummaryScreenDollarState
                                             ? value.get(AniProps.opacity1)
                                             : 0.0,
                                         child: Padding(
-                                          padding: const EdgeInsets.symmetric(horizontal: 20.0),
+                                          padding: const EdgeInsets.symmetric(
+                                              horizontal: 20.0),
                                           child: Text(
                                             "You Have Successfully Invested In Zimvest High Yield Dollar",
                                             textAlign: TextAlign.center,
-                                            style: TextStyle(color: Colors.white),
+                                            style:
+                                                TextStyle(color: Colors.white),
                                           ),
                                         ),
                                       ),
@@ -295,14 +304,14 @@ class _InvestmentSummaryScreenDollarState
                                                     : 0.0,
                                                 child: PrimaryButtonNew(
                                                   onTap: () {
-                                                    // model.buyDollarInstrument(
-                                                    //     amount: widget.amount,
-                                                    //     productId:
-                                                    //         widget.productId,
-                                                    //     uniqueName:
-                                                    //         widget.uniqueName,
-                                                    //     fundingChannel:
-                                                    //         widget.channelId);
+                                                    Navigator.pushAndRemoveUntil(
+                                                        context,
+                                                        MaterialPageRoute(
+                                                            builder: (context) =>
+                                                                TabsContainer()),
+                                                        (Route<dynamic>
+                                                                route) =>
+                                                            false);
                                                   },
                                                   textColor: Colors.white,
                                                   title: "Retry",
@@ -599,16 +608,20 @@ class _InvestmentSummaryScreenDollarState
                 right: 0,
                 child: GestureDetector(
                   onVerticalDragStart: (details) async {
-                    startAnim();
-                    await model.buyDollarInstrument(
-                      walletType: widget.walletType,
-                        amount: paymentViewModel.investmentAmount,
-                        productId: paymentViewModel.pickeddollarInstrument.id,
-                        uniqueName: paymentViewModel.investmentName,
-                        fundingChannel: widget.channelId);
+                    if (network.neTisOn) {
+                      startAnim();
+                      await model.buyDollarInstrument(
+                          walletType: widget.walletType,
+                          amount: paymentViewModel.investmentAmount,
+                          productId: paymentViewModel.pickeddollarInstrument.id,
+                          uniqueName: paymentViewModel.investmentName,
+                          fundingChannel: widget.channelId);
 
-                    paymentViewModel.amountController.clear();
-
+                      paymentViewModel.amountController.clear();
+                    } else {
+                      cautionFlushBar(context, "No Network",
+                          "Please make sure you are connected to the internet");
+                    }
                   },
                   child: Container(
                     height: 60,
