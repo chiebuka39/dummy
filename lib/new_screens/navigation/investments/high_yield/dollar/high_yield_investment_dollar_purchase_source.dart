@@ -77,7 +77,14 @@ class _HighYieldInvestmentDollarPurchaseSourceState
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: appBar(context),
+      appBar: ZimAppBar(
+          icon: Icons.arrow_back_ios_outlined,
+          text: "Invest",
+          showCancel: true,
+          callback: () {
+            Navigator.pop(context);
+          },
+        ),
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -169,29 +176,10 @@ class _HighYieldInvestmentDollarPurchaseSourceState
                     PaymentSourceButtonSpecial(
                       paymentsource: "Wired Transfer",
                       image: "wallet",
-                      onTap: () => Flushbar(
-                        margin: EdgeInsets.all(12),
-                        borderRadius: 20,
-                        flushbarPosition: FlushbarPosition.TOP,
-                        titleText: Text(
-                          "Coming Soon!",
-                          style: TextStyle(
-                            fontSize: 13,
-                            fontFamily: AppStrings.fontBold,
-                            color: AppColors.kPrimaryColor,
-                          ),
-                        ),
-                        backgroundColor: AppColors.kPrimaryColorLight,
-                        messageText: Text(
-                          "This is not currently available",
-                          style: TextStyle(
-                            fontSize: 11,
-                            fontFamily: AppStrings.fontLight,
-                            color: AppColors.kPrimaryColor,
-                          ),
-                        ),
-                        duration: Duration(seconds: 3),
-                      ).show(context),
+                      onTap: () => Navigator.push(
+                        context,
+                        WiredTransferScreen.route(),
+                      ),
                     ),
                     YMargin(25),
                     PaymentSourceButtonSpecial(

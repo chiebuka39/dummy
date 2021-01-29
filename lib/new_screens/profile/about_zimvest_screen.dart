@@ -9,6 +9,7 @@ import 'package:zimvest/new_screens/profile/preview_screen.dart';
 import 'package:zimvest/new_screens/profile/residential_screen.dart';
 import 'package:zimvest/new_screens/profile/widgets/profile_widgets.dart';
 import 'package:zimvest/new_screens/profile/widgets/verification_failed_widget.dart';
+import 'package:zimvest/new_screens/web/faq_screen.dart';
 import 'package:zimvest/styles/colors.dart';
 import 'package:zimvest/utils/margin.dart';
 import 'package:zimvest/utils/strings.dart';
@@ -59,7 +60,10 @@ class _AboutZimvestScreenState extends State<AboutZimvestScreen> {
           ProfileWidget(
             padding: 0,
             onClick: (){
-              //Navigator.push(context, NextOfKinScreen.route());
+              Navigator.push(context, FAQScreen.route(
+                url: 'https://zimvest.com.ng/frequently-asked-questions',
+                title: "FAQ"
+              ));
 
             },
             title: "FAQ",
@@ -75,7 +79,10 @@ class _AboutZimvestScreenState extends State<AboutZimvestScreen> {
           ),
           ProfileWidget(
             onClick: (){
-              Navigator.push(context, IdentityUploadScreen.route());
+              Navigator.push(context, FAQScreen.route(
+                  url: 'https://zimvest.com.ng/contact-us',
+                  title: "Knowledge Base"
+              ));
             },
             title: "Knowledge Base",
 

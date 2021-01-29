@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:zimvest/data/view_models/payment_view_model.dart';
 import 'package:zimvest/new_screens/funding/wallet/dollar/fund_dollar_wallet_summary.dart';
 import 'package:zimvest/styles/colors.dart';
 import 'package:zimvest/utils/margin.dart';
@@ -43,6 +45,8 @@ class _FundDollarWalletPaymentOptionState
   bool isNaira = true;
   TabController controller;
 
+  ABSPaymentViewModel paymentViewModel;
+
   @override
   void initState() {
     controller = TabController(length: 2, vsync: this);
@@ -51,6 +55,7 @@ class _FundDollarWalletPaymentOptionState
 
   @override
   Widget build(BuildContext context) {
+    paymentViewModel = Provider.of(context);
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.transparent,
@@ -143,8 +148,11 @@ class _FundDollarWalletPaymentOptionState
                       PaymentSourceButtonSpecial(
                           paymentsource: "Wired Transfer",
                           image: "wallet",
-                          onTap: () => cautionFlushBar(context, "Coming Soon!",
-                              "This is not currently available")),
+                          onTap: () {
+
+                            ///TODO: keep all the item in the view model
+                            Navigator.push(context, WiredTransferScreen.route());
+                          }),
                       YMargin(25),
                       PaymentSourceButtonSpecial(
                         paymentsource: "R|rexelpay",

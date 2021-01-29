@@ -6,6 +6,7 @@ import 'package:provider_architecture/_viewmodel_provider.dart';
 import 'package:simple_animations/simple_animations.dart';
 import 'package:zimvest/animations/loading.dart';
 import 'package:zimvest/data/models/payment/bank.dart';
+import 'package:zimvest/data/services/connectivity_service.dart';
 import 'package:zimvest/data/view_models/identity_view_model.dart';
 import 'package:zimvest/data/view_models/investment_view_model.dart';
 import 'package:zimvest/data/view_models/liquidate_asset_vm.dart';
@@ -24,6 +25,7 @@ import 'package:zimvest/utils/margins.dart';
 import 'package:zimvest/utils/strings.dart';
 import 'package:zimvest/widgets/buttons.dart';
 import 'package:supercharged/supercharged.dart';
+import 'package:zimvest/widgets/flushbar.dart';
 
 import '../../../../../tabs.dart';
 
@@ -192,7 +194,7 @@ class _InitialReviewScreenState
   Widget build(BuildContext context) {
     identityViewModel = Provider.of(context);
     savingViewModel = Provider.of(context);
-
+    ConnectionProvider network = Provider.of(context);
     pinViewModel = Provider.of(context);
     liquidateAssetViewModel = Provider.of(context);
     paymentViewModel = Provider.of(context);
@@ -660,8 +662,12 @@ class _InitialReviewScreenState
                           //   // },isScrollControlled: true);
                           // },
                           onVerticalDragStart: (details) {
-                            print("dff ${details.toString()}");
-                            startAnimWallet(context);
+                            if (network.neTisOn) {
+                              startAnimWallet(context);
+                            } else {
+                              cautionFlushBar(context, "No Network",
+                                  "Please make sure you are connected to the internet");
+                            }
                           },
                           child: Container(
                             height: 60,

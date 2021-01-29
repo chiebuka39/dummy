@@ -49,6 +49,7 @@ class _ProfileScreenState extends State<ProfileScreen> with AfterLayoutMixin<Pro
     settingsViewModel.getProfileDetail(token: _identityViewModel.user.token);
     settingsViewModel.getNextOfKin(token: _identityViewModel.user.token);
     settingsViewModel.getCompletedSections(token: _identityViewModel.user.token);
+    settingsViewModel.getNotificationSettings(token: _identityViewModel.user.token);
 
   }
 
@@ -103,8 +104,18 @@ class _ProfileScreenState extends State<ProfileScreen> with AfterLayoutMixin<Pro
           },icon: 'account',),
           ProfileWidget(title: "Notifications",
             icon: 'notif',onClick: (){
+              if(settingsViewModel.notification == null){
+                showModalBottomSheet < Null > (context: context, builder: (BuildContext context) {
+                  return NoInternetWidget(onDone: (){
+                    Navigator.pop(context);
+                    Navigator.pop(context);
+                  },message: "",);
+                });
+              }else{
+                Navigator.push(context, NotificationsScreen.route(settingsViewModel.notification));
+              }
 
-              Navigator.push(context, NotificationsScreen.route());
+
 
 
             },

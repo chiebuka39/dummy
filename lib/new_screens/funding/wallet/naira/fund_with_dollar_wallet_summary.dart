@@ -107,6 +107,8 @@ class _DollarFundingSummaryScreenState
   Widget build(BuildContext context) {
     ABSPaymentViewModel paymentViewModel = Provider.of(context);
     var size = MediaQuery.of(context).size;
+    print("lllll ${(widget.amount )}");
+    print("lllll111 ${( widget.nairaRate)}");
     return ViewModelProvider<WalletViewModel>.withConsumer(
       viewModelBuilder: () => WalletViewModel(),
       builder: (context, model, _) => Scaffold(
@@ -246,12 +248,15 @@ class _DollarFundingSummaryScreenState
                                                         ? value.get(
                                                             AniProps.opacity1)
                                                         : 0.0,
-                                                    child: Text(
-                                                      "${model.message}",
-                                                      textAlign:
-                                                          TextAlign.center,
-                                                      style: TextStyle(
-                                                          color: Colors.white),
+                                                    child: SizedBox(
+                                                      width: 250,
+                                                      child: Text(
+                                                        "${ model.result.errorMessage == null ? "We could not fund wallet": model.result.errorMessage}",
+                                                        textAlign:
+                                                            TextAlign.center,
+                                                        style: TextStyle(
+                                                            color: Colors.white),
+                                                      ),
                                                     ),
                                                   ),
                                                 ),
@@ -270,15 +275,16 @@ class _DollarFundingSummaryScreenState
                                                         : 0.0,
                                                     child: PrimaryButtonNew(
                                                       onTap: () {
-                                                        Navigator.pushAndRemoveUntil(
-                                                            context,
-                                                            MaterialPageRoute(
-                                                                builder:
-                                                                    (context) =>
-                                                                        TabsContainer()),
-                                                            (Route<dynamic>
-                                                                    route) =>
-                                                                false);
+                                                        Navigator.pop(context);
+                                                        // Navigator.pushAndRemoveUntil(
+                                                        //     context,
+                                                        //     MaterialPageRoute(
+                                                        //         builder:
+                                                        //             (context) =>
+                                                        //                 TabsContainer()),
+                                                        //     (Route<dynamic>
+                                                        //             route) =>
+                                                        //         false);
                                                       },
                                                       textColor: Colors.white,
                                                       title: "Retry",
@@ -454,8 +460,7 @@ class _DollarFundingSummaryScreenState
                 child: GestureDetector(
                   onVerticalDragStart: (details) {
                     startAnim();
-                    // num nairaAmount = widget.amount * widget.nairaRate;
-                    model.fundWallet(
+                    model.fundWallet(fundingSource:1,
                         sourceAmount: widget.amount, currency: "NGN");
                     paymentViewModel.amountController.clear();
                   },

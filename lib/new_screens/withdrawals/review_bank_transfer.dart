@@ -4,6 +4,8 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 import 'package:provider/provider.dart';
 import 'package:zimvest/animations/loading.dart';
+import 'package:zimvest/data/models/payment/bank.dart';
+import 'package:zimvest/data/services/connectivity_service.dart';
 import 'package:zimvest/data/view_models/identity_view_model.dart';
 import 'package:zimvest/data/view_models/liquidate_asset_vm.dart';
 import 'package:zimvest/data/view_models/payment_view_model.dart';
@@ -19,12 +21,17 @@ import 'package:zimvest/utils/strings.dart';
 import 'package:simple_animations/simple_animations.dart';
 import 'package:supercharged/supercharged.dart';
 import 'package:zimvest/widgets/buttons.dart';
+import 'package:zimvest/widgets/flushbar.dart';
 
 class ReviewBankTransfer extends StatefulWidget {
-  static Route<dynamic> route() {
+  final bool nairaWalletWithdrawal;
+  final Bank bank;
+  const ReviewBankTransfer({Key key, this.nairaWalletWithdrawal, this.bank}) : super(key: key);
+  static Route<dynamic> route({bool nairaWalletWithdrawal, Bank bank}) {
     return MaterialPageRoute(
-        builder: (_) => ReviewBankTransfer(),
-        settings: RouteSettings(name: ReviewBankTransfer().toStringShort()));
+        builder: (_) => ReviewBankTransfer(nairaWalletWithdrawal: nairaWalletWithdrawal,bank: bank,),
+        settings:
+        RouteSettings(name: ReviewBankTransfer().toStringShort()));
   }
 
   @override
@@ -41,33 +48,12 @@ class _ReviewBankTransferState extends State<ReviewBankTransfer> {
   bool loading = false;
 
   final _tween = MultiTween<AniProps>()
-    ..add(
-        AniProps.offset1,
-        Tween(begin: Offset(0, 10), end: Offset(0, 0)),
-        800.milliseconds,
-        Interval(
-          0.0,
-          1.0,
-          curve: Curves.easeIn,
-        ))
-    ..add(
-        AniProps.scale,
-        Tween(begin: 0.0, end: 1.0),
-        800.milliseconds,
-        Interval(
-          0.0,
-          0.6,
-          curve: Curves.bounceInOut,
-        ))
-    ..add(
-        AniProps.opacity1,
-        0.0.tweenTo(1.0),
-        800.milliseconds,
-        Interval(
-          0.0,
-          1.0,
-          curve: Curves.ease,
-        ));
+    ..add(AniProps.offset1, Tween(begin: Offset(0, 10), end: Offset(0, 0)),
+        800.milliseconds, Interval(0.0, 1.0, curve: Curves.easeIn,))
+    ..add(AniProps.scale, Tween(begin: 0.0, end: 1.0),
+        800.milliseconds, Interval(0.0, 0.6, curve: Curves.bounceInOut,))
+    ..add(AniProps.opacity1, 0.0.tweenTo(1.0),
+        800.milliseconds, Interval(0.0, 1.0, curve: Curves.ease,));
 
   bool confirmed = false;
 
@@ -77,6 +63,8 @@ class _ReviewBankTransferState extends State<ReviewBankTransfer> {
 
   @override
   void initState() {
+    print("mmmmm<<<<<<<<< ${widget.nairaWalletWithdrawal}");
+    print(">>>>>>>>>>>>${widget.bank}");
     keys = List.generate(2, (index) => GlobalKey<ItemFaderState>());
 
     super.initState();
@@ -89,46 +77,84 @@ class _ReviewBankTransferState extends State<ReviewBankTransfer> {
     });
 
     //processTransaction();
-    await Future.delayed(1000.milliseconds);
-    showCupertinoModalBottomSheet(
-        context: context,
-        builder: (context) {
-          return UsePinWidget(
-            onNext: () {
-              startAnim2(buildContext);
-            },
-          );
-        },
-        isDismissible: false);
+    if (widget.nairaWalletWithdrawal == true) {
+      showCupertinoModalBottomSheet(context: context, builder: (context) {
+        return UsePinWidget(
+          buildContext: context,
+          validatePin: true,
+          onNext: () {
+            startAnimForNairaWithdrawal(buildContext);
+          },
+        );
+      }, isDismissible: false);
+    } else {
+      await Future.delayed(1000.milliseconds);
+      showCupertinoModalBottomSheet(context: context, builder: (context) {
+        return UsePinWidget(
+          onNext: () {
+            startAnim2(buildContext);
+          },
+        );
+      }, isDismissible: false);
+    }
   }
 
-  void startAnim2(BuildContext buildContext) async {
+  void startAnim2(BuildContext buildContext)async{
     var result = await savingViewModel.withdrawFund(
-      customerSavingId: savingViewModel.selectedPlan.id,
+      customerSavingId:savingViewModel.selectedPlan.id,
       token: identityViewModel.user.token,
       customerBankId: paymentViewModel.selectedBank?.id ?? null,
       amount: savingViewModel.amountToSave,
-      pin:
-          "${pinViewModel.pin1}${pinViewModel.pin2}${pinViewModel.pin3}${pinViewModel.pin4}",
-      withdrawalChannel: paymentViewModel.selectedBank == null ? 2 : 1,
+      pin: "${pinViewModel.pin1}${pinViewModel.pin2}${pinViewModel.pin3}${pinViewModel.pin4}",
+        withdrawalChannel: paymentViewModel.selectedBank == null ?2: 1,
     );
     print("ooooo ${result.error}");
     print("4444 ${result.errorMessage}");
-    if (result.error == false) {
+    if(result.error == false){
       setState(() {
         loading = false;
         confirmed = true;
       });
       Future.delayed(1000.milliseconds).then((value) => onInit());
-    } else {
+    }else{
       setState(() {
         loading = false;
         error = true;
-        if (result.errorMessage != null) {
+        if(result.errorMessage != null){
           errorMessage = result.errorMessage;
         }
       });
     }
+
+  }
+  void startAnimForNairaWithdrawal(BuildContext buildContext)async{
+
+
+    var result = await paymentViewModel.withdrawToBank(
+
+      token: identityViewModel.user.token,
+      bank:widget.bank,
+      amount: savingViewModel.amountToSave,
+      type: "NGN",
+    );
+    print("ooooo ${result.error}");
+    print("4444 ${result.errorMessage}");
+    if(result.error == false){
+      setState(() {
+        loading = false;
+        confirmed = true;
+      });
+      Future.delayed(1000.milliseconds).then((value) => onInit());
+    }else{
+      setState(() {
+        loading = false;
+        error = true;
+        if(result.errorMessage != null){
+          errorMessage = result.errorMessage;
+        }
+      });
+    }
+
   }
 
   void onInit() async {
@@ -136,7 +162,10 @@ class _ReviewBankTransferState extends State<ReviewBankTransfer> {
       //await Future.delayed(Duration(seconds: 1));
       key.currentState.show();
     }
+
   }
+
+
 
   @override
   Widget build(BuildContext context) {
@@ -146,341 +175,249 @@ class _ReviewBankTransferState extends State<ReviewBankTransfer> {
     pinViewModel = Provider.of(context);
     var size = MediaQuery.of(context).size;
     return WillPopScope(
-      onWillPop: () async {
+      onWillPop: ()async{
         return false;
       },
       child: Scaffold(
         backgroundColor: AppColors.kSecondaryColor,
         body: Container(
           height: MediaQuery.of(context).size.height,
-          child: Stack(
-            children: [
-              SvgPicture.asset(
-                "images/patterns.svg",
-                fit: BoxFit.fill,
-              ),
-              Positioned.fill(
-                child: confirmed
-                    ? PlayAnimation<MultiTweenValues<AniProps>>(
-                        tween: _tween,
-                        duration: _tween.duration,
-                        builder: (context, child, value) {
-                          return Container(
-                            height: MediaQuery.of(context).size.height,
-                            child: Center(
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.center,
-                                children: [
-                                  Spacer(),
-                                  Transform.scale(
-                                      scale: value.get(AniProps.scale),
-                                      child: Transform.translate(
-                                          offset: value.get(AniProps.offset1),
-                                          child: Opacity(
-                                              opacity:
-                                                  value.get(AniProps.opacity1),
-                                              child: SvgPicture.asset(
-                                                  "images/new/confetti.svg")))),
-                                  YMargin(40),
-                                  ItemFader(
-                                      offset: 10,
-                                      curve: Curves.easeIn,
-                                      key: keys[0],
-                                      child: Text(
-                                        "Withdrawal is successful. Your Bank Account has been credit successfully",
-                                        style: TextStyle(color: Colors.white),
-                                      )),
-                                  Spacer(),
-                                  ItemFader(
-                                    offset: 10,
-                                    curve: Curves.easeIn,
-                                    key: keys[1],
-                                    child: PrimaryButtonNew(
-                                      onTap: () {
-                                        pinViewModel.resetPins();
-                                        paymentViewModel.selectedBank = null;
-                                        Navigator.pushAndRemoveUntil(
-                                            context,
-                                            MaterialPageRoute(
-                                                builder: (context) =>
-                                                    TabsContainer()),
-                                            (Route<dynamic> route) => false);
-                                      },
-                                      textColor: Colors.white,
-                                      title: "Done",
-                                      bg: AppColors.kPrimaryColor,
-                                    ),
-                                  ),
-                                  YMargin(50)
-                                ],
-                              ),
-                            ),
-                          );
-                        },
-                      )
-                    : SizedBox(),
-              ),
-              AnimatedPositioned(
-                duration: Duration(milliseconds: 500),
-                //top: -(MediaQuery.of(context).size.height - 200),
-                top: slideUp ? -(MediaQuery.of(context).size.height - 200) : 0,
-                left: 0, right: 0,
-                child: Container(
-                  width: double.infinity,
-                  height: MediaQuery.of(context).size.height - 200,
-                  decoration: BoxDecoration(
-                      color: Colors.white,
-                      borderRadius: BorderRadius.only(
-                        bottomLeft: Radius.circular(25),
-                        bottomRight: Radius.circular(25),
-                      ),
-                      boxShadow: AppUtils.getBoxShaddow3),
-                  child: SafeArea(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        BackButton(
-                          color: AppColors.kPrimaryColor,
-                          onPressed: () {
-                            Navigator.pop(context);
-                          },
-                        ),
-                        YMargin(50),
-                        Padding(
-                          padding: const EdgeInsets.only(left: 20),
-                          child: Text(
-                            "Review Bank Transfer",
-                            style: TextStyle(fontFamily: AppStrings.fontMedium),
-                          ),
-                        ),
-                        YMargin(20),
-                        Container(
-                          margin: EdgeInsets.symmetric(horizontal: 20),
-                          padding: EdgeInsets.symmetric(
-                              horizontal: 20, vertical: 25),
-                          height: 280,
-                          width: double.infinity,
-                          decoration: BoxDecoration(
-                              color: AppColors.kWhite,
-                              borderRadius: BorderRadius.circular(13),
-                              boxShadow: AppUtils.getBoxShaddow3),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(
-                                "Account Name".toUpperCase(),
-                                style: TextStyle(
-                                  fontSize: 12,
-                                  color: AppColors.kSecondaryText,
-                                  fontFamily: AppStrings.fontNormal,
-                                ),
-                              ),
-                              YMargin(15),
-                              Text(
-                                paymentViewModel.selectedBank?.accountName ??
-                                    '',
-                                style: TextStyle(
-                                    fontFamily: AppStrings.fontMedium,
-                                    fontSize: 13,
-                                    color: AppColors.kGreyText),
-                              ),
-                              YMargin(40),
-                              Row(
-                                children: [
-                                  Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: [
-                                      Text(
-                                        "Bank".toUpperCase(),
-                                        style: TextStyle(
-                                          fontSize: 12,
-                                          color: AppColors.kSecondaryText,
-                                          fontFamily: AppStrings.fontNormal,
-                                        ),
-                                      ),
-                                      YMargin(15),
-                                      Text(
-                                        paymentViewModel.selectedBank?.name ??
-                                            '',
-                                        style: TextStyle(
-                                            fontFamily: AppStrings.fontMedium,
-                                            fontSize: 13,
-                                            color: AppColors.kGreyText),
-                                      ),
-                                    ],
-                                  ),
-                                  Spacer(),
-                                  Column(
-                                    crossAxisAlignment: CrossAxisAlignment.end,
-                                    children: [
-                                      Text(
-                                        "Amount".toUpperCase(),
-                                        style: TextStyle(
-                                          fontSize: 11,
-                                          color: AppColors.kSecondaryText,
-                                          fontFamily: AppStrings.fontNormal,
-                                        ),
-                                      ),
-                                      YMargin(15),
-                                      Row(
-                                        children: [
-                                          Text(
-                                            AppStrings.nairaSymbol,
-                                            style: TextStyle(fontSize: 12),
-                                          ),
-                                          Text(
-                                            " ${savingViewModel.amountToSave}"
-                                                .split(".")
-                                                .first
-                                                .convertWithComma(),
-                                            style: TextStyle(
-                                                fontFamily:
-                                                    AppStrings.fontMedium,
-                                                fontSize: 13,
-                                                color: AppColors.kGreyText),
-                                          ),
-                                        ],
-                                      ),
-                                    ],
-                                  )
-                                ],
-                              ),
-                              YMargin(40),
-                              Text(
-                                "Transaction fee".toUpperCase(),
-                                style: TextStyle(
-                                  fontSize: 12,
-                                  color: AppColors.kSecondaryText,
-                                  fontFamily: AppStrings.fontNormal,
-                                ),
-                              ),
-                              YMargin(15),
-                              Row(
-                                children: [
-                                  Text(
-                                    AppStrings.nairaSymbol,
-                                    style: TextStyle(fontSize: 12),
-                                  ),
-                                  Text(
-                                    " 25",
-                                    style: TextStyle(
-                                        fontFamily: AppStrings.fontMedium,
-                                        fontSize: 13,
-                                        color: AppColors.kGreyText),
-                                  ),
-                                ],
-                              ),
-                            ],
-                          ),
-                        )
-                      ],
-                    ),
-                  ),
-                ),
-              ),
-              AnimatedPositioned(
-                duration: Duration(milliseconds: 500),
-                //top: MediaQuery.of(context).size.height - 100,
-                top: slideUp == true
-                    ? -60
-                    : (MediaQuery.of(context).size.height - 100),
-                left: 0,
-                right: 0,
-                child: GestureDetector(
-                  onTap: () {
-                    // showModalBottomSheet < Null > (context: context, builder: (BuildContext context) {
-                    //   return ConfirmSavings();
-                    // },isScrollControlled: true);
-                  },
-                  onVerticalDragStart: (details) {
-                    print("dff ${details.toString()}");
-                    startAnim(context);
-                  },
-                  child: Container(
-                    height: 60,
-                    child: Column(
-                      children: [
-                        Column(
-                          children: [
-                            Icon(
-                              Icons.keyboard_arrow_up,
-                              color: AppColors.kWhite,
-                            ),
-                            Text(
-                              "Swipe up to confirm",
-                              style: TextStyle(
-                                  fontFamily: AppStrings.fontMedium,
-                                  color: Colors.white),
-                            ),
-                          ],
-                        )
-                      ],
-                    ),
-                  ),
-                ),
-              ),
-              error == false
-                  ? Container(
-                      height: size.height,
-                      width: size.width,
-                      child: Center(
-                        child: loading ? LoadingWIdget() : SizedBox(),
-                      ),
-                    )
-                  : Container(
-                      height: size.height,
-                      width: size.width,
-                      child: Center(
-                        child: Column(
-                          children: [
-                            Spacer(),
-                            SvgPicture.asset("images/new/error2.svg"),
-                            YMargin(40),
-                            SizedBox(
-                                width: 250,
-                                child: Text(
-                                  errorMessage,
-                                  style: TextStyle(
-                                      color: AppColors.kWhite,
-                                      fontFamily: AppStrings.fontNormal,
-                                      height: 1.7),
-                                  textAlign: TextAlign.center,
-                                )),
-                            Spacer(),
-                            PrimaryButtonNew(
-                              title: "Back to Home",
-                              onTap: () {
+          child: Stack(children: [
+            SvgPicture.asset("images/patterns.svg", fit: BoxFit.fill,),
+            Positioned.fill(
+              child: confirmed ? PlayAnimation<MultiTweenValues<AniProps>>(
+                tween: _tween,
+                duration: _tween.duration,
+                builder: (context, child, value){
+                  return Container(
+                    height: MediaQuery.of(context).size.height,
+                    child: Center(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          Spacer(),
+                          Transform.scale(
+                              scale: value.get(AniProps.scale),
+                              child: Transform.translate(
+                                  offset: value.get(AniProps.offset1),
+                                  child: Opacity(
+                                      opacity: value.get(AniProps.opacity1),
+                                      child: SvgPicture.asset("images/new/confetti.svg")))),
+                          YMargin(40),
+                          ItemFader(
+                              offset: 10,
+                              curve: Curves.easeIn,
+                              key: keys[0],
+                              child: Padding(
+                                padding: const EdgeInsets.symmetric(horizontal: 30),
+                                child: Text("Withdrawal is successful. Your Bank Account has been credit successfully", style: TextStyle(color: Colors.white),textAlign: TextAlign.center,),
+                              )),
+                          Spacer(),
+                          ItemFader(
+                            offset: 10,
+                            curve: Curves.easeIn,
+                            key: keys[1],
+                            child: PrimaryButtonNew(
+                              onTap: (){
                                 pinViewModel.resetPins();
                                 paymentViewModel.selectedBank = null;
                                 Navigator.pushAndRemoveUntil(
                                     context,
-                                    MaterialPageRoute(
-                                        builder: (context) => TabsContainer()),
-                                    (Route<dynamic> route) => false);
+                                    MaterialPageRoute(builder: (context) => TabsContainer()),
+                                        (Route<dynamic> route) => false);
                               },
+                              textColor: Colors.white,
+                              title: "Done",
+                              bg: AppColors.kPrimaryColor,
                             ),
-                            YMargin(40)
-                          ],
-                        ),
-                      ),
+                          ),
+                          YMargin(50)
+                        ],),
                     ),
-            ],
-          ),
+                  );
+                },
+              ):SizedBox(),
+            ),
+
+            AnimatedPositioned(
+              duration: Duration(milliseconds: 500),
+              //top: -(MediaQuery.of(context).size.height - 200),
+              top: slideUp ?-(MediaQuery.of(context).size.height - 200): 0,
+              left: 0,right: 0,
+              child: Container(
+                width: double.infinity,
+                height: MediaQuery.of(context).size.height - 200,
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.only(bottomLeft: Radius.circular(25),
+                      bottomRight: Radius.circular(25),
+
+                  ),
+                  boxShadow: AppUtils.getBoxShaddow3
+                ),
+                child: SafeArea(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      BackButton(
+                        color: AppColors.kPrimaryColor,
+                        onPressed: (){
+                          Navigator.pop(context);
+                        },
+                      ),
+                      YMargin(50),
+                      Padding(
+                        padding: const EdgeInsets.only(left: 20),
+                        child: Text("Review Bank Transfer", style: TextStyle(fontFamily: AppStrings.fontMedium),),
+                      ),
+                      YMargin(20),
+                      Container(
+                        margin: EdgeInsets.symmetric(horizontal: 20),
+                        padding: EdgeInsets.symmetric(horizontal: 20,vertical: 25),
+                        height: 280,
+                        width: double.infinity,
+                        decoration: BoxDecoration(
+                            color: AppColors.kWhite,
+                            borderRadius: BorderRadius.circular(13),
+                            boxShadow: AppUtils.getBoxShaddow3
+                        ),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text("Account Name".toUpperCase(), style: TextStyle(fontSize: 12,
+                              color: AppColors.kSecondaryText,fontFamily: AppStrings.fontNormal,),),
+                            YMargin(15),
+                            Text(paymentViewModel.selectedBank?.accountName ?? '', style: TextStyle(
+                                fontFamily: AppStrings.fontMedium,
+                                fontSize: 13,color: AppColors.kGreyText
+                            ),),
+                            YMargin(40),
+                            Row(children: [
+                              Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text("Bank".toUpperCase(), style: TextStyle(fontSize: 12,
+                                    color: AppColors.kSecondaryText,fontFamily: AppStrings.fontNormal,),),
+                                  YMargin(15),
+                                  Text(paymentViewModel.selectedBank?.name ?? '', style: TextStyle(
+                                      fontFamily: AppStrings.fontMedium,
+                                      fontSize: 13,color: AppColors.kGreyText
+                                  ),),
+                                ],),
+                              Spacer(),
+                              Column(
+                                crossAxisAlignment: CrossAxisAlignment.end,
+                                children: [
+                                  Text("Amount".toUpperCase(), style: TextStyle(fontSize: 11,
+                                    color: AppColors.kSecondaryText,fontFamily: AppStrings.fontNormal,),),
+                                  YMargin(15),
+                                  Row(
+                                    children: [
+                                      Text(AppStrings.nairaSymbol, style: TextStyle(fontSize: 12),),
+                                      Text(" ${savingViewModel.amountToSave}".split(".").first.convertWithComma(), style: TextStyle(
+                                          fontFamily: AppStrings.fontMedium,
+                                          fontSize: 13,color: AppColors.kGreyText
+                                      ),),
+                                    ],
+                                  ),
+                                ],)
+                            ],),
+                            YMargin(40),
+                            Text("Transaction fee".toUpperCase(), style: TextStyle(fontSize: 12,
+                              color: AppColors.kSecondaryText,fontFamily: AppStrings.fontNormal,),),
+                            YMargin(15),
+                            Row(
+                              children: [
+                                Text(AppStrings.nairaSymbol, style: TextStyle(fontSize: 12),),
+                                Text(" 25", style: TextStyle(
+                                    fontFamily: AppStrings.fontMedium,
+                                    fontSize: 13,color: AppColors.kGreyText
+                                ),),
+                              ],
+                            ),
+
+                          ],),
+                      )
+                  ],),
+                ),
+              ),
+            ),
+
+            AnimatedPositioned(
+              duration: Duration(milliseconds: 500),
+              //top: MediaQuery.of(context).size.height - 100,
+              top:slideUp == true ? -60: (MediaQuery.of(context).size.height - 100),
+              left: 0,
+              right: 0,
+              child: GestureDetector(
+                onTap: (){
+                  // showModalBottomSheet < Null > (context: context, builder: (BuildContext context) {
+                  //   return ConfirmSavings();
+                  // },isScrollControlled: true);
+                },
+                onVerticalDragStart: (details){
+                  print("dff ${details.toString()}");
+                  startAnim(context);
+                },
+                child: Container(
+                  height: 60,
+                  child: Column(children: [
+                    Column(
+                      children: [
+                        Icon(Icons.keyboard_arrow_up, color: AppColors.kWhite,),
+                        Text("Swipe up to confirm", style: TextStyle(fontFamily: AppStrings.fontMedium,
+                            color: Colors.white),),
+                      ],
+                    )
+                  ],),
+                ),
+              ),
+            ),
+            error == false ? Container(
+              height: size.height,
+              width: size.width,
+              child: Center(child: loading ? LoadingWIdget():SizedBox()
+                ,),
+            ):Container(
+              height: size.height,
+              width: size.width,
+              child: Center(child:Column(children: [
+                Spacer(),
+                SvgPicture.asset("images/new/error2.svg"),
+                YMargin(40),
+                SizedBox(
+                    width: 250,
+                    child: Text(errorMessage,
+                      style: TextStyle(color: AppColors.kWhite,
+                          fontFamily: AppStrings.fontNormal,height: 1.7),textAlign: TextAlign.center,)),
+                Spacer(),
+                PrimaryButtonNew(
+                  title: "Back to Home",
+                  onTap: (){
+                    pinViewModel.resetPins();
+                    paymentViewModel.selectedBank = null;
+                    Navigator.pushAndRemoveUntil(
+                        context,
+                        MaterialPageRoute(builder: (context) => TabsContainer()),
+                            (Route<dynamic> route) => false);
+                  },
+                ),
+                YMargin(40)
+              ],)
+                ,),
+            ),
+          ],),
         ),
       ),
     );
   }
 }
-
 class ItemFader extends StatefulWidget {
   final Widget child;
   final Curve curve;
   final int offset;
 
-  const ItemFader(
-      {Key key, this.child, this.curve = Curves.easeInOut, this.offset = 64})
-      : super(key: key);
+  const ItemFader({Key key, this.child, this.curve = Curves.easeInOut, this.offset = 64}) : super(key: key);
   @override
   ItemFaderState createState() => ItemFaderState();
 }
@@ -672,6 +609,7 @@ class _ReviewBankTransferLiquidationState
     paymentViewModel = Provider.of(context);
     pinViewModel = Provider.of(context);
     liquidateAssetViewModel = Provider.of(context);
+    ConnectionProvider network = Provider.of(context);
     var size = MediaQuery.of(context).size;
     return WillPopScope(
       onWillPop: () async {
@@ -913,14 +851,13 @@ class _ReviewBankTransferLiquidationState
                 left: 0,
                 right: 0,
                 child: GestureDetector(
-                  // onTap: () {
-                  //   // showModalBottomSheet < Null > (context: context, builder: (BuildContext context) {
-                  //   //   return ConfirmSavings();
-                  //   // },isScrollControlled: true);
-                  // },
                   onVerticalDragStart: (details) {
+                    if(network.neTisOn){
                     print("dff ${details.toString()}");
-                    startAnim(context);
+                    startAnim(context);}else{
+                       cautionFlushBar(context, "No Network",
+                          "Please make sure you are connected to the internet");
+                    }
                   },
                   child: Container(
                     height: 60,

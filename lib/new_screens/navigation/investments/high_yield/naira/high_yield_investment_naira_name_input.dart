@@ -12,6 +12,7 @@ import 'package:zimvest/styles/colors.dart';
 import 'package:zimvest/utils/margin.dart';
 import 'package:zimvest/utils/strings.dart';
 import 'package:zimvest/widgets/buttons.dart';
+import 'package:zimvest/widgets/new/new_widgets.dart';
 
 import '../../../../tabs.dart';
 import 'high_yield_investment_naira_amount_input.dart';
@@ -42,7 +43,14 @@ class _HighYieldInvestmentNairaUniqueNameState
       onModelReady: (model) => model.getNairaTermInstruments(),
       builder: (context, model, _) => Scaffold(
         // appBar: ,
-        appBar: appBar(context),
+        appBar: ZimAppBar(
+          icon: Icons.arrow_back_ios_outlined,
+          text: "Invest",
+          showCancel: true,
+          callback: () {
+            Navigator.pop(context);
+          },
+        ),
         body: SingleChildScrollView(
           child: Column(
             children: [

@@ -376,8 +376,9 @@ class SavingsInvestmentErrorWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return SliverPadding(
       sliver: SliverList(
-          delegate: SliverChildListDelegate(
-              [NoInternetWidget2(message: message, retry: retry)])),
+          delegate: SliverChildListDelegate([
+        NoInternetWidget2(message: message ?? "Something went wrong", retry: retry)
+      ])),
       padding: EdgeInsets.symmetric(horizontal: 20),
     );
   }
@@ -406,8 +407,8 @@ class NoInternetWidget2 extends StatelessWidget {
               width: 300,
               child: Text(
                 message,
-                style:
-                    TextStyle(fontFamily: AppStrings.fontNormal, height: 1.7),
+                style: TextStyle(
+                    fontFamily: AppStrings.fontNormal, height: 1.7),
                 textAlign: TextAlign.center,
               )),
           YMargin(30),
@@ -458,12 +459,10 @@ class SavingsInvestmentCashWidget extends StatelessWidget {
                 )),
             XMargin(2),
             Text(
-              dashboardViewModel.dashboardModel.nairaPortfolio == "0.00"
-                  ? '0'
-                  : dashboardViewModel.dashboardModel.nairaSavings
-                      .substring(1)
-                      .split(".")
-                      .first,
+              dashboardViewModel.dashboardModel.nairaPortfolio == "0.00" ? '0':dashboardViewModel.dashboardModel.nairaSavings
+                  .substring(1)
+                  .split(".")
+                  .first,
               style: TextStyle(
                   fontSize: 25,
                   fontFamily: AppStrings.fontMedium,
@@ -521,15 +520,9 @@ class SavingsInvestmentCashWidget extends StatelessWidget {
                               YMargin(10),
                               Row(
                                 children: [
+                                  Text(AppStrings.nairaSymbol, style: TextStyle(fontSize: 12),),
                                   Text(
-                                    AppStrings.nairaSymbol,
-                                    style: TextStyle(fontSize: 12),
-                                  ),
-                                  Text(
-                                    "${wealthBox.amountSaved}"
-                                        .split(".")
-                                        .first
-                                        .convertWithComma(),
+                                    "${wealthBox.amountSaved}".split(".").first.convertWithComma(),
                                     style: TextStyle(
                                         color: AppColors.kGreyText,
                                         fontFamily: AppStrings.fontMedium),

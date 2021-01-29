@@ -68,7 +68,14 @@ class _HighYieldInvestmentPurchaseSourceState
     return ViewModelProvider<InvestmentHighYieldViewModel>.withConsumer(
       viewModelBuilder: () => InvestmentHighYieldViewModel(),
       builder: (context, model, _) => Scaffold(
-        appBar: appBar(context),
+        appBar: ZimAppBar(
+          icon: Icons.arrow_back_ios_outlined,
+          text: "Invest",
+          showCancel: true,
+          callback: () {
+            Navigator.pop(context);
+          },
+        ),
         body: Builder(
           builder: (context) => Column(
             crossAxisAlignment: CrossAxisAlignment.start,

@@ -4,6 +4,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 import 'package:provider/provider.dart';
 import 'package:zimvest/animations/loading.dart';
+import 'package:zimvest/data/services/connectivity_service.dart';
 import 'package:zimvest/data/view_models/identity_view_model.dart';
 import 'package:zimvest/data/view_models/liquidate_asset_vm.dart';
 import 'package:zimvest/data/view_models/payment_view_model.dart';
@@ -19,7 +20,7 @@ import 'package:zimvest/utils/strings.dart';
 import 'package:simple_animations/simple_animations.dart';
 import 'package:supercharged/supercharged.dart';
 import 'package:zimvest/widgets/buttons.dart';
-
+import 'package:zimvest/widgets/flushbar.dart';
 
 class ItemFader extends StatefulWidget {
   final Widget child;
@@ -173,7 +174,6 @@ class _ReviewBankTransferLiquidationState
   }
 
   void startAnim2(BuildContext buildContext) async {
-    
     var result = await liquidateAssetViewModel.liquidateFGNBond(
       transactionId: paymentViewModel.transactionId,
       instrumentId: paymentViewModel.instrumentId,
@@ -217,6 +217,7 @@ class _ReviewBankTransferLiquidationState
     savingViewModel = Provider.of(context);
     paymentViewModel = Provider.of(context);
     pinViewModel = Provider.of(context);
+    ConnectionProvider network = Provider.of(context);
     liquidateAssetViewModel = Provider.of(context);
     var size = MediaQuery.of(context).size;
     return WillPopScope(
@@ -230,7 +231,10 @@ class _ReviewBankTransferLiquidationState
           child: Stack(
             fit: StackFit.expand,
             children: [
-              SvgPicture.asset("images/patterns.svg", fit: BoxFit.fill,),
+              SvgPicture.asset(
+                "images/patterns.svg",
+                fit: BoxFit.fill,
+              ),
               Positioned.fill(
                 child: confirmed
                     ? PlayAnimation<MultiTweenValues<AniProps>>(
@@ -461,14 +465,13 @@ class _ReviewBankTransferLiquidationState
                 left: 0,
                 right: 0,
                 child: GestureDetector(
-                  // onTap: () {
-                  //   // showModalBottomSheet < Null > (context: context, builder: (BuildContext context) {
-                  //   //   return ConfirmSavings();
-                  //   // },isScrollControlled: true);
-                  // },
                   onVerticalDragStart: (details) {
-                    print("dff ${details.toString()}");
-                    startAnim(context);
+                    if (network.neTisOn) {
+                      startAnim(context);
+                    } else {
+                      cautionFlushBar(context, "No Network",
+                          "Please make sure you are connected to the internet");
+                    }
                   },
                   child: Container(
                     height: 60,
@@ -548,4 +551,3 @@ class _ReviewBankTransferLiquidationState
     );
   }
 }
-

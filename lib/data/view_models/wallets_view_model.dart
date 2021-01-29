@@ -8,6 +8,7 @@ import 'package:zimvest/data/services/investment_service.dart';
 import 'package:zimvest/data/services/payment_service.dart';
 import 'package:zimvest/data/services/wallet_service.dart';
 import 'package:zimvest/data/view_models/base_model.dart';
+import 'package:zimvest/utils/result.dart';
 
 import '../../locator.dart';
 
@@ -61,24 +62,25 @@ class WalletViewModel extends BaseViewModel {
     notifyListeners();
   }
 
-  Future<void> fundWallet({num sourceAmount, String currency,
+  Future<Result<void>> fundWallet({num sourceAmount, String currency,
       int fundingSource}) async {
     setBusy(true);
     String token = _localStorage.getUser().token;
         var getAmount =
         await _investmentService.calculateRate(token: token, amount: sourceAmount, sourceCurrency: "USD", destiationCurrency: "NGN");
-        // print(getAmount.destinationAmount);
+        print("opppp ${getAmount.destinationAmount}");
     var fundWallet = await _walletService.fundWallet(
         sourceAmount: getAmount.sourceAmount,
         token: token,
         exchangeAmount: getAmount.destinationAmount,
         currency: currency,
-        fundingSource: 1);
-    print(fundWallet);
-    if (fundWallet == "Operation Successful") {
+        fundingSource: fundingSource);
+    print("p0ioi  ${fundWallet.error}");
+    setResult(fundWallet);
+    if (fundWallet.error == false) {
       setBusy(false);
       _status = true;
-    } else if (fundWallet == null) {
+    } else if (fundWallet.error == true) {
       setBusy(false);
       _message = "Oops! Something went wrong try again later";
       _status = false;
@@ -89,6 +91,7 @@ class WalletViewModel extends BaseViewModel {
     }
     setBusy(false);
     notifyListeners();
+    return fundWallet;
   }
 
   void check() {

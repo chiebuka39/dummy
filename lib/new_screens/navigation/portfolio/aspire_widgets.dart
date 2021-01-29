@@ -5,6 +5,7 @@ import 'package:percent_indicator/percent_indicator.dart';
 import 'package:zimvest/data/models/saving_plan.dart';
 import 'package:zimvest/new_screens/navigation/wealth/aspire/select_goals.dart';
 import 'package:zimvest/new_screens/navigation/wealth/aspire_box_details.dart';
+import 'package:zimvest/new_screens/withdrawals/withdraw_to_%20savings.dart';
 import 'package:zimvest/styles/colors.dart';
 import 'package:zimvest/utils/app_utils.dart';
 import 'package:zimvest/utils/margin.dart';
@@ -13,16 +14,23 @@ import 'package:zimvest/utils/strings.dart';
 class AspireContainerWidget extends StatelessWidget {
   const AspireContainerWidget({
     Key key,
-    this.goal,
+    this.goal, this.topUp = false,
   }) : super(key: key);
   final SavingPlanModel goal;
+  final bool topUp;
 
   @override
   Widget build(BuildContext context) {
     return Expanded(
       child: GestureDetector(
         onTap: () {
-          Navigator.push(context, AspireDetailsScreen.route(goal));
+          if(topUp){
+            Navigator.push(
+                context, WithdrawToSavingsScreen.route(savingPlanModel: goal));
+          }else{
+            Navigator.push(context, AspireDetailsScreen.route(goal));
+          }
+
         },
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,

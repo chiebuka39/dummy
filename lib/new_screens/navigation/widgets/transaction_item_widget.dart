@@ -162,7 +162,7 @@ class TransactionItemWidgetWithdrawal extends StatelessWidget {
                 Container(
                   width: 130,
                   child: Text(
-                    narration,
+                    narration ?? '',
                     overflow: TextOverflow.ellipsis,
                     softWrap: true,
                     style: TextStyle(
@@ -177,12 +177,15 @@ class TransactionItemWidgetWithdrawal extends StatelessWidget {
                       color: AppColors.kTextColor,
                       fontFamily: AppStrings.fontLight),
                 ),
+
               ],
             ),
             Spacer(),
-            Text(
-              "$symbol $amount",
-              style: TextStyle(fontSize: 12),
+            Row(
+              children: [
+                Text(symbol, style: TextStyle(fontSize: 12),),
+                Text("$amount".split(".").first.convertWithComma(), style: TextStyle(fontSize: 12),),
+              ],
             )
           ],
         ),
@@ -270,6 +273,7 @@ class InvestmentTransactionItemWidget extends StatelessWidget {
                   style: TextStyle(fontSize: 12),
                   textAlign: TextAlign.right,
                 ),
+                YMargin(5),
                 Container(
                     padding: EdgeInsets.symmetric(horizontal: 10, vertical: 5),
                     decoration: BoxDecoration(

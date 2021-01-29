@@ -1,10 +1,16 @@
+import 'package:after_layout/after_layout.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
+import 'package:provider/provider.dart';
 import 'package:zimvest/data/models/saving_plan.dart';
+import 'package:zimvest/data/view_models/identity_view_model.dart';
+import 'package:zimvest/data/view_models/payment_view_model.dart';
 import 'package:zimvest/new_screens/funding/confirm_withdrawal.dart';
 import 'package:zimvest/new_screens/funding/select_bank_account.dart';
 import 'package:zimvest/new_screens/funding/wallet/pick_investment_plan.dart';
 import 'package:zimvest/new_screens/funding/wallet/pick_savings_plan.dart';
+import 'package:zimvest/new_screens/withdrawals/use_pin_widget.dart';
 import 'package:zimvest/styles/colors.dart';
 import 'package:zimvest/utils/margin.dart';
 import 'package:zimvest/utils/strings.dart';
@@ -21,9 +27,17 @@ class WalletWithdrawToScreen extends StatefulWidget {
   _WalletWithdrawToScreenState createState() => _WalletWithdrawToScreenState();
 }
 
-class _WalletWithdrawToScreenState extends State<WalletWithdrawToScreen> {
+class _WalletWithdrawToScreenState extends State<WalletWithdrawToScreen> with AfterLayoutMixin<WalletWithdrawToScreen> {
+  ABSIdentityViewModel identityViewModel;
+  ABSPaymentViewModel paymentViewModel;
+  @override
+  void afterFirstLayout(BuildContext context) {
+    paymentViewModel.getCustomerBank(identityViewModel.user.token);
+  }
   @override
   Widget build(BuildContext context) {
+    identityViewModel = Provider.of(context);
+    paymentViewModel = Provider.of(context);
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.transparent,
@@ -58,23 +72,14 @@ class _WalletWithdrawToScreenState extends State<WalletWithdrawToScreen> {
             ),
             WithdrawAction(
               bg: AppColors.kSecondaryColor,
-              title: "Investment Plan",
+              title: "Bank Account",
               onTap: () {
-                Navigator.push(context, PickInvestmentPlan.route());
+
+                Navigator.push(context, SelectBankAccount.route());
               },
             ),
             YMargin(20),
-            Center(
-              child: Text("Or"),
-            ),
-            WithdrawAction(
-              title: "Bank Account",
-              bg: AppColors.kPrimaryColorLight,
-              textColor: AppColors.kPrimaryColor,
-              onTap: () {
-                Navigator.push(context, SelectBankAccount.route());
-              },
-            )
+
           ],
         ),
       ),

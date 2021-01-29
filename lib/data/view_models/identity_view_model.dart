@@ -93,7 +93,8 @@ class IdentityViewModel extends ABSIdentityViewModel{
     try {
       result = await _identityService.login(email:email, password: password);
       if (result.error == false) {
-        _localStorage.saveSecondaryState(SecondaryState(true,password: password,email: email));
+        _localStorage.saveSecondaryState(SecondaryState(true,
+            password: password,email: email, biometricsEnabled: _localStorage.getSecondaryState().biometricsEnabled));
         result.error = false;
         this.user = result.data;
       }

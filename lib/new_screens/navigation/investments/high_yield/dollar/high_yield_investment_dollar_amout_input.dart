@@ -2,6 +2,7 @@ import 'package:flushbar/flushbar.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:provider_architecture/_viewmodel_provider.dart';
+import 'package:zimvest/data/services/connectivity_service.dart';
 import 'package:zimvest/data/view_models/investment_view_model.dart';
 import 'package:zimvest/data/view_models/payment_view_model.dart';
 import 'package:zimvest/new_screens/navigation/investments/high_yield/dollar/investment_duration.dart';
@@ -10,8 +11,12 @@ import 'package:zimvest/styles/colors.dart';
 import 'package:zimvest/utils/margin.dart';
 import 'package:zimvest/utils/strings.dart';
 import 'package:zimvest/widgets/buttons.dart';
+import 'package:zimvest/widgets/flushbar.dart';
+import 'package:zimvest/widgets/new/new_widgets.dart';
 import 'package:zimvest/widgets/number_keyboard.dart';
 import 'package:zimvest/utils/app_utils.dart';
+
+import '../../../../tabs.dart';
 
 class InvestmentHighYieldDollarAmountInput extends StatefulWidget {
   final String uniqueName;
@@ -62,17 +67,21 @@ class InvestmentHighYieldDollarAmountInput extends StatefulWidget {
 
 class _InvestmentHighYieldDollarAmountInputState
     extends State<InvestmentHighYieldDollarAmountInput> {
-  // static String amountController.text;
-  // var amountController =
-  //     MoneyMaskedTextController(thousandSeparator: ",", decimalSeparator: ".",);
-  // TextEditingController amountController = TextEditingController();
   @override
   Widget build(BuildContext context) {
+    ConnectionProvider network = Provider.of(context);
     ABSPaymentViewModel paymentViewModel = Provider.of(context);
     return ViewModelProvider<InvestmentHighYieldViewModel>.withConsumer(
       viewModelBuilder: () => InvestmentHighYieldViewModel(),
       builder: (context, model, _) => Scaffold(
-        appBar: appBar(context),
+        appBar: ZimAppBar(
+          icon: Icons.arrow_back_ios_outlined,
+          text: "Invest",
+          showCancel: true,
+          callback: () {
+            Navigator.pop(context);
+          },
+        ),
         body: Builder(
           builder: (context) => Column(
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -97,7 +106,7 @@ class _InvestmentHighYieldDollarAmountInputState
                   height: 55,
                   width: double.infinity,
                   decoration: BoxDecoration(
-                       color: AppColors.kTextBg,
+                      color: AppColors.kTextBg,
                       borderRadius: BorderRadius.circular(12)),
                   child: Align(
                     alignment: Alignment.centerLeft,
@@ -148,79 +157,31 @@ class _InvestmentHighYieldDollarAmountInputState
               RoundedNextButton(
                 loading: model.busy,
                 onTap: () async {
-                  print(paymentViewModel.amountController.text);
-                  double amount =
-                      double.tryParse(paymentViewModel.amountController.text.split(',').join());
-                  paymentViewModel.investmentAmount = amount;
-                  if (amount == null) {
-                    Flushbar(
-                      icon: ImageIcon(
-                        AssetImage(
-                            "images/failed.png"),
-                        color: AppColors.kRed,
-                        size: 70,
-                      ),
-                      margin: EdgeInsets.all(12),
-                      borderRadius: 20,
-                      flushbarPosition: FlushbarPosition.TOP,
-                      titleText: Text(
-                        "Error !",
-                        style: TextStyle(
-                          fontSize: 13,
-                          fontFamily: AppStrings.fontBold,
-                          color: AppColors.kRed4,
+                  if (network.neTisOn) {
+                    double amount = double.tryParse(paymentViewModel
+                        .amountController.text
+                        .split(',')
+                        .join());
+                    paymentViewModel.investmentAmount = amount;
+                    if (amount == null) {
+                      errorFlushBar(context, "Error!", "Field Cannot be Empty");
+                    } else if (amount < widget.minimumAmount) {
+                      errorFlushBar(context, "Error!",
+                          "Minimum purchase amount is \$${widget.minimumAmount.toString().split('.')[0].convertWithComma()}");
+                    } else {
+                      await model.getDollarTermInstrumentsFilter(amount);
+                      Navigator.push(
+                        context,
+                        InvestmentDurationPeriod.route(
+                          amount: amount,
+                          instrument: model.dollarInstrument.data,
+                          uniqueName: widget.uniqueName,
                         ),
-                      ),
-                      backgroundColor: AppColors.kRed3,
-                      messageText: Text(
-                        "Field Cannot be Empty",
-                        style: TextStyle(
-                          fontSize: 11,
-                          fontFamily: AppStrings.fontLight,
-                          color: AppColors.kRed4,
-                        ),
-                      ),
-                      duration: Duration(seconds: 3),
-                    ).show(context);
-                  } else if (amount < widget.minimumAmount) {
-                    Flushbar(
-                      icon: ImageIcon(
-                        AssetImage("images/failed.png"),
-                        color: AppColors.kRed,
-                        size: 70,
-                      ),
-                      margin: EdgeInsets.all(12),
-                      borderRadius: 20,
-                      flushbarPosition: FlushbarPosition.TOP,
-                      titleText: Text(
-                        "Error !",
-                        style: TextStyle(
-                          fontSize: 13,
-                          fontFamily: AppStrings.fontBold,
-                          color: AppColors.kRed4,
-                        ),
-                      ),
-                      backgroundColor: AppColors.kRed3,
-                      messageText: Text(
-                        "Minimum purchase amount is \$${widget.minimumAmount.toString().split('.')[0].convertWithComma()}",
-                        style: TextStyle(
-                          fontSize: 11,
-                          fontFamily: AppStrings.fontLight,
-                          color: AppColors.kRed4,
-                        ),
-                      ),
-                      duration: Duration(seconds: 2),
-                    ).show(context);
+                      );
+                    }
                   } else {
-                    await model.getDollarTermInstrumentsFilter(amount);
-                    Navigator.push(
-                      context,
-                      InvestmentDurationPeriod.route(
-                        amount: amount,
-                        instrument: model.dollarInstrument.data,
-                        uniqueName: widget.uniqueName,
-                      ),
-                    );
+                    cautionFlushBar(context, "No Network",
+                        "Please make sure you are connected to the internet");
                   }
                 },
               ),
@@ -233,8 +194,9 @@ class _InvestmentHighYieldDollarAmountInputState
                 ),
                 rightButtonFn: () {
                   setState(() {
-                    paymentViewModel.amountController.text = paymentViewModel.amountController.text
-                        .substring(0, paymentViewModel.amountController.text.length - 1);
+                    paymentViewModel.amountController.text =
+                        paymentViewModel.amountController.text.substring(0,
+                            paymentViewModel.amountController.text.length - 1);
                   });
                 },
               )
@@ -250,7 +212,7 @@ class _InvestmentHighYieldDollarAmountInputState
   //     paymentViewModel.amountController.text = paymentViewModel.amountController.text + value;
   //   });
   // }
-    convertWithComma(String newValue) {
+  convertWithComma(String newValue) {
     String value = newValue;
     var buffer = new StringBuffer();
 

@@ -18,6 +18,7 @@ import 'package:zimvest/data/view_models/base_model.dart';
 
 import 'package:zimvest/locator.dart';
 import 'package:zimvest/screens/tabs/invstment/invest_term.dart';
+import 'package:zimvest/utils/image_picker.dart';
 import 'package:zimvest/utils/result.dart';
 
 abstract class ABSInvestmentViewModel extends ChangeNotifier {
@@ -340,16 +341,13 @@ class InvestmentHighYieldViewModel extends ChangeNotifier {
   ConvertedRate dollarConversion = ConvertedRate();
   Result<GottenRate> gotRate = Result<GottenRate>();
   AmountPayableResponse amountPayableResponse = AmountPayableResponse();
-
-
+  var imgs = locator<PickImage>();
 
   bool _busy = false;
   bool get busy => _busy;
 
   bool _status = false;
   bool get status => _status;
-
-
 
   void setBusy(bool value) {
     _busy = value;
@@ -465,7 +463,7 @@ class InvestmentHighYieldViewModel extends ChangeNotifier {
     setBusy(true);
     String token = _localStorage.getUser().token;
     var purchaseRes = await _investmentService.buyNairaInstrument(
-      cardId: cardId,
+        cardId: cardId,
         productId: productId,
         fundingChannel: fundingChannel,
         amount: amount,
@@ -491,7 +489,8 @@ class InvestmentHighYieldViewModel extends ChangeNotifier {
       double amount,
       double nairaAmount,
       String uniqueName,
-      String token, int walletType}) async {
+      String token,
+      int walletType}) async {
     setBusy(true);
     String token = _localStorage.getUser().token;
 
@@ -525,7 +524,39 @@ class InvestmentHighYieldViewModel extends ChangeNotifier {
     notifyListeners();
   }
 
+  Future<Result<void>> buyDollarInstrumentWired(
+      {int productId,
+      int beneficiaryBankType,
+      int fundingChannel,
+      String proofOfPayment,
+      num amount,
+      String uniqueName}) async {
+    String token = _localStorage.getUser().token;
+    var submitPuchaseReceipt = await _investmentService.buyDollarnstrumentWired(
+      token: token,
+      productId: productId,
+      proofOfPayment: proofOfPayment,
+      fundingChannel: fundingChannel,
+      amount: amount,
+      uniqueName: uniqueName,
+    );
+    return submitPuchaseReceipt;
+  }
 
+  File _zeImage;
+  File get pickedImage => _zeImage;
+
+  Future pickImage() async {
+    var picked = await imgs.selectImage();
+    _zeImage = picked;
+    notifyListeners();
+  }
+
+  Future takeImage() async {
+    var taken = await imgs.captureImage();
+    _zeImage = taken;
+    notifyListeners();
+  }
 }
 
 class FixedIncomeViewModel extends BaseViewModel {

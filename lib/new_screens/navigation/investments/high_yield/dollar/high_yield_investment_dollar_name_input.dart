@@ -13,6 +13,7 @@ import 'package:zimvest/styles/colors.dart';
 import 'package:zimvest/utils/margin.dart';
 import 'package:zimvest/utils/strings.dart';
 import 'package:zimvest/widgets/buttons.dart';
+import 'package:zimvest/widgets/new/new_widgets.dart';
 
 class HighYieldInvestmentDollarUniqueName extends StatefulWidget {
   static Route<dynamic> route() {
@@ -39,7 +40,14 @@ class _HighYieldInvestmentDollarUniqueNameState
       viewModelBuilder: () => InvestmentHighYieldViewModel(),
       onModelReady: (model) => model.getDollarTermInstruments(),
       builder: (context, model, _) => Scaffold(
-        appBar: appBar(context),
+        appBar: ZimAppBar(
+          icon: Icons.arrow_back_ios_outlined,
+          text: "Invest",
+          showCancel: true,
+          callback: () {
+            Navigator.pop(context);
+          },
+        ),
         body: SingleChildScrollView(
           child: Column(
             children: [

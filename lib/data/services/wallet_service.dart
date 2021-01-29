@@ -3,24 +3,27 @@ import 'dart:io';
 
 import 'package:dio/dio.dart';
 import 'package:zimvest/data/models/payment/wallet.dart';
+import 'package:zimvest/utils/result.dart';
 import 'package:zimvest/utils/strings.dart';
 
 import '../../locator.dart';
 
-
-
-// TODO: Refactor to follow already existing coding pattern 
+// TODO: Refactor to follow already existing coding pattern
 abstract class ABSWalletService {
   Future<List<Wallet>> getWallets(String token);
   Future<List<WalletTransaction>> getWalletsTransactions(String token);
-  Future<dynamic> fundWallet(
+  Future<Result<void>> fundWallet(
       {String token,
       num sourceAmount,
       num exchangeAmount,
       String currency,
       int fundingSource});
   Future<dynamic> fundWalletWired(
-      {String token, num wiredTransferAmount, int fundingSource});
+      {String token,
+      num wiredTransferAmount,
+      int fundingSource,
+      String proofOfPayment,
+      int intermediaryBankType});
 }
 
 class WalletService implements ABSWalletService {
@@ -76,20 +79,22 @@ class WalletService implements ABSWalletService {
   }
 
   @override
-  Future fundWallet(
+  Future<Result<void>> fundWallet(
       {String token,
       num sourceAmount,
       num exchangeAmount,
       String currency,
       int fundingSource}) async {
+    Result<void> result = Result(error: false);
     final url = "${AppStrings.baseUrl}$microService/api/Wallet/fundwallet";
+
     var headers = {HttpHeaders.authorizationHeader: "Bearer $token"};
-    Map<String, dynamic> data = {
-      "walletFundingSource": fundingSource,
-      "currency": currency,
-      "sourceAmount": sourceAmount,
-      "exchangeAmount": exchangeAmount
-    };
+    FormData data = FormData.fromMap({
+      "WalletFundingSource": fundingSource,
+      "Currency": currency,
+      "SourceAmount": sourceAmount,
+      "ExchangeAmount": exchangeAmount
+    });
     print(data);
     print(url);
     try {
@@ -103,30 +108,52 @@ class WalletService implements ABSWalletService {
           },
         ),
       );
+      print("pppvg dd ${fundWallet.data}");
+      print("pppvg 1111 ${fundWallet.statusCode}");
       if (fundWallet.statusCode == 200) {
-        return fundWallet.data["message"];
+        result.error = false;
+        result.errorMessage = fundWallet.data["message"];
       } else if (fundWallet.statusCode == 400) {
-        return null;
+        result.error = true;
+        result.errorMessage = fundWallet.data["message"];
+      } else {
+        result.error = true;
+        result.errorMessage = "Wallet could not be funded";
       }
     } on DioError catch (e) {
-      print(e.message.toString());
-      throw Exception(e.response.toString());
+      result.error = true;
+      if (e.response.data == null) {
+        result.errorMessage = "Error Message";
+      } else {
+        if (e.response.data is Map) {
+          result.errorMessage = e.response.data['message'];
+        } else {
+          result.errorMessage = "Error Message";
+        }
+      }
     }
-    return null;
+    return result;
   }
 
   @override
   Future fundWalletWired(
-      {String token, num wiredTransferAmount, int fundingSource}) async {
+      {String token,
+      num wiredTransferAmount,
+      int fundingSource,
+      String proofOfPayment,
+      int intermediaryBankType}) async {
     final url = "${AppStrings.baseUrl}$microService/api/Wallet/fundwallet";
     var headers = {HttpHeaders.authorizationHeader: "Bearer $token"};
+    FormData data = FormData.fromMap({
+      "WalletFundingSource": fundingSource,
+      "ProofOfPayment.DocumentFile": proofOfPayment,
+      "WireTransferAmount": wiredTransferAmount,
+      "IntermediaryBankType": intermediaryBankType,
+    });
     try {
       final fundWallet = await dio.post(
         url,
-        data: {
-          "walletFundingSource": fundingSource,
-          "wireTransferAmount": wiredTransferAmount,
-        },
+        data: data,
         options: Options(
           headers: headers,
           validateStatus: (status) {

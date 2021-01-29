@@ -3,7 +3,8 @@ import 'package:connectivity/connectivity.dart';
 import 'package:flutter/cupertino.dart';
 
 class ConnectionProvider extends ChangeNotifier {
-  bool neTisOn = true;
+  bool _neTisOn;
+  bool get neTisOn => _neTisOn;
 
   StreamController<ConnectivityResult> netWorkStatus =
   StreamController<ConnectivityResult>();
@@ -20,9 +21,9 @@ class ConnectionProvider extends ChangeNotifier {
 
   setNetWork(ConnectivityResult value) {
     if (value == ConnectivityResult.none) {
-      neTisOn = false;
+      _neTisOn = false;
     } else {
-      neTisOn = true;
+      _neTisOn = true;
     }
     notifyListeners();
   }
