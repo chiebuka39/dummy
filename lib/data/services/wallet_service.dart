@@ -142,8 +142,7 @@ class WalletService implements ABSWalletService {
       int fundingSource,
       String proofOfPayment,
       int intermediaryBankType}) async {
-    final url = "${AppStrings.baseUrl}$microService/api/Wallet/fundwallet";
-      {String token, num wiredTransferAmount, int fundingSource}) async {
+
     final url = "$microService/api/Wallet/fundwallet";
     var headers = {HttpHeaders.authorizationHeader: "Bearer $token"};
     FormData data = FormData.fromMap({
