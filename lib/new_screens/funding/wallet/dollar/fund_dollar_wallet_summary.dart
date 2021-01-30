@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:after_layout/after_layout.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:provider/provider.dart';
@@ -526,17 +527,22 @@ class WiredTransferScreen extends StatefulWidget {
   _WiredTransferScreenState createState() => _WiredTransferScreenState();
 }
 
-class _WiredTransferScreenState extends State<WiredTransferScreen> {
+class _WiredTransferScreenState extends State<WiredTransferScreen> with AfterLayoutMixin<WiredTransferScreen> {
+  WalletViewModel walletViewModel;
   @override
   void initState() {
-    Provider.of<WalletViewModel>(context, listen: false)
-        .getWiredTransferDetails();
     super.initState();
   }
 
   @override
+  void afterFirstLayout(BuildContext context) {
+    walletViewModel.getWiredTransferDetails();
+  }
+
+
+  @override
   Widget build(BuildContext context) {
-    WalletViewModel m = Provider.of(context);
+    walletViewModel = Provider.of(context);
     return Scaffold(
       appBar: ZimAppBar(
         icon: Icons.arrow_back_ios_outlined,
@@ -546,10 +552,10 @@ class _WiredTransferScreenState extends State<WiredTransferScreen> {
           Navigator.pop(context);
         },
       ),
-      body: m.busy
+      body: walletViewModel.busy
           ? Center(child: LoadingWIdget())
           : PageView.builder(
-              itemCount: m.wiredDetails.length,
+              itemCount: walletViewModel.wiredDetails.length,
               itemBuilder: (context, index) => Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
@@ -620,7 +626,7 @@ class _WiredTransferScreenState extends State<WiredTransferScreen> {
                               Container(
                                 width: screenWidth(context) / 2,
                                 child: Text(
-                                  m.wiredDetails[index].beneficiaryName
+                                  walletViewModel.wiredDetails[index].beneficiaryName
                                       .toUpperCase(),
                                   textAlign: TextAlign.end,
                                   style: TextStyle(
@@ -647,7 +653,7 @@ class _WiredTransferScreenState extends State<WiredTransferScreen> {
                               Container(
                                 width: screenWidth(context) / 2.15,
                                 child: Text(
-                                  m.wiredDetails[index].beneficiaryAddress,
+                                  walletViewModel.wiredDetails[index].beneficiaryAddress,
                                   textAlign: TextAlign.end,
                                   style: TextStyle(
                                     fontSize: 10,
@@ -673,7 +679,7 @@ class _WiredTransferScreenState extends State<WiredTransferScreen> {
                               Container(
                                 width: screenWidth(context) / 2.15,
                                 child: Text(
-                                  m.wiredDetails[index].beneficiaryBank,
+                                  walletViewModel.wiredDetails[index].beneficiaryBank,
                                   textAlign: TextAlign.end,
                                   style: TextStyle(
                                     fontSize: 10,
@@ -699,7 +705,7 @@ class _WiredTransferScreenState extends State<WiredTransferScreen> {
                               Container(
                                 width: screenWidth(context) / 3.15,
                                 child: Text(
-                                  m.wiredDetails[index].beneficiaryAccountNumer,
+                                  walletViewModel.wiredDetails[index].beneficiaryAccountNumer,
                                   textAlign: TextAlign.end,
                                   style: TextStyle(
                                     fontSize: 10,
@@ -725,7 +731,7 @@ class _WiredTransferScreenState extends State<WiredTransferScreen> {
                               Container(
                                 width: screenWidth(context) / 2.15,
                                 child: Text(
-                                  m.wiredDetails[index]
+                                  walletViewModel.wiredDetails[index]
                                       .intermediaryBankAccountNumber,
                                   textAlign: TextAlign.end,
                                   style: TextStyle(
@@ -752,7 +758,7 @@ class _WiredTransferScreenState extends State<WiredTransferScreen> {
                               Container(
                                 width: screenWidth(context) / 2.15,
                                 child: Text(
-                                  m.wiredDetails[index].intermediarySwiftCode,
+                                  walletViewModel.wiredDetails[index].intermediarySwiftCode,
                                   textAlign: TextAlign.end,
                                   style: TextStyle(
                                     fontSize: 10,
@@ -778,7 +784,7 @@ class _WiredTransferScreenState extends State<WiredTransferScreen> {
                               Container(
                                 width: screenWidth(context) / 2.15,
                                 child: Text(
-                                  m.wiredDetails[index].intermediaryAddress,
+                                  walletViewModel.wiredDetails[index].intermediaryAddress,
                                   textAlign: TextAlign.end,
                                   style: TextStyle(
                                     fontSize: 10,
