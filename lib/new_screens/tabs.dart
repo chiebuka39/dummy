@@ -4,6 +4,7 @@ import 'package:provider/provider.dart';
 import 'package:zimvest/data/models/payment/wallet.dart';
 import 'package:zimvest/data/view_models/dashboard_view_model.dart';
 import 'package:zimvest/data/view_models/identity_view_model.dart';
+import 'package:zimvest/data/view_models/investment_view_model.dart';
 import 'package:zimvest/data/view_models/payment_view_model.dart';
 import 'package:zimvest/data/view_models/savings_view_model.dart';
 import 'package:zimvest/data/view_models/settings_view_model.dart';

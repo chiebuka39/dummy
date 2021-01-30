@@ -37,14 +37,14 @@ class FundDollarWallet extends StatefulWidget {
 
 class _FundDollarWalletState extends State<FundDollarWallet> {
   // var amountController =
-      // MoneyMaskedTextController(thousandSeparator: ",", decimalSeparator: ".");
+  // MoneyMaskedTextController(thousandSeparator: ",", decimalSeparator: ".");
   @override
   Widget build(BuildContext context) {
     ABSPaymentViewModel paymentViewModel = Provider.of(context);
     return Scaffold(
       appBar: ZimAppBar(
         icon: Icons.arrow_back_ios,
-        callback: (){
+        callback: () {
           Navigator.pop(context);
         },
         text: "",
@@ -67,7 +67,7 @@ class _FundDollarWalletState extends State<FundDollarWallet> {
               ),
             ),
             YMargin(36),
-                        Padding(
+            Padding(
               padding: const EdgeInsets.symmetric(horizontal: 20.0),
               child: Container(
                 padding: EdgeInsets.symmetric(horizontal: 15),
@@ -112,8 +112,8 @@ class _FundDollarWalletState extends State<FundDollarWallet> {
             YMargin(70),
             RoundedNextButton(
               onTap: () {
-                double amount =
-                    double.tryParse(paymentViewModel.amountController.text.split(',').join());
+                double amount = double.tryParse(
+                    paymentViewModel.amountController.text.split(',').join());
                 double balance = widget.wallet
                     .where((element) => element.currency == "NGN")
                     .first
@@ -158,8 +158,9 @@ class _FundDollarWalletState extends State<FundDollarWallet> {
               rightButtonFn: () {
                 setState(
                   () {
-                    paymentViewModel.amountController.text = paymentViewModel.amountController.text
-                        .substring(0, paymentViewModel.amountController.text.length - 1);
+                    paymentViewModel.amountController.text =
+                        paymentViewModel.amountController.text.substring(0,
+                            paymentViewModel.amountController.text.length - 1);
                   },
                 );
               },
@@ -169,7 +170,8 @@ class _FundDollarWalletState extends State<FundDollarWallet> {
       ),
     );
   }
-convertWithComma(String newValue) {
+
+  convertWithComma(String newValue) {
     String value = newValue;
     var buffer = new StringBuffer();
 

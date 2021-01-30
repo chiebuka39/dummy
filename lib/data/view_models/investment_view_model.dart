@@ -349,8 +349,24 @@ class InvestmentHighYieldViewModel extends ChangeNotifier {
   bool _status = false;
   bool get status => _status;
 
+  num _exchangeRate;
+  num get exchangeRate => _exchangeRate;
+
+  File _zeImage;
+  File get pickedImage => _zeImage;
+
   void setBusy(bool value) {
     _busy = value;
+    notifyListeners();
+  }
+
+  set exchangeRate(num value) {
+    _exchangeRate = value;
+    notifyListeners();
+  }
+
+  set pickedImage(File value){
+    _zeImage = value;
     notifyListeners();
   }
 
@@ -524,13 +540,14 @@ class InvestmentHighYieldViewModel extends ChangeNotifier {
     notifyListeners();
   }
 
-  Future<Result<void>> buyDollarInstrumentWired(
+  Future<void> buyDollarInstrumentWired(
       {int productId,
       int beneficiaryBankType,
       int fundingChannel,
-      String proofOfPayment,
+      File proofOfPayment,
       num amount,
       String uniqueName}) async {
+    setBusy(true);
     String token = _localStorage.getUser().token;
     var submitPuchaseReceipt = await _investmentService.buyDollarnstrumentWired(
       token: token,
@@ -538,13 +555,22 @@ class InvestmentHighYieldViewModel extends ChangeNotifier {
       proofOfPayment: proofOfPayment,
       fundingChannel: fundingChannel,
       amount: amount,
+      beneficiaryBankType: beneficiaryBankType,
       uniqueName: uniqueName,
     );
-    return submitPuchaseReceipt;
+    print(submitPuchaseReceipt.toString());
+    if (submitPuchaseReceipt != "Success") {
+      _status = false;
+      setBusy(false);
+    } else {
+      _status = true;
+      setBusy(false);
+    }
+    setBusy(false);
+    notifyListeners();
   }
 
-  File _zeImage;
-  File get pickedImage => _zeImage;
+
 
   Future pickImage() async {
     var picked = await imgs.selectImage();

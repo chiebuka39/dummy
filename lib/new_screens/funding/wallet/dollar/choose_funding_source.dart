@@ -57,35 +57,13 @@ class _FundDollarWalletPaymentOptionState
   Widget build(BuildContext context) {
     paymentViewModel = Provider.of(context);
     return Scaffold(
-      appBar: AppBar(
-        backgroundColor: Colors.transparent,
-        elevation: 0,
-        centerTitle: true,
-        leading: IconButton(
-            icon: Icon(
-              Icons.arrow_back_ios,
-              color: AppColors.kPrimaryColor,
-            ),
-            onPressed: () => Navigator.pop(context)),
-        actions: [
-          FlatButton(
-            child: Text(
-              "Cancel",
-              style: TextStyle(
-                  fontSize: 12,
-                  fontFamily: AppStrings.fontMedium,
-                  color: AppColors.kPrimaryColor),
-            ),
-            onPressed: () {
-              showModalBottomSheet<Null>(
-                  context: context,
-                  builder: (BuildContext context) {
-                    return CancelAction();
-                  },
-                  isScrollControlled: true);
-            },
-          ),
-        ],
+      appBar: ZimAppBar(
+        icon: Icons.arrow_back_ios_outlined,
+        text: "",
+        showCancel: true,
+        callback: () {
+          Navigator.pop(context);
+        },
       ),
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -128,11 +106,10 @@ class _FundDollarWalletPaymentOptionState
                             Navigator.push(
                               context,
                               FundDollarWalletSummaryScreen.route(
-                                amount: widget.amount,
-                                balance: widget.balance,
-                                nairaRate: widget.nairaRate,
-                                isWallet: true
-                              ),
+                                  amount: widget.amount,
+                                  balance: widget.balance,
+                                  nairaRate: widget.nairaRate,
+                                  isWallet: true),
                             );
                           },
                         ),
@@ -149,9 +126,9 @@ class _FundDollarWalletPaymentOptionState
                           paymentsource: "Wired Transfer",
                           image: "wallet",
                           onTap: () {
-
                             ///TODO: keep all the item in the view model
-                            Navigator.push(context, WiredTransferScreen.route());
+                            Navigator.push(
+                                context, WiredTransferScreen.route());
                           }),
                       YMargin(25),
                       PaymentSourceButtonSpecial(

@@ -51,6 +51,7 @@ class _AspireDetailsScreenState extends State<AspireDetailsScreen> with
 
   bool transactionsLoading = true;
   List<ProductTransaction> transactions = [];
+  Map<String,dynamic> withdrawlSummary;
 
   @override
   void afterFirstLayout(BuildContext context) async{
@@ -65,6 +66,16 @@ class _AspireDetailsScreenState extends State<AspireDetailsScreen> with
       transactionsLoading = false;
       transactions = [];
     }
+    var result1 =await savingViewModel.getWithdrawalSummary(
+        token: identityViewModel.user.token,
+        productId: widget.goal.id
+    );
+    if(result.error == false){
+
+      withdrawlSummary = result1.data;
+    }else{
+
+    }
 
     setState(() {
 
@@ -77,7 +88,6 @@ class _AspireDetailsScreenState extends State<AspireDetailsScreen> with
     settingsViewModel = Provider.of(context);
     return Scaffold(
       backgroundColor: AppColors.kWealth,
-
       body: Stack(
         children: [
           Positioned(
@@ -266,7 +276,7 @@ class _AspireDetailsScreenState extends State<AspireDetailsScreen> with
                             child: GestureDetector(
                               onTap: (){
 
-                                if(widget.goal.amountSaved == 0){
+                                if(widget.goal.amountSaved == 0 || withdrawlSummary == null ){
                                   return;
                                 }
                                 if(settingsViewModel.completedSections.kycValidationCheck.isKycValidated == true){
@@ -281,22 +291,26 @@ class _AspireDetailsScreenState extends State<AspireDetailsScreen> with
                                         builder: (BuildContext context) {
                                           return WithdrawWealthbox(
                                             savingPlanModel: widget.goal,
+                                            prompt: withdrawlSummary['prompt'],
                                             onTapYes: (){
 
                                               savingViewModel.selectedPlan = widget.goal;
-                                              Navigator.of(context).pushReplacement(AmountWithdrawScreen.route(penaltyWithDraw: true));
+                                              Navigator.of(context).pushReplacement(
+                                                  AmountWithdrawScreen.route(penaltyWithDraw: true,
+                                                      withdrawableAmount: withdrawlSummary['amount']));
                                             },
                                           );
                                         },
                                         isScrollControlled: true);
                                   }
                                 }else{
+
                                   Navigator.push(context, VerificationNeeded.route());
                                 }
 
                               },
                               child: Opacity(
-                                opacity: widget.goal.amountSaved == 0 ? 0.4:1,
+                                opacity: widget.goal.amountSaved == 0 || withdrawlSummary == null ? 0.4:1,
                                 child: Container(child: Column(children: [
                                   Container(
                                       height:35,

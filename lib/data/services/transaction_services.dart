@@ -30,7 +30,7 @@ class TransactionService implements ABSTransactionService {
       String token) async {
     var headers = {HttpHeaders.authorizationHeader: "Bearer $token"};
     var url =
-        "${AppStrings.baseUrl}$microService/api/Dashboards/dollarportfoliotransaction";
+        "$microService/api/Dashboards/dollarportfoliotransaction";
     print("pppnn ${url}");
     try {
       var getTransactions = await dio.get(
@@ -57,7 +57,7 @@ class TransactionService implements ABSTransactionService {
       String token) async {
     var headers = {HttpHeaders.authorizationHeader: "Bearer $token"};
     var url =
-        "${AppStrings.baseUrl}$microService/api/Dashboards/nairaportfoliotransaction";
+        "$microService/api/Dashboards/nairaportfoliotransaction";
     print("pppnn ${url}");
     try {
       var getTransactions = await dio.get(
@@ -84,7 +84,7 @@ class TransactionService implements ABSTransactionService {
       {String token, String name, int transactionId, int instrumentId}) async {
     var headers = {HttpHeaders.authorizationHeader: "Bearer $token"};
     var url =
-        "${AppStrings.baseUrl}$microService/api/Dashboards/manageterminstrumentV2?TransactionId=$transactionId&TermInstrumentId=$instrumentId&TermInstrumentName=$name";
+        "$microService/api/Dashboards/manageterminstrumentV2?TransactionId=$transactionId&TermInstrumentId=$instrumentId&TermInstrumentName=$name";
     print(url);
     try {
       var getTransactionActivities = await dio.get(
@@ -108,7 +108,7 @@ class TransactionService implements ABSTransactionService {
   Future<Activities> getFixedInvestmentActivities({String token, String name, int transactionId, int instrumentId}) async{
     var headers = {HttpHeaders.authorizationHeader: "Bearer $token"};
     var url =
-        "${AppStrings.baseUrl}$microService/api/Dashboards/managefixedincomeV2?TransactionId=$transactionId&TermInstrumentId=$instrumentId&TermInstrumentName=$name";
+        "$microService/api/Dashboards/managefixedincomeV2?TransactionId=$transactionId&TermInstrumentId=$instrumentId&TermInstrumentName=$name";
     print(url);
     try {
       var getTransactionActivities = await dio.get(
@@ -132,7 +132,7 @@ class TransactionService implements ABSTransactionService {
   Future<List<InvestmentTransactions>> getInvestmentTransactions({int transactionType, String token}) async{
         var headers = {HttpHeaders.authorizationHeader: "Bearer $token"};
     var url =
-        "${AppStrings.baseUrl}$microService/api/Dashboards/investmenttransaction?TransactionType=$transactionType";
+        "$microService/api/Dashboards/investmenttransaction?TransactionType=$transactionType";
     print(url);
     try {
       var getInvestmentTransactions = await dio.get(

@@ -95,7 +95,7 @@ class _InvestmentDurationPeriodState extends State<InvestmentDurationPeriod> {
                 ? Padding(
                     padding: const EdgeInsets.only(
                       left: 20.0,
-                      top: 250,
+                      top: 200,
                       right: 20,
                     ),
                     child: Center(
@@ -108,7 +108,7 @@ class _InvestmentDurationPeriodState extends State<InvestmentDurationPeriod> {
                 : instrument.length == 0
                     ? Padding(
                         padding: const EdgeInsets.symmetric(
-                            horizontal: 20.0, vertical: 250),
+                            horizontal: 20.0, vertical: 200),
                         child: Text(
                           "There are no available investments for ${widget.amount}",
                           textAlign: TextAlign.center,

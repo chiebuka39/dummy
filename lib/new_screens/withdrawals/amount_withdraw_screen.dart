@@ -17,12 +17,13 @@ import 'package:zimvest/widgets/new/new_widgets.dart';
 
 class AmountWithdrawScreen extends StatefulWidget {
   final bool penaltyWithDraw;
+  final double withdrawableAmount;
   const AmountWithdrawScreen({
-    Key key, this.penaltyWithDraw = false,
+    Key key, this.penaltyWithDraw = false, this.withdrawableAmount,
   }) : super(key: key);
-  static Route<dynamic> route({bool penaltyWithDraw = false}) {
+  static Route<dynamic> route({bool penaltyWithDraw = false,double withdrawableAmount}) {
     return MaterialPageRoute(
-        builder: (_) => AmountWithdrawScreen(penaltyWithDraw: penaltyWithDraw,),
+        builder: (_) => AmountWithdrawScreen(penaltyWithDraw: penaltyWithDraw,withdrawableAmount: withdrawableAmount,),
         settings:
         RouteSettings(name: AmountWithdrawScreen().toStringShort()));
   }
@@ -96,16 +97,18 @@ class _SavingDailyScreenState extends State<AmountWithdrawScreen> with AfterLayo
                 ),
                 if (widget.penaltyWithDraw) Padding(
                   padding: const EdgeInsets.only(right: 40,top: 10),
-                  child: Text("You would be charged 10% of your accrued interest for "
-                      "liquidating outside of your accrued date", style: TextStyle(fontSize: 11,fontFamily: AppStrings.fontMedium, height: 1.6),),
+                  child: Text("You can’t withdraw more than ${AppStrings.nairaSymbol}${widget
+                      .withdrawableAmount
+                      .toString().split(".").first.convertWithComma()}", style: TextStyle(fontSize: 11,height: 1.6),),
                 ) else SizedBox(),
                 YMargin(height > 750 ? 65:30),
 
 
                 RoundedNextButton(
                   onTap: pinViewModel.amount.isEmpty? null : double.parse(pinViewModel.amount) < 1000 ? null: (){
-                    if(double.parse(pinViewModel.amount) > savingViewModel.selectedPlan.amountSaved){
-                        AppUtils.showError(context, message: "You don't Have up to this amount on this plan", title: "Insufficient Balance");
+                    if(double.parse(pinViewModel.amount) > (widget.withdrawableAmount == null ? savingViewModel.selectedPlan.amountSaved:widget.withdrawableAmount) ){
+                        AppUtils.showError(context, message: "You can't withdraw up to this "
+                            "amount on this plan", title: "Insufficient Balance");
                     }else{
                       savingViewModel.amountToSave = double.parse(pinViewModel.amount);
                       Navigator.push(context, ChooseWealthWithdrawScreen.route());

@@ -436,9 +436,12 @@ class SavingsInvestmentCashWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    List<SavingPlanModel> goals = [...aspirePlans, SavingPlanModel()];
-    List<SavingPlanModel> goals1 = [...aspirePlans, SavingPlanModel()];
+    ABSSavingViewModel savingViewModel = Provider.of(context);
     ABSDashboardViewModel dashboardViewModel = Provider.of(context);
+    List<SavingPlanModel> goals = [...savingViewModel.savingPlanModel.where((element) => element.productId == 2), SavingPlanModel()];
+    List<SavingPlanModel> goals1 = [...savingViewModel.savingPlanModel.where((element) => element.productId == 2), SavingPlanModel()];
+    print("ooo<<<<<<<<<<<<<<<<<");
+
     return SliverPadding(
       sliver: SliverList(
           delegate: SliverChildListDelegate([
@@ -482,7 +485,7 @@ class SavingsInvestmentCashWidget extends StatelessWidget {
           ],
         ),
         YMargin(25),
-        wealthBox == null
+            savingViewModel.savingPlanModel.where((element) => element.productId == 1).length == 0
             ? SizedBox()
             : GestureDetector(
                 onTap: () {

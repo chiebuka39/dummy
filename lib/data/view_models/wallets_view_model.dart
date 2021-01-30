@@ -1,9 +1,12 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:zimvest/data/local/user_local.dart';
 import 'package:zimvest/data/models/investment/term_instruments.dart';
 import 'package:zimvest/data/models/payment/card.dart';
 import 'package:zimvest/data/models/payment/wallet.dart';
 import 'package:zimvest/data/models/wallets/wallets_model.dart';
+import 'package:zimvest/data/models/wired_transfer_details_model.dart';
 import 'package:zimvest/data/services/investment_service.dart';
 import 'package:zimvest/data/services/payment_service.dart';
 import 'package:zimvest/data/services/wallet_service.dart';
@@ -19,8 +22,9 @@ class WalletViewModel extends BaseViewModel {
   List<WalletTransaction> walletTransaction = List<WalletTransaction>();
   ABSPaymentService _paymentService = locator<ABSPaymentService>();
   List<PaymentCard> cards = List<PaymentCard>();
-   ABSInvestmentService _investmentService = locator<ABSInvestmentService>();
-   
+  List<WiredTransferDetails> wiredDetails = List<WiredTransferDetails>();
+  ABSInvestmentService _investmentService = locator<ABSInvestmentService>();
+
   bool _status = false;
   bool get status => _status;
 
@@ -62,13 +66,16 @@ class WalletViewModel extends BaseViewModel {
     notifyListeners();
   }
 
-  Future<Result<void>> fundWallet({num sourceAmount, String currency,
-      int fundingSource}) async {
+  Future<Result<void>> fundWallet(
+      {num sourceAmount, String currency, int fundingSource}) async {
     setBusy(true);
     String token = _localStorage.getUser().token;
-        var getAmount =
-        await _investmentService.calculateRate(token: token, amount: sourceAmount, sourceCurrency: "USD", destiationCurrency: "NGN");
-        print("opppp ${getAmount.destinationAmount}");
+    var getAmount = await _investmentService.calculateRate(
+        token: token,
+        amount: sourceAmount,
+        sourceCurrency: "USD",
+        destiationCurrency: "NGN");
+    print("opppp ${getAmount.destinationAmount}");
     var fundWallet = await _walletService.fundWallet(
         sourceAmount: getAmount.sourceAmount,
         token: token,
@@ -92,6 +99,48 @@ class WalletViewModel extends BaseViewModel {
     setBusy(false);
     notifyListeners();
     return fundWallet;
+  }
+
+  Future<Result<void>> fundWalletWired(
+      {num wiredTransferAmount,
+      int fundingSource,
+      File proofOfPayment,
+      int intermediaryBankType}) async {
+    setBusy(true);
+    String token = _localStorage.getUser().token;
+    var wireTransfer = await _walletService.fundWalletWired(
+      token: token,
+      wiredTransferAmount: wiredTransferAmount,
+      fundingSource: fundingSource,
+      proofOfPayment: proofOfPayment,
+      intermediaryBankType: intermediaryBankType,
+    );
+    setResult(wireTransfer);
+    if (wireTransfer.error == false) {
+      setBusy(false);
+      _status = true;
+    } else if (wireTransfer.error == true) {
+      setBusy(false);
+      _message = "Oops! Something went wrong try again later";
+      _status = false;
+    } else {
+      setBusy(false);
+      _message = fundWallet.toString();
+      _status = false;
+    }
+    setBusy(false);
+    notifyListeners();
+    return wireTransfer;
+  }
+
+  Future<void> getWiredTransferDetails() async {
+    setBusy(true);
+    String token = _localStorage.getUser().token;
+    var wiredTransferDetails =
+        await _walletService.getWiredTransferDetails(token);
+    this.wiredDetails = wiredTransferDetails.data;
+    setBusy(false);
+    notifyListeners();
   }
 
   void check() {

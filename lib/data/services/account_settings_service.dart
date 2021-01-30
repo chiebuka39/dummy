@@ -63,7 +63,7 @@ class SettingsService extends ABSSettingsService{
     var headers = {
       HttpHeaders.authorizationHeader: "Bearer $token"
     };
-    var url = "${AppStrings.baseUrl}zimvest.onboarding.individual/api/Profiles";
+    var url = "zimvest.onboarding.individual/api/Profiles";
 
     print("lll $url");
     try{
@@ -96,7 +96,7 @@ class SettingsService extends ABSSettingsService{
     var headers = {
       HttpHeaders.authorizationHeader: "Bearer $token"
     };
-    var url = "${AppStrings.baseUrl}zimvest.onboarding.individual/api/NextOfKins";
+    var url = "zimvest.onboarding.individual/api/NextOfKins";
 
     print("lll $url");
     try{
@@ -141,7 +141,7 @@ class SettingsService extends ABSSettingsService{
     var headers = {
       HttpHeaders.authorizationHeader: "Bearer $token"
     };
-    var url = "${AppStrings.baseUrl}zimvest.onboarding.individual/api/Profiles/notificationsettings";
+    var url = "zimvest.onboarding.individual/api/Profiles/notificationsettings";
 
     print("lll $url");
     try{
@@ -185,7 +185,7 @@ class SettingsService extends ABSSettingsService{
     var headers = {
       HttpHeaders.authorizationHeader: "Bearer $token"
     };
-    var url = "${AppStrings.baseUrl}zimvest.onboarding.individual/api/Documents/identifications";
+    var url = "zimvest.onboarding.individual/api/Documents/identifications";
 
     var body = FormData.fromMap({
       "IdentificationNumber": id,
@@ -230,7 +230,7 @@ class SettingsService extends ABSSettingsService{
     var headers = {
       HttpHeaders.authorizationHeader: "Bearer $token"
     };
-    var url = "${AppStrings.baseUrl}zimvest.onboarding.individual/api/Documents/utilitybills";
+    var url = "zimvest.onboarding.individual/api/Documents/utilitybills";
 
     var body = FormData.fromMap({
       "UtilityBill.DocumentFile":await MultipartFile.fromFile(file.path)
@@ -273,7 +273,7 @@ class SettingsService extends ABSSettingsService{
     var headers = {
       HttpHeaders.authorizationHeader: "Bearer $token"
     };
-    var url = "${AppStrings.baseUrl}zimvest.onboarding.individual/api/Profiles/residentialinformation";
+    var url = "zimvest.onboarding.individual/api/Profiles/residentialinformation";
 
     var body = {
       "state":state,
@@ -316,7 +316,7 @@ class SettingsService extends ABSSettingsService{
     var headers = {
       HttpHeaders.authorizationHeader: "Bearer $token"
     };
-    var url = "${AppStrings.baseUrl}zimvest.onboarding.individual/api"
+    var url = "zimvest.onboarding.individual/api"
         "/Profiles/getresidentialinformation";
 
     print("lll $url");
@@ -356,7 +356,7 @@ class SettingsService extends ABSSettingsService{
     var headers = {
       HttpHeaders.authorizationHeader: "Bearer $token"
     };
-    var url = "${AppStrings.baseUrl}zimvest.onboarding.individual/api/Profiles/bvn";
+    var url = "zimvest.onboarding.individual/api/Profiles/bvn";
 
     print("lll $url");
     try{
@@ -400,7 +400,7 @@ class SettingsService extends ABSSettingsService{
     var headers = {
       HttpHeaders.authorizationHeader: "Bearer $token"
     };
-    var url = "${AppStrings.baseUrl}zimvest.onboarding.individual/api/"
+    var url = "zimvest.onboarding.individual/api/"
         "IndividualOnboarding/checkcompletedsections";
 
     print("lll $url");
@@ -443,7 +443,7 @@ class SettingsService extends ABSSettingsService{
     var headers = {
       HttpHeaders.authorizationHeader: "Bearer $token"
     };
-    var url = "${AppStrings.baseUrl}zimvest.onboarding.individual/api/Profiles/notificationsettings";
+    var url = "zimvest.onboarding.individual/api/Profiles/notificationsettings";
 
     var body = {
       "receiveEmailUpdateOnInvestment":receiveEmailUpdateOnInvestment,
@@ -480,7 +480,7 @@ class SettingsService extends ABSSettingsService{
     var headers = {
       HttpHeaders.authorizationHeader: "Bearer $token"
     };
-    var url = "${AppStrings.baseUrl}zimvest.onboarding.individual/api/Profiles/bvn";
+    var url = "zimvest.onboarding.individual/api/Profiles/bvn";
 
     var body = {
       "bvn":bvn,
@@ -525,7 +525,7 @@ class SettingsService extends ABSSettingsService{
     var headers = {
       HttpHeaders.authorizationHeader: "Bearer $token"
     };
-    var url = "${AppStrings.baseUrl}zimvest.onboarding.individual/api/Profiles";
+    var url = "zimvest.onboarding.individual/api/Profiles";
 
     var body = FormData.fromMap({
       "FirstName":firstName,
@@ -577,7 +577,7 @@ class SettingsService extends ABSSettingsService{
     var headers = {
       HttpHeaders.authorizationHeader: "Bearer $token"
     };
-    var url = "${AppStrings.baseUrl}zimvest.onboarding.individual/api/NextOfKins";
+    var url = "zimvest.onboarding.individual/api/NextOfKins";
 
     var body = {
       "fullName":fullName,
@@ -632,7 +632,7 @@ class SettingsService extends ABSSettingsService{
     var headers = {
       HttpHeaders.authorizationHeader: "Bearer $token"
     };
-    var url = "${AppStrings.baseUrl}zimvest.services.general/api/IPS/profilerInformation";
+    var url = "zimvest.services.general/api/IPS/profilerInformation";
 
     var body = {
       "investmentKnowledge":investmentKnowledge,
@@ -690,7 +690,7 @@ class SettingsService extends ABSSettingsService{
     var headers = {
       HttpHeaders.authorizationHeader: "Bearer $token"
     };
-    var url = "${AppStrings.baseUrl}zimvest.services.general/api/IPS/checkipsstatus";
+    var url = "zimvest.services.general/api/IPS/checkipsstatus";
 
 
     print("lll $url");

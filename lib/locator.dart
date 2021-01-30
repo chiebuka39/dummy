@@ -1,4 +1,5 @@
 import 'package:dio/dio.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:get_it/get_it.dart';
 import 'package:zimvest/data/local/user_local.dart';
 import 'package:zimvest/data/services/account_settings_service.dart';
@@ -13,6 +14,7 @@ import 'package:zimvest/data/services/savings_service.dart';
 import 'package:zimvest/data/services/temp_service.dart';
 import 'package:zimvest/data/services/transaction_services.dart';
 import 'package:zimvest/data/services/wallet_service.dart';
+import 'package:zimvest/utils/strings.dart';
 import 'package:zimvest/utils/image_picker.dart';
 
 import 'data/models/transactions_portfolio/naira_model.dart';
@@ -23,7 +25,23 @@ GetIt locator = GetIt.instance;
 
 void setUpLocator(){
   locator.registerLazySingleton(() => NavigationService());
-  locator.registerLazySingleton<Dio>(() => Dio());
+  locator.registerLazySingleton<Dio>(() {
+    BaseOptions options = new BaseOptions(
+        baseUrl: AppStrings.baseUrl,
+        receiveDataWhenStatusError: true,
+        connectTimeout: 5*1000, // 60 seconds
+        receiveTimeout: 5*1000 // 60 seconds
+    );
+    Dio dio = Dio(options);
+    dio.interceptors.add(InterceptorsWrapper(
+        onRequest: (Options options){
+
+          debugPrint("Omo interceptor was added");
+          return options;
+        }
+    ));
+    return dio;
+  });
   locator.registerLazySingleton<ABSOthersService>(() => OthersService());
   locator.registerLazySingleton<ABSTempService>(() => TempService());
   locator.registerLazySingleton<ABSIdentityService>(() => IdentityService());

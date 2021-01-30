@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:provider/provider.dart';
@@ -17,6 +19,7 @@ import 'package:zimvest/utils/strings.dart';
 import 'package:zimvest/widgets/buttons.dart';
 import 'package:zimvest/widgets/navigation/delete_wealthbox.dart';
 import 'package:zimvest/widgets/new/anim.dart';
+import 'package:zimvest/widgets/new/new_widgets.dart';
 
 import '../../../tabs.dart';
 import '../../top_up_successful.dart';
@@ -26,18 +29,29 @@ class FundDollarWalletSummaryScreen extends StatefulWidget {
   final double balance;
   final double nairaRate;
   final bool isWallet;
+  final File image;
 
   const FundDollarWalletSummaryScreen(
-      {Key key, this.amount, this.balance, this.nairaRate, this.isWallet})
+      {Key key,
+      this.amount,
+      this.balance,
+      this.nairaRate,
+      this.isWallet,
+      this.image})
       : super(key: key);
   static Route<dynamic> route(
-      {double amount, double balance, double nairaRate, bool isWallet}) {
+      {double amount,
+      double balance,
+      double nairaRate,
+      bool isWallet,
+      File image}) {
     return MaterialPageRoute(
       builder: (_) => FundDollarWalletSummaryScreen(
         amount: amount,
         balance: balance,
         nairaRate: nairaRate,
         isWallet: isWallet,
+        image: image,
       ),
       settings: RouteSettings(
         name: FundDollarWalletSummaryScreen().toStringShort(),
@@ -113,7 +127,7 @@ class _FundDollarWalletSummaryScreenState
     return ViewModelProvider<WalletViewModel>.withConsumer(
       viewModelBuilder: () => WalletViewModel(),
       builder: (context, model, _) => WillPopScope(
-        onWillPop: ()async{
+        onWillPop: () async {
           return false;
         },
         child: Scaffold(
@@ -191,7 +205,9 @@ class _FundDollarWalletSummaryScreenState
                                                       context,
                                                       MaterialPageRoute(
                                                           builder: (context) =>
-                                                              TabsContainer(tab: 4,)),
+                                                              TabsContainer(
+                                                                tab: 4,
+                                                              )),
                                                       (Route<dynamic> route) =>
                                                           false);
                                                 },
@@ -208,102 +224,84 @@ class _FundDollarWalletSummaryScreenState
                                   ),
                                 );
                               },
-                            ) : PlayAnimation<MultiTweenValues<AniProps>>(
-                                      tween: _tween,
-                                      duration: _tween.duration,
-                                      builder: (context, child, value) {
-                                        return Container(
-                                          width: screenWidth(context),
-                                          height:
-                                              MediaQuery.of(context).size.height,
-                                          child: Center(
-                                            child: Column(
-                                              crossAxisAlignment:
-                                                  CrossAxisAlignment.center,
-                                              children: [
-                                                Spacer(),
-                                                Transform.scale(
-                                                  scale:
-                                                      value.get(AniProps.scale),
-                                                  child: Transform.translate(
-                                                    offset: value
-                                                        .get(AniProps.offset1),
-                                                    child: Opacity(
-                                                      opacity: value
-                                                          .get(AniProps.opacity1),
-                                                      child: SvgPicture.asset(
-                                                          "images/new/errfetti.svg"),
-                                                    ),
-                                                  ),
-                                                ),
-                                                YMargin(40),
-                                                Transform.scale(
-                                                  scale:
-                                                      value.get(AniProps.scale),
-                                                  child: Transform.translate(
-                                                    offset: value
-                                                        .get(AniProps.offset1),
-                                                    child: Opacity(
-                                                      opacity: slideUp
-                                                          ? value.get(
-                                                              AniProps.opacity1)
-                                                          : 0.0,
-                                                      child: SizedBox(
-                                                        child: Text(
-                                                          "${model.result.errorMessage}",
-                                                          textAlign:
-                                                              TextAlign.center,
-                                                          style: TextStyle(
-                                                              color: Colors.white),
-                                                        ),
-                                                      ),
-                                                    ),
-                                                  ),
-                                                ),
-                                                Spacer(),
-                                                Transform.scale(
-                                                  scale:
-                                                      value.get(AniProps.scale),
-                                                  child: Transform.translate(
-                                                    offset: value
-                                                        .get(AniProps.offset1),
-                                                    child: Opacity(
-                                                      opacity: slideUp
-                                                          ? value.get(
-                                                              AniProps.opacity1)
-                                                          : 0.0,
-                                                      child: PrimaryButtonNew(
-                                                        onTap: () {
-                                                          Navigator.pop(context);
-                                                          // Navigator.pushAndRemoveUntil(
-                                                          //     context,
-                                                          //     MaterialPageRoute(
-                                                          //         builder:
-                                                          //             (context) =>
-                                                          //                 TabsContainer()),
-                                                          //     (Route<dynamic>
-                                                          //             route) =>
-                                                          //         false);
-                                                        },
-                                                        textColor: Colors.white,
-                                                        title: "Retry",
-                                                        bg: AppColors
-                                                            .kPrimaryColor,
-                                                      ),
-                                                    ),
-                                                  ),
-                                                ),
-                                                YMargin(50)
-                                              ],
+                            )
+                          : PlayAnimation<MultiTweenValues<AniProps>>(
+                              tween: _tween,
+                              duration: _tween.duration,
+                              builder: (context, child, value) {
+                                return Container(
+                                  width: screenWidth(context),
+                                  height: MediaQuery.of(context).size.height,
+                                  child: Center(
+                                    child: Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.center,
+                                      children: [
+                                        Spacer(),
+                                        Transform.scale(
+                                          scale: value.get(AniProps.scale),
+                                          child: Transform.translate(
+                                            offset: value.get(AniProps.offset1),
+                                            child: Opacity(
+                                              opacity:
+                                                  value.get(AniProps.opacity1),
+                                              child: SvgPicture.asset(
+                                                  "images/new/errfetti.svg"),
                                             ),
                                           ),
-                                        );
-                                      },
+                                        ),
+                                        YMargin(40),
+                                        Transform.scale(
+                                          scale: value.get(AniProps.scale),
+                                          child: Transform.translate(
+                                            offset: value.get(AniProps.offset1),
+                                            child: Opacity(
+                                              opacity: slideUp
+                                                  ? value.get(AniProps.opacity1)
+                                                  : 0.0,
+                                              child: SizedBox(
+                                                child: Text(
+                                                  "${model.result.errorMessage}",
+                                                  textAlign: TextAlign.center,
+                                                  style: TextStyle(
+                                                      color: Colors.white),
+                                                ),
+                                              ),
+                                            ),
+                                          ),
+                                        ),
+                                        Spacer(),
+                                        Transform.scale(
+                                          scale: value.get(AniProps.scale),
+                                          child: Transform.translate(
+                                            offset: value.get(AniProps.offset1),
+                                            child: Opacity(
+                                              opacity: slideUp
+                                                  ? value.get(AniProps.opacity1)
+                                                  : 0.0,
+                                              child: PrimaryButtonNew(
+                                                onTap: () {
+                                                  Navigator.pop(context);
+                                                },
+                                                textColor: Colors.white,
+                                                title: "Retry",
+                                                bg: AppColors.kPrimaryColor,
+                                              ),
+                                            ),
+                                          ),
+                                        ),
+                                        YMargin(50)
+                                      ],
                                     ),
+                                  ),
+                                );
+                              },
+                            ),
                 ),
                 AnimatedPositioned(
                   duration: Duration(milliseconds: 500),
-                  top: slideUp ? -(MediaQuery.of(context).size.height - 200) : 0,
+                  top:
+                      slideUp ? -(MediaQuery.of(context).size.height - 200) : 0,
                   left: 0,
                   right: 0,
                   child: Container(
@@ -331,12 +329,14 @@ class _FundDollarWalletSummaryScreenState
                             padding: const EdgeInsets.only(left: 20),
                             child: Text(
                               "Dollar Wallet Funding",
-                              style: TextStyle(fontFamily: AppStrings.fontMedium),
+                              style:
+                                  TextStyle(fontFamily: AppStrings.fontMedium),
                             ),
                           ),
                           YMargin(20),
                           Padding(
-                            padding: const EdgeInsets.symmetric(horizontal: 20.0),
+                            padding:
+                                const EdgeInsets.symmetric(horizontal: 20.0),
                             child: Container(
                               decoration: BoxDecoration(
                                   color: AppColors.kWhite,
@@ -394,7 +394,8 @@ class _FundDollarWalletSummaryScreenState
                                               textAlign: TextAlign.justify,
                                               style: TextStyle(
                                                 fontSize: 11,
-                                                fontFamily: AppStrings.fontMedium,
+                                                fontFamily:
+                                                    AppStrings.fontMedium,
                                                 color: AppColors.kLightText5,
                                               ),
                                             ),
@@ -420,7 +421,8 @@ class _FundDollarWalletSummaryScreenState
                                               textAlign: TextAlign.justify,
                                               style: TextStyle(
                                                 fontSize: 11,
-                                                fontFamily: AppStrings.fontMedium,
+                                                fontFamily:
+                                                    AppStrings.fontMedium,
                                                 color: AppColors.kLightText5,
                                               ),
                                             ),
@@ -457,10 +459,22 @@ class _FundDollarWalletSummaryScreenState
                   right: 0,
                   child: GestureDetector(
                     onVerticalDragStart: (details) {
-                      startAnim();
-                      // num nairaAmount = widget.amount * widget.nairaRate;
-                      model.fundWallet(
-                          sourceAmount: widget.amount, currency: "USD",fundingSource: widget.isWallet ? 1:2);
+                      if (widget.isWallet) {
+                        print("Nawa oo");
+                        startAnim();
+                        model.fundWallet(
+                            sourceAmount: widget.amount,
+                            currency: "USD",
+                            fundingSource: widget.isWallet ? 1 : 2);
+                      } else {
+                        print("OMO");
+                        startAnim();
+                        model.fundWalletWired(
+                            wiredTransferAmount: widget.amount,
+                            proofOfPayment: widget.image,
+                            intermediaryBankType: 1,
+                            fundingSource: 2);
+                      }
                       paymentViewModel.amountController.clear();
                     },
                     child: Container(
@@ -495,12 +509,10 @@ class _FundDollarWalletSummaryScreenState
   }
 }
 
-
-
 class WiredTransferScreen extends StatefulWidget {
-
-
-  const WiredTransferScreen({Key key,}) : super(key: key);
+  const WiredTransferScreen({
+    Key key,
+  }) : super(key: key);
   static Route<dynamic> route() {
     return MaterialPageRoute(
       builder: (_) => WiredTransferScreen(),
@@ -516,292 +528,285 @@ class WiredTransferScreen extends StatefulWidget {
 
 class _WiredTransferScreenState extends State<WiredTransferScreen> {
   @override
+  void initState() {
+    Provider.of<WalletViewModel>(context, listen: false)
+        .getWiredTransferDetails();
+    super.initState();
+  }
+
+  @override
   Widget build(BuildContext context) {
+    WalletViewModel m = Provider.of(context);
     return Scaffold(
-      appBar: AppBar(
-        backgroundColor: Colors.transparent,
-        elevation: 0,
-        centerTitle: true,
-        leading: IconButton(
-            icon: Icon(
-              Icons.arrow_back_ios,
-              color: AppColors.kPrimaryColor,
-            ),
-            onPressed: () => Navigator.pop(context)),
-        actions: [
-          FlatButton(
-            child: Text(
-              "Cancel",
-              style: TextStyle(
-                  fontSize: 12,
-                  fontFamily: AppStrings.fontMedium,
-                  color: AppColors.kPrimaryColor),
-            ),
-            onPressed: () {
-              showModalBottomSheet<Null>(
-                  context: context,
-                  builder: (BuildContext context) {
-                    return CancelAction();
-                  },
-                  isScrollControlled: true);
-            },
-          ),
-        ],
+      appBar: ZimAppBar(
+        icon: Icons.arrow_back_ios_outlined,
+        text: "",
+        showCancel: true,
+        callback: () {
+          Navigator.pop(context);
+        },
       ),
-      body: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          YMargin(69),
-          Padding(
-            padding: const EdgeInsets.only(left: 20.0),
-            child: Text(
-              "Wired Transfer",
-              style: TextStyle(
-                fontSize: 15,
-                fontFamily: AppStrings.fontBold,
-                color: AppColors.kTextColor,
-              ),
-            ),
-          ),
-          YMargin(22),
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 20.0),
-            child: Container(
-              padding:
-                  EdgeInsets.only(left: 27, right: 26, top: 29, bottom: 28),
-              height: screenHeight(context) / 1.7,
-              width: screenWidth(context),
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(20),
-                color: AppColors.kWhite,
-                boxShadow: [
-                  BoxShadow(
-                    blurRadius: 1,
-                    color: Color(0x20000000),
-                    spreadRadius: -0.1,
-                    offset: Offset(1.5, 1.5),
-                  ),
-                ],
-              ),
-              child: Column(
+      body: m.busy
+          ? Center(child: LoadingWIdget())
+          : PageView.builder(
+              itemCount: m.wiredDetails.length,
+              itemBuilder: (context, index) => Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text(
-                    "Wired Transfer Details",
-                    style: TextStyle(
-                      fontSize: 13,
-                      fontFamily: AppStrings.fontBold,
-                      color: AppColors.kTextColor,
+                  YMargin(69),
+                  Padding(
+                    padding: const EdgeInsets.only(left: 20.0),
+                    child: Text(
+                      "Wired Transfer",
+                      style: TextStyle(
+                        fontSize: 15,
+                        fontFamily: AppStrings.fontBold,
+                        color: AppColors.kTextColor,
+                      ),
                     ),
                   ),
-                  YMargin(10),
-                  Text(
-                    "Kindly note that this mode of payment may 2 - 5 working days depending on your bank",
-                    style: TextStyle(
-                      fontSize: 10,
-                      fontFamily: AppStrings.fontNormal,
-                      color: AppColors.kTextColor,
+                  YMargin(22),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 20.0),
+                    child: Container(
+                      padding: EdgeInsets.only(
+                          left: 27, right: 26, top: 29, bottom: 28),
+                      height: screenHeight(context) / 1.7,
+                      width: screenWidth(context),
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(20),
+                        color: AppColors.kWhite,
+                        boxShadow: [
+                          BoxShadow(
+                            blurRadius: 1,
+                            color: Color(0x20000000),
+                            spreadRadius: -0.1,
+                            offset: Offset(1.5, 1.5),
+                          ),
+                        ],
+                      ),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            "Wired Transfer Details",
+                            style: TextStyle(
+                              fontSize: 13,
+                              fontFamily: AppStrings.fontBold,
+                              color: AppColors.kTextColor,
+                            ),
+                          ),
+                          YMargin(10),
+                          Text(
+                            "Kindly note that this mode of payment may 2 - 5 working days depending on your bank",
+                            style: TextStyle(
+                              fontSize: 10,
+                              fontFamily: AppStrings.fontNormal,
+                              color: AppColors.kTextColor,
+                            ),
+                          ),
+                          YMargin(30),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Text(
+                                "Beneficiary name:",
+                                style: TextStyle(
+                                  fontSize: 10,
+                                  fontFamily: AppStrings.fontBold,
+                                  color: AppColors.kTextColor,
+                                ),
+                              ),
+                              Container(
+                                width: screenWidth(context) / 2,
+                                child: Text(
+                                  m.wiredDetails[index].beneficiaryName
+                                      .toUpperCase(),
+                                  textAlign: TextAlign.end,
+                                  style: TextStyle(
+                                    fontSize: 10,
+                                    fontFamily: AppStrings.fontNormal,
+                                    color: AppColors.kTextColor,
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                          YMargin(25),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Text(
+                                "Beneficiary address:",
+                                style: TextStyle(
+                                  fontSize: 10,
+                                  fontFamily: AppStrings.fontBold,
+                                  color: AppColors.kTextColor,
+                                ),
+                              ),
+                              Container(
+                                width: screenWidth(context) / 2.15,
+                                child: Text(
+                                  m.wiredDetails[index].beneficiaryAddress,
+                                  textAlign: TextAlign.end,
+                                  style: TextStyle(
+                                    fontSize: 10,
+                                    fontFamily: AppStrings.fontNormal,
+                                    color: AppColors.kTextColor,
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                          YMargin(25),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Text(
+                                "Beneficiary bank:",
+                                style: TextStyle(
+                                  fontSize: 10,
+                                  fontFamily: AppStrings.fontBold,
+                                  color: AppColors.kTextColor,
+                                ),
+                              ),
+                              Container(
+                                width: screenWidth(context) / 2.15,
+                                child: Text(
+                                  m.wiredDetails[index].beneficiaryBank,
+                                  textAlign: TextAlign.end,
+                                  style: TextStyle(
+                                    fontSize: 10,
+                                    fontFamily: AppStrings.fontNormal,
+                                    color: AppColors.kTextColor,
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                          YMargin(25),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Text(
+                                "Beneficiary account number:",
+                                style: TextStyle(
+                                  fontSize: 10,
+                                  fontFamily: AppStrings.fontBold,
+                                  color: AppColors.kTextColor,
+                                ),
+                              ),
+                              Container(
+                                width: screenWidth(context) / 3.15,
+                                child: Text(
+                                  m.wiredDetails[index].beneficiaryAccountNumer,
+                                  textAlign: TextAlign.end,
+                                  style: TextStyle(
+                                    fontSize: 10,
+                                    fontFamily: AppStrings.fontNormal,
+                                    color: AppColors.kTextColor,
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                          YMargin(25),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Text(
+                                "Account number:",
+                                style: TextStyle(
+                                  fontSize: 10,
+                                  fontFamily: AppStrings.fontBold,
+                                  color: AppColors.kTextColor,
+                                ),
+                              ),
+                              Container(
+                                width: screenWidth(context) / 2.15,
+                                child: Text(
+                                  m.wiredDetails[index]
+                                      .intermediaryBankAccountNumber,
+                                  textAlign: TextAlign.end,
+                                  style: TextStyle(
+                                    fontSize: 10,
+                                    fontFamily: AppStrings.fontNormal,
+                                    color: AppColors.kTextColor,
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                          YMargin(25),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Text(
+                                "Swift code:",
+                                style: TextStyle(
+                                  fontSize: 10,
+                                  fontFamily: AppStrings.fontBold,
+                                  color: AppColors.kTextColor,
+                                ),
+                              ),
+                              Container(
+                                width: screenWidth(context) / 2.15,
+                                child: Text(
+                                  m.wiredDetails[index].intermediarySwiftCode,
+                                  textAlign: TextAlign.end,
+                                  style: TextStyle(
+                                    fontSize: 10,
+                                    fontFamily: AppStrings.fontNormal,
+                                    color: AppColors.kTextColor,
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                          YMargin(25),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Text(
+                                "Bank address:",
+                                style: TextStyle(
+                                  fontSize: 10,
+                                  fontFamily: AppStrings.fontBold,
+                                  color: AppColors.kTextColor,
+                                ),
+                              ),
+                              Container(
+                                width: screenWidth(context) / 2.15,
+                                child: Text(
+                                  m.wiredDetails[index].intermediaryAddress,
+                                  textAlign: TextAlign.end,
+                                  style: TextStyle(
+                                    fontSize: 10,
+                                    fontFamily: AppStrings.fontNormal,
+                                    color: AppColors.kTextColor,
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ],
+                      ),
                     ),
                   ),
-                  YMargin(30),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Text(
-                        "Beneficiary name:",
-                        style: TextStyle(
-                          fontSize: 10,
-                          fontFamily: AppStrings.fontBold,
-                          color: AppColors.kTextColor,
-                        ),
+                  YMargin(58),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 87),
+                    child: PrimaryButtonNew(
+                      title: "I have made payment",
+                      onTap: () => Navigator.push(
+                        context,
+                        UploadProofOfPayment.route(),
                       ),
-                      Container(
-                        width: screenWidth(context) / 2,
-                        child: Text(
-                          "ZEDCREST INVESTMENT MANAGERS LIMITED",
-                          textAlign: TextAlign.end,
-                          style: TextStyle(
-                            fontSize: 10,
-                            fontFamily: AppStrings.fontNormal,
-                            color: AppColors.kTextColor,
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                  YMargin(25),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Text(
-                        "Beneficiary address:",
-                        style: TextStyle(
-                          fontSize: 10,
-                          fontFamily: AppStrings.fontBold,
-                          color: AppColors.kTextColor,
-                        ),
-                      ),
-                      Container(
-                        width: screenWidth(context) / 2.15,
-                        child: Text(
-                          "177A Ligali Ayorinde, Victoria Island,Lagos",
-                          textAlign: TextAlign.end,
-                          style: TextStyle(
-                            fontSize: 10,
-                            fontFamily: AppStrings.fontNormal,
-                            color: AppColors.kTextColor,
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                  YMargin(25),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Text(
-                        "Beneficiary bank:",
-                        style: TextStyle(
-                          fontSize: 10,
-                          fontFamily: AppStrings.fontBold,
-                          color: AppColors.kTextColor,
-                        ),
-                      ),
-                      Container(
-                        width: screenWidth(context) / 2.15,
-                        child: Text(
-                          "First City Monument Bank  Limited",
-                          textAlign: TextAlign.end,
-                          style: TextStyle(
-                            fontSize: 10,
-                            fontFamily: AppStrings.fontNormal,
-                            color: AppColors.kTextColor,
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                  YMargin(25),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Text(
-                        "Beneficiary account number:",
-                        style: TextStyle(
-                          fontSize: 10,
-                          fontFamily: AppStrings.fontBold,
-                          color: AppColors.kTextColor,
-                        ),
-                      ),
-                      Container(
-                        width: screenWidth(context) / 3.15,
-                        child: Text(
-                          "6643633035",
-                          textAlign: TextAlign.end,
-                          style: TextStyle(
-                            fontSize: 10,
-                            fontFamily: AppStrings.fontNormal,
-                            color: AppColors.kTextColor,
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                  YMargin(25),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Text(
-                        "Account number:",
-                        style: TextStyle(
-                          fontSize: 10,
-                          fontFamily: AppStrings.fontBold,
-                          color: AppColors.kTextColor,
-                        ),
-                      ),
-                      Container(
-                        width: screenWidth(context) / 2.15,
-                        child: Text(
-                          "0101254445850",
-                          textAlign: TextAlign.end,
-                          style: TextStyle(
-                            fontSize: 10,
-                            fontFamily: AppStrings.fontNormal,
-                            color: AppColors.kTextColor,
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                  YMargin(25),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Text(
-                        "Swit code:",
-                        style: TextStyle(
-                          fontSize: 10,
-                          fontFamily: AppStrings.fontBold,
-                          color: AppColors.kTextColor,
-                        ),
-                      ),
-                      Container(
-                        width: screenWidth(context) / 2.15,
-                        child: Text(
-                          "FCMBNGLA",
-                          textAlign: TextAlign.end,
-                          style: TextStyle(
-                            fontSize: 10,
-                            fontFamily: AppStrings.fontNormal,
-                            color: AppColors.kTextColor,
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                  YMargin(25),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Text(
-                        "Bank address:",
-                        style: TextStyle(
-                          fontSize: 10,
-                          fontFamily: AppStrings.fontBold,
-                          color: AppColors.kTextColor,
-                        ),
-                      ),
-                      Container(
-                        width: screenWidth(context) / 2.15,
-                        child: Text(
-                          "17a Tinubu Street, Lagos Island, Lagos, Nigeria",
-                          textAlign: TextAlign.end,
-                          style: TextStyle(
-                            fontSize: 10,
-                            fontFamily: AppStrings.fontNormal,
-                            color: AppColors.kTextColor,
-                          ),
-                        ),
-                      ),
-                    ],
+                    ),
                   ),
                 ],
               ),
             ),
-          ),
-          YMargin(58),
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 87),
-            child: PrimaryButtonNew(
-              title: "I have made payment",
-              onTap: () => Navigator.push(
-                context,
-                UploadProofOfPayment.route(),
-              ),
-            ),
-          ),
-        ],
-      ),
     );
   }
 }

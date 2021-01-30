@@ -50,6 +50,7 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   void initState() {
     super.initState();
+    Provider.of<InvestmentHighYieldViewModel>(context, listen: false).getRate();
   }
 
   @override
@@ -58,6 +59,7 @@ class _HomeScreenState extends State<HomeScreen> {
     dashboardViewModel = Provider.of(context);
     savingViewModel = Provider.of(context);
     settingsViewModel = Provider.of(context);
+    InvestmentHighYieldViewModel investmentModel = Provider.of(context);
     print(".pppppp ${dashboardViewModel.dashboardModel.nairaPortfolio}");
     return Scaffold(
       body: SafeArea(
@@ -501,7 +503,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                     child: GestureDetector(
                                       onTap: () => Navigator.push(
                                         context,
-                                        HighYieldDetailsDollar.route(),
+                                        HighYieldDetailsDollar.route(exchangeRate: investmentModel.gotRate.data.rate),
                                       ),
                                       child: Container(
                                         height: 130,

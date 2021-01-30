@@ -25,6 +25,7 @@ import 'package:zimvest/data/view_models/payment_view_model.dart';
 import 'package:zimvest/data/view_models/pin_view_model.dart';
 import 'package:zimvest/data/view_models/savings_view_model.dart';
 import 'package:zimvest/data/view_models/settings_view_model.dart';
+import 'package:zimvest/data/view_models/wallets_view_model.dart';
 import 'package:zimvest/locator.dart';
 import 'package:zimvest/new_screens/account/temp_login_screen.dart';
 import 'package:zimvest/new_screens/tabs.dart';
@@ -96,6 +97,12 @@ class MyApp extends StatelessWidget {
               create: (_) => ConnectionProvider()),
           ChangeNotifierProvider<LiquidateAssetViewModel>(
             create: (_) => LiquidateAssetViewModel(),
+          ),
+          ChangeNotifierProvider<WalletViewModel>(
+            create: (_) => WalletViewModel(),
+          ),
+          ChangeNotifierProvider<InvestmentHighYieldViewModel>(
+            create: (_) => InvestmentHighYieldViewModel(),
           )
         ],
         child: MaterialApp(
@@ -126,7 +133,6 @@ class _HomeAppState extends State<HomeApp> with WidgetsBindingObserver {
   final ABSStateLocalStorage _localStorage = locator<ABSStateLocalStorage>();
   StreamSubscription<ConnectivityResult> _connectivitySubscription;
 
-
   double _statusBarHeight = 0.0;
   StatusBarAnimation _statusBarAnimation = StatusBarAnimation.SLIDE;
 
@@ -144,22 +150,15 @@ class _HomeAppState extends State<HomeApp> with WidgetsBindingObserver {
         SecondaryState state = SecondaryState(false,
             email: _localStorage.getSecondaryState().email,
             password: _localStorage.getSecondaryState().password,
-          biometricsEnabled: _localStorage.getSecondaryState().biometricsEnabled
-        );
+            biometricsEnabled:
+                _localStorage.getSecondaryState().biometricsEnabled);
         _localStorage.saveSecondaryState(state);
       }
     }
 
-
-
     initPlatformState();
     super.initState();
   }
-
-
-
-
-
 
   Future<void> initPlatformState() async {
     double statusBarHeight;
@@ -212,10 +211,11 @@ void configLoading() {
 
 class NavigationService {
   final GlobalKey<NavigatorState> navigatorKey =
-  new GlobalKey<NavigatorState>();
+      new GlobalKey<NavigatorState>();
   Future<dynamic> navigateTo(String routeName) {
     return navigatorKey.currentState.pushNamed(routeName);
   }
+
   Future<dynamic> navigateTo1(Route<dynamic> route) {
     return navigatorKey.currentState.push(route);
   }

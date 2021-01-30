@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:provider/provider.dart';
+import 'package:zimvest/data/view_models/investment_view_model.dart';
 import 'package:zimvest/new_screens/navigation/investments/high_yield/dollar/high_yield_investment_dollar_name_input.dart';
 import 'package:zimvest/styles/colors.dart';
 import 'package:zimvest/utils/margins.dart';
@@ -7,9 +9,12 @@ import 'package:zimvest/utils/strings.dart';
 import 'package:zimvest/widgets/buttons.dart';
 
 class HighYieldDetailsDollar extends StatefulWidget {
-  static Route<dynamic> route() {
+  final double exchangeRate;
+
+  const HighYieldDetailsDollar({Key key, this.exchangeRate}) : super(key: key);
+  static Route<dynamic> route({double exchangeRate}) {
     return MaterialPageRoute(
-      builder: (_) => HighYieldDetailsDollar(),
+      builder: (_) => HighYieldDetailsDollar(exchangeRate: exchangeRate,),
       settings: RouteSettings(
         name: HighYieldDetailsDollar().toStringShort(),
       ),
@@ -22,8 +27,14 @@ class HighYieldDetailsDollar extends StatefulWidget {
 
 class _HighYieldDetailsDollarState extends State<HighYieldDetailsDollar> {
   @override
-  Widget build(BuildContext context) {
+  void initState() {
+    Provider.of<InvestmentHighYieldViewModel>(context, listen: false).getRate();
+    super.initState();
+  }
 
+  @override
+  Widget build(BuildContext context) {
+    InvestmentHighYieldViewModel investmentModel = Provider.of(context);
     return Scaffold(
       backgroundColor: AppColors.kHighYield,
       body: Stack(
@@ -149,10 +160,14 @@ class _HighYieldDetailsDollarState extends State<HighYieldDetailsDollar> {
                             Center(
                               child: PrimaryButtonNew(
                                 title: "Get Started",
-                                onTap: () => Navigator.push(
-                                  context,
-                                  HighYieldInvestmentDollarUniqueName.route(),
-                                ),
+                                onTap: () {
+                                  print(investmentModel.gotRate.data.rate);
+                                  investmentModel.exchangeRate = widget.exchangeRate;
+                                  Navigator.push(
+                                    context,
+                                    HighYieldInvestmentDollarUniqueName.route(),
+                                  );
+                                },
                               ),
                             ),
                             verticalSpace(63),

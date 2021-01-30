@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:provider/provider.dart';
@@ -166,74 +168,91 @@ class _InvestmentSummaryScreenDollarState
                         duration: _tween.duration,
                         builder: (context, child, value) {
                           return Container(
+                            // color: Colors.white,
                             height: MediaQuery.of(context).size.height,
-                            child: Center(
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.center,
-                                children: [
-                                  Spacer(),
-                                  Transform.scale(
-                                    scale: value.get(AniProps.scale),
-                                    child: Transform.translate(
-                                      offset: value.get(AniProps.offset1),
-                                      child: Opacity(
-                                        opacity: value.get(AniProps.opacity1),
-                                        child: SvgPicture.asset(
-                                            "images/new/confetti.svg"),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              children: [
+                                Spacer(
+                                  flex: 2,
+                                ),
+                                Transform.scale(
+                                  scale: value.get(AniProps.scale),
+                                  child: Transform.translate(
+                                    offset: value.get(AniProps.offset1),
+                                    child: Opacity(
+                                      opacity: value.get(AniProps.opacity1),
+                                      child: Text(
+                                        "Transaction Processing",
+                                        style: TextStyle(
+                                            fontSize: 16,
+                                            fontWeight: FontWeight.w400,
+                                            fontFamily: AppStrings.fontMedium,
+                                            color: AppColors.kWhite),
                                       ),
                                     ),
                                   ),
-                                  YMargin(40),
-                                  Transform.scale(
-                                    scale: value.get(AniProps.scale),
-                                    child: Transform.translate(
-                                      offset: value.get(AniProps.offset1),
-                                      child: Opacity(
-                                        opacity: slideUp
-                                            ? value.get(AniProps.opacity1)
-                                            : 0.0,
-                                        child: Padding(
-                                          padding: const EdgeInsets.symmetric(
-                                              horizontal: 20.0),
-                                          child: Text(
-                                            "You Have Successfully Invested In Zimvest High Yield Dollar",
-                                            textAlign: TextAlign.center,
-                                            style:
-                                                TextStyle(color: Colors.white),
-                                          ),
+                                ),
+                                Spacer(),
+                                Transform.scale(
+                                  scale: value.get(AniProps.scale),
+                                  child: Transform.translate(
+                                    offset: value.get(AniProps.offset1),
+                                    child: Opacity(
+                                      opacity: value.get(AniProps.opacity1),
+                                      child: SvgPicture.asset(
+                                          "images/new/confetti.svg"),
+                                    ),
+                                  ),
+                                ),
+                                YMargin(40),
+                                Transform.scale(
+                                  scale: value.get(AniProps.scale),
+                                  child: Transform.translate(
+                                    offset: value.get(AniProps.offset1),
+                                    child: Opacity(
+                                      opacity: slideUp
+                                          ? value.get(AniProps.opacity1)
+                                          : 0.0,
+                                      child: Padding(
+                                        padding: const EdgeInsets.symmetric(
+                                            horizontal: 20.0),
+                                        child: Text(
+                                          "Transaction will be confirmed between 48 - 72 hours",
+                                          textAlign: TextAlign.center,
+                                          style: TextStyle(color: Colors.white),
                                         ),
                                       ),
                                     ),
                                   ),
-                                  Spacer(),
-                                  Transform.scale(
-                                    scale: value.get(AniProps.scale),
-                                    child: Transform.translate(
-                                      offset: value.get(AniProps.offset1),
-                                      child: Opacity(
-                                        opacity: slideUp
-                                            ? value.get(AniProps.opacity1)
-                                            : 0.0,
-                                        child: PrimaryButtonNew(
-                                          onTap: () {
-                                            Navigator.pushAndRemoveUntil(
-                                                context,
-                                                MaterialPageRoute(
-                                                    builder: (context) =>
-                                                        TabsContainer()),
-                                                (Route<dynamic> route) =>
-                                                    false);
-                                          },
-                                          textColor: Colors.white,
-                                          title: "Done",
-                                          bg: AppColors.kPrimaryColor,
-                                        ),
+                                ),
+                                Spacer(),
+                                Transform.scale(
+                                  scale: value.get(AniProps.scale),
+                                  child: Transform.translate(
+                                    offset: value.get(AniProps.offset1),
+                                    child: Opacity(
+                                      opacity: slideUp
+                                          ? value.get(AniProps.opacity1)
+                                          : 0.0,
+                                      child: PrimaryButtonNew(
+                                        onTap: () {
+                                          Navigator.pushAndRemoveUntil(
+                                              context,
+                                              MaterialPageRoute(
+                                                  builder: (context) =>
+                                                      TabsContainer()),
+                                              (Route<dynamic> route) => false);
+                                        },
+                                        textColor: Colors.white,
+                                        title: "Done",
+                                        bg: AppColors.kPrimaryColor,
                                       ),
                                     ),
                                   ),
-                                  YMargin(50)
-                                ],
-                              ),
+                                ),
+                                YMargin(50)
+                              ],
                             ),
                           );
                         },
@@ -654,255 +673,16 @@ class _InvestmentSummaryScreenDollarState
   }
 }
 
-Widget summarySreen(context) {
-  return Stack(
-    children: [
-      Positioned(
-        top: 0,
-        right: 0,
-        left: 0,
-        child: Container(
-          height: screenHeight(context) / 1.4,
-          width: screenWidth(context),
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.only(
-              bottomLeft: Radius.circular(40),
-              bottomRight: Radius.circular(40),
-            ),
-            color: AppColors.kWhite,
-          ),
-          child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 20.0),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                YMargin(73),
-                Text(
-                  "Investment Summary",
-                  style: TextStyle(
-                    fontSize: 13,
-                    fontFamily: AppStrings.fontMedium,
-                    color: AppColors.kTextColor,
-                  ),
-                ),
-                YMargin(27),
-                Container(
-                  decoration: BoxDecoration(
-                      color: AppColors.kWhite,
-                      borderRadius: BorderRadius.circular(10),
-                      boxShadow: AppUtils.getBoxShaddow),
-                  height: screenHeight(context) / 2.2,
-                  width: screenWidth(context),
-                  child: Column(
-                    // mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      YMargin(27),
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            "INVESTMENT NAME (Zimvest High Yield Naira 30 Days)",
-                            textAlign: TextAlign.start,
-                            style: TextStyle(
-                              fontSize: 11,
-                              fontFamily: AppStrings.fontMedium,
-                              color: AppColors.kLightText5,
-                            ),
-                          ),
-                          Text(
-                            "Good vibes",
-                            style: TextStyle(
-                              fontSize: 11,
-                              fontFamily: AppStrings.fontBold,
-                              color: AppColors.kTextColor,
-                            ),
-                          ),
-                        ],
-                      ),
-                      YMargin(40),
-                      Padding(
-                        padding: const EdgeInsets.only(left: 23.0, right: 23.0),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Column(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text(
-                                  "INTEREST RATE",
-                                  textAlign: TextAlign.justify,
-                                  style: TextStyle(
-                                    fontSize: 11,
-                                    fontFamily: AppStrings.fontMedium,
-                                    color: AppColors.kLightText5,
-                                  ),
-                                ),
-                                Text(
-                                  "6% P.A",
-                                  style: TextStyle(
-                                    fontSize: 11,
-                                    fontFamily: AppStrings.fontBold,
-                                    color: AppColors.kTextColor,
-                                  ),
-                                ),
-                              ],
-                            ),
-                            Column(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text(
-                                  "NEXT MATURITY DATE",
-                                  textAlign: TextAlign.justify,
-                                  style: TextStyle(
-                                    fontSize: 11,
-                                    fontFamily: AppStrings.fontMedium,
-                                    color: AppColors.kLightText5,
-                                  ),
-                                ),
-                                Text(
-                                  "Feb 29, 2020",
-                                  style: TextStyle(
-                                    fontSize: 11,
-                                    fontFamily: AppStrings.fontBold,
-                                    color: AppColors.kTextColor,
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ],
-                        ),
-                      ),
-                      YMargin(40),
-                      Padding(
-                        padding: const EdgeInsets.only(left: 23.0, right: 23.0),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Column(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text(
-                                  "AMOUNT",
-                                  textAlign: TextAlign.justify,
-                                  style: TextStyle(
-                                    fontSize: 11,
-                                    fontFamily: AppStrings.fontMedium,
-                                    color: AppColors.kLightText5,
-                                  ),
-                                ),
-                                Text(
-                                  "${AppStrings.nairaSymbol}20,000,000",
-                                  style: TextStyle(
-                                    fontSize: 11,
-                                    fontFamily: AppStrings.fontBold,
-                                    color: AppColors.kTextColor,
-                                  ),
-                                ),
-                              ],
-                            ),
-                            Column(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text(
-                                  "PROCESSING FEE (1.5%)",
-                                  textAlign: TextAlign.justify,
-                                  style: TextStyle(
-                                    fontSize: 11,
-                                    fontFamily: AppStrings.fontMedium,
-                                    color: AppColors.kLightText5,
-                                  ),
-                                ),
-                                Text(
-                                  "${AppStrings.nairaSymbol}30,000",
-                                  style: TextStyle(
-                                    fontSize: 11,
-                                    fontFamily: AppStrings.fontBold,
-                                    color: AppColors.kTextColor,
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ],
-                        ),
-                      ),
-                      YMargin(40),
-                      Padding(
-                        padding: const EdgeInsets.only(left: 23.0),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          children: [
-                            Column(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text(
-                                  "TOTAL",
-                                  textAlign: TextAlign.justify,
-                                  style: TextStyle(
-                                    fontSize: 11,
-                                    fontFamily: AppStrings.fontMedium,
-                                    color: AppColors.kLightText5,
-                                  ),
-                                ),
-                                Text(
-                                  "${AppStrings.nairaSymbol}20,030,000",
-                                  style: TextStyle(
-                                    fontSize: 11,
-                                    fontFamily: AppStrings.fontBold,
-                                    color: AppColors.kTextColor,
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ],
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              ],
-            ),
-          ),
-        ),
-      ),
-      Positioned(
-        bottom: 34,
-        left: 50,
-        right: 50,
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            RotatedBox(
-              quarterTurns: 1,
-              child: Icon(
-                Icons.arrow_back_ios,
-                color: AppColors.kWhite,
-              ),
-            ),
-            Text(
-              "Swipe up to confirm",
-              style: TextStyle(
-                fontSize: 13,
-                fontFamily: AppStrings.fontLight,
-                color: AppColors.kWhite,
-              ),
-            ),
-          ],
-        ),
-      )
-    ],
-  );
-}
-
 class InvestmentSummaryScreenDollarWired extends StatefulWidget {
-  static Route<dynamic> route() {
+  final File pickedImage;
+
+  const InvestmentSummaryScreenDollarWired({Key key, this.pickedImage})
+      : super(key: key);
+  static Route<dynamic> route({File pickedImage}) {
     return MaterialPageRoute(
-      builder: (_) => InvestmentSummaryScreenDollarWired(),
+      builder: (_) => InvestmentSummaryScreenDollarWired(
+        pickedImage: pickedImage,
+      ),
       settings: RouteSettings(
         name: InvestmentSummaryScreenDollarWired().toStringShort(),
       ),
@@ -916,28 +696,635 @@ class InvestmentSummaryScreenDollarWired extends StatefulWidget {
 
 class _InvestmentSummaryScreenDollarWiredState
     extends State<InvestmentSummaryScreenDollarWired> {
+  List<GlobalKey<ItemFaderState>> keys;
+
+  bool loading = false;
+
+  final _tween = MultiTween<AniProps>()
+    ..add(
+        AniProps.offset1,
+        Tween(begin: Offset(0, 10), end: Offset(0, 0)),
+        800.milliseconds,
+        Interval(
+          0.0,
+          1.0,
+          curve: Curves.easeIn,
+        ))
+    ..add(
+        AniProps.scale,
+        Tween(begin: 0.0, end: 1.0),
+        800.milliseconds,
+        Interval(
+          0.0,
+          0.6,
+          curve: Curves.bounceInOut,
+        ))
+    ..add(
+        AniProps.opacity1,
+        0.0.tweenTo(1.0),
+        800.milliseconds,
+        Interval(
+          0.0,
+          1.0,
+          curve: Curves.ease,
+        ));
+
+  bool confirmed = false;
+
+  bool slideUp = false;
+
+  @override
+  void initState() {
+    keys = List.generate(2, (index) => GlobalKey<ItemFaderState>());
+
+    super.initState();
+  }
+
+  void startAnim() async {
+    setState(() {
+      slideUp = true;
+      loading = true;
+    });
+  }
+
+  void onInit() async {
+    for (var key in keys) {
+      key.currentState.show();
+    }
+  }
+
+  ConnectionProvider network;
+  ABSPaymentViewModel paymentViewModel;
+  InvestmentHighYieldViewModel investmentModel;
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: AppColors.kTextColor,
-      appBar: AppBar(
-        backgroundColor: AppColors.kWhite,
-        elevation: 0,
-        leading: IconButton(
-          icon: Icon(
-            Icons.arrow_back_ios,
-            color: AppColors.kPrimaryColor,
+    network = Provider.of(context);
+    paymentViewModel = Provider.of(context);
+    investmentModel = Provider.of(context);
+    return ViewModelProvider<InvestmentHighYieldViewModel>.withConsumer(
+      viewModelBuilder: () => InvestmentHighYieldViewModel(),
+      builder: (context, model, _) => Scaffold(
+        backgroundColor: AppColors.kSecondaryColor,
+        body: Container(
+          height: MediaQuery.of(context).size.height,
+          child: Stack(
+            fit: StackFit.expand,
+            children: [
+              SvgPicture.asset(
+                "images/patterns.svg",
+                fit: BoxFit.fill,
+              ),
+              Positioned.fill(
+                child: model.busy
+                    ? Center(
+                        child: LoadingWIdget(),
+                      )
+                    : model.status
+                        ? PlayAnimation<MultiTweenValues<AniProps>>(
+                            tween: _tween,
+                            duration: _tween.duration,
+                            builder: (context, child, value) {
+                              return Container(
+                                // color: Colors.white,
+                                height: MediaQuery.of(context).size.height,
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.center,
+                                  children: [
+                                    Spacer(
+                                      flex: 2,
+                                    ),
+                                    Transform.scale(
+                                      scale: value.get(AniProps.scale),
+                                      child: Transform.translate(
+                                        offset: value.get(AniProps.offset1),
+                                        child: Opacity(
+                                          opacity: value.get(AniProps.opacity1),
+                                          child: Text(
+                                            "Awaiting Confirmation",
+                                            style: TextStyle(
+                                                fontSize: 16,
+                                                fontWeight: FontWeight.w400,
+                                                fontFamily:
+                                                    AppStrings.fontMedium,
+                                                color: AppColors.kWhite),
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                    Spacer(),
+                                    Transform.scale(
+                                      scale: value.get(AniProps.scale),
+                                      child: Transform.translate(
+                                        offset: value.get(AniProps.offset1),
+                                        child: Opacity(
+                                          opacity: value.get(AniProps.opacity1),
+                                          child: SvgPicture.asset(
+                                              "images/new/confetti.svg"),
+                                        ),
+                                      ),
+                                    ),
+                                    YMargin(40),
+                                    Transform.scale(
+                                      scale: value.get(AniProps.scale),
+                                      child: Transform.translate(
+                                        offset: value.get(AniProps.offset1),
+                                        child: Opacity(
+                                          opacity: slideUp
+                                              ? value.get(AniProps.opacity1)
+                                              : 0.0,
+                                          child: Padding(
+                                            padding: const EdgeInsets.symmetric(
+                                                horizontal: 20.0),
+                                            child: Text(
+                                              "Transaction will be confirmed between 48 - 72 hours",
+                                              textAlign: TextAlign.center,
+                                              style: TextStyle(
+                                                  color: Colors.white),
+                                            ),
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                    Spacer(),
+                                    Transform.scale(
+                                      scale: value.get(AniProps.scale),
+                                      child: Transform.translate(
+                                        offset: value.get(AniProps.offset1),
+                                        child: Opacity(
+                                          opacity: slideUp
+                                              ? value.get(AniProps.opacity1)
+                                              : 0.0,
+                                          child: PrimaryButtonNew(
+                                            onTap: () {
+                                              Navigator.pushAndRemoveUntil(
+                                                  context,
+                                                  MaterialPageRoute(
+                                                      builder: (context) =>
+                                                          TabsContainer()),
+                                                  (Route<dynamic> route) =>
+                                                      false);
+                                            },
+                                            textColor: Colors.white,
+                                            title: "Done",
+                                            bg: AppColors.kPrimaryColor,
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                    YMargin(50)
+                                  ],
+                                ),
+                              );
+                            },
+                          )
+                        : model.busy
+                            ? Center(child: LoadingWIdget())
+                            : model.status
+                                ? Text(
+                                    model.status.toString(),
+                                    style: TextStyle(color: AppColors.kWhite),
+                                  )
+                                : PlayAnimation<MultiTweenValues<AniProps>>(
+                                    tween: _tween,
+                                    duration: _tween.duration,
+                                    builder: (context, child, value) {
+                                      return Container(
+                                        width: screenWidth(context),
+                                        height:
+                                            MediaQuery.of(context).size.height,
+                                        child: Center(
+                                          child: Column(
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.center,
+                                            children: [
+                                              Spacer(),
+                                              Transform.scale(
+                                                scale:
+                                                    value.get(AniProps.scale),
+                                                child: Transform.translate(
+                                                  offset: value
+                                                      .get(AniProps.offset1),
+                                                  child: Opacity(
+                                                    opacity: value
+                                                        .get(AniProps.opacity1),
+                                                    child: SvgPicture.asset(
+                                                        "images/new/errfetti.svg"),
+                                                  ),
+                                                ),
+                                              ),
+                                              YMargin(40),
+                                              Transform.scale(
+                                                scale:
+                                                    value.get(AniProps.scale),
+                                                child: Transform.translate(
+                                                  offset: value
+                                                      .get(AniProps.offset1),
+                                                  child: Opacity(
+                                                    opacity: slideUp
+                                                        ? value.get(
+                                                            AniProps.opacity1)
+                                                        : 0.0,
+                                                    child: Text(
+                                                      "Your investment was not successful",
+                                                      textAlign:
+                                                          TextAlign.center,
+                                                      style: TextStyle(
+                                                          color: Colors.white),
+                                                    ),
+                                                  ),
+                                                ),
+                                              ),
+                                              Spacer(),
+                                              Transform.scale(
+                                                scale:
+                                                    value.get(AniProps.scale),
+                                                child: Transform.translate(
+                                                  offset: value
+                                                      .get(AniProps.offset1),
+                                                  child: Opacity(
+                                                    opacity: slideUp
+                                                        ? value.get(
+                                                            AniProps.opacity1)
+                                                        : 0.0,
+                                                    child: PrimaryButtonNew(
+                                                      onTap: () {
+                                                        Navigator.pushAndRemoveUntil(
+                                                            context,
+                                                            MaterialPageRoute(
+                                                                builder:
+                                                                    (context) =>
+                                                                        TabsContainer()),
+                                                            (Route<dynamic>
+                                                                    route) =>
+                                                                false);
+                                                      },
+                                                      textColor: Colors.white,
+                                                      title: "Retry",
+                                                      bg: AppColors
+                                                          .kPrimaryColor,
+                                                    ),
+                                                  ),
+                                                ),
+                                              ),
+                                              YMargin(50)
+                                            ],
+                                          ),
+                                        ),
+                                      );
+                                    },
+                                  ),
+              ),
+              AnimatedPositioned(
+                duration: Duration(milliseconds: 500),
+                top: slideUp ? -(MediaQuery.of(context).size.height - 200) : 0,
+                left: 0,
+                right: 0,
+                child: Container(
+                  width: double.infinity,
+                  height: MediaQuery.of(context).size.height - 200,
+                  decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.only(
+                        bottomLeft: Radius.circular(25),
+                        bottomRight: Radius.circular(25),
+                      ),
+                      boxShadow: AppUtils.getBoxShaddow3),
+                  child: SafeArea(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            BackButton(
+                              color: AppColors.kPrimaryColor,
+                              onPressed: () {
+                                Navigator.pop(context);
+                              },
+                            ),
+                            Padding(
+                              padding: const EdgeInsets.only(right: 20.0),
+                              child: InkWell(
+                                onTap: () => Navigator.pushAndRemoveUntil(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) => TabsContainer()),
+                                    (Route<dynamic> route) => false),
+                                child: Text(
+                                  "Cancel",
+                                  style: TextStyle(
+                                    color: AppColors.kPrimaryColor,
+                                    fontSize: 11,
+                                    fontFamily: AppStrings.fontNormal,
+                                    fontWeight: FontWeight.w400,
+                                  ),
+                                ),
+                              ),
+                            ),
+                            // XMargin(1),
+                          ],
+                        ),
+                        YMargin(70),
+                        Padding(
+                          padding: const EdgeInsets.only(left: 20),
+                          child: Text(
+                            "Investment Summary",
+                            style: TextStyle(fontFamily: AppStrings.fontMedium),
+                          ),
+                        ),
+                        YMargin(20),
+                        Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 20.0),
+                          child: Container(
+                            decoration: BoxDecoration(
+                                color: AppColors.kWhite,
+                                borderRadius: BorderRadius.circular(10),
+                                boxShadow: AppUtils.getBoxShaddow),
+                            height: screenHeight(context) / 2.2,
+                            width: screenWidth(context),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                YMargin(27),
+                                Padding(
+                                  padding: const EdgeInsets.symmetric(
+                                      horizontal: 20.0),
+                                  child: Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      Text(
+                                        "INVESTMENT NAME (Zimvest High Yield Dollar)",
+                                        textAlign: TextAlign.start,
+                                        style: TextStyle(
+                                          fontSize: 11,
+                                          fontFamily: AppStrings.fontMedium,
+                                          color: AppColors.kLightText5,
+                                        ),
+                                      ),
+                                      YMargin(8),
+                                      Text(
+                                        "${paymentViewModel.investmentName}",
+                                        style: TextStyle(
+                                          fontSize: 11,
+                                          fontFamily: AppStrings.fontBold,
+                                          color: AppColors.kTextColor,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                                YMargin(40),
+                                Padding(
+                                  padding: const EdgeInsets.only(
+                                      left: 23.0, right: 23.0),
+                                  child: Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      Column(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.spaceBetween,
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: [
+                                          Text(
+                                            "amount in dollars".toUpperCase(),
+                                            textAlign: TextAlign.justify,
+                                            style: TextStyle(
+                                              fontSize: 11,
+                                              fontFamily: AppStrings.fontMedium,
+                                              color: AppColors.kLightText5,
+                                            ),
+                                          ),
+                                          YMargin(8),
+                                          Text(
+                                            "${AppStrings.dollarSymbol}${paymentViewModel.investmentAmount.toString().split('.')[0].convertWithComma()}",
+                                            style: TextStyle(
+                                              fontSize: 11,
+                                              fontFamily: AppStrings.fontBold,
+                                              color: AppColors.kTextColor,
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                      Column(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.spaceBetween,
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.end,
+                                        children: [
+                                          Text(
+                                            "amount in naira".toUpperCase(),
+                                            textAlign: TextAlign.justify,
+                                            style: TextStyle(
+                                              fontSize: 11,
+                                              fontFamily: AppStrings.fontMedium,
+                                              color: AppColors.kLightText5,
+                                            ),
+                                          ),
+                                          YMargin(8),
+                                          Text(
+                                            "${AppStrings.nairaSymbol}${(paymentViewModel.investmentAmount * investmentModel.exchangeRate).toString().split('.')[0].convertWithComma()}",
+                                            style: TextStyle(
+                                              fontSize: 11,
+                                              fontFamily: AppStrings.fontBold,
+                                              color: AppColors.kTextColor,
+                                            ),
+                                            textAlign: TextAlign.end,
+                                          ),
+                                        ],
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                                YMargin(40),
+                                Padding(
+                                  padding: const EdgeInsets.only(
+                                      left: 23.0, right: 23.0),
+                                  child: Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      Column(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.spaceBetween,
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: [
+                                          Text(
+                                            "PROCESSING FEE (1.5%)",
+                                            textAlign: TextAlign.justify,
+                                            style: TextStyle(
+                                              fontSize: 11,
+                                              fontFamily: AppStrings.fontMedium,
+                                              color: AppColors.kLightText5,
+                                            ),
+                                          ),
+                                          YMargin(8),
+                                          Text(
+                                            "${AppStrings.dollarSymbol}${(0.015 * paymentViewModel.investmentAmount).toString().split('.')[0].convertWithComma()}",
+                                            style: TextStyle(
+                                              fontSize: 11,
+                                              fontFamily: AppStrings.fontBold,
+                                              color: AppColors.kTextColor,
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                      Column(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.spaceBetween,
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.end,
+                                        children: [
+                                          Text(
+                                            "INTEREST RATE",
+                                            textAlign: TextAlign.justify,
+                                            style: TextStyle(
+                                              fontSize: 11,
+                                              fontFamily: AppStrings.fontMedium,
+                                              color: AppColors.kLightText5,
+                                            ),
+                                          ),
+                                          YMargin(8),
+                                          Text(
+                                            "${paymentViewModel.pickeddollarInstrument.rate}%",
+                                            style: TextStyle(
+                                              fontSize: 11,
+                                              fontFamily: AppStrings.fontBold,
+                                              color: AppColors.kFixed,
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                                YMargin(40),
+                                Padding(
+                                  padding: const EdgeInsets.only(
+                                      left: 23.0, right: 19),
+                                  child: Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      Column(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.spaceBetween,
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: [
+                                          Text(
+                                            "TOTAL",
+                                            textAlign: TextAlign.justify,
+                                            style: TextStyle(
+                                              fontSize: 11,
+                                              fontFamily: AppStrings.fontMedium,
+                                              color: AppColors.kLightText5,
+                                            ),
+                                          ),
+                                          YMargin(8),
+                                          Text(
+                                            "${AppStrings.dollarSymbol}${((0.015 * paymentViewModel.investmentAmount) + paymentViewModel.investmentAmount).toString().split('.')[0].convertWithComma()}",
+                                            style: TextStyle(
+                                              fontSize: 11,
+                                              fontFamily: AppStrings.fontBold,
+                                              color: AppColors.kTextColor,
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                      Column(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.spaceBetween,
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.end,
+                                        children: [
+                                          Text(
+                                            "NEXT MATURITY DATE",
+                                            textAlign: TextAlign.justify,
+                                            style: TextStyle(
+                                              fontSize: 11,
+                                              fontFamily: AppStrings.fontMedium,
+                                              color: AppColors.kLightText5,
+                                            ),
+                                          ),
+                                          YMargin(8),
+                                          Text(
+                                            "${paymentViewModel.pickeddollarInstrument.maturityDate}",
+                                            style: TextStyle(
+                                              fontSize: 11,
+                                              fontFamily: AppStrings.fontBold,
+                                              color: AppColors.kTextColor,
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              ),
+              AnimatedPositioned(
+                duration: Duration(milliseconds: 500),
+                //top: MediaQuery.of(context).size.height - 100,
+                top: slideUp == true
+                    ? -60
+                    : (MediaQuery.of(context).size.height - 100),
+                left: 0,
+                right: 0,
+                child: GestureDetector(
+                  onVerticalDragStart: (details) {
+                    if (network.neTisOn) {
+                      startAnim();
+                      model.buyDollarInstrumentWired(
+                        beneficiaryBankType: 1,
+                        proofOfPayment: widget.pickedImage,
+                        amount: paymentViewModel.investmentAmount,
+                        productId: paymentViewModel.pickeddollarInstrument.id,
+                        uniqueName: paymentViewModel.investmentName,
+                        fundingChannel: 4,
+                      );
+                      paymentViewModel.amountController.clear();
+                    } else {
+                      cautionFlushBar(context, "No Network",
+                          "Please make sure you are connected to the internet");
+                    }
+                  },
+                  child: Container(
+                    height: 60,
+                    child: Column(
+                      children: [
+                        Column(
+                          children: [
+                            Icon(
+                              Icons.keyboard_arrow_up,
+                              color: AppColors.kWhite,
+                            ),
+                            Text(
+                              "Swipe up to confirm",
+                              style: TextStyle(
+                                  fontFamily: AppStrings.fontMedium,
+                                  color: Colors.white),
+                            ),
+                          ],
+                        )
+                      ],
+                    ),
+                  ),
+                ),
+              ),
+            ],
           ),
-          onPressed: () => Navigator.pop(context),
         ),
-      ),
-      body: GestureDetector(
-        onPanUpdate: (details) {
-          if (details.delta.dy < 0) {
-            Navigator.push(context, InvestmentConfirmationDollarWired.route());
-          }
-        },
-        child: summarySreen(context),
       ),
     );
   }

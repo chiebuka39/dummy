@@ -71,6 +71,7 @@ class _InvestmentHighYieldDollarAmountInputState
   Widget build(BuildContext context) {
     ConnectionProvider network = Provider.of(context);
     ABSPaymentViewModel paymentViewModel = Provider.of(context);
+    InvestmentHighYieldViewModel investmentModel = Provider.of(context);
     return ViewModelProvider<InvestmentHighYieldViewModel>.withConsumer(
       viewModelBuilder: () => InvestmentHighYieldViewModel(),
       builder: (context, model, _) => Scaffold(
@@ -145,7 +146,7 @@ class _InvestmentHighYieldDollarAmountInputState
                 child: Text(
                   paymentViewModel.amountController.text == ""
                       ? ""
-                      : "₦ ${(double.tryParse(paymentViewModel.amountController.text.split(',').join()) * 390).toString().split('.')[0].convertWithComma()} (1 USD = 390.0 NGN)",
+                      : "₦ ${(double.tryParse(paymentViewModel.amountController.text.split(',').join()) * investmentModel.exchangeRate.toDouble()).toString().split('.')[0].convertWithComma()} (1 USD = ${investmentModel.exchangeRate.toDouble()} NGN)",
                   style: TextStyle(
                     fontSize: 12,
                     fontFamily: AppStrings.fontNormal,

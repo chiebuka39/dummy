@@ -19,11 +19,11 @@ abstract class ABSWalletService {
       num exchangeAmount,
       String currency,
       int fundingSource});
-  Future<dynamic> fundWalletWired(
+  Future<Result<dynamic>> fundWalletWired(
       {String token,
       num wiredTransferAmount,
       int fundingSource,
-      String proofOfPayment,
+      File proofOfPayment,
       int intermediaryBankType});
   Future<Result<List<WiredTransferDetails>>> getWiredTransferDetails(
       String token);
@@ -35,7 +35,7 @@ class WalletService implements ABSWalletService {
 
   @override
   Future<List<Wallet>> getWallets(String token) async {
-    final url = "${AppStrings.baseUrl}$microService/api/Wallet/wallets";
+    final url = "$microService/api/Wallet/wallets";
     var headers = {HttpHeaders.authorizationHeader: "Bearer $token"};
     print(url);
     try {
@@ -58,8 +58,7 @@ class WalletService implements ABSWalletService {
 
   @override
   Future<List<WalletTransaction>> getWalletsTransactions(String token) async {
-    final url =
-        "${AppStrings.baseUrl}$microService/api/Wallet/WalletTransaction";
+    final url = "$microService/api/Wallet/WalletTransaction";
     var headers = {HttpHeaders.authorizationHeader: "Bearer $token"};
     print(url);
     try {
@@ -89,7 +88,7 @@ class WalletService implements ABSWalletService {
       String currency,
       int fundingSource}) async {
     Result<void> result = Result(error: false);
-    final url = "${AppStrings.baseUrl}$microService/api/Wallet/fundwallet";
+    final url = "$microService/api/Wallet/fundwallet";
 
     var headers = {HttpHeaders.authorizationHeader: "Bearer $token"};
     FormData data = FormData.fromMap({
@@ -139,22 +138,23 @@ class WalletService implements ABSWalletService {
   }
 
   @override
-  Future fundWalletWired(
+  Future<Result> fundWalletWired(
       {String token,
       num wiredTransferAmount,
       int fundingSource,
-      String proofOfPayment,
+      File proofOfPayment,
       int intermediaryBankType}) async {
-    final url = "${AppStrings.baseUrl}$microService/api/Wallet/fundwallet";
+    final url = "$microService/api/Wallet/fundwallet";
     var headers = {HttpHeaders.authorizationHeader: "Bearer $token"};
+    Result result = Result(error: false);
     FormData data = FormData.fromMap({
       "WalletFundingSource": fundingSource,
-      "ProofOfPayment.DocumentFile": proofOfPayment,
+      "ProofOfPayment.DocumentFile": proofOfPayment.path,
       "WireTransferAmount": wiredTransferAmount,
       "IntermediaryBankType": intermediaryBankType,
     });
     try {
-      final fundWallet = await dio.post(
+      final fundWalletWired = await dio.post(
         url,
         data: data,
         options: Options(
@@ -164,16 +164,30 @@ class WalletService implements ABSWalletService {
           },
         ),
       );
-      if (fundWallet.statusCode == 200) {
-        return fundWallet.data["message"];
-      } else if (fundWallet.statusCode == 400) {
-        return fundWallet.data["message"];
+      print("pppvg dd ${fundWalletWired.data}");
+      if (fundWalletWired.statusCode == 200) {
+        result.error = false;
+        result.errorMessage = fundWalletWired.data["message"];
+      } else if (fundWalletWired.statusCode == 400) {
+        result.error = true;
+        result.errorMessage = fundWalletWired.data["message"];
+      } else {
+        result.error = true;
+        result.errorMessage = "Wallet could not be funded";
       }
     } on DioError catch (e) {
-      print(e.message.toString());
-      throw Exception(e.response.toString());
+      result.error = true;
+      if (e.response.data == null) {
+        result.errorMessage = "Error Message";
+      } else {
+        if (e.response.data is Map) {
+          result.errorMessage = e.response.data['message'];
+        } else {
+          result.errorMessage = "Error Message";
+        }
+      }
     }
-    return null;
+    return result;
   }
 
   @override
