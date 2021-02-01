@@ -52,11 +52,11 @@ void main() async {
   //initialize service locator
   setUpLocator();
   runApp(
-    // DevicePreview(
-    //   builder: (context) =>
+    DevicePreview(
+      builder: (context) =>
     MyApp(),
-    //   enabled: !kReleaseMode,
-    // ),
+      enabled: !kReleaseMode,
+    ),
   );
   configLoading();
 }

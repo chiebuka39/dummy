@@ -148,10 +148,7 @@ class _InvestmentSummaryScreenNairaState
           child: Stack(
             fit: StackFit.expand,
             children: [
-              SvgPicture.asset(
-                "images/patterns.svg",
-                fit: BoxFit.fill,
-              ),
+             slideUp ? SvgPicture.asset("images/patterns.svg", fit: BoxFit.fill,): Container(),
               Positioned.fill(
                 child: model.status
                     ? PlayAnimation<MultiTweenValues<AniProps>>(
@@ -566,7 +563,7 @@ class _InvestmentSummaryScreenNairaState
                                             ),
                                           ),
                                           Text(
-                                            "${AppStrings.nairaSymbol}${0.015 * paymentViewModel.investmentAmount}",
+                                            "${AppStrings.nairaSymbol}${(0.015 * paymentViewModel.investmentAmount).toString().split('.')[0].convertWithComma()}",
                                             style: TextStyle(
                                               fontSize: 11,
                                               fontFamily: AppStrings.fontBold,

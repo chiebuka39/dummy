@@ -3,6 +3,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:provider/provider.dart';
 import 'package:provider_architecture/provider_architecture.dart';
 import 'package:simple_animations/simple_animations.dart';
+import 'package:zimvest/animations/loading.dart';
 import 'package:zimvest/data/services/connectivity_service.dart';
 import 'package:zimvest/data/view_models/investment_view_model.dart';
 import 'package:zimvest/data/view_models/payment_view_model.dart';
@@ -165,7 +166,7 @@ class _SavingsSummaryScreenState extends State<SavingsSummaryScreen> {
           child: Stack(
              fit: StackFit.expand,
             children: [
-              SvgPicture.asset("images/patterns.svg", fit: BoxFit.fill,),
+             slideUp ? SvgPicture.asset("images/patterns.svg", fit: BoxFit.fill,): Container(),
               Positioned.fill(
                 child: model.status
                     ? PlayAnimation<MultiTweenValues<AniProps>>(
@@ -241,7 +242,7 @@ class _SavingsSummaryScreenState extends State<SavingsSummaryScreen> {
                         },
                       )
                     : model.busy
-                        ? Center(child: CircularProgressIndicator())
+                        ? Center(child: LoadingWIdget())
                         : model.status
                             ? Text(
                                 model.status.toString(),

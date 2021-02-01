@@ -42,7 +42,7 @@ class _TreasuryBillPageState extends State<TreasuryBillPage> {
                         return toShow.length == 0 ? Container(): Padding(
                           padding: const EdgeInsets.only(left: 8.0, right: 8.0),
                           child: Container(
-                            height: screenHeight(context) / 3.0,
+                            height: screenHeight(context) / 3.5,
                             width: screenWidth(context),
                             child: Column(
                               children: [
@@ -94,7 +94,7 @@ class _TreasuryBillPageState extends State<TreasuryBillPage> {
                                   ),
                                 ),
                                 Container(
-                                  height: screenHeight(context) / 4.5,
+                                  height: screenHeight(context) / 5,
                                   width: screenWidth(context),
                                   child: Row(
                                     children: [

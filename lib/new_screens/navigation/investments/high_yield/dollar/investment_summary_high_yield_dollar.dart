@@ -157,10 +157,7 @@ class _InvestmentSummaryScreenDollarState
           child: Stack(
             fit: StackFit.expand,
             children: [
-              SvgPicture.asset(
-                "images/patterns.svg",
-                fit: BoxFit.fill,
-              ),
+             slideUp ? SvgPicture.asset("images/patterns.svg", fit: BoxFit.fill,): Container(),
               Positioned.fill(
                 child: model.status
                     ? PlayAnimation<MultiTweenValues<AniProps>>(
@@ -770,10 +767,7 @@ class _InvestmentSummaryScreenDollarWiredState
           child: Stack(
             fit: StackFit.expand,
             children: [
-              SvgPicture.asset(
-                "images/patterns.svg",
-                fit: BoxFit.fill,
-              ),
+              slideUp ? SvgPicture.asset("images/patterns.svg", fit: BoxFit.fill,): Container(),
               Positioned.fill(
                 child: model.busy
                     ? Center(
