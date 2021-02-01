@@ -71,7 +71,11 @@ class _ResidentialScreenState extends State<ResidentialScreen> {
                 decoration: InputDecoration(
                   border: InputBorder.none,
                   hintText: 'Enter Residential Address',
-
+                    hintStyle: TextStyle(
+                        fontSize: 13,
+                        fontFamily: AppStrings.fontNormal,
+                        color: AppColors.kSecondaryColor.withOpacity(0.64)
+                    )
                 ),
               ),
             ),

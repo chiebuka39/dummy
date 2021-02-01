@@ -21,7 +21,9 @@ import 'package:zimvest/new_screens/withdrawals/verification_needed.dart';
 import 'package:zimvest/styles/colors.dart';
 import 'package:zimvest/utils/app_utils.dart';
 import 'package:zimvest/utils/margin.dart';
+import 'package:zimvest/utils/result.dart';
 import 'package:zimvest/utils/strings.dart';
+import 'package:zimvest/widgets/flushbar.dart';
 import 'package:zimvest/widgets/navigation/delete_wealthbox.dart';
 import 'package:zimvest/widgets/navigation/wealth_activites.dart';
 import 'package:zimvest/widgets/navigation/wealth_more.dart';
@@ -52,9 +54,12 @@ class _WealthBoxDetailsScreenState extends State<WealthBoxDetailsScreen> with Af
   bool noInternet = false;
   bool error = false;
 
+  bool play;
+
   @override
   void initState() {
    savingsPlanModel = widget.savingsPlanModel;
+   play = !widget.savingsPlanModel.isPaused;
     super.initState();
   }
 
@@ -93,7 +98,7 @@ class _WealthBoxDetailsScreenState extends State<WealthBoxDetailsScreen> with Af
     identityViewModel = Provider.of(context);
     settingsViewModel = Provider.of(context);
     double height = MediaQuery.of(context).size.height;
-    // print("ooo ${savingViewModel.savingsTransactions[1]}");
+    print("oo77777777o ${widget.savingsPlanModel.isPaused}");
     return Scaffold(
       backgroundColor: AppColors.kWealth,
 
@@ -221,7 +226,8 @@ class _WealthBoxDetailsScreenState extends State<WealthBoxDetailsScreen> with Af
                                     YMargin(12),
                                     Text("Top Up", style: TextStyle(
                                         fontSize: 12,
-                                        fontFamily: AppStrings.fontNormal
+                                        color: AppColors.kPrimaryColor,
+                                        fontFamily: AppStrings.fontMedium
                                     ),)
                                   ],),),
                                 ),
@@ -232,6 +238,8 @@ class _WealthBoxDetailsScreenState extends State<WealthBoxDetailsScreen> with Af
                                 child: GestureDetector(
                                   onTap: (){
                                     if(widget.savingsPlanModel.amountSaved == 0){
+                                      cautionFlushBar(context, "Insufficient Balance!",
+                                          "You currently don't have any fund to withdraw ");
                                         return;
                                     }
 
@@ -275,7 +283,8 @@ class _WealthBoxDetailsScreenState extends State<WealthBoxDetailsScreen> with Af
                                       YMargin(12),
                                       Text("Withdraw", style: TextStyle(
                                           fontSize: 12,
-                                          fontFamily: AppStrings.fontNormal
+                                          color: AppColors.kPrimaryColor,
+                                          fontFamily: AppStrings.fontMedium
                                       ),)
                                     ],),),
                                   ),
@@ -286,14 +295,35 @@ class _WealthBoxDetailsScreenState extends State<WealthBoxDetailsScreen> with Af
                               child: Center(
                                 child: GestureDetector(
                                   onTap: ()async{
-                                    EasyLoading.show(status:"Pausing savings");
-                                    var result = await savingViewModel.pauseSaving(
-                                        token: identityViewModel.user.token,savingModelId: savingsPlanModel.id);
-                                    if(result.error == false){
-                                      EasyLoading.showSuccess("Savings paused");
+
+                                    Result result;
+                                    if(play){
+                                      EasyLoading.show(status:"Pausing savings");
+                                       result = await savingViewModel.pauseSaving(
+                                          token: identityViewModel.user.token,savingModelId: savingsPlanModel.id);
+                                      if(result.error == false){
+                                        setState(() {
+                                          play = !play;
+                                        });
+                                        EasyLoading.showSuccess("Savings paused");
+                                      }else{
+                                        EasyLoading.showError(result.errorMessage);
+                                      }
                                     }else{
-                                      EasyLoading.showError(result.errorMessage);
+                                      EasyLoading.show(status:"Continue savings");
+                                       result = await savingViewModel.continueSaving(
+                                          token: identityViewModel.user.token,savingModelId: savingsPlanModel.id);
+                                      if(result.error == false){
+                                        setState(() {
+                                          play = !play;
+                                        });
+                                        EasyLoading.showSuccess("Savings Continued");
+                                      }else{
+                                        EasyLoading.showError(result.errorMessage);
+                                      }
                                     }
+
+
                                   },
                                   child: Container(child: Column(children: [
                                     Container(
@@ -303,11 +333,12 @@ class _WealthBoxDetailsScreenState extends State<WealthBoxDetailsScreen> with Af
                                             color: AppColors.kPrimaryColorLight,
                                             shape: BoxShape.circle
                                         ),
-                                        child: Center(child: SvgPicture.asset("images/new/pause.svg",color: AppColors.kPrimaryColor,))),
+                                        child: Center(child: SvgPicture.asset("images/new/${play? 'pause':'play'}.svg",color: AppColors.kPrimaryColor,))),
                                     YMargin(12),
                                     Text("Pause", style: TextStyle(
                                         fontSize: 12,
-                                        fontFamily: AppStrings.fontNormal
+                                        color: AppColors.kPrimaryColor,
+                                        fontFamily: AppStrings.fontMedium
                                     ),)
                                   ],),),
                                 ),
