@@ -165,7 +165,7 @@ class _SavingsSummaryScreenState extends State<SavingsSummaryScreen> {
           child: Stack(
              fit: StackFit.expand,
             children: [
-              SvgPicture.asset("images/patterns.svg", fit: BoxFit.fill,),
+              slideUp == false ? SizedBox():SvgPicture.asset("images/patterns.svg", fit: BoxFit.fill,),
               Positioned.fill(
                 child: model.status
                     ? PlayAnimation<MultiTweenValues<AniProps>>(
