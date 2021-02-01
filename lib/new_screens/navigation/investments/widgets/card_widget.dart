@@ -224,8 +224,8 @@ class FixedIncomeCard extends StatelessWidget {
       @required this.rate,
       @required this.minimumAmount,
       @required this.maturityDate,
-      this.height = 4,
-      this.width = 1.5})
+      this.height = 70,
+      this.width = 250})
       : super(key: key);
   @override
   Widget build(BuildContext context) {
@@ -234,8 +234,8 @@ class FixedIncomeCard extends StatelessWidget {
       child: Container(
         padding: EdgeInsets.all(11),
         margin: EdgeInsets.only(top: 20),
-        height: screenHeight(context) / height,
-        width: screenWidth(context) / width,
+        height: height,
+        width: width,
         decoration: BoxDecoration(
           color: AppColors.kWhite,
           boxShadow: AppUtils.getBoxShaddow,
@@ -284,7 +284,7 @@ class FixedIncomeCard extends StatelessWidget {
                       ),
                     ),
                     Text(
-                      "${AppStrings.nairaSymbol} ${minimumAmount.toString().convertWithComma()}",
+                      "${AppStrings.nairaSymbol} ${minimumAmount.toString().split('.')[0].convertWithComma()}",
                       style: TextStyle(
                         fontSize: 11,
                         fontWeight: FontWeight.w400,

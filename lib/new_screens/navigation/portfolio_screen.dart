@@ -377,7 +377,8 @@ class SavingsInvestmentErrorWidget extends StatelessWidget {
     return SliverPadding(
       sliver: SliverList(
           delegate: SliverChildListDelegate([
-        NoInternetWidget2(message: message ?? "Something went wrong", retry: retry)
+        NoInternetWidget2(
+            message: message ?? "Something went wrong", retry: retry)
       ])),
       padding: EdgeInsets.symmetric(horizontal: 20),
     );
@@ -407,8 +408,8 @@ class NoInternetWidget2 extends StatelessWidget {
               width: 300,
               child: Text(
                 message,
-                style: TextStyle(
-                    fontFamily: AppStrings.fontNormal, height: 1.7),
+                style:
+                    TextStyle(fontFamily: AppStrings.fontNormal, height: 1.7),
                 textAlign: TextAlign.center,
               )),
           YMargin(30),
@@ -438,8 +439,16 @@ class SavingsInvestmentCashWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     ABSSavingViewModel savingViewModel = Provider.of(context);
     ABSDashboardViewModel dashboardViewModel = Provider.of(context);
-    List<SavingPlanModel> goals = [...savingViewModel.savingPlanModel.where((element) => element.productId == 2), SavingPlanModel()];
-    List<SavingPlanModel> goals1 = [...savingViewModel.savingPlanModel.where((element) => element.productId == 2), SavingPlanModel()];
+    List<SavingPlanModel> goals = [
+      ...savingViewModel.savingPlanModel
+          .where((element) => element.productId == 2),
+      SavingPlanModel()
+    ];
+    List<SavingPlanModel> goals1 = [
+      ...savingViewModel.savingPlanModel
+          .where((element) => element.productId == 2),
+      SavingPlanModel()
+    ];
     print("ooo<<<<<<<<<<<<<<<<<");
 
     return SliverPadding(
@@ -462,10 +471,12 @@ class SavingsInvestmentCashWidget extends StatelessWidget {
                 )),
             XMargin(2),
             Text(
-              dashboardViewModel.dashboardModel.nairaPortfolio == "0.00" ? '0':dashboardViewModel.dashboardModel.nairaSavings
-                  .substring(1)
-                  .split(".")
-                  .first,
+              dashboardViewModel.dashboardModel.nairaPortfolio == "0.00"
+                  ? '0'
+                  : dashboardViewModel.dashboardModel.nairaSavings
+                      .substring(1)
+                      .split(".")
+                      .first,
               style: TextStyle(
                   fontSize: 25,
                   fontFamily: AppStrings.fontMedium,
@@ -485,7 +496,10 @@ class SavingsInvestmentCashWidget extends StatelessWidget {
           ],
         ),
         YMargin(25),
-            savingViewModel.savingPlanModel.where((element) => element.productId == 1).length == 0
+        savingViewModel.savingPlanModel
+                    .where((element) => element.productId == 1)
+                    .length ==
+                0
             ? SizedBox()
             : GestureDetector(
                 onTap: () {
@@ -523,9 +537,15 @@ class SavingsInvestmentCashWidget extends StatelessWidget {
                               YMargin(10),
                               Row(
                                 children: [
-                                  Text(AppStrings.nairaSymbol, style: TextStyle(fontSize: 12),),
                                   Text(
-                                    "${wealthBox.amountSaved}".split(".").first.convertWithComma(),
+                                    AppStrings.nairaSymbol,
+                                    style: TextStyle(fontSize: 12),
+                                  ),
+                                  Text(
+                                    "${wealthBox.amountSaved}"
+                                        .split(".")
+                                        .first
+                                        .convertWithComma(),
                                     style: TextStyle(
                                         color: AppColors.kGreyText,
                                         fontFamily: AppStrings.fontMedium),
@@ -669,6 +689,7 @@ class _PortfolioInvestmentWidgetState extends State<PortfolioInvestmentWidget> {
   Widget build(BuildContext context) {
     return ViewModelProvider<BaseViewModel>.withConsumer(
       viewModelBuilder: () => BaseViewModel(),
+      // onModelReady: (model) => model.,
       builder: (context, model, _) => SliverPadding(
         padding: EdgeInsets.symmetric(horizontal: 20),
         sliver: SliverList(
@@ -1042,10 +1063,11 @@ Widget dollarPortfolio(BuildContext context) {
                     child: model.dollarTransaction.length == 0
                         ? Center(
                             child: Padding(
-                              padding: const EdgeInsets.only(bottom: 150.0),
+                              padding: const EdgeInsets.only(bottom: 100.0, left: 20, right: 20.0, top: 150),
                               child: Text(
-                                "No Transactons yet",
+                                "You don't have any Dollar Investment Transactions Yet",
                                 style: TextStyle(color: AppColors.kTextColor),
+                                textAlign: TextAlign.center,
                               ),
                             ),
                           )
@@ -1161,10 +1183,12 @@ Widget nairaPortfolio(BuildContext context) {
                         )),
                     XMargin(2),
                     Text(
-                      dashboardViewModel.dashboardModel.nairaPortfolio
-                          .substring(1)
-                          .split(".")
-                          .first,
+                      dashboardViewModel.dashboardModel.nairaPortfolio == "0.00"
+                          ? '0'
+                          : dashboardViewModel.dashboardModel.nairaPortfolio
+                              .substring(1)
+                              .split(".")
+                              .first,
                       style: TextStyle(
                           fontSize: 25,
                           fontFamily: AppStrings.fontMedium,
@@ -1192,9 +1216,9 @@ Widget nairaPortfolio(BuildContext context) {
                     child: model.nairaTransaction.length == 0
                         ? Center(
                             child: Padding(
-                              padding: const EdgeInsets.only(bottom: 150.0),
+                              padding: const EdgeInsets.only(bottom: 100.0, left: 20, right: 20.0, top: 150),
                               child: Text(
-                                "No Transactons yet",
+                                "You don't have any Naira Investment Transactions Yet",
                                 style: TextStyle(color: AppColors.kTextColor),
                               ),
                             ),

@@ -220,10 +220,7 @@ class _InitialReviewScreenState extends State<InitialReviewScreen> {
                 child: Stack(
                   fit: StackFit.expand,
                   children: [
-                    SvgPicture.asset(
-                      "images/patterns.svg",
-                      fit: BoxFit.fill,
-                    ),
+                    slideUp ? SvgPicture.asset("images/patterns.svg", fit: BoxFit.fill,): Container(),
                     Positioned(
                       top: slideUp
                           ? -(MediaQuery.of(context).size.height - 200)

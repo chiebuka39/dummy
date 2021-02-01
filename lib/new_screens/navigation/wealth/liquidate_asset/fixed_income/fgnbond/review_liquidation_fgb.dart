@@ -231,10 +231,7 @@ class _ReviewBankTransferLiquidationState
           child: Stack(
             fit: StackFit.expand,
             children: [
-              SvgPicture.asset(
-                "images/patterns.svg",
-                fit: BoxFit.fill,
-              ),
+               slideUp ? SvgPicture.asset("images/patterns.svg", fit: BoxFit.fill,): Container(),
               Positioned.fill(
                 child: confirmed
                     ? PlayAnimation<MultiTweenValues<AniProps>>(
