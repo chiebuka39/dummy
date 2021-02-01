@@ -335,7 +335,7 @@ class _WealthBoxDetailsScreenState extends State<WealthBoxDetailsScreen> with Af
                                         ),
                                         child: Center(child: SvgPicture.asset("images/new/${play? 'pause':'play'}.svg",color: AppColors.kPrimaryColor,))),
                                     YMargin(12),
-                                    Text("Pause", style: TextStyle(
+                                    Text(play? 'Pause':'Play', style: TextStyle(
                                         fontSize: 12,
                                         color: AppColors.kPrimaryColor,
                                         fontFamily: AppStrings.fontMedium
