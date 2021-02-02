@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider_architecture/_viewmodel_provider.dart';
+import 'package:zimvest/animations/loading.dart';
 import 'package:zimvest/data/models/investment/fixed_models.dart';
 import 'package:zimvest/data/view_models/investment_view_model.dart';
 import 'package:zimvest/new_screens/navigation/investments/fixed/fbn_bonds/all_fbn_bond_investments.dart';
@@ -22,9 +23,7 @@ class _FBNBondPagePageState extends State<FBNBondPagePage> {
       builder: (context, model, _) => Container(
         child: Center(
           child: model.fgnBond.data == null
-              ? CircularProgressIndicator(
-                  valueColor: AlwaysStoppedAnimation(AppColors.kPrimaryColor),
-                )
+              ? LoadingWIdget()
               : model.fgnBond.data.fgnBondItems[1].bonds.length == 0
                   ? Text("Not Available")
                   : ListView.builder(

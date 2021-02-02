@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider_architecture/provider_architecture.dart';
+import 'package:zimvest/animations/loading.dart';
 import 'package:zimvest/data/models/investment/fixed_models.dart';
 import 'package:zimvest/data/view_models/investment_view_model.dart';
 import 'package:zimvest/new_screens/navigation/investments/fixed/corporate_bonds/all_corporate_bond_investments.dart';
@@ -22,9 +23,7 @@ class _CorporateBondPageState extends State<CorporateBondPage> {
       builder: (context, model, _) => Container(
         child: Center(
           child: model.corporateBond.data == null
-              ? CircularProgressIndicator(
-                  valueColor: AlwaysStoppedAnimation(AppColors.kGreen),
-                )
+              ? LoadingWIdget()
               : model.corporateBond.data.corporateBondItems[1]
                           .corporateBondBonds ==
                       null

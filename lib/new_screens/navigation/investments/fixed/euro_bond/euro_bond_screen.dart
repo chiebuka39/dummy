@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider_architecture/_viewmodel_provider.dart';
+import 'package:zimvest/animations/loading.dart';
 import 'package:zimvest/data/models/investment/fixed_models.dart';
 import 'package:zimvest/data/view_models/investment_view_model.dart';
 import 'package:zimvest/new_screens/navigation/investments/fixed/euro_bond/all_euro_bond_investments.dart';
@@ -22,9 +23,7 @@ class _EuroBondPageState extends State<EuroBondPage> {
       builder: (context, model, _) => Container(
         child: Center(
           child: model.euroBond.data == null
-              ? CircularProgressIndicator(
-                  valueColor: AlwaysStoppedAnimation(AppColors.kGreen),
-                )
+              ? LoadingWIdget()
               : model.euroBond.data.euroBondItems[1].bonds.length == 0
                   ? Text("Not Available")
                   : ListView.builder(
@@ -43,7 +42,7 @@ class _EuroBondPageState extends State<EuroBondPage> {
                                 padding: const EdgeInsets.only(
                                     left: 8.0, right: 8.0, bottom: 8.0),
                                 child: Container(
-                                  height: screenHeight(context) / 3.0,
+                                  height: screenHeight(context) / 4.0,
                                   width: screenWidth(context),
                                   child: Column(
                                     children: [

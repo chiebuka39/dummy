@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider_architecture/_viewmodel_provider.dart';
+import 'package:zimvest/animations/loading.dart';
 import 'package:zimvest/data/models/investment/fixed_models.dart';
 import 'package:zimvest/data/view_models/investment_view_model.dart';
 import 'package:zimvest/new_screens/navigation/investments/fixed/commercial_papers/all_commercial_paper_investments.dart';
@@ -22,9 +23,7 @@ class _CommercialPaperPageState extends State<CommercialPaperPage> {
       builder: (context, model, _) => Container(
         child: Center(
           child: model.commercialPaper.data == null
-              ? CircularProgressIndicator(
-                  valueColor: AlwaysStoppedAnimation(AppColors.kGreen),
-                )
+              ? LoadingWIdget()
               : model.commercialPaper.data.comercialPaperItems[1]
                           .commercialPapers.length ==
                       0

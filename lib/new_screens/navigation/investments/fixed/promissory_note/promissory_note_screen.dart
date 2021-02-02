@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider_architecture/_viewmodel_provider.dart';
+import 'package:zimvest/animations/loading.dart';
 import 'package:zimvest/data/models/investment/fixed_models.dart';
 import 'package:zimvest/data/view_models/investment_view_model.dart';
 import 'package:zimvest/new_screens/navigation/investments/fixed/promissory_note/all_promissory_note_investment.dart';
@@ -22,9 +23,7 @@ class _PromissoryNotePageState extends State<PromissoryNotePage> {
       builder: (context, model, _) => Container(
         child: Center(
           child: model.promissoryNote.data == null
-              ? CircularProgressIndicator(
-                  valueColor: AlwaysStoppedAnimation(AppColors.kGreen),
-                )
+              ? LoadingWIdget()
               : model.promissoryNote.data.promissoryNoteItems[1].promissoryNotes
                           .length ==
                       0
