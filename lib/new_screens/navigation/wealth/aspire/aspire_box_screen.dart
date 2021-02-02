@@ -39,7 +39,7 @@ class _AspireSavingScreenState extends State<AspireSavingScreen> {
               Navigator.of(context).pop();
           })
         ],),
-        Center(child: SvgPicture.asset("images/aspire.svg",height: height > 800 ? 200 + (height - 750): 200,)),
+        Center(child: SvgPicture.asset("images/aspire.svg",height: height > 800 ? 150 + (height - 750): 200,)),
         YMargin(20),
         Expanded(
           child: Container(

@@ -148,7 +148,7 @@ class BankItemWidget extends StatelessWidget {
       onTap: () {
         paymentViewModel.selectedBank = bank;
         if (isWithdraw) {
-          Navigator.push(context, WithdrawToSavingsScreen.route(bank: bank));
+          Navigator.push(context, WithdrawToSavingsScreen.route(bank: bank, isDollar: true));
         } else if (isLiquidate) {
           if (isLiquidate && investmentType == 0) {
             Navigator.push(context, ReviewBankTransferLiquidation.route());

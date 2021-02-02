@@ -69,7 +69,7 @@ class _IdentityUploadScreenState extends State<IdentityUploadScreen> {
           ),),
           YMargin(10),
           Text("Choose one of the document option to verify your identity",
-            style: TextStyle(fontFamily: AppStrings.fontNormal),),
+            style: TextStyle(fontFamily: AppStrings.fontNormal, fontSize: 12),),
 
           IdentityWidget(
             onTap: (){

@@ -308,6 +308,7 @@ class PaymentViewModel extends ABSPaymentViewModel {
 
   @override
   Future<Result<void>> withdrawToBank({String token, Bank bank, double amount, String type}) {
+    print(type);
     return _paymentService.withdrawToBank(token, bank, amount, type);
   }
 }

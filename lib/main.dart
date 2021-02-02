@@ -2,7 +2,7 @@ import 'dart:async';
 import 'dart:io';
 
 import 'package:connectivity/connectivity.dart';
-import 'package:device_preview/device_preview.dart';
+// import 'package:device_preview/device_preview.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 // import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
@@ -52,11 +52,9 @@ void main() async {
   //initialize service locator
   setUpLocator();
   runApp(
-    // DevicePreview(
-    //   builder: (context) =>
+
     MyApp(),
-    //   enabled: !kReleaseMode,
-    // ),
+
   );
   configLoading();
 }

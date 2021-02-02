@@ -99,18 +99,24 @@ class _AccountScreenState extends State<AccountScreen> with AfterLayoutMixin<Acc
     identityViewModel = Provider.of(context);
     settingsViewModel = Provider.of(context);
     return Scaffold(
-      appBar: AppBar(
-        elevation: 0,
-        iconTheme: IconThemeData(color:AppColors.kTextColor),
-        backgroundColor: Colors.transparent,
-        leading: Padding(
-          padding: const EdgeInsets.only(left: 10),
-          child: IconButton(icon: Icon(Icons.navigate_before_rounded, color: AppColors.kPrimaryColor,), onPressed: () {
-            Navigator.pop(context);
-          },),
-        ),
-        title: Text("Account", style: TextStyle(fontSize: 13,
-            fontFamily: AppStrings.fontMedium,color: AppColors.kTextColor),),
+      // appBar: AppBar(
+      //   elevation: 0,
+      //   iconTheme: IconThemeData(color:AppColors.kTextColor),
+      //   backgroundColor: Colors.transparent,
+      //   leading: Padding(
+      //     padding: const EdgeInsets.only(left: 10),
+      //     child: IconButton(icon: Icon(Icons.navigate_before_rounded, color: AppColors.kPrimaryColor,), onPressed: () {
+      //       Navigator.pop(context);
+      //     },),
+      //   ),
+      //   title: Text("Account", style: TextStyle(fontSize: 13,
+      //       fontFamily: AppStrings.fontMedium,color: AppColors.kTextColor),),
+      // ),
+      appBar: ZimAppBar(
+        icon: Icons.arrow_back_ios_rounded, callback: () {
+        Navigator.pop(context);
+      },
+        text: 'Account',
       ),
       body: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 20),

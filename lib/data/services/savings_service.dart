@@ -193,7 +193,7 @@ class SavingService extends ABSSavingService{
       }else {
         result.error = false;
         List<ProductTransaction> types = [];
-        (response1['data'] as List).forEach((chaList) {
+        (response1['data']["result"] as List).forEach((chaList) {
           //initialize Chat Object
           types.add(ProductTransaction.fromJson(chaList));
         });
@@ -240,7 +240,7 @@ class SavingService extends ABSSavingService{
       }else {
         result.error = false;
         List<ProductTransaction> types = [];
-        (response1['data'] as List).forEach((chaList) {
+        (response1['data']["result"] as List).forEach((chaList) {
           //initialize Chat Object
           types.add(ProductTransaction.fromJson(chaList));
         });

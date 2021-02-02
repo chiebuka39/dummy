@@ -145,7 +145,7 @@ class _SavingsSummaryScreenState extends State<SavingsSummaryScreen> {
           height: MediaQuery.of(context).size.height,
           child: Stack(
             children: [
-              SvgPicture.asset("images/patterns.svg", fit: BoxFit.fill,),
+              slideUp == false ? SizedBox():SvgPicture.asset("images/patterns.svg", fit: BoxFit.fill,),
               Positioned.fill(
                 child: confirmed
                     ? PlayAnimation<MultiTweenValues<AniProps>>(

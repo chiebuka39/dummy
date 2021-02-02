@@ -22,12 +22,13 @@ import 'package:zimvest/widgets/new/new_widgets.dart';
 class WithdrawToSavingsScreen extends StatefulWidget {
   final SavingPlanModel savingPlanModel;
   final Bank bank;
+  final bool isDollar;
   const WithdrawToSavingsScreen({
-    Key key, this.savingPlanModel, this.bank,
+    Key key, this.savingPlanModel, this.bank, this.isDollar,
   }) : super(key: key);
-  static Route<dynamic> route({SavingPlanModel savingPlanModel,Bank bank}) {
+  static Route<dynamic> route({SavingPlanModel savingPlanModel,Bank bank, bool isDollar}) {
     return MaterialPageRoute(
-        builder: (_) => WithdrawToSavingsScreen(savingPlanModel: savingPlanModel,bank: bank,),
+        builder: (_) => WithdrawToSavingsScreen(savingPlanModel: savingPlanModel,bank: bank, isDollar: isDollar),
         settings:
         RouteSettings(name: WithdrawToSavingsScreen().toStringShort()));
   }
@@ -111,11 +112,15 @@ class _WithdrawToSavingsScreenState extends State<WithdrawToSavingsScreen> {
                       savingViewModel.selectedPlan = widget.savingPlanModel;
                       Navigator.of(context).push(SavingsSummaryScreen.route(
                           amount: savingViewModel.amountToSave));
+                    }else if(widget.bank != null && widget.isDollar){
+                      print("Lmao");
+                      Navigator.of(context).push(ReviewBankTransferDollar.route(
+                          nairaWalletWithdrawal: false,bank:widget.bank));
                     }else if(widget.bank != null){
+                      print("Nawa oooo");
                       Navigator.of(context).push(ReviewBankTransfer.route(
                           nairaWalletWithdrawal: true,bank:widget.bank));
                     }
-
                   },
                 ),
                 YMargin(5),
