@@ -622,7 +622,7 @@ class SavingService extends ABSSavingService{
       print("error $e}");
       if(e.response != null ){
         print(e.response.data);
-        if(e.response.data['message'] is String){
+        if(e.response.data is Map){
           result.errorMessage = e.response.data['message'];
         }
 

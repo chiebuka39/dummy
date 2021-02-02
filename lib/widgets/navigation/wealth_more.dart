@@ -13,11 +13,12 @@ class WealthMore extends StatelessWidget {
   const WealthMore({
     Key key,
     this.savingPlanModel,
-    this.delete = true,
+    this.delete = true, this.isActive,
   }) : super(key: key);
 
   final SavingPlanModel savingPlanModel;
   final bool delete;
+  final bool isActive;
 
   @override
   Widget build(BuildContext context) {
@@ -120,7 +121,7 @@ class WealthMore extends StatelessWidget {
                             ),
                             YMargin(10),
                             Text(
-                              savingPlanModel.isPaused ? 'Paused' : 'Active',
+                              !isActive? 'Paused' : 'Active',
                               style: TextStyle(
                                   fontSize: 12,
                                   fontFamily: AppStrings.fontMedium,

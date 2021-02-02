@@ -56,10 +56,10 @@ class _DollarPortfolioBreakdownScreenState extends State<DollarPortfolioBreakdow
           Container(
             height: 70,
             child: Row(children: [
-              Text("Portfolio Value", style: TextStyle(color: AppColors.kGreyText),),
+              Text("Portfolio Value", style: TextStyle(color: AppColors.kSecondaryText, fontFamily: AppStrings.fontNormal),),
               Spacer(),
               Text(getDoubleValue(dashboardViewModel.dashboardModel.dollarPortfolio), style: TextStyle(
-                  color: AppColors.kGreyText, fontFamily: AppStrings.fontMedium),),
+                  color: AppColors.kSecondaryBoldText, fontFamily: AppStrings.fontMedium),),
             ],),
           ),
           Divider(),
@@ -74,10 +74,10 @@ class _DollarPortfolioBreakdownScreenState extends State<DollarPortfolioBreakdow
                 ),
               ),
               XMargin(10),
-              Text("Wallet balance", style: TextStyle(color: AppColors.kGreyText),),
+              Text("Wallet balance", style: TextStyle(color: AppColors.kSecondaryText, fontFamily: AppStrings.fontNormal),),
               Spacer(),
               Text(getDoubleValue(dashboardViewModel.dashboardModel.dollarWallet), style: TextStyle(
-                  color: AppColors.kGreyText, fontFamily: AppStrings.fontMedium),),
+                  color: AppColors.kSecondaryBoldText, fontFamily: AppStrings.fontMedium),),
             ],),
           ),
           Divider(),
@@ -92,10 +92,10 @@ class _DollarPortfolioBreakdownScreenState extends State<DollarPortfolioBreakdow
                 ),
               ),
               XMargin(10),
-              Text("Investment Balance", style: TextStyle(color: AppColors.kGreyText),),
+              Text("Investment Balance", style: TextStyle(color: AppColors.kSecondaryText, fontFamily: AppStrings.fontNormal),),
               Spacer(),
               Text(getDoubleValue(dashboardViewModel.dashboardModel.dollarInvestment), style: TextStyle(
-                  color: AppColors.kGreyText, fontFamily: AppStrings.fontMedium),),
+                  color: AppColors.kSecondaryBoldText, fontFamily: AppStrings.fontMedium),),
             ],),
           ),
           Divider(),

@@ -658,7 +658,7 @@ class SavingsInvestmentCashWidget extends StatelessWidget {
             ),
           );
         }),
-        YMargin(70),
+        YMargin(100),
       ])),
       padding: EdgeInsets.symmetric(horizontal: 20),
     );
@@ -821,7 +821,7 @@ class InvestmentItemWidget extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              investmentName,
+              investmentName ?? "Default Investment",
               style: TextStyle(fontSize: 13, fontFamily: AppStrings.fontMedium),
             ),
             YMargin(8),
@@ -852,7 +852,6 @@ class InvestmentItemWidget extends StatelessWidget {
                           AppStrings.nairaSymbol,
                           style: TextStyle(
                               fontSize: 11,
-                              fontFamily: AppStrings.fontMedium,
                               color: AppColors.kTextColor),
                         ),
                         Text(

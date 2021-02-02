@@ -294,7 +294,7 @@ class _SavingTransactionsWidgetState extends State<SavingTransactionsWidget>
                                 trans: trans,
                               );
                             }),
-                            YMargin(50)
+                            YMargin(150)
                           ],
                         )
               : savingViewModel.savingsTransactions[2] == null
@@ -319,7 +319,7 @@ class _SavingTransactionsWidgetState extends State<SavingTransactionsWidget>
                                 topUp: false,
                               );
                             }),
-                            YMargin(50)
+                            YMargin(150)
                           ],
                         ),
         ]),

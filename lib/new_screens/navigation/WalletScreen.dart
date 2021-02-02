@@ -731,7 +731,7 @@ class _WalletTransactionCreditState extends State<WalletTransactionCredit>
                   ],
                 ),
                 if(showTopUp)
-                  if(walletViewModel.walletTransaction == null)
+                  if(getTransaction( "Credit", widget.currency).isEmpty )
                     Padding(
                       padding: const EdgeInsets.only(top: 100.0),
                       child: Text(
@@ -748,7 +748,7 @@ class _WalletTransactionCreditState extends State<WalletTransactionCredit>
                     narration: getTransaction( "Credit", widget.currency)[index].narration,
                   ))
                 else
-                  if(walletViewModel.walletTransaction == null)
+                  if(getTransaction( "Debit", widget.currency).isEmpty )
                     Padding(
                       padding: const EdgeInsets.only(top: 100.0),
                       child: Text(

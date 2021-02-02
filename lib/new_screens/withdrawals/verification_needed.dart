@@ -1,8 +1,12 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
 import 'package:zimvest/data/view_models/identity_view_model.dart';
 import 'package:zimvest/data/view_models/settings_view_model.dart';
 import 'package:zimvest/new_screens/profile/identity_upload_screens.dart';
+import 'package:zimvest/new_screens/profile/preview_screen.dart';
 import 'package:zimvest/new_screens/profile/widgets/profile_widgets.dart';
 import 'package:zimvest/new_screens/profile/widgets/verification_failed_widget.dart';
 import 'package:zimvest/utils/margin.dart';
@@ -27,6 +31,29 @@ class VerificationNeeded extends StatefulWidget {
 class _VerificationNeededState extends State<VerificationNeeded> {
   ABSSettingsViewModel settingsViewModel;
   ABSIdentityViewModel identityViewModel;
+
+  final picker = ImagePicker();
+
+  Future getImageFromGallery() async {
+    final pickedFile = await picker.getImage(source: ImageSource.gallery);
+
+    if (pickedFile != null) {
+      Navigator.pushReplacement(context, PreviewScreen.route(File(pickedFile.path)));
+    } else {
+      print('No image selected.');
+    }
+  }
+  Future getImageFromCam() async {
+    final pickedFile = await picker.getImage(source: ImageSource.camera);
+
+
+    if (pickedFile != null) {
+      Navigator.pushReplacement(context, PreviewScreen.route(File(pickedFile.path)));
+    } else {
+      print('No image selected.');
+    }
+
+  }
   @override
   Widget build(BuildContext context) {
     settingsViewModel = Provider.of(context);
@@ -89,6 +116,31 @@ class _VerificationNeededState extends State<VerificationNeeded> {
             showNext: settingsViewModel.completedSections
                 .kycValidationCheck.identificationStatus == 1 || settingsViewModel.completedSections
                 .kycValidationCheck.identificationStatus == 0 ? false:true,
+            padding: 0,
+          ),ProfileWidget(
+            onClick: (){
+              if(settingsViewModel.completedSections
+                  .kycValidationCheck.utilityBillStatus == 1 ||settingsViewModel.completedSections
+                  .kycValidationCheck.utilityBillStatus == 0 ){
+                return;
+              }
+              settingsViewModel.selectedIdentity = null;
+              showModalBottomSheet < Null > (context: context, builder: (BuildContext context) {
+                return ImageUploadWidget(onCamera: getImageFromCam,
+                    onGallery: getImageFromGallery,title: "Utility Bill");
+              }, isScrollControlled: true);
+              //Navigator.push(context, IdentityVerificationScreen.route());
+            },
+            title: "Utility Bill",
+            rejected: settingsViewModel.completedSections
+                .kycValidationCheck.utilityBillStatus == 2,
+            approved: settingsViewModel.completedSections
+                .kycValidationCheck.utilityBillStatus == 1,
+            pending: settingsViewModel.completedSections
+                .kycValidationCheck.utilityBillStatus == 0,
+            showNext: settingsViewModel.completedSections
+                .kycValidationCheck.utilityBillStatus == 1 ||settingsViewModel.completedSections
+                .kycValidationCheck.utilityBillStatus == 0  ? false:true,
             padding: 0,
           ),
         ],),

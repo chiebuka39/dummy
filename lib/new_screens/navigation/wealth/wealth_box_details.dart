@@ -140,7 +140,7 @@ class _WealthBoxDetailsScreenState extends State<WealthBoxDetailsScreen> with Af
                             Spacer(),
                             IconButton(icon: Icon(Icons.more_horiz_rounded, color: AppColors.kPrimaryColor,), onPressed: (){
                               showModalBottomSheet < Null > (context: context, builder: (BuildContext context) {
-                                return WealthMore(savingPlanModel: savingsPlanModel,delete: false,);
+                                return WealthMore(savingPlanModel: savingsPlanModel,delete: false,isActive: play,);
                               },isScrollControlled: true);
                             })
                           ],
@@ -335,7 +335,7 @@ class _WealthBoxDetailsScreenState extends State<WealthBoxDetailsScreen> with Af
                                         ),
                                         child: Center(child: SvgPicture.asset("images/new/${play? 'pause':'play'}.svg",color: AppColors.kPrimaryColor,))),
                                     YMargin(12),
-                                    Text(play? 'Pause':'Play', style: TextStyle(
+                                    Text(play? 'Pause':'Resume Savings', style: TextStyle(
                                         fontSize: 12,
                                         color: AppColors.kPrimaryColor,
                                         fontFamily: AppStrings.fontMedium

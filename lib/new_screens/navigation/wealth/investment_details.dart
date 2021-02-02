@@ -593,8 +593,11 @@ class _InvestmentDetailsScreenState extends State<InvestmentDetailsScreen> {
                                   child: Row(
                                     children: [
                                       Icon(Icons.arrow_drop_up_outlined),
+                                      Text(AppStrings.nairaSymbol, style: TextStyle(
+                                        fontSize: 11,color: AppColors.kWealthDark,fontWeight: FontWeight.w400
+                                      ),),
                                       Text(
-                                        "${AppStrings.nairaSymbol}2,000",
+                                        "2,000",
                                         style: TextStyle(
                                             fontFamily: AppStrings.fontMedium,
                                             color: AppColors.kWealthDark,

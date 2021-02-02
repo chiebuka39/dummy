@@ -135,6 +135,7 @@ class _SavingsSummaryScreenState extends State<SavingsSummaryScreen> {
 
 
     var size = MediaQuery.of(context).size;
+    print("pirtttt ${size.height}");
     return WillPopScope(
       onWillPop: () async {
         return false;
@@ -253,6 +254,7 @@ class _SavingsSummaryScreenState extends State<SavingsSummaryScreen> {
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
+                              Spacer(),
                               Text(
                                 "Plan name".toUpperCase(),
                                 style: TextStyle(
@@ -261,7 +263,7 @@ class _SavingsSummaryScreenState extends State<SavingsSummaryScreen> {
                                   fontFamily: AppStrings.fontNormal,
                                 ),
                               ),
-                              YMargin(size.height < 650 ? 7:size.height > 700 ? 15:10),
+                              YMargin(size.height < 650 ? 7:10),
                               Text(
                                 savingViewModel.selectedPlan.planName,
                                 style: TextStyle(
@@ -269,8 +271,8 @@ class _SavingsSummaryScreenState extends State<SavingsSummaryScreen> {
                                     fontSize: 13,
                                     color: AppColors.kGreyText),
                               ),
-                              //YMargin(40),
-                              YMargin(size.height < 650 ? 18:size.height > 700 ? 40:30),
+                              Spacer(flex: 2,),
+                             // YMargin(size.height < 650 ? 18:size.height > 700 ? 40:30),
                               Row(
                                 children: [
                                   Column(
@@ -285,7 +287,7 @@ class _SavingsSummaryScreenState extends State<SavingsSummaryScreen> {
                                           fontFamily: AppStrings.fontNormal,
                                         ),
                                       ),
-                                      YMargin(15),
+                                      YMargin(10),
                                       Row(
                                         children: [
                                           Text(AppStrings.nairaSymbol,style: TextStyle(fontSize: 12),),
@@ -312,7 +314,7 @@ class _SavingsSummaryScreenState extends State<SavingsSummaryScreen> {
                                           fontFamily: AppStrings.fontNormal,
                                         ),
                                       ),
-                                      YMargin(15),
+                                      YMargin(10),
                                       Text(
                                         savingViewModel.selectedPlan.maturityDate == null
                                             ? AppUtils.getReadableDate2(getDate()):AppUtils.getReadableDate2(savingViewModel.selectedPlan.maturityDate),
@@ -325,7 +327,8 @@ class _SavingsSummaryScreenState extends State<SavingsSummaryScreen> {
                                   )
                                 ],
                               ),
-                              YMargin(size.height < 650 ? 18:size.height > 700 ? 40:30),
+                              Spacer(flex: 2,),
+                              //YMargin(size.height < 650 ? 18:size.height > 700 ? 38:30),
                               Text(
                                 "Interest rate".toUpperCase(),
                                 style: TextStyle(
@@ -334,7 +337,7 @@ class _SavingsSummaryScreenState extends State<SavingsSummaryScreen> {
                                   fontFamily: AppStrings.fontNormal,
                                 ),
                               ),
-                              YMargin(size.height < 650 ? 7:size.height > 700 ? 15:10),
+                              YMargin(size.height < 650 ? 7:10),
                               Text(
                                 "${savingViewModel.selectedPlan.interestRate}% P.A",
                                 style: TextStyle(
@@ -342,6 +345,7 @@ class _SavingsSummaryScreenState extends State<SavingsSummaryScreen> {
                                     fontSize: 13,
                                     color: AppColors.kGreyText),
                               ),
+                              Spacer(),
                             ],
                           ),
                         )

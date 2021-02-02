@@ -10,6 +10,7 @@ import 'package:zimvest/styles/colors.dart';
 import 'package:zimvest/utils/margin.dart';
 import 'package:zimvest/utils/strings.dart';
 import 'package:zimvest/widgets/buttons.dart';
+import 'package:zimvest/widgets/new/new_widgets.dart';
 import 'package:zimvest/widgets/number_keyboard.dart';
 import 'package:zimvest/utils/app_utils.dart';
 
@@ -43,15 +44,13 @@ class _FundNairaWalletWithDollarState extends State<FundNairaWalletWithDollar> {
   Widget build(BuildContext context) {
     ABSPaymentViewModel paymentViewModel = Provider.of(context);
     return Scaffold(
-      appBar: AppBar(
-        backgroundColor: Colors.transparent,
-        elevation: 0,
-        leading: IconButton(
-            icon: Icon(
-              Icons.arrow_back_ios,
-              color: AppColors.kPrimaryColor,
-            ),
-            onPressed: () => Navigator.pop(context)),
+      appBar: ZimAppBar(
+        icon: Icons.arrow_back_ios,
+        text: "",
+        showCancel: true,
+        callback: (){
+          Navigator.pop(context);
+        },
       ),
       body: Builder(
         builder: (context) => Column(
@@ -107,7 +106,6 @@ class _FundNairaWalletWithDollarState extends State<FundNairaWalletWithDollar> {
                     : "₦ ${(double.tryParse(paymentViewModel.amountController.text.split(',').join()) * widget.rate).toString().split('.')[0].convertWithComma()} (1 USD = ${widget.rate} NGN)",
                 style: TextStyle(
                   fontSize: 12,
-                  fontFamily: AppStrings.fontNormal,
                   color: AppColors.kFixed,
                 ),
               ),

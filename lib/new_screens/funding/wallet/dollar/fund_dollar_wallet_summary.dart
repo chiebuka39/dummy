@@ -369,7 +369,7 @@ class _FundDollarWalletSummaryScreenState
                                           "${AppStrings.nairaSymbol}${widget.balance.toString().split('.')[0].convertWithComma()}",
                                           style: TextStyle(
                                             fontSize: 11,
-                                            fontFamily: AppStrings.fontBold,
+                                            fontWeight: FontWeight.bold,
                                             color: AppColors.kTextColor,
                                           ),
                                         ),
@@ -405,7 +405,7 @@ class _FundDollarWalletSummaryScreenState
                                               "${AppStrings.nairaSymbol} ${(widget.amount * widget.nairaRate).toString().split('.')[0].convertWithComma()}",
                                               style: TextStyle(
                                                 fontSize: 11,
-                                                fontFamily: AppStrings.fontBold,
+                                                fontWeight: FontWeight.bold,
                                                 color: AppColors.kTextColor,
                                               ),
                                             ),

@@ -104,7 +104,7 @@ class _FundDollarWalletState extends State<FundDollarWallet> {
                     : "₦ ${(double.tryParse(paymentViewModel.amountController.text.split(',').join()) * widget.rate).toString().split('.')[0].convertWithComma()} (1 USD = ${widget.rate.toString().split(".").first.convertWithComma()} NGN)",
                 style: TextStyle(
                   fontSize: 12,
-                  fontFamily: AppStrings.fontNormal,
+
                   color: AppColors.kFixed,
                 ),
               ),
@@ -138,15 +138,28 @@ class _FundDollarWalletState extends State<FundDollarWallet> {
               },
             ),
             YMargin(7),
-            Center(
-              child: Text(
-                "Wallet Ballance ${AppStrings.nairaSymbol}${StringUtils(widget.wallet.where((element) => element.currency == "NGN").first.balance.toString().split('.')[0]).convertWithComma()}",
-                style: TextStyle(
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Text("Wallet Ballance ",style: TextStyle(
                   fontSize: 14,
                   fontFamily: AppStrings.fontNormal,
                   color: AppColors.kTextColor,
+                )),
+                Text(AppStrings.nairaSymbol,style: TextStyle(
+                  fontSize: 12,
+                  fontWeight: FontWeight.bold
+                )),
+                Text(
+                  "${StringUtils(widget.wallet.where((element)
+                  => element.currency == "NGN").first.balance.toString().split('.')[0]).convertWithComma()}",
+                  style: TextStyle(
+                    fontSize: 14,
+                    fontFamily: AppStrings.fontBold,
+                    color: AppColors.kTextColor,
+                  ),
                 ),
-              ),
+              ],
             ),
             NumericKeyboard(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,

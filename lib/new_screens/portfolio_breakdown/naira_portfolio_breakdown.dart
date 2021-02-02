@@ -56,10 +56,15 @@ class _NairaPortfolioBreakdownScreenState extends State<NairaPortfolioBreakdownS
             Container(
               height: 70,
               child: Row(children: [
-                Text("Portfolio Value", style: TextStyle(color: AppColors.kSecondaryText),),
+                Text("Portfolio Value", style: TextStyle(color: AppColors.kSecondaryText, fontFamily: AppStrings.fontNormal),),
                 Spacer(),
-                Text("${dashboardViewModel.dashboardModel.nairaPortfolio}", style: TextStyle(
-                    color: AppColors.kSecondaryBoldText, fontFamily: AppStrings.fontMedium),),
+                Row(
+                  children: [
+                    Text(AppStrings.nairaSymbol, style: TextStyle(fontWeight: FontWeight.bold,color:AppColors.kSecondaryBoldText, ),),
+                    Text("${dashboardViewModel.dashboardModel.nairaPortfolio.substring(1)}", style: TextStyle(
+                        color: AppColors.kSecondaryBoldText, fontFamily: AppStrings.fontMedium),),
+                  ],
+                ),
               ],),
             ),
             Divider(),
@@ -74,11 +79,11 @@ class _NairaPortfolioBreakdownScreenState extends State<NairaPortfolioBreakdownS
                   ),
                 ),
                 XMargin(10),
-                Text("Wallet balance", style: TextStyle(color: AppColors.kSecondaryText),),
+                Text("Wallet balance", style: TextStyle(color: AppColors.kSecondaryText, fontFamily: AppStrings.fontNormal),),
                 Spacer(),
                 Row(
                   children: [
-                    Text(dashboardViewModel.dashboardModel.nairaWallet == "0.00" ?AppStrings.nairaSymbol:'', style: TextStyle(fontSize: 12),),
+                    Text(AppStrings.nairaSymbol, style: TextStyle(fontSize: 13,color: AppColors.kSecondaryBoldText, fontWeight: FontWeight.bold),),
                     Text(getDoubleValue(dashboardViewModel.dashboardModel.nairaWallet), style: TextStyle(
                         color: AppColors.kSecondaryBoldText, fontFamily: AppStrings.fontMedium),),
                   ],
@@ -97,11 +102,11 @@ class _NairaPortfolioBreakdownScreenState extends State<NairaPortfolioBreakdownS
                   ),
                 ),
                 XMargin(10),
-                Text("Investment Balance", style: TextStyle(color: AppColors.kSecondaryText),),
+                Text("Investment Balance", style: TextStyle(color: AppColors.kSecondaryText, fontFamily: AppStrings.fontNormal),),
                 Spacer(),
                 Row(
                   children: [
-                    Text(dashboardViewModel.dashboardModel.nairaInvestment == "0.00" ?AppStrings.nairaSymbol:'', style: TextStyle(fontSize: 12),),
+                    Text(AppStrings.nairaSymbol, style: TextStyle(fontSize: 13,color: AppColors.kSecondaryBoldText, fontWeight: FontWeight.bold),),
                     Text(getDoubleValue(dashboardViewModel.dashboardModel.nairaInvestment), style: TextStyle(
                         color: AppColors.kSecondaryBoldText, fontFamily: AppStrings.fontMedium),),
                   ],
@@ -120,11 +125,11 @@ class _NairaPortfolioBreakdownScreenState extends State<NairaPortfolioBreakdownS
                   ),
                 ),
                 XMargin(10),
-                Text("Savings Balance", style: TextStyle(color: AppColors.kSecondaryText),),
+                Text("Savings Balance", style: TextStyle(color: AppColors.kSecondaryText, fontFamily: AppStrings.fontNormal),),
                 Spacer(),
                 Row(
                   children: [
-                    Text(dashboardViewModel.dashboardModel.nairaSavings == "0.00" ?AppStrings.nairaSymbol:'', style: TextStyle(fontSize: 12),),
+                    Text(AppStrings.nairaSymbol, style: TextStyle(fontSize: 13,color: AppColors.kSecondaryBoldText, fontWeight: FontWeight.bold),),
                     Text(getDoubleValue(dashboardViewModel.dashboardModel.nairaSavings), style: TextStyle(
                         color: AppColors.kSecondaryBoldText, fontFamily: AppStrings.fontMedium),),
                   ],
@@ -140,9 +145,9 @@ class _NairaPortfolioBreakdownScreenState extends State<NairaPortfolioBreakdownS
   }
   String getDoubleValue(String value){
     if(value == "0.00"){
-      return " 0.00";
+      return "0.00";
     }else{
-      return value;
+      return value.substring(1);
     }
 
   }
