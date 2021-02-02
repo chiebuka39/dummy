@@ -330,7 +330,7 @@ class _WalletScreenState extends State<WalletScreen> with AfterLayoutMixin<Walle
                           child: GestureDetector(
                             onTap: () {
                               Navigator.push(context,
-                                  ExchangeToDollarsScreen.route(false));
+                                 WalletWithdrawToScreenDollar.route());
                             },
                             child: Container(
                               child: Column(

@@ -826,7 +826,7 @@ class InvestmentItemWidget extends StatelessWidget {
             ),
             YMargin(8),
             Text(
-              investmentType,
+              "$investmentType",
               style: TextStyle(
                   fontSize: 11,
                   color: AppColors.kTextColor,
@@ -855,8 +855,7 @@ class InvestmentItemWidget extends StatelessWidget {
                               color: AppColors.kTextColor),
                         ),
                         Text(
-                          StringUtils(balance.substring(1).split(".").first)
-                              .convertWithComma(),
+                        "${balance.substring(1).split(".").first.convertWithComma()}",
                           style: TextStyle(
                               fontSize: 11,
                               fontFamily: AppStrings.fontMedium,

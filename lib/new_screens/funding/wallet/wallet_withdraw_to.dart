@@ -75,7 +75,7 @@ class _WalletWithdrawToScreenState extends State<WalletWithdrawToScreen> with Af
               title: "Bank Account",
               onTap: () {
 
-                Navigator.push(context, SelectBankAccount.route());
+                Navigator.push(context, SelectBankAccount.route(nairaWithdrawal: true));
               },
             ),
             YMargin(20),

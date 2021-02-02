@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider_architecture/provider_architecture.dart';
+import 'package:zimvest/animations/loading.dart';
 import 'package:zimvest/data/models/investment/fixed_models.dart';
 import 'package:zimvest/data/view_models/investment_view_model.dart';
 import 'package:zimvest/new_screens/navigation/investments/fixed/treasury_bills/all_tbills_investments.dart';
@@ -22,9 +23,7 @@ class _TreasuryBillPageState extends State<TreasuryBillPage> {
       builder: (context, model, _) => Container(
         child: Center(
           child: model.treasuryBills.data == null
-              ? CircularProgressIndicator(
-                  valueColor: AlwaysStoppedAnimation(AppColors.kPrimaryColor),
-                )
+              ?LoadingWIdget()
               : model.treasuryBills.data.tBillsItems[1].treasureBills.length ==
                       0
                   ? Text("Nothing to Show")
