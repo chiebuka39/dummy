@@ -1382,7 +1382,7 @@ class _ReviewBankTransferDollarState extends State<ReviewBankTransferDollar> {
                                       Row(
                                         children: [
                                           Text(
-                                            AppStrings.nairaSymbol,
+                                            AppStrings.dollarSymbol,
                                             style: TextStyle(fontSize: 12),
                                           ),
                                           Text(
