@@ -746,7 +746,8 @@ class _WalletTransactionCreditState extends State<WalletTransactionCredit>
                     amount: getTransaction( "Credit", widget.currency)[index].amount,
                     date: getTransaction( "Credit", widget.currency)[index].date,
                     narration: getTransaction( "Credit", widget.currency)[index].narration,
-                  ))
+                  )
+                   )
                 else
                   if(walletViewModel.walletTransaction.length == 0)
                     Padding(
