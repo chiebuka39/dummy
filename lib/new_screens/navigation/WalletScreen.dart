@@ -24,6 +24,7 @@ import 'package:zimvest/utils/margin.dart';
 import 'package:zimvest/utils/margins.dart';
 import 'package:zimvest/utils/strings.dart';
 import 'package:zimvest/widgets/buttons.dart';
+import 'package:zimvest/widgets/new/loading.dart';
 
 class WalletScreen extends StatefulWidget {
   @override
@@ -731,7 +732,9 @@ class _WalletTransactionCreditState extends State<WalletTransactionCredit>
                   ],
                 ),
                 if(showTopUp)
-                  if(getTransaction( "Credit", widget.currency).isEmpty )
+                if(walletViewModel.busy)
+                ShimmerLoading()
+                  else if(getTransaction( "Credit", widget.currency).isEmpty )
                     Padding(
                       padding: const EdgeInsets.only(top: 100.0),
                       child: Text(
@@ -748,7 +751,10 @@ class _WalletTransactionCreditState extends State<WalletTransactionCredit>
                     narration: getTransaction( "Credit", widget.currency)[index].narration,
                   ))
                 else
-                  if(getTransaction( "Debit", widget.currency).isEmpty )
+
+                if(walletViewModel.busy)
+                ShimmerLoading()
+                  else if(getTransaction( "Debit", widget.currency).isEmpty )
                     Padding(
                       padding: const EdgeInsets.only(top: 100.0),
                       child: Text(

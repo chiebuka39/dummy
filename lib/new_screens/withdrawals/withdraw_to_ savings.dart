@@ -65,7 +65,7 @@ class _WithdrawToSavingsScreenState extends State<WithdrawToSavingsScreen> {
             Navigator.pop(context);
           },
         ),
-        body: GestureDetector(
+        body:!widget.isDollar ?  GestureDetector(
           onTap: (){
             FocusScope.of(context).requestFocus(new FocusNode());
           },
@@ -131,6 +131,82 @@ class _WithdrawToSavingsScreenState extends State<WithdrawToSavingsScreen> {
                     Text(AppStrings.nairaSymbol),
 
                     Text(paymentViewModel.wallet.first.balance.toString().split(".").first.convertWithComma(),
+                      style: TextStyle(fontFamily: AppStrings.fontMedium),),
+                  ],
+                ),
+                YMargin(height < 650 ? 15: height > 700 ? 65:30),
+                NumKeyboardWidget()
+
+
+
+              ],),
+          ),
+        ) : GestureDetector(
+          onTap: (){
+            FocusScope.of(context).requestFocus(new FocusNode());
+          },
+          child: Container(
+            padding: const EdgeInsets.symmetric(horizontal: 20),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                YMargin(40),
+                SizedBox(
+                  width: 250,
+                  child: Text("How much do you went to send to ${widget.bank.accountName}?", style: TextStyle(fontSize: 15,
+                      color: AppColors.kGreyText,
+                      fontFamily: AppStrings.fontBold, height: 1.6),),
+                ),
+                YMargin(12),
+                Container(
+                  padding: EdgeInsets.symmetric(horizontal: 15),
+                  height: 60,
+                  width: double.infinity,
+                  decoration: BoxDecoration(
+                      color: AppColors.kGreyBg,
+                      borderRadius: BorderRadius.circular(12)
+                  ),
+                  child: Align(
+                      alignment: Alignment.centerLeft,
+                      child:pinViewModel.amount.isEmpty ? Text("Enter Amount", style: TextStyle(fontFamily: AppStrings.fontNormal,
+                          fontSize: 14, color: AppColors.kTextColor.withOpacity(0.8)),): Text(pinViewModel.amount.convertWithComma(), style: TextStyle(fontSize: 15),)),
+                ),
+                YMargin(70),
+
+                // SizedBox(
+                //   width: 300,
+                //   child: Text("N/B Topup must be at least 1,000 naira", style: TextStyle(
+                //       fontSize: 10,height: 1.6,color: AppColors.kRed),),
+                // ),
+                // YMargin(height < 650 ? 25:height > 700 ? 70:40),
+
+
+                RoundedNextButton(
+                  onTap: pinViewModel.amount.isEmpty? null : double.parse(pinViewModel.amount) < 1000 ? null: (){
+                    savingViewModel.amountToSave = double.parse(pinViewModel.amount);
+                    if(widget.savingPlanModel != null){
+                      savingViewModel.selectedPlan = widget.savingPlanModel;
+                      Navigator.of(context).push(SavingsSummaryScreen.route(
+                          amount: savingViewModel.amountToSave));
+                    }else if(widget.bank != null && widget.isDollar){
+                      print("Lmao");
+                      Navigator.of(context).push(ReviewBankTransferDollar.route(
+                          nairaWalletWithdrawal: false,bank:widget.bank));
+                    }else if(widget.bank != null){
+                      print("Nawa oooo");
+                      Navigator.of(context).push(ReviewBankTransfer.route(
+                          nairaWalletWithdrawal: true,bank:widget.bank));
+                    }
+                  },
+                ),
+                YMargin(5),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Text("Wallet Balance ", style: TextStyle(fontFamily: AppStrings.fontNormal),),
+                    Text(AppStrings.dollarSymbol),
+
+                    Text(paymentViewModel.wallet[1].balance.toString().split(".").first.convertWithComma(),
                       style: TextStyle(fontFamily: AppStrings.fontMedium),),
                   ],
                 ),
