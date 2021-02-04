@@ -1,8 +1,10 @@
+import 'package:after_layout/after_layout.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:zimvest/data/view_models/pin_view_model.dart';
 import 'package:zimvest/data/view_models/savings_view_model.dart';
 import 'package:zimvest/new_screens/navigation/wealth/aspire/choose_start_screen.dart';
+import 'package:zimvest/new_screens/navigation/wealth/aspire/save_frequency.dart';
 import 'package:zimvest/styles/colors.dart';
 import 'package:zimvest/utils/margin.dart';
 import 'package:zimvest/utils/strings.dart';
@@ -26,15 +28,22 @@ class SavingsTargetScreen extends StatefulWidget {
   _SavingsTargetScreenState createState() => _SavingsTargetScreenState();
 }
 
-class _SavingsTargetScreenState extends State<SavingsTargetScreen> {
+class _SavingsTargetScreenState extends State<SavingsTargetScreen> with AfterLayoutMixin<SavingsTargetScreen> {
 
   ABSSavingViewModel savingViewModel;
+  ABSPinViewModel pinViewModel;
 
+  @override
+  void afterFirstLayout(BuildContext context) {
+    if(savingViewModel.selectedPlan != null){
+      pinViewModel.amount = savingViewModel.selectedPlan.targetAmount.toString().split(".").first;
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
     savingViewModel = Provider.of(context);
-    ABSPinViewModel pinViewModel = Provider.of(context);
+     pinViewModel = Provider.of(context);
     final height = MediaQuery.of(context).size.height;
     return GestureDetector(
       onTap: (){
@@ -46,7 +55,9 @@ class _SavingsTargetScreenState extends State<SavingsTargetScreen> {
           callback: (){
           Navigator.pop(context);
           pinViewModel.resetAmount();
-        },icon: Icons.arrow_back_ios_outlined,text: "Create Zimvest Aspire",),
+        },icon: Icons.arrow_back_ios_outlined,
+          text: savingViewModel.selectedPlan == null ?
+          "Create Zimvest Aspire":"Edit Zimvest Aspire",),
         body: GestureDetector(
           onTap: (){
             FocusScope.of(context).requestFocus(new FocusNode());
@@ -85,9 +96,14 @@ class _SavingsTargetScreenState extends State<SavingsTargetScreen> {
 
                 RoundedNextButton(
                   onTap:pinViewModel.amount.isEmpty ? null : double.parse(pinViewModel.amount) > 1000 ? (){
-                    savingViewModel.amountToSave = double.parse(pinViewModel.amount);
-                    Navigator.push(context, ChooseStartScreen.route());
-                    pinViewModel.resetAmount();
+                    if(savingViewModel.selectedPlan == null){
+                      savingViewModel.amountToSave = double.parse(pinViewModel.amount);
+                      Navigator.push(context, ChooseStartScreen.route());
+                    }else{
+                      Navigator.push(context, SaveFrequencyScreen.route());
+                    }
+
+                    //pinViewModel.resetAmount();
                   }:null,
                 ),
                 YMargin(height < 650 ? 25:height > 700 ? 65:40),

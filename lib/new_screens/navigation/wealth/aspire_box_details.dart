@@ -14,6 +14,8 @@ import 'package:zimvest/data/view_models/settings_view_model.dart';
 import 'package:zimvest/new_screens/funding/top_up_screen.dart';
 import 'package:zimvest/new_screens/funding/withdraw_screen.dart';
 import 'package:zimvest/new_screens/navigation/portfolio_screen.dart';
+import 'package:zimvest/new_screens/navigation/wealth/aspire/name_goal_screen.dart';
+import 'package:zimvest/new_screens/navigation/wealth/aspire/select_goals.dart';
 import 'package:zimvest/new_screens/navigation/widgets/money_title_widget.dart';
 import 'package:zimvest/new_screens/withdrawals/amount_withdraw_screen.dart';
 import 'package:zimvest/new_screens/withdrawals/verification_needed.dart';
@@ -180,8 +182,14 @@ class _AspireDetailsScreenState extends State<AspireDetailsScreen> with
                             Text("Goal", style: TextStyle(fontSize: 14,
                                 fontFamily: AppStrings.fontMedium, color: AppColors.kGreyText),),
                             Spacer(),
-                            Text("Edit", style: TextStyle(fontSize: 11,
-                                fontFamily: AppStrings.fontMedium, color: AppColors.kPrimaryColor))
+                            InkWell(
+                              onTap: (){
+                                savingViewModel.selectedPlan = widget.goal;
+                                Navigator.push(context, NameYourGoalScreen.route(goalName: widget.goal.planName));
+                              },
+                              child: Text("Edit", style: TextStyle(fontSize: 11,
+                                  fontFamily: AppStrings.fontMedium, color: AppColors.kPrimaryColor)),
+                            )
                           ],),
                           YMargin(15),
                           Container(

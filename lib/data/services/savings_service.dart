@@ -50,6 +50,10 @@ abstract class ABSSavingService{
     int fundingChannel, int frequency, String planName, DateTime maturityDate,
     DateTime startDate, int productId, double targetAmount, bool autoSave,
     int savingsAmount, String token});
+
+  Future<Result<void>> editTargetSavings({int cardId,
+    int fundingChannel, int frequency, String planName, int planId,
+    double targetAmount, bool autoSave, String token});
   Future<Result<SavingPlanModel>> createTargetSavings2({int cardId,
     int fundingChannel, int frequency, String planName, DateTime maturityDate,
     DateTime startDate, int productId, double targetAmount, bool autoSave,
@@ -722,6 +726,71 @@ class SavingService extends ABSSavingService{
     print("body $body");
     try{
       var response = await dio.post(url,options: Options(headers: headers),data: body);
+      final int statusCode = response.statusCode;
+      var response1 = response.data;
+      print("iii ${response1}");
+      print("111i ${statusCode}");
+
+      if (statusCode != 200 && statusCode != 201) {
+        print("oooooooogggggggggggg");
+        result.errorMessage = response1['message'];
+        result.error = true;
+      }
+      else {
+        print("33333333333333oooooooo");
+        result.error = false;
+        //result.data = SavingPlanModel.fromJson(response1['data']);
+        if(response1['message'] != null){
+          result.errorMessage = response1['message'];
+        }
+      }
+
+    }on DioError catch(e){
+      print("errrrrrrrr");
+      print("error $e}");
+      if(e.response != null ){
+        print(e.response.data);
+        if(e.response.data['message'] is String){
+          result.errorMessage = e.response.data['message'];
+        }
+
+      }else{
+        print(e.toString());
+        result.errorMessage = "Sorry, We could not complete your request";
+      }
+      result.error = true;
+    }
+
+    return result;
+  }
+
+  @override
+  Future<Result<void>> editTargetSavings({int cardId,
+    int fundingChannel, int frequency, String planName,
+    int planId, double targetAmount,bool autoSave, String token}) async{
+    Result<SavingPlanModel> result = Result(error: false);
+
+
+    var headers = {
+      HttpHeaders.authorizationHeader: "Bearer $token"
+    };
+    var body = {
+      "cardId": cardId,
+      'isAutoSave':autoSave,
+      "frequency": frequency,
+      "fundingChannel": fundingChannel,
+      "targetAmount": targetAmount,
+      "id": planId,
+      "planName": planName,
+      "savingsAmount": targetAmount,
+    };
+
+
+    var url = "zimvest.services.savings/api/v2/Savings/TargetSavings";
+    print("url $url");
+    print("body $body");
+    try{
+      var response = await dio.patch(url,options: Options(headers: headers),data: body);
       final int statusCode = response.statusCode;
       var response1 = response.data;
       print("iii ${response1}");

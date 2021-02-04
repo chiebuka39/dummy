@@ -50,6 +50,7 @@ class _NameYourGoalScreenState extends State<NameYourGoalScreen> {
   @override
   void initState() {
     goalName = widget.goalName;
+
     super.initState();
   }
 
@@ -63,7 +64,9 @@ class _NameYourGoalScreenState extends State<NameYourGoalScreen> {
         showCancel: true,
         callback: (){
         Navigator.pop(context);
-      },icon: Icons.arrow_back_ios_outlined,text: "Create Zimvest Aspire",),
+      },icon: Icons.arrow_back_ios_outlined,
+        text: savingViewModel.selectedPlan == null ?
+        "Create Zimvest Aspire":"Edit Zimvest Aspire",),
       body: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 20),
         child: SingleChildScrollView(

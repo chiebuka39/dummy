@@ -1,5 +1,7 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:zimvest/data/view_models/savings_view_model.dart';
 import 'package:zimvest/new_screens/navigation/wealth/aspire/name_goal_screen.dart';
 import 'package:zimvest/styles/colors.dart';
 import 'package:zimvest/utils/margin.dart';
@@ -20,6 +22,7 @@ class SelectGoalScreen extends StatefulWidget {
 class _SelectGoalScreenState extends State<SelectGoalScreen> {
   @override
   Widget build(BuildContext context) {
+    ABSSavingViewModel savingViewModel = Provider.of(context);
     List<String> goals = ['Rent', 'Vacation', 'Gift', 'Wedding', 'Education', 'Business'];
     return Scaffold(
 
@@ -39,6 +42,7 @@ class _SelectGoalScreenState extends State<SelectGoalScreen> {
           YMargin(20),
           PrimaryButtonNew(
             onTap: (){
+              savingViewModel.selectedPlan = null;
               Navigator.push(context, NameYourGoalScreen.route());
             },
             title: 'Create Custom goal',
@@ -81,6 +85,7 @@ class _SelectGoalScreenState extends State<SelectGoalScreen> {
                 ...List.generate(goals.length, (index) {
                   return GestureDetector(
                     onTap: (){
+                      savingViewModel.selectedPlan = null;
                       Navigator.push(context, NameYourGoalScreen.route(goalName: goals[index]));
                     },
                     child: Container(

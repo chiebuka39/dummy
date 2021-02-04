@@ -105,6 +105,9 @@ abstract class ABSSavingViewModel extends ChangeNotifier{
     double amount, int customerBankId, String pin, int withdrawalChannel});
   Future<Result<Map>> getWithdrawalSummary({String token, int productId});
   Future<Result<void>> terminateSavings({String token, int productId});
+  Future<Result<void>> editTargetSavings({int cardId,
+    int fundingChannel, int frequency, String planName,
+    int planId, String token});
 }
 
 class SavingViewModel extends ABSSavingViewModel{
@@ -407,6 +410,19 @@ class SavingViewModel extends ABSSavingViewModel{
     models.removeWhere((element) => element.id == productId);
     savingPlanModel = models;
     return result;
+  }
+
+  @override
+  Future<Result<void>> editTargetSavings({int cardId, int fundingChannel, int frequency, String planName,
+    int planId, double targetAmount, String token}) {
+    return _savingService.editTargetSavings(
+      cardId: cardId,
+      frequency: selectedFrequency.id,fundingChannel: fundingChannel,
+      token: token,
+      targetAmount: amountToSave,autoSave: autoSave,
+      planId: selectedPlan.id,
+      planName: goalName
+    );
   }
 
 }

@@ -12,6 +12,7 @@ import 'package:zimvest/new_screens/tabs.dart';
 import 'package:zimvest/styles/colors.dart';
 import 'package:zimvest/utils/app_utils.dart';
 import 'package:zimvest/utils/margin.dart';
+import 'package:zimvest/utils/result.dart';
 import 'package:zimvest/utils/strings.dart';
 import 'package:simple_animations/simple_animations.dart';
 import 'package:supercharged/supercharged.dart';
@@ -89,15 +90,30 @@ class _SavingsSummaryScreenState extends State<SavingsSummaryScreen> {
       slideUp = true;
       loading = true;
     });
-    var result = await savingViewModel.createTargetSavings2(
-    
-        cardId:paymentViewModel.selectedCard?.id ?? null,
-        token: identityViewModel.user.token,
-        fundingChannel: paymentViewModel.selectedCard == null ?
-        savingViewModel.fundingChannels.firstWhere((element) => element.name == "Wallet").id:
-        savingViewModel.fundingChannels.firstWhere((element) => element.name == "Card").id,
-        savingsAmount: getSavingsAmount()
-    );
+    Result result;
+    if(savingViewModel.selectedPlan == null){
+      result = await savingViewModel.createTargetSavings2(
+
+          cardId:paymentViewModel.selectedCard?.id ?? null,
+          token: identityViewModel.user.token,
+          fundingChannel: paymentViewModel.selectedCard == null ?
+          savingViewModel.fundingChannels.firstWhere((element) => element.name == "Wallet").id:
+          savingViewModel.fundingChannels.firstWhere((element) => element.name == "Card").id,
+          savingsAmount: getSavingsAmount()
+      );
+    }else{
+      print("pppp<<<<<<<<<<< i cam calleing edit");
+      result = await savingViewModel.editTargetSavings(
+
+          cardId:paymentViewModel.selectedCard?.id ?? null,
+          token: identityViewModel.user.token,
+          fundingChannel: paymentViewModel.selectedCard == null ?
+          savingViewModel.fundingChannels.firstWhere((element) => element.name == "Wallet").id:
+          savingViewModel.fundingChannels.firstWhere((element) => element.name == "Card").id,
+
+      );
+    }
+
     print("ooooo ${result.error}");
     print("4444 ${result.errorMessage}");
     if(result.error == false){
@@ -195,6 +211,7 @@ class _SavingsSummaryScreenState extends State<SavingsSummaryScreen> {
                                   savingViewModel.startDate = null;
                                   savingViewModel.goalName = "";
                                   savingViewModel.selectedFrequency = null;
+                                  savingViewModel.selectedPlan = null;
                                   savingViewModel.amountToSave = null;
                                   savingViewModel.selectedChannel = null;
                                 });
@@ -420,12 +437,9 @@ class _SavingsSummaryScreenState extends State<SavingsSummaryScreen> {
                       textAlign: TextAlign.center,)),
                 Spacer(),
                 PrimaryButtonNew(
-                  title: "Back to Home",
+                  title: "Retry",
                   onTap: (){
-                    Navigator.pushAndRemoveUntil(
-                        context,
-                        MaterialPageRoute(builder: (context) => TabsContainer()),
-                            (Route<dynamic> route) => false);
+                    Navigator.pop(context);
                   },
                 ),
                 YMargin(40)

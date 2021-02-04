@@ -134,7 +134,14 @@ class _ProfileScreenState extends State<ProfileScreen> with AfterLayoutMixin<Pro
             icon: 'earn',onClick: (){
               Navigator.push(context, EarnFreeCashScreen.route());
             },),
-          ProfileWidget(title: "Rate App",icon: 'rate',),
+          ProfileWidget(title: "Rate App",icon: 'rate',onClick: (){
+            showModalBottomSheet<Null>(
+                context: context,
+                builder: (BuildContext context) {
+                  return RateAction();
+                },
+                isScrollControlled: true);
+          },),
           ProfileWidget(title: "About Zimvest",
             icon: 'about',
             onClick: (){

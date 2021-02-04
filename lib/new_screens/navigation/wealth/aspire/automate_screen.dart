@@ -5,6 +5,7 @@ import 'package:zimvest/data/view_models/savings_view_model.dart';
 import 'package:zimvest/new_screens/navigation/wealth/aspire/choose_funding_source.dart';
 import 'package:zimvest/utils/margin.dart';
 import 'package:zimvest/utils/strings.dart';
+import 'package:zimvest/new_screens/navigation/wealth/aspire/savings_summary.dart';
 import 'package:zimvest/widgets/buttons.dart';
 import 'package:zimvest/widgets/new/new_widgets.dart';
 
@@ -32,7 +33,8 @@ class _AutomateSavingsScreenState extends State<AutomateSavingsScreen> {
           showCancel: true,
           callback: (){
           Navigator.pop(context);
-        },icon: Icons.arrow_back_ios_outlined,text: "Create Zimvest Aspire",),
+        },icon: Icons.arrow_back_ios_outlined,text: savingViewModel.selectedPlan == null ?
+        "Create Zimvest Aspire":"Edit Zimvest Aspire",),
       body: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 20),
         child: Column(
@@ -84,9 +86,12 @@ class _AutomateSavingsScreenState extends State<AutomateSavingsScreen> {
             YMargin(110),
             RoundedNextButton(
               onTap: automatic == null ? null: (){
-                savingViewModel.autoSave = automatic;
-                Navigator.push(context,
-                    ChooseFundingScreen.route());
+
+                  savingViewModel.autoSave = automatic;
+                  Navigator.push(context,
+                      ChooseFundingScreen.route());
+
+
               },
             )
 

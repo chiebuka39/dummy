@@ -135,7 +135,7 @@ class _TempLoginScreenState extends State<TempLoginScreen> with AfterLayoutMixin
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 YMargin(40),
-                Text("Good morning, ${identityViewModel.user.fullname.split(" ").first}",
+                Text("Good ${DateTime.now().hour < 12 ? 'Morning' : DateTime.now().hour >16 ? 'Evening':'Afternoon'}, ${identityViewModel.user.fullname.split(" ").first}",
                   style: TextStyle(fontSize: 17, fontFamily: AppStrings.fontBold),),
                 YMargin(30),
                 Container(
