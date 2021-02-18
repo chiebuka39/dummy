@@ -22,6 +22,8 @@ class SavingPlanModel {
     this.dateUpdated,
     this.isPaused,
     this.savingsActivities,
+    this.cardId,
+    this.fundingChannel,this.fundingChannelText
   });
 
   int id;
@@ -37,6 +39,9 @@ class SavingPlanModel {
   DateTime maturityDate;
   int status;
   String statusText;
+  String fundingChannelText;
+  int fundingChannel;
+  int cardId;
   bool isMatured;
   double amountSaved;
   double accruedInterest;
@@ -72,6 +77,9 @@ class SavingPlanModel {
         dateCreated: DateTime.parse(json["dateCreated"]),
         dateUpdated: DateTime.parse(json["dateUpdated"]),
         isPaused: json["isPaused"],
+        fundingChannel: json["fundingChannel"],
+        fundingChannelText: json["fundingChannelText"],
+        cardId: json["cardId"],
         //savingsActivities: json["savingsActivities"],
       );
 }

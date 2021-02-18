@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:dio/dio.dart';
+import 'package:zimvest/data/models/payment/bank.dart';
 import 'package:zimvest/data/models/payment/wallet.dart';
 import 'package:zimvest/data/models/wired_transfer_details_model.dart';
 import 'package:zimvest/utils/result.dart';
@@ -19,14 +20,18 @@ abstract class ABSWalletService {
       num exchangeAmount,
       String currency,
       int fundingSource});
+  Future<Result<dynamic>> fundWalletTransfer(
+      {String token,
+      File file,
+      Bank bank});
   Future<Result<dynamic>> fundWalletWired(
       {String token,
       num wiredTransferAmount,
       int fundingSource,
       File proofOfPayment,
       int intermediaryBankType});
-  Future<Result<List<WiredTransferDetails>>> getWiredTransferDetails(
-      String token);
+  Future<Result<List<WiredTransferDetails>>> getWiredTransferDetails(String token);
+  Future<Result<Bank>> getTransferDetails(String token);
 }
 
 class WalletService implements ABSWalletService {
@@ -45,7 +50,12 @@ class WalletService implements ABSWalletService {
       );
       if (getWallets.statusCode == 200) {
         final Iterable result = getWallets.data["data"];
-        return result.map((e) => Wallet.fromJson(e)).toList();
+        if(result == null){
+          return [];
+        }else{
+          return result.map((e) => Wallet.fromJson(e)).toList();
+        }
+
       } else if (getWallets.statusCode == 400) {
         return null;
       }
@@ -69,7 +79,12 @@ class WalletService implements ABSWalletService {
 
       if (getWalletTransactions.statusCode == 200) {
         final Iterable result = getWalletTransactions.data["data"];
-        return result.map((e) => WalletTransaction.fromJson(e)).toList();
+        if(result == null){
+          return [];
+        }else{
+          return result.map((e) => WalletTransaction.fromJson(e)).toList();
+        }
+
       } else if (getWalletTransactions.statusCode == 400) {
         return null;
       }
@@ -191,6 +206,57 @@ class WalletService implements ABSWalletService {
   }
 
   @override
+  Future<Result> fundWalletTransfer(
+      {String token,
+        File file,
+        Bank bank}) async {
+    final url = "$microService/api/Wallet/fundwallet";
+    var headers = {HttpHeaders.authorizationHeader: "Bearer $token"};
+    Result result = Result(error: false);
+    FormData data = FormData.fromMap({
+      "WalletFundingSource": 5,
+      "BankTransferProofOfPayment.DocumentFile": file.path,
+      'BankTransferOption':bank.id
+
+    });
+    try {
+      final fundWalletWired = await dio.post(
+        url,
+        data: data,
+        options: Options(
+          headers: headers,
+          validateStatus: (status) {
+            return status < 600;
+          },
+        ),
+      );
+      print("pppvg dd ${fundWalletWired.data}");
+      if (fundWalletWired.statusCode == 200) {
+        result.error = false;
+        result.errorMessage = fundWalletWired.data["message"];
+      } else if (fundWalletWired.statusCode == 400) {
+        result.error = true;
+        result.errorMessage = fundWalletWired.data["message"];
+      } else {
+        result.error = true;
+        result.errorMessage = "Wallet could not be funded";
+      }
+    } on DioError catch (e) {
+      result.error = true;
+      if (e.response.data == null) {
+        result.errorMessage = "Error Message";
+      } else {
+        if (e.response.data is Map) {
+          result.errorMessage = e.response.data['message'];
+        } else {
+          result.errorMessage = "Error Message";
+        }
+      }
+    }
+    return result;
+  }
+
+  @override
   Future<Result<List<WiredTransferDetails>>> getWiredTransferDetails(
       String token) async {
     Result<List<WiredTransferDetails>> result = Result(error: false);
@@ -206,6 +272,29 @@ class WalletService implements ABSWalletService {
           details.add(WiredTransferDetails.fromJson(element));
         });
         result.data = details;
+      }
+    } on DioError catch (e) {
+      print(e.toString());
+      result.errorMessage = e.response.statusMessage;
+      result.error = true;
+    }
+    return result;
+  }
+
+  @override
+  Future<Result<Bank>> getTransferDetails(
+      String token) async {
+    Result<Bank> result = Result(error: false);
+    final url = "$microService/api/Wallet/banktransferoptions";
+    var headers = {HttpHeaders.authorizationHeader: "Bearer $token"};
+    try {
+      var getDetails = await dio.get(url, options: Options(headers: headers));
+      if (getDetails.statusCode == 200) {
+        result.error = false;
+        var res = getDetails.data["data"];
+        print("res $res");
+
+        result.data = Bank.fromJsonMain((res as List).first);
       }
     } on DioError catch (e) {
       print(e.toString());

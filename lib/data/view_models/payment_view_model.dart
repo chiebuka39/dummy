@@ -88,6 +88,7 @@ abstract class ABSPaymentViewModel extends ChangeNotifier {
   Future<Result<void>> paymentConfirmation(String token, String trnasactionRef);
   Future<Result<void>> withdrawToBank({String token, Bank bank, double amount, String type});
   void onKeyboardTap(String value);
+  Future<Result<Bank>> createVirtualAccount(String token);
 }
 
 class PaymentViewModel extends ABSPaymentViewModel {
@@ -310,5 +311,10 @@ class PaymentViewModel extends ABSPaymentViewModel {
   Future<Result<void>> withdrawToBank({String token, Bank bank, double amount, String type}) {
     print(type);
     return _paymentService.withdrawToBank(token, bank, amount, type);
+  }
+
+  @override
+  Future<Result<Bank>> createVirtualAccount(String token) {
+    return _paymentService.createVirtualAccount(token);
   }
 }

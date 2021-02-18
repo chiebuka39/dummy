@@ -35,6 +35,7 @@ class _UploadProofOfPaymentState extends State<UploadProofOfPayment> {
     paymentViewModel = Provider.of(context);
     walletModel = Provider.of(context);
     investmentModel = Provider.of(context);
+    final height = MediaQuery.of(context).size.height;
     return Scaffold(
       appBar: ZimAppBar(
         text: "Invest",
@@ -42,11 +43,12 @@ class _UploadProofOfPaymentState extends State<UploadProofOfPayment> {
           Navigator.pop(context);
         },
         icon: Icons.arrow_back_ios,
+        showCancel: true,
       ),
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          YMargin(69),
+          YMargin(height > 750 ?70: 30),
           Padding(
             padding: const EdgeInsets.only(left: 20.0),
             child: Text(
@@ -58,7 +60,7 @@ class _UploadProofOfPaymentState extends State<UploadProofOfPayment> {
               ),
             ),
           ),
-          YMargin(51),
+          YMargin(height > 750 ?51: 30),
           PaymentSourceButtonSpecial(
             paymentsource: "Upload Proof of Payment",
             color: AppColors.kTextColor,

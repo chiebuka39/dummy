@@ -4,9 +4,12 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:flutter_switch/flutter_switch.dart';
 import 'package:provider/provider.dart';
 import 'package:zimvest/data/local/user_local.dart';
+import 'package:zimvest/data/models/payment/bank.dart';
 import 'package:zimvest/data/models/secondary_state.dart';
 import 'package:zimvest/data/services/connectivity_service.dart';
+import 'package:zimvest/data/view_models/identity_view_model.dart';
 import 'package:zimvest/data/view_models/payment_view_model.dart';
+import 'package:zimvest/data/view_models/savings_view_model.dart';
 import 'package:zimvest/locator.dart';
 import 'package:zimvest/new_screens/profile/verif_code_screen.dart';
 import 'package:zimvest/new_screens/tabs.dart';
@@ -44,7 +47,7 @@ class SelectWallet extends StatelessWidget {
               fontSize: 13,fontFamily: AppStrings.fontNormal),),
           Spacer(),
           Text(AppStrings.nairaSymbol, style: TextStyle(fontSize: 12, color: AppColors.kWhite),),
-          Text(" ${paymentViewModel.wallet == null ? '0.0':paymentViewModel.wallet.where((element) => element.currency == "NGN").first.balance.toString().split(".").first.convertWithComma()}", style: TextStyle(color: AppColors.kWhite,
+          Text(" ${paymentViewModel.wallet == null  ? '0.0': paymentViewModel.wallet.isEmpty ? '0.0':paymentViewModel.wallet.where((element) => element.currency == "NGN").first.balance.toString().split(".").first.convertWithComma()}", style: TextStyle(color: AppColors.kWhite,
               fontSize: 13,fontFamily: AppStrings.fontNormal),),
           XMargin(5),
           Icon(Icons.navigate_next_rounded,color: AppColors.kWhite,)
@@ -285,6 +288,111 @@ class EnableFaceIdWidget extends StatelessWidget {
     );
   }
 }
+class VirtualAccountCreatedWidget extends StatelessWidget {
+  const VirtualAccountCreatedWidget({
+    Key key, this.bank,
+  }) : super(key: key);
+  final Bank bank;
+
+  @override
+  Widget build(BuildContext context) {
+    ABSIdentityViewModel identityViewModel = Provider.of(context);
+    return Container(
+      height: 400,
+      decoration: BoxDecoration(
+        color: Colors.transparent,
+      ),
+      child: Column(children: [
+        YMargin(10),
+        Center(child: Container(
+          width: 30,
+          height: 5,
+          decoration: BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.circular(5)
+          ),
+        ),),
+        YMargin(20),
+        Expanded(child: Container(
+          width: double.infinity,
+          padding: EdgeInsets.symmetric(horizontal: 20),
+          decoration: BoxDecoration(
+              color:Colors.white,
+              borderRadius: BorderRadius.only(
+                  topLeft: Radius.circular(25),
+                  topRight: Radius.circular(25)
+              )
+          ),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              YMargin(40),
+              Text("Virtual Account Generated", style: TextStyle(fontSize: 16, fontFamily: AppStrings.fontBold),),
+              YMargin(10),
+              Text("You can fund your wallet with these account details", style: TextStyle(
+                  fontFamily: AppStrings.fontNormal,fontSize: 12
+              ),),
+              YMargin(26),
+              Container(
+                height: 140,
+                width: double.infinity,
+                decoration: BoxDecoration(
+                  color: AppColors.kWhite,
+                  boxShadow: AppUtils.getBoxShaddow3,
+                  borderRadius: BorderRadius.circular(10)
+                ),
+                child: Column(children: [
+                  Spacer(),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 20),
+                    child: Row(children: [
+                      Text("Bank Name", style: TextStyle(fontFamily: AppStrings.fontNormal,),),
+                      Spacer(),
+                      Text(bank.name, style: TextStyle(fontFamily: AppStrings.fontMedium),)
+                    ],),
+                  ),
+                  Spacer(),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 20),
+                    child: Row(children: [
+                      Text("Account No", style: TextStyle(fontFamily: AppStrings.fontNormal,),),
+                      Spacer(),
+                      Text(bank.accountNum, style: TextStyle(fontFamily: AppStrings.fontMedium),)
+                    ],),
+                  ),
+                  Spacer(),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 20),
+                    child: Row(children: [
+                      Text("Account Name", style: TextStyle(fontFamily: AppStrings.fontNormal,),),
+                      Spacer(),
+                      Text(identityViewModel.user.fullname, style: TextStyle(fontFamily: AppStrings.fontMedium),)
+                    ],),
+                  ),
+                  Spacer(),
+                ],),
+              ),
+              Spacer(),
+              Center(
+                child: PrimaryButtonNew(
+                  onTap: (){
+                    Navigator.pushAndRemoveUntil(
+                        context,
+                        MaterialPageRoute(builder: (context) => TabsContainer()),
+                            (Route<dynamic> route) => false);
+                  },
+                  title: "Done",
+                  width: 200,
+                ),
+              ),
+              YMargin(10),
+
+            ],),
+        ))
+      ],),
+    );
+  }
+}
 class ResetPinWidget extends StatelessWidget {
   const ResetPinWidget({
     Key key,
@@ -411,6 +519,7 @@ class PasswordSuccessWidget extends StatelessWidget {
                 onTap: onDone,
                 title: "Done",
                 width: 200,
+
               ),
               Spacer(),
             ],),
@@ -481,6 +590,8 @@ class NoInternetWidget extends StatelessWidget {
 
   }
 }
+
+
 
 class ImageUploadWidget extends StatelessWidget {
   const ImageUploadWidget({

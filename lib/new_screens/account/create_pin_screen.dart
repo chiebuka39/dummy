@@ -38,6 +38,7 @@ class _CreatePinWidgetState extends State<CreatePinScreen> {
   Widget build(BuildContext context) {
     identityViewModel = Provider.of(context);
     final node = FocusScope.of(context);
+    final height = MediaQuery.of(context).size.height;
     return Scaffold(
       appBar: AppBar(
         elevation: 0,
@@ -50,7 +51,8 @@ class _CreatePinWidgetState extends State<CreatePinScreen> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            YMargin(50),
+
+            YMargin(height > 800 ?50:height > 700 ? 30:20),
             Text("Create Zimvest Pin", style: TextStyle(fontFamily: AppStrings.fontMedium),),
             YMargin(12),
             SizedBox(

@@ -56,7 +56,7 @@ class _VerifCodeWidgetState extends State<VerifCodeWidget> with AfterLayoutMixin
           YMargin(12),
           SizedBox(
             width: 225,
-            child: Text("Please enter the code that was sent to jondave@aza.com", style: TextStyle(
+            child: Text("Please enter the code that was sent to ${identityViewModel.email}", style: TextStyle(
                 fontSize: 11,color: Colors.black54, fontFamily: AppStrings.fontNormal
             ),),
           ),

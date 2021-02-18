@@ -24,7 +24,7 @@ class Bank{
       id: map['id'] ?? 0,
       name: map['bankName'] ?? '',
       accountName: map['accountName'] ?? '',
-      accountNum: map['accountNumber'] ?? '',
+      accountNum: map['accountNumber'] ?? map['bankAccountNumer'] ?? '',
       isActive: map['isActive'] ?? false,
     );
   }

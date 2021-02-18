@@ -43,6 +43,7 @@ class _FundNairaWalletWithDollarState extends State<FundNairaWalletWithDollar> {
   @override
   Widget build(BuildContext context) {
     ABSPaymentViewModel paymentViewModel = Provider.of(context);
+    var height = MediaQuery.of(context).size.height;
     return Scaffold(
       appBar: ZimAppBar(
         icon: Icons.arrow_back_ios,
@@ -56,7 +57,7 @@ class _FundNairaWalletWithDollarState extends State<FundNairaWalletWithDollar> {
         builder: (context) => Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            YMargin(72),
+            YMargin(height > 750 ?72:30),
             Padding(
               padding: const EdgeInsets.only(left: 20.0, right: 76),
               child: Text(
@@ -110,7 +111,7 @@ class _FundNairaWalletWithDollarState extends State<FundNairaWalletWithDollar> {
                 ),
               ),
             ),
-            YMargin(70),
+            YMargin(height > 750 ?70:40),
             RoundedNextButton(
               onTap: () {
                 double amount = double.tryParse(

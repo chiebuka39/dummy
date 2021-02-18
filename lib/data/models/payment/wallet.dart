@@ -1,18 +1,34 @@
+import 'package:zimvest/data/models/payment/bank.dart';
+
 class Wallet{
   String walletNum;
   String currency;
   int walletId;
   double balance;
+  List<Bank> virtualAccounts;
 
 
-  Wallet({this.balance, this.walletNum, this.walletId,this.currency});
+  Wallet({this.balance, this.walletNum, this.walletId,this.currency, this.virtualAccounts});
 
-  factory Wallet.fromJson(Map<String, dynamic> json) => Wallet(
+  factory Wallet.fromJson2(Map<String, dynamic> json) => Wallet(
     walletNum: json["walletNumber"],
     balance: json["walletBalance"],
     currency: json["currency"],
     walletId: json["walletId"],
   );
+  Wallet.fromJson(Map<String, dynamic> json){
+    walletNum= json["walletNumber"];
+    balance= json["walletBalance"];
+    currency= json["currency"];
+    walletId= json["walletId"];
+    if (json['virtualAccounts'] != null) {
+      virtualAccounts = new List<Bank>();
+      json['virtualAccounts'].forEach((v) {
+        Bank gg = Bank.fromJsonMain(v);
+        virtualAccounts.add(gg);
+      });
+    }
+  }
 
   Map<String, dynamic> toJson() => {
     "walletNumber": walletNum,

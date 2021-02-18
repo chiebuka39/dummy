@@ -41,6 +41,7 @@ class _FundDollarWalletState extends State<FundDollarWallet> {
   @override
   Widget build(BuildContext context) {
     ABSPaymentViewModel paymentViewModel = Provider.of(context);
+    var height = MediaQuery.of(context).size.height;
     return Scaffold(
       appBar: ZimAppBar(
         icon: Icons.arrow_back_ios,
@@ -54,7 +55,7 @@ class _FundDollarWalletState extends State<FundDollarWallet> {
         builder: (context) => Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            YMargin(72),
+            YMargin(height > 750 ?72: 35),
             Padding(
               padding: const EdgeInsets.only(left: 20.0, right: 76),
               child: Text(
@@ -109,7 +110,7 @@ class _FundDollarWalletState extends State<FundDollarWallet> {
                 ),
               ),
             ),
-            YMargin(70),
+            YMargin(height > 750 ?70:30),
             RoundedNextButton(
               onTap: () {
                 double amount = double.tryParse(
@@ -121,7 +122,7 @@ class _FundDollarWalletState extends State<FundDollarWallet> {
                 if (paymentViewModel.amountController.text == "0.00") {
                   errorFlushBar(
                       context, "Error !", "You have to fill in an amount");
-                } else if (amount > balance) {
+                } else if (amount < 5) {
                   errorFlushBar(context, "Error !", "Insufficient Funds");
                 } else {
                   paymentViewModel.investmentAmount = amount;

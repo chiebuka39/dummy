@@ -69,6 +69,7 @@ abstract class ABSSavingViewModel extends ChangeNotifier{
   Future<Result<List<ProductType>>> getProductTypes({
     String token});
   Future<Result<List<SavingPlanModel>>> getSavingPlans({String token});
+  Future<Result<SavingPlanModel>> getSingleSavingPlan({String token,int id});
   Future<Result<List<ProductTransaction>>> getTransactionForProductType({String token,
     int productId});
   Future<Result<List<ProductTransaction>>> getTransactionForProduct({String token,
@@ -105,8 +106,8 @@ abstract class ABSSavingViewModel extends ChangeNotifier{
     double amount, int customerBankId, String pin, int withdrawalChannel});
   Future<Result<Map>> getWithdrawalSummary({String token, int productId});
   Future<Result<void>> terminateSavings({String token, int productId});
-  Future<Result<void>> editTargetSavings({int cardId,
-    int fundingChannel, int frequency, String planName,
+  Future<Result<void>> editTargetSavings({int cardId,File image,
+    int fundingChannel, int frequency, String planName, int savingsAmount,
     int planId, String token});
 }
 
@@ -196,6 +197,10 @@ class SavingViewModel extends ABSSavingViewModel{
     }
     print(",,, ${result.data}");
     return result;
+  }
+  @override
+  Future<Result<SavingPlanModel>> getSingleSavingPlan({String token,int id}){
+    return _savingService.getSingleSavingPlan(token: token,id: id);
   }
 
   @override
@@ -414,12 +419,15 @@ class SavingViewModel extends ABSSavingViewModel{
 
   @override
   Future<Result<void>> editTargetSavings({int cardId, int fundingChannel, int frequency, String planName,
-    int planId, double targetAmount, String token}) {
+    int planId, int savingsAmount, String token,File image}) {
     return _savingService.editTargetSavings(
       cardId: cardId,
       frequency: selectedFrequency.id,fundingChannel: fundingChannel,
       token: token,
-      targetAmount: amountToSave,autoSave: autoSave,
+      targetAmount: amountToSave,
+        autoSave: autoSave,
+      savingsAmount: savingsAmount,
+      image: image,
       planId: selectedPlan.id,
       planName: goalName
     );

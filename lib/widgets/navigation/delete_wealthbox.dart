@@ -10,6 +10,7 @@ import 'package:zimvest/data/models/saving_plan.dart';
 import 'package:zimvest/data/models/secondary_state.dart';
 import 'package:zimvest/data/view_models/identity_view_model.dart';
 import 'package:zimvest/data/view_models/payment_view_model.dart';
+import 'package:zimvest/data/view_models/pin_view_model.dart';
 import 'package:zimvest/data/view_models/savings_view_model.dart';
 import 'package:zimvest/locator.dart';
 import 'package:zimvest/new_screens/account/login_screen.dart';
@@ -414,6 +415,7 @@ class CancelAction extends StatelessWidget {
     ABSSavingViewModel savingViewModel = Provider.of(context);
     ABSIdentityViewModel identityViewModel = Provider.of(context);
     ABSPaymentViewModel paymentViewModel = Provider.of(context);
+    ABSPinViewModel pinViewModel = Provider.of(context);
     final buttonWidth = (MediaQuery
         .of(context)
         .size
@@ -482,6 +484,8 @@ class CancelAction extends StatelessWidget {
                       paymentViewModel.selectedCard = null;
                       paymentViewModel.selectedBank = null;
                       savingViewModel.amountToSave = 0.0;
+                      pinViewModel.resetAmount();
+
                       savingViewModel.autoSave = null;
                       savingViewModel.selectedFrequency = null;
                     });

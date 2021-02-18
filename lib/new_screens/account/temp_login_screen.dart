@@ -123,6 +123,8 @@ class _TempLoginScreenState extends State<TempLoginScreen> with AfterLayoutMixin
   @override
   Widget build(BuildContext context) {
     identityViewModel = Provider.of(context);
+    final height = MediaQuery.of(context).size.height;
+    print(";;;;;;; $height");
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.transparent,
@@ -134,7 +136,7 @@ class _TempLoginScreenState extends State<TempLoginScreen> with AfterLayoutMixin
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                YMargin(40),
+                YMargin(height > 800 ?40:height > 700 ? 30:20),
                 Text("Good ${DateTime.now().hour < 12 ? 'Morning' : DateTime.now().hour >16 ? 'Evening':'Afternoon'}, ${identityViewModel.user.fullname.split(" ").first}",
                   style: TextStyle(fontSize: 17, fontFamily: AppStrings.fontBold),),
                 YMargin(30),
@@ -179,7 +181,6 @@ class _TempLoginScreenState extends State<TempLoginScreen> with AfterLayoutMixin
                   ),
                 ),
                 YMargin(40),
-                YMargin(40),
                 Center(
                   child: GestureDetector(
                     onTap:_localStorage.getSecondaryState().biometricsEnabled == true ? (){
@@ -206,7 +207,7 @@ class _TempLoginScreenState extends State<TempLoginScreen> with AfterLayoutMixin
                       color: AppColors.kGreyText
                   ),)),
                 ),
-                YMargin(MediaQuery.of(context).size.height * 0.15),
+                YMargin(MediaQuery.of(context).size.height * 0.08),
                 RoundedNextButton(
                   loading: loading,
                   onTap: password.length  >=8  ? ()async{

@@ -157,6 +157,7 @@ class _SavingsSummaryScreenState extends State<SavingsSummaryScreen> {
     savingViewModel = Provider.of(context);
     paymentViewModel = Provider.of(context);
     var size = MediaQuery.of(context).size;
+    print("pppppppp>>>>>>>>>>>>>>>> ${size.height}");
     return WillPopScope(
       onWillPop: ()async{
         return false;
@@ -261,7 +262,7 @@ class _SavingsSummaryScreenState extends State<SavingsSummaryScreen> {
                           },
                         ),
                       ),
-                      YMargin(size.height < 650 ? 15:size.height > 700 ? 70:40),
+                      YMargin(size.height < 650 ? 15:size.height > 700 ? 70:30),
                       Padding(
                         padding: const EdgeInsets.only(left: 20),
                         child: Text("Savings Summary", style: TextStyle(fontFamily: AppStrings.fontMedium),),
@@ -270,7 +271,7 @@ class _SavingsSummaryScreenState extends State<SavingsSummaryScreen> {
                       Container(
                         margin: EdgeInsets.symmetric(horizontal: 20),
                         padding: EdgeInsets.symmetric(horizontal: 20,vertical: 25),
-                        height: size.height < 650 ? 320:size.height > 700 ? 380:340,
+                        height: size.height > 700 ? 380:320,
                         width: double.infinity,
                         decoration: BoxDecoration(
                           color: AppColors.kWhite,
@@ -281,7 +282,7 @@ class _SavingsSummaryScreenState extends State<SavingsSummaryScreen> {
                           children: [
                           Text("Plan name".toUpperCase(), style: TextStyle(fontSize: 12,
                               color: AppColors.kSecondaryText,fontFamily: AppStrings.fontNormal,),),
-                            Spacer(),
+                            YMargin(size.height < 700 ? 7:15),
                             Text(savingViewModel.goalName, style: TextStyle(
                                 fontFamily: AppStrings.fontMedium,
                                 fontSize: 13,color: AppColors.kGreyText
@@ -293,7 +294,7 @@ class _SavingsSummaryScreenState extends State<SavingsSummaryScreen> {
                                 children: [
                                   Text("Frequency".toUpperCase(), style: TextStyle(fontSize: 11,
                                     color: AppColors.kSecondaryText,fontFamily: AppStrings.fontNormal,),),
-                                  YMargin(15),
+                                  YMargin(size.height < 700 ? 7:15),
                                   Text(savingViewModel.selectedFrequency.name, style: TextStyle(
                                       fontFamily: AppStrings.fontMedium,
                                       fontSize: 13,color: AppColors.kGreyText
@@ -306,7 +307,7 @@ class _SavingsSummaryScreenState extends State<SavingsSummaryScreen> {
                                 children: [
                                   Text("Interest rate".toUpperCase(), style: TextStyle(fontSize: 12,
                                     color: AppColors.kSecondaryText,fontFamily: AppStrings.fontNormal,),),
-                                  YMargin(15),
+                                  YMargin(size.height < 700 ? 7:15),
                                   Text("6% P.A", style: TextStyle(
                                       fontFamily: AppStrings.fontMedium,
                                       fontSize: 13,color: AppColors.kGreyText
@@ -322,7 +323,7 @@ class _SavingsSummaryScreenState extends State<SavingsSummaryScreen> {
                                 children: [
                                   Text("${savingViewModel.selectedFrequency.name} amount".toUpperCase(), style: TextStyle(fontSize: 12,
                                     color: AppColors.kSecondaryText,fontFamily: AppStrings.fontNormal,),),
-                                  YMargin(15),
+                                  YMargin(size.height < 700 ? 7:15),
                                   Row(
                                     children: [
                                       Text(AppStrings.nairaSymbol),
@@ -341,7 +342,7 @@ class _SavingsSummaryScreenState extends State<SavingsSummaryScreen> {
                                 children: [
                                   Text("target amount".toUpperCase(), style: TextStyle(fontSize: 11,
                                     color: AppColors.kSecondaryText,fontFamily: AppStrings.fontNormal,),),
-                                  YMargin(15),
+                                  YMargin(size.height < 700 ? 7:15),
                                   Row(
                                     children: [
                                       Text(AppStrings.nairaSymbol),
@@ -360,7 +361,7 @@ class _SavingsSummaryScreenState extends State<SavingsSummaryScreen> {
                                 children: [
                                   Text("start date".toUpperCase(), style: TextStyle(fontSize: 12,
                                     color: AppColors.kSecondaryText,fontFamily: AppStrings.fontNormal,),),
-                                  YMargin(15),
+                                  YMargin(size.height < 700 ? 7:15),
                                   Text(AppUtils.getReadableDate2(savingViewModel.startDate), style: TextStyle(
                                       fontFamily: AppStrings.fontMedium,
                                       fontSize: 13,color: AppColors.kGreyText
@@ -372,7 +373,7 @@ class _SavingsSummaryScreenState extends State<SavingsSummaryScreen> {
                                 children: [
                                   Text("Next maturity date".toUpperCase(), style: TextStyle(fontSize: 11,
                                     color: AppColors.kSecondaryText,fontFamily: AppStrings.fontNormal,),),
-                                  YMargin(15),
+                                  YMargin(size.height < 700 ? 7:15),
                                   Text(AppUtils.getReadableDate2(savingViewModel.endDate), style: TextStyle(
                                       fontFamily: AppStrings.fontMedium,
                                       fontSize: 13,color: AppColors.kGreyText

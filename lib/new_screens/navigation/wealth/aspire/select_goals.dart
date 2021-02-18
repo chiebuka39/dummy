@@ -86,6 +86,7 @@ class _SelectGoalScreenState extends State<SelectGoalScreen> {
                   return GestureDetector(
                     onTap: (){
                       savingViewModel.selectedPlan = null;
+
                       Navigator.push(context, NameYourGoalScreen.route(goalName: goals[index]));
                     },
                     child: Container(

@@ -1,11 +1,15 @@
+import 'dart:io';
+
 import 'package:after_layout/after_layout.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
 import 'package:provider_architecture/provider_architecture.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
+import 'package:zimvest/data/models/payment/bank.dart';
 import 'package:zimvest/data/models/payment/wallet.dart';
 import 'package:zimvest/data/models/product_transaction.dart';
 import 'package:zimvest/data/view_models/identity_view_model.dart';
@@ -16,8 +20,10 @@ import 'package:zimvest/new_screens/funding/wallet/dollar/fund_dollar_wallet.dar
 import 'package:zimvest/new_screens/funding/wallet/exchange/exchange_to_dollars.dart';
 import 'package:zimvest/new_screens/funding/wallet/naira/fund_with_dollar_wallet.dart';
 import 'package:zimvest/new_screens/funding/wallet/wallet_withdraw_to.dart';
+import 'package:zimvest/new_screens/navigation/bank_transfer_upload_screen.dart';
 import 'package:zimvest/new_screens/navigation/widgets/money_title_widget.dart';
 import 'package:zimvest/new_screens/navigation/widgets/transaction_item_widget.dart';
+import 'package:zimvest/new_screens/profile/preview_screen.dart';
 import 'package:zimvest/styles/colors.dart';
 import 'package:zimvest/utils/app_utils.dart';
 import 'package:zimvest/utils/margin.dart';
@@ -25,6 +31,7 @@ import 'package:zimvest/utils/margins.dart';
 import 'package:zimvest/utils/strings.dart';
 import 'package:zimvest/widgets/buttons.dart';
 import 'package:zimvest/widgets/new/loading.dart';
+import 'package:zimvest/widgets/new/new_widgets.dart';
 
 class WalletScreen extends StatefulWidget {
   @override
@@ -34,6 +41,7 @@ class WalletScreen extends StatefulWidget {
 class _WalletScreenState extends State<WalletScreen> with AfterLayoutMixin<WalletScreen> {
   PageController controller = PageController();
   ABSIdentityViewModel identityViewModel;
+  ABSPaymentViewModel paymentViewModel;
   //WalletViewModel walletViewModel;
 
   bool showTopUp = true;
@@ -152,7 +160,7 @@ class _WalletScreenState extends State<WalletScreen> with AfterLayoutMixin<Walle
                       Spacer(),
                       MoneyTitleWidget(
                         // symbol: symbol,
-                        amount: paymentViewModel.wallet
+                        amount: paymentViewModel.wallet.isEmpty ? 0: paymentViewModel.wallet
                             .where((element) => element.currency == "NGN")
                             .first
                             .balance,
@@ -261,7 +269,7 @@ class _WalletScreenState extends State<WalletScreen> with AfterLayoutMixin<Walle
                     children: [
                       Spacer(),
                       MoneyTitleWidgetDollar(
-                        amount: paymentViewModel.wallet
+                        amount: paymentViewModel.wallet.isEmpty ? 0: paymentViewModel.wallet
                             .where((element) => element.currency == "USD")
                             .first
                             .balance,
@@ -379,9 +387,55 @@ class _WalletScreenState extends State<WalletScreen> with AfterLayoutMixin<Walle
 
 void bottomSheet(BuildContext context, List<Wallet> wallets, String name) {
   showModalBottomSheet(
-    context: context,
-    builder: (context) => Container(
-      height: screenHeight(context),
+    context: context,isScrollControlled: true,
+    builder: (context) => WalletButtom(wallets: wallets,name: name,),
+  );
+}
+
+class WalletButtom extends StatefulWidget {
+  const WalletButtom({
+    Key key, this.name, this.wallets,
+  }) : super(key: key);
+
+  final String name;
+  final List<Wallet> wallets;
+
+  @override
+  _WalletButtomState createState() => _WalletButtomState();
+}
+
+class _WalletButtomState extends State<WalletButtom> {
+  bool showUpload = false;
+  File _image;
+
+  final picker = ImagePicker();
+
+  Bank bank;
+
+  Future getImageFromGallery() async {
+    final pickedFile = await picker.getImage(source: ImageSource.gallery);
+
+    if (pickedFile != null) {
+      Navigator.pushReplacement(context, UploadSummaryScreen.route(file: File(pickedFile.path), bank: bank));
+    } else {
+      print('No image selected.');
+    }
+  }
+  Future getImageFromCam() async {
+    final pickedFile = await picker.getImage(source: ImageSource.camera);
+
+
+    if (pickedFile != null) {
+      Navigator.pushReplacement(context, UploadSummaryScreen.route(file: File(pickedFile.path), bank: bank));
+    } else {
+      print('No image selected.');
+    }
+
+  }
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      height: 470,
       child: Column(
         children: [
           Container(
@@ -392,193 +446,449 @@ void bottomSheet(BuildContext context, List<Wallet> wallets, String name) {
               borderRadius: BorderRadius.circular(20),
             ),
           ),
-          YMargin(5),
-          Container(
-            height: screenHeight(context) / 1.822,
-            width: screenWidth(context),
-            decoration: BoxDecoration(
-              color: AppColors.kWhite,
-              borderRadius: BorderRadius.only(
-                topLeft: Radius.circular(20),
-                topRight: Radius.circular(20),
-              ),
-            ),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Padding(
-                  padding: const EdgeInsets.only(left: 20.0, top: 33),
-                  child: Text(
-                    "Fund Wallet",
-                    style: TextStyle(
-                        fontWeight: FontWeight.w700,
-                        color: AppColors.kTextColor,
-                        fontSize: 15,
-                        fontFamily: AppStrings.fontNormal),
-                  ),
+          YMargin(15),
+          Expanded(
+            child: Container(
+              width: screenWidth(context),
+              decoration: BoxDecoration(
+                color: AppColors.kWhite,
+                borderRadius: BorderRadius.only(
+                  topLeft: Radius.circular(20),
+                  topRight: Radius.circular(20),
                 ),
-                YMargin(14),
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 20.0),
-                  child: Container(
-                    height: 133,
-                    width: screenWidth(context),
-                    decoration: BoxDecoration(
-                      boxShadow: AppUtils.getBoxShaddow,
-                      color: AppColors.kWhite,
-                      borderRadius: BorderRadius.circular(20),
+              ),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  showUpload == true ? Padding(
+                    padding: const EdgeInsets.only(left: 10,top: 20),
+                    child: BackButton(
+                      onPressed: (){
+                        setState(() {
+                          showUpload = !showUpload;
+                        });
+                      },color: AppColors.kPrimaryColor,
                     ),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        YMargin(25),
-                        Padding(
-                          padding:
-                              const EdgeInsets.symmetric(horizontal: 20.0),
-                          child: Text(
-                            "Account Information",
-                            style: TextStyle(
-                                fontWeight: FontWeight.w400,
-                                color: AppColors.kTextColor,
-                                fontSize: 12,
-                                fontFamily: AppStrings.fontNormal),
+                  ):SizedBox(),
+                  Padding(
+                    padding: const EdgeInsets.only(left: 20.0, top: 33),
+                    child: Text(
+                      "Fund Wallet",
+                      style: TextStyle(
+                          fontWeight: FontWeight.w700,
+                          color: AppColors.kTextColor,
+                          fontSize: 15,
+                          fontFamily: AppStrings.fontNormal),
+                    ),
+                  ),
+                  showUpload == true ? Padding(
+                    padding: const EdgeInsets.only(top: 20),
+                    child: PaymentSourceButtonSpecial(
+                      paymentsource: "Upload Proof of Payment",
+                      color: AppColors.kTextColor,
+                      onTap: () async {
+                        showModalBottomSheet < Null > (context: context, builder: (BuildContext context) {
+                          return ImageUploadWidget(onCamera: getImageFromCam,
+                              onGallery: getImageFromGallery,title: "Proof of payment");
+                        }, isScrollControlled: true);
+
+                      },
+                    ),
+                  ): DefaultTabController(
+                    length: 2,
+                    child: Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          TabBar(
+                            unselectedLabelColor: AppColors.kGrey,
+                            labelColor: AppColors.kPrimaryColor,
+                            indicatorColor: AppColors.kPrimaryColor,
+
+                            tabs: [
+                              Tab(text: "Virtual Account",),
+                              Tab(text: "Bank Transfer",),
+                            ],
                           ),
-                        ),
-                        YMargin(17),
-                        Padding(
-                          padding:
-                              const EdgeInsets.symmetric(horizontal: 20.0),
-                          child: Text(
-                            "$name",
-                            style: TextStyle(
-                                fontWeight: FontWeight.w400,
-                                color: AppColors.kTextColor,
-                                fontSize: 14,
-                                fontFamily: AppStrings.fontNormal),
-                          ),
-                        ),
-                        YMargin(15),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                          children: [
-                            XMargin(2),
-                            Text(
-                              "${wallets.where((element) => element.currency == "NGN").first.walletNum}",
-                              style: TextStyle(
-                                  fontWeight: FontWeight.w400,
-                                  color: AppColors.kTextColor,
-                                  fontSize: 13,
-                                  fontFamily: AppStrings.fontNormal),
-                            ),
-                            XMargin(11),
-                            Text(
-                              "Providus Bank",
-                              style: TextStyle(
-                                  fontWeight: FontWeight.w400,
-                                  color: AppColors.kTextColor,
-                                  fontSize: 13,
-                                  fontFamily: AppStrings.fontNormal),
-                            ),
-                            XMargin(44),
-                            InkWell(
-                              onTap: () => Clipboard.setData(ClipboardData(
-                                      text:
-                                          "${wallets.where((element) => element.currency == "NGN").first.walletNum}"))
-                                  .then(
-                                (_) {
-                                  final toast = FToast(context);
-                                  toast.showToast(
-                                    child: Container(
-                                      decoration: BoxDecoration(
-                                        color: AppColors.kPrimaryColor,
-                                        borderRadius:
-                                            BorderRadius.circular(5),
+                          ViewModelProvider<WalletViewModel>.withConsumer(
+                            viewModelBuilder: () => WalletViewModel(),
+                            onModelReady: (model) {
+                              model.getTransferDetails().then((value) {
+                                setState(() {
+                                  if(model.transferBank != null){
+                                    bank = model.transferBank;
+                                  }
+
+                                });
+                              });
+                            },
+                            builder: (context, model, _) =>  Expanded(
+                              child: TabBarView(
+                                children: [
+                                  Column(
+                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    children: [
+                                      YMargin(14),
+                                      Padding(
+                                        padding: const EdgeInsets.symmetric(horizontal: 20.0),
+                                        child: Container(
+                                          height: 133,
+                                          width: screenWidth(context),
+                                          decoration: BoxDecoration(
+                                            boxShadow: AppUtils.getBoxShaddow,
+                                            color: AppColors.kWhite,
+                                            borderRadius: BorderRadius.circular(20),
+                                          ),
+                                          child: Column(
+                                            crossAxisAlignment: CrossAxisAlignment.start,
+                                            children: [
+                                              YMargin(25),
+                                              Padding(
+                                                padding:
+                                                const EdgeInsets.symmetric(horizontal: 20.0),
+                                                child: Text(
+                                                  "Account Information",
+                                                  style: TextStyle(
+                                                      fontWeight: FontWeight.w400,
+                                                      color: AppColors.kTextColor,
+                                                      fontSize: 12,
+                                                      fontFamily: AppStrings.fontNormal),
+                                                ),
+                                              ),
+                                              YMargin(17),
+                                              Padding(
+                                                padding:
+                                                const EdgeInsets.symmetric(horizontal: 20.0),
+                                                child: Text(
+                                                  "${widget.name}",
+                                                  style: TextStyle(
+                                                      fontWeight: FontWeight.w400,
+                                                      color: AppColors.kTextColor,
+                                                      fontSize: 14,
+                                                      fontFamily: AppStrings.fontNormal),
+                                                ),
+                                              ),
+                                              YMargin(15),
+                                              Row(
+                                                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                                                children: [
+                                                  XMargin(18),
+
+                                                  Text(
+                                                    "${widget.wallets.where((element) => element.currency == "NGN").first.virtualAccounts.first.accountNum}",
+                                                    style: TextStyle(
+                                                        fontWeight: FontWeight.w400,
+                                                        color: AppColors.kTextColor,
+                                                        fontSize: 13,
+                                                        fontFamily: AppStrings.fontNormal),
+                                                  ),
+                                                  XMargin(11),
+                                                  Text(
+                                                    "${widget.wallets.where((element) => element.currency == "NGN").first.virtualAccounts.first.name}",
+                                                    style: TextStyle(
+                                                        fontWeight: FontWeight.w400,
+                                                        color: AppColors.kTextColor,
+                                                        fontSize: 13,
+                                                        fontFamily: AppStrings.fontNormal),
+                                                  ),
+
+                                                  Spacer(),
+                                                  InkWell(
+                                                    onTap: () => Clipboard.setData(ClipboardData(
+                                                        text:
+                                                        "${widget.wallets.where((element) => element.currency == "NGN").first.walletNum}"))
+                                                        .then(
+                                                          (_) {
+                                                        final toast = FToast(context);
+                                                        toast.showToast(
+                                                          child: Container(
+                                                            decoration: BoxDecoration(
+                                                              color: AppColors.kPrimaryColor,
+                                                              borderRadius:
+                                                              BorderRadius.circular(5),
+                                                            ),
+                                                            padding: EdgeInsets.all(8.0),
+                                                            height: 40,
+                                                            width: 120,
+                                                            child: Center(
+                                                              child: Text(
+                                                                'Copied!',
+                                                                style: TextStyle(
+                                                                    fontWeight: FontWeight.w400,
+                                                                    color: AppColors.kTextColor,
+                                                                    fontSize: 14,
+                                                                    fontFamily:
+                                                                    AppStrings.fontNormal),
+                                                              ),
+                                                            ),
+                                                          ),
+                                                          toastDuration:
+                                                          Duration(milliseconds: 2500),
+                                                          gravity: ToastGravity.BOTTOM,
+                                                        );
+                                                      },
+                                                    ),
+                                                    child: Text(
+                                                      "COPY",
+                                                      style: TextStyle(
+                                                          fontWeight: FontWeight.w400,
+                                                          color: AppColors.kPrimaryColor,
+                                                          fontSize: 10,
+                                                          fontFamily: AppStrings.fontNormal),
+                                                    ),
+                                                  ),
+                                                  XMargin(20),
+                                                ],
+                                              ),
+                                            ],
+                                          ),
+                                        ),
                                       ),
-                                      padding: EdgeInsets.all(8.0),
-                                      height: 40,
-                                      width: 120,
-                                      child: Center(
+                                      YMargin(13),
+                                      Padding(
+                                        padding: const EdgeInsets.symmetric(horizontal: 20.0),
                                         child: Text(
-                                          'Copied!',
+                                          "Please add 20 Naira to the amount you are transferring, this charge is applicable from the service provider",
                                           style: TextStyle(
                                               fontWeight: FontWeight.w400,
                                               color: AppColors.kTextColor,
-                                              fontSize: 14,
-                                              fontFamily:
-                                                  AppStrings.fontNormal),
+                                              fontSize: 11,
+                                              fontFamily: AppStrings.fontNormal),
                                         ),
                                       ),
-                                    ),
-                                    toastDuration:
-                                        Duration(milliseconds: 2500),
-                                    gravity: ToastGravity.BOTTOM,
-                                  );
-                                },
-                              ),
-                              child: Text(
-                                "COPY",
-                                style: TextStyle(
-                                    fontWeight: FontWeight.w400,
-                                    color: AppColors.kPrimaryColor,
-                                    fontSize: 10,
-                                    fontFamily: AppStrings.fontNormal),
+                                      YMargin(35),
+                                      Center(
+                                        child: Text(
+                                          "Or",
+                                          style: TextStyle(
+                                              fontWeight: FontWeight.w400,
+                                              color: AppColors.kTextColor,
+                                              fontSize: 12,
+                                              fontFamily: AppStrings.fontNormal),
+                                        ),
+                                      ),
+                                      YMargin(24),
+                                      ViewModelProvider<InvestmentHighYieldViewModel>.withConsumer(
+                                        viewModelBuilder: () => InvestmentHighYieldViewModel(),
+                                        onModelReady: (model) => model.getRate(),
+                                        builder: (context, model, _) => PaymentSourceButtonSpecial(
+                                          onTap: () {
+                                            Navigator.of(context).push(
+                                              FundNairaWalletWithDollar.route(
+                                                  wallet: widget.wallets, rate: model.gotRate.data.rate),
+                                            );
+                                          },
+                                          paymentsource: "Fund With Dollar Wallet",
+                                          color: AppColors.kPrimaryColorLight,
+                                          textColor: AppColors.kPrimaryColor,
+                                          iconColor: AppColors.kPrimaryColor,
+                                        ),
+                                      ),
+                                      YMargin(30),
+                                    ],
+                                  ),
+                                  Column(
+                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    children: [
+                                      YMargin(14),
+                                      model.busy ?
+                                      Container(
+                                        height: 140,
+                                        width: screenWidth(context),
+                                        child: Center(child: CircularProgressIndicator()),):Padding(
+                                        padding: const EdgeInsets.symmetric(horizontal: 20.0),
+                                        child: Container(
+                                          height: 140,
+                                          width: screenWidth(context),
+                                          decoration: BoxDecoration(
+                                            boxShadow: AppUtils.getBoxShaddow,
+                                            color: AppColors.kWhite,
+                                            borderRadius: BorderRadius.circular(20),
+                                          ),
+                                          child: Column(
+                                            crossAxisAlignment: CrossAxisAlignment.start,
+                                            children: [
+                                              YMargin(25),
+                                              Padding(
+                                                padding:
+                                                const EdgeInsets.symmetric(horizontal: 20.0),
+                                                child: Text(
+                                                  "Account Information",
+                                                  style: TextStyle(
+                                                      fontWeight: FontWeight.w400,
+                                                      color: AppColors.kTextColor,
+                                                      fontSize: 12,
+                                                      fontFamily: AppStrings.fontNormal),
+                                                ),
+                                              ),
+                                              YMargin(17),
+                                              Padding(
+                                                padding:
+                                                const EdgeInsets.symmetric(horizontal: 20.0),
+                                                child: Text(
+                                                  "${model.transferBank.accountName}",
+                                                  style: TextStyle(
+                                                      fontWeight: FontWeight.w400,
+                                                      color: AppColors.kTextColor,
+                                                      fontSize: 14,
+                                                      fontFamily: AppStrings.fontNormal),
+                                                ),
+                                              ),
+                                              YMargin(15),
+                                              Row(
+                                                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                                                children: [
+                                                  XMargin(18),
+
+                                                  Text(
+                                                    "${model.transferBank.accountNum}",
+                                                    style: TextStyle(
+                                                        fontWeight: FontWeight.w400,
+                                                        color: AppColors.kTextColor,
+                                                        fontSize: 13,
+                                                        fontFamily: AppStrings.fontNormal),
+                                                  ),
+                                                  XMargin(11),
+                                                  Expanded(
+                                                    child: Text(
+                                                      "${model.transferBank.name}",
+                                                      style: TextStyle(
+                                                          fontWeight: FontWeight.w400,
+                                                          color: AppColors.kTextColor,
+                                                          fontSize: 13,
+                                                          fontFamily: AppStrings.fontNormal),
+                                                    ),
+                                                  ),
+
+                                                  YMargin(10),
+                                                  InkWell(
+                                                    onTap: () => Clipboard.setData(ClipboardData(
+                                                        text:
+                                                        "${widget.wallets.where((element) => element.currency == "NGN").first.walletNum}"))
+                                                        .then(
+                                                          (_) {
+                                                        final toast = FToast(context);
+                                                        toast.showToast(
+                                                          child: Container(
+                                                            decoration: BoxDecoration(
+                                                              color: AppColors.kPrimaryColor,
+                                                              borderRadius:
+                                                              BorderRadius.circular(5),
+                                                            ),
+                                                            padding: EdgeInsets.all(8.0),
+                                                            height: 40,
+                                                            width: 120,
+                                                            child: Center(
+                                                              child: Text(
+                                                                'Copied!',
+                                                                style: TextStyle(
+                                                                    fontWeight: FontWeight.w400,
+                                                                    color: AppColors.kTextColor,
+                                                                    fontSize: 14,
+                                                                    fontFamily:
+                                                                    AppStrings.fontNormal),
+                                                              ),
+                                                            ),
+                                                          ),
+                                                          toastDuration:
+                                                          Duration(milliseconds: 2500),
+                                                          gravity: ToastGravity.BOTTOM,
+                                                        );
+                                                      },
+                                                    ),
+                                                    child: Text(
+                                                      "COPY",
+                                                      style: TextStyle(
+                                                          fontWeight: FontWeight.w400,
+                                                          color: AppColors.kPrimaryColor,
+                                                          fontSize: 10,
+                                                          fontFamily: AppStrings.fontNormal),
+                                                    ),
+                                                  ),
+                                                  XMargin(20),
+                                                ],
+                                              ),
+                                            ],
+                                          ),
+                                        ),
+                                      ),
+                                      YMargin(13),
+                                      Padding(
+                                        padding: const EdgeInsets.symmetric(horizontal: 20.0),
+                                        child: Text(
+                                          "Please make a transfer or deposit to this account below, you would need to upload your proof of payment to validate this transaction.",
+                                          style: TextStyle(
+                                              fontWeight: FontWeight.w400,
+                                              color: AppColors.kTextColor,
+                                              fontSize: 10,
+                                              height: 1.7,
+                                              fontFamily: AppStrings.fontNormal),
+                                        ),
+                                      ),
+                                      YMargin(10),
+                                      Center(
+                                        child: InkWell(
+                                          onTap: (){
+                                            setState(() {
+                                              showUpload = !showUpload;
+                                            });
+                                          },
+                                          child: Text("I have made payment", style: TextStyle(fontSize: 13,
+                                              fontFamily: AppStrings.fontBold,
+                                              color: AppColors.kPrimaryColor),),
+                                        ),
+                                      ),
+                                      Spacer(),
+                                      Center(
+                                        child: Text(
+                                          "Or",
+                                          style: TextStyle(
+                                              fontWeight: FontWeight.w400,
+                                              color: AppColors.kTextColor,
+                                              fontSize: 12,
+                                              fontFamily: AppStrings.fontNormal),
+                                        ),
+                                      ),
+                                      Spacer(),
+                                      ViewModelProvider<InvestmentHighYieldViewModel>.withConsumer(
+                                        viewModelBuilder: () => InvestmentHighYieldViewModel(),
+                                        onModelReady: (model) => model.getRate(),
+                                        builder: (context, model, _) => PaymentSourceButtonSpecial(
+                                          onTap: () {
+                                            Navigator.of(context).push(
+                                              FundNairaWalletWithDollar.route(
+                                                  wallet: widget.wallets, rate: model.gotRate.data.rate),
+                                            );
+                                          },
+                                          paymentsource: "Fund With Dollar Wallet",
+                                          color: AppColors.kPrimaryColorLight,
+                                          textColor: AppColors.kPrimaryColor,
+                                          iconColor: AppColors.kPrimaryColor,
+                                        ),
+                                      ),
+                                      Spacer()
+                                    ],
+                                  ),
+                                ],
                               ),
                             ),
-                          ],
-                        ),
-                      ],
+                          )
+
+                        ],
+                      ),
                     ),
-                  ),
-                ),
-                YMargin(13),
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 20.0),
-                  child: Text(
-                    "Please add 20 Naira to the amount you are transferring, this charge is applicable from the service provider",
-                    style: TextStyle(
-                        fontWeight: FontWeight.w400,
-                        color: AppColors.kTextColor,
-                        fontSize: 11,
-                        fontFamily: AppStrings.fontNormal),
-                  ),
-                ),
-                YMargin(35),
-                Center(
-                  child: Text(
-                    "Or",
-                    style: TextStyle(
-                        fontWeight: FontWeight.w400,
-                        color: AppColors.kTextColor,
-                        fontSize: 12,
-                        fontFamily: AppStrings.fontNormal),
-                  ),
-                ),
-                YMargin(24),
-                ViewModelProvider<InvestmentHighYieldViewModel>.withConsumer(
-                  viewModelBuilder: () => InvestmentHighYieldViewModel(),
-                  onModelReady: (model) => model.getRate(),
-                  builder: (context, model, _) => PaymentSourceButtonSpecial(
-                    onTap: () {
-                      Navigator.of(context).push(
-                        FundNairaWalletWithDollar.route(
-                            wallet: wallets, rate: model.gotRate.data.rate),
-                      );
-                    },
-                    paymentsource: "Fund With Dollar Wallet",
-                    color: AppColors.kPrimaryColorLight,
-                    textColor: AppColors.kPrimaryColor,
-                    iconColor: AppColors.kPrimaryColor,
-                  ),
-                ),
-                YMargin(30),
-              ],
+                  )
+
+                ],
+              ),
             ),
           ),
         ],
       ),
-    ),
-  );
+    );
+  }
 }
+
 
 
 

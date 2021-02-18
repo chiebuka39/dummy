@@ -1,5 +1,6 @@
 import 'package:dots_indicator/dots_indicator.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:provider/provider.dart';
 import 'package:provider_architecture/_viewmodel_provider.dart';
@@ -8,6 +9,7 @@ import 'package:timelines/timelines.dart';
 import 'package:zimvest/data/view_models/dashboard_view_model.dart';
 import 'package:zimvest/data/view_models/identity_view_model.dart';
 import 'package:zimvest/data/view_models/investment_view_model.dart';
+import 'package:zimvest/data/view_models/payment_view_model.dart';
 import 'package:zimvest/data/view_models/savings_view_model.dart';
 import 'package:zimvest/data/view_models/settings_view_model.dart';
 import 'package:zimvest/new_screens/navigation/investments/fixed/fixed_income_screen.dart';
@@ -29,6 +31,7 @@ import 'package:zimvest/styles/colors.dart';
 import 'package:zimvest/utils/margin.dart';
 import 'package:zimvest/utils/strings.dart';
 import 'package:zimvest/widgets/home/action_box_widgets.dart';
+import 'package:zimvest/widgets/new/new_widgets.dart';
 
 class HomeScreen extends StatefulWidget {
   final VoidCallback callback;
@@ -46,6 +49,9 @@ class _HomeScreenState extends State<HomeScreen> {
   ABSDashboardViewModel dashboardViewModel;
   ABSSavingViewModel savingViewModel;
   ABSSettingsViewModel settingsViewModel;
+  ABSPaymentViewModel paymentViewModel;
+
+
 
   @override
   void initState() {
@@ -59,6 +65,7 @@ class _HomeScreenState extends State<HomeScreen> {
     dashboardViewModel = Provider.of(context);
     savingViewModel = Provider.of(context);
     settingsViewModel = Provider.of(context);
+    paymentViewModel = Provider.of(context);
     InvestmentHighYieldViewModel investmentModel = Provider.of(context);
     print(".pppppp ${dashboardViewModel.dashboardModel.nairaPortfolio}");
     return Scaffold(
@@ -73,6 +80,9 @@ class _HomeScreenState extends State<HomeScreen> {
                   children: [
                     GestureDetector(
                       onTap: () {
+                        // showModalBottomSheet < Null > (context: context, isScrollControlled: true,builder: (BuildContext context) {
+                        //   return VirtualAccountCreatedWidget();
+                        // });
                         Navigator.of(context).push(ProfileScreen.route());
                       },
                       child: Container(
@@ -337,8 +347,8 @@ class _HomeScreenState extends State<HomeScreen> {
                           actions: settingsViewModel.completedSections
                                       .kycValidationCheck.isKycValidated ==
                                   false
-                              ? ['Verify Identity', 'Fund Wallet']
-                              : ['Fund Wallet'],
+                              ? ['Verify Identity', paymentViewModel.wallet.isEmpty ? 'Generate Virtual Account Number':  paymentViewModel.wallet.first.virtualAccounts.isEmpty ? 'Generate Virtual Account Number': 'Fund Wallet']
+                              : [paymentViewModel.wallet.isEmpty  ? 'Generate Virtual Account Number':paymentViewModel.wallet.first.virtualAccounts.isEmpty ? 'Generate Virtual Account Number': 'Fund Wallet'],
                           callbacks: settingsViewModel.completedSections
                                       .kycValidationCheck.isKycValidated ==
                                   false
@@ -347,12 +357,12 @@ class _HomeScreenState extends State<HomeScreen> {
                                     Navigator.push(context,
                                         VerificationDetailsScreen.route());
                                   },
-                                  () {
+                            paymentViewModel.wallet.isEmpty  ?createVirtualAccount: paymentViewModel.wallet.first.virtualAccounts.isEmpty ? createVirtualAccount:  () {
                                     widget.callback();
                                   }
                                 ]
                               : [
-                                  () {
+                            paymentViewModel.wallet == null ?createVirtualAccount: paymentViewModel.wallet.first.virtualAccounts.isEmpty ? createVirtualAccount:  () {
                                     widget.callback();
                                   }
                                 ],
@@ -588,6 +598,30 @@ class _HomeScreenState extends State<HomeScreen> {
         ),
       ),
     );
+  }
+
+  createVirtualAccount ()async{
+    EasyLoading.show(status: '');
+    var result = await paymentViewModel.createVirtualAccount(identityViewModel.user.token);
+    EasyLoading.dismiss();
+    if(result.error == false){
+      paymentViewModel.getWallet(identityViewModel.user.token);
+      showModalBottomSheet < Null > (context: context, isScrollControlled: true,
+          builder: (BuildContext context) {
+            return VirtualAccountCreatedWidget(bank: result.data,);
+          });
+    }else{
+      showModalBottomSheet < Null > (context: context, isScrollControlled: false,
+          builder: (BuildContext context) {
+            return PasswordSuccessWidget(
+              onDone: (){
+                Navigator.pop(context);
+              },
+                success: false,
+                message:"We could not create a virtual account now, try again"
+            );
+          });
+    }
   }
 }
 

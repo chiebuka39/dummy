@@ -59,7 +59,7 @@ class _VerificationDetailsScreenState extends State<VerificationDetailsScreen> {
         .kycValidationCheck.identificationStatus}");
     return Scaffold(
       appBar: ZimAppBar(
-        text: "Create Zimvest Aspire",
+        text: "Verify Identity",
         icon: Icons.close,
         callback: (){
           Navigator.pop(context);

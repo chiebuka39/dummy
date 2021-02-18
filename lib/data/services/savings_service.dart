@@ -24,6 +24,8 @@ abstract class ABSSavingService{
   ///Get Customer's Savings information
   Future<Result<List<SavingPlanModel>>> getSavingPlans({String token});
 
+  Future<Result<SavingPlanModel>> getSingleSavingPlan({String token, int id});
+
   Future<Result<SavingPlanModel>> createWealthBox({String token,
     int cardId,
     int frequency,
@@ -52,8 +54,8 @@ abstract class ABSSavingService{
     int savingsAmount, String token});
 
   Future<Result<void>> editTargetSavings({int cardId,
-    int fundingChannel, int frequency, String planName, int planId,
-    double targetAmount, bool autoSave, String token});
+    int fundingChannel, int frequency, String planName, int planId,File image,
+    double targetAmount,int savingsAmount, bool autoSave, String token});
   Future<Result<SavingPlanModel>> createTargetSavings2({int cardId,
     int fundingChannel, int frequency, String planName, DateTime maturityDate,
     DateTime startDate, int productId, double targetAmount, bool autoSave,
@@ -150,10 +152,15 @@ class SavingService extends ABSSavingService{
       }else {
         result.error = false;
         List<ProductTransaction> types = [];
-        (response1['data']['result'] as List).forEach((chaList) {
-          //initialize Chat Object
-          types.add(ProductTransaction.fromJson(chaList));
-        });
+        if(response1['data']['result'] == null){
+
+        }else{
+          (response1['data']['result'] as List).forEach((chaList) {
+            //initialize Chat Object
+            types.add(ProductTransaction.fromJson(chaList));
+          });
+        }
+
         result.data = types;
       }
 
@@ -197,10 +204,15 @@ class SavingService extends ABSSavingService{
       }else {
         result.error = false;
         List<ProductTransaction> types = [];
-        (response1['data']["result"] as List).forEach((chaList) {
-          //initialize Chat Object
-          types.add(ProductTransaction.fromJson(chaList));
-        });
+        if(response1['data']["result"] == null){
+
+        }else{
+          (response1['data']["result"] as List).forEach((chaList) {
+            //initialize Chat Object
+            types.add(ProductTransaction.fromJson(chaList));
+          });
+        }
+
         result.data = types;
       }
 
@@ -244,10 +256,15 @@ class SavingService extends ABSSavingService{
       }else {
         result.error = false;
         List<ProductTransaction> types = [];
-        (response1['data']["result"] as List).forEach((chaList) {
-          //initialize Chat Object
-          types.add(ProductTransaction.fromJson(chaList));
-        });
+        if(response1['data']["result"] == null){
+
+        }else{
+          (response1['data']["result"] as List).forEach((chaList) {
+            //initialize Chat Object
+            types.add(ProductTransaction.fromJson(chaList));
+          });
+        }
+
         result.data = types;
       }
 
@@ -356,6 +373,59 @@ class SavingService extends ABSSavingService{
           types.add(SavingPlanModel.fromJson(chaList));
         });
         result.data = types;
+      }
+
+    }on DioError catch(e){
+      if(e.error.runtimeType == SocketException){
+        print("<<<<<<<<<");
+        result.networkAvailable = false;
+        result.errorMessage = "Failed to connect, "
+            "please connect to the internet and try again";
+
+      }else{
+        print("error000 ${e.response}");
+
+        if(e.response != null ){
+          print(e.response.data);
+          //result.errorMessage = e.response.data['message'];
+        }else{
+          print(e.toString());
+          result.errorMessage = "Sorry, We could not complete your request";
+        }
+        result.error = true;
+      }
+
+    }
+
+    return result;
+  }
+
+  @override
+  Future<Result<SavingPlanModel>> getSingleSavingPlan({String token,int id}) async{
+    Result<SavingPlanModel> result = Result(error: false);
+
+
+    var headers = {
+      HttpHeaders.authorizationHeader: "Bearer $token"
+    };
+
+
+    var url = "zimvest.services.savings/api/Savings/Customers/$id";
+    print("url $url");
+    print("url $headers");
+    try{
+      var response = await dio.get(url,options: Options(headers: headers));
+      final int statusCode = response.statusCode;
+      var response1 = response.data;
+
+
+      if (statusCode != 200) {
+        result.errorMessage = response1['message'];
+        result.error = true;
+      }else {
+        result.error = false;
+
+        result.data = SavingPlanModel.fromJson(response1['data']);
       }
 
     }on DioError catch(e){
@@ -766,7 +836,7 @@ class SavingService extends ABSSavingService{
 
   @override
   Future<Result<void>> editTargetSavings({int cardId,
-    int fundingChannel, int frequency, String planName,
+    int fundingChannel, int frequency, String planName,int savingsAmount,File image,
     int planId, double targetAmount,bool autoSave, String token}) async{
     Result<SavingPlanModel> result = Result(error: false);
 
@@ -774,7 +844,7 @@ class SavingService extends ABSSavingService{
     var headers = {
       HttpHeaders.authorizationHeader: "Bearer $token"
     };
-    var body = {
+    var body = image == null ?FormData.fromMap({
       "cardId": cardId,
       'isAutoSave':autoSave,
       "frequency": frequency,
@@ -782,13 +852,32 @@ class SavingService extends ABSSavingService{
       "targetAmount": targetAmount,
       "id": planId,
       "planName": planName,
-      "savingsAmount": targetAmount,
-    };
+      "savingsAmount": savingsAmount,
+    }) : FormData.fromMap({
+      "cardId": cardId,
+      'isAutoSave':autoSave,
+      "frequency": frequency,
+      "fundingChannel": fundingChannel,
+      "targetAmount": targetAmount,
+      "id": planId,
+      "planName": planName,
+      "savingsAmount": savingsAmount,
+      "PhotoFile": await MultipartFile.fromFile(image.path),
+    });
 
 
     var url = "zimvest.services.savings/api/v2/Savings/TargetSavings";
     print("url $url");
-    print("body $body");
+    print("body ${{
+      "cardId": cardId,
+      'isAutoSave':autoSave,
+      "frequency": frequency,
+      "fundingChannel": fundingChannel,
+      "targetAmount": targetAmount,
+      "id": planId,
+      "planName": planName,
+      "savingsAmount": savingsAmount,
+    }}");
     try{
       var response = await dio.patch(url,options: Options(headers: headers),data: body);
       final int statusCode = response.statusCode;

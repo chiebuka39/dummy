@@ -19,41 +19,43 @@ class _ChooseGenderWidgetState extends State<ChooseGenderWidget> {
   Widget build(BuildContext context) {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 20),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          YMargin(50),
-          Text("Choose Your Gender"),
-          YMargin(30),
-          Row(children: [
-            GestureDetector(
+      child: SingleChildScrollView(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            YMargin(50),
+            Text("Choose Your Gender"),
+            YMargin(30),
+            Row(children: [
+              GestureDetector(
+                onTap: (){
+                  setState(() {
+                    gender = 'male';
+                  });
+                },
+                child: SelectGenderWidget(emoji: "male",title: "Male",gender: gender,),
+              ),
+              Spacer(),
+              GestureDetector(
+                onTap: (){
+                  setState(() {
+                    gender = 'female';
+                  });
+                },
+                child:SelectGenderWidget(emoji:"fem",title: "Female",gender: gender,),
+              ),
+            ],),
+            YMargin(50),
+            RoundedNextButton(
               onTap: (){
-                setState(() {
-                  gender = 'male';
-                });
+                if(gender != null){
+                  widget.onNext(gender);
+                }
               },
-              child: SelectGenderWidget(emoji: "male",title: "Male",gender: gender,),
             ),
-            Spacer(),
-            GestureDetector(
-              onTap: (){
-                setState(() {
-                  gender = 'female';
-                });
-              },
-              child:SelectGenderWidget(emoji:"fem",title: "Female",gender: gender,),
-            ),
+            YMargin(120)
           ],),
-          Spacer(),
-          RoundedNextButton(
-            onTap: (){
-              if(gender != null){
-                widget.onNext(gender);
-              }
-            },
-          ),
-          YMargin(120)
-        ],),
+      ),
     );
   }
 }

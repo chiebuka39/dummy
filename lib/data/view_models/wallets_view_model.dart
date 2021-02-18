@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:zimvest/data/local/user_local.dart';
 import 'package:zimvest/data/models/investment/term_instruments.dart';
+import 'package:zimvest/data/models/payment/bank.dart';
 import 'package:zimvest/data/models/payment/card.dart';
 import 'package:zimvest/data/models/payment/wallet.dart';
 import 'package:zimvest/data/models/wallets/wallets_model.dart';
@@ -23,6 +24,12 @@ class WalletViewModel extends BaseViewModel {
   ABSPaymentService _paymentService = locator<ABSPaymentService>();
   List<PaymentCard> cards = List<PaymentCard>();
   List<WiredTransferDetails> wiredDetails = List<WiredTransferDetails>();
+  Bank get transferBank => _transferBank ;
+  Bank _transferBank;
+  set transferBank(Bank value){
+    _transferBank = value;
+    notifyListeners();
+  }
   ABSInvestmentService _investmentService = locator<ABSInvestmentService>();
 
   bool _status = false;
@@ -101,6 +108,34 @@ class WalletViewModel extends BaseViewModel {
     return fundWallet;
   }
 
+  Future<Result<void>> fundWalletTransfer(
+      {File file, Bank bank}) async {
+    setBusy(true);
+    String token = _localStorage.getUser().token;
+
+    var fundWallet = await _walletService.fundWalletTransfer(
+        bank: bank,
+        token: token,
+        file: file);
+    print("p0ioi  ${fundWallet.error}");
+    setResult(fundWallet);
+    if (fundWallet.error == false) {
+      setBusy(false);
+      _status = true;
+    } else if (fundWallet.error == true) {
+      setBusy(false);
+      _message = "Oops! Something went wrong try again later";
+      _status = false;
+    } else {
+      setBusy(false);
+      _message = fundWallet.toString();
+      _status = false;
+    }
+    setBusy(false);
+    notifyListeners();
+    return fundWallet;
+  }
+
   Future<Result<void>> fundWalletWired(
       {num wiredTransferAmount,
       int fundingSource,
@@ -139,6 +174,16 @@ class WalletViewModel extends BaseViewModel {
     var wiredTransferDetails =
         await _walletService.getWiredTransferDetails(token);
     this.wiredDetails = wiredTransferDetails.data;
+    setBusy(false);
+    notifyListeners();
+  }
+
+  Future<void> getTransferDetails() async {
+    setBusy(true);
+    String token = _localStorage.getUser().token;
+    var wiredTransferDetails =
+    await _walletService.getTransferDetails(token);
+    this.transferBank = wiredTransferDetails.data;
     setBusy(false);
     notifyListeners();
   }

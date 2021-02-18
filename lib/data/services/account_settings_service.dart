@@ -215,8 +215,18 @@ class SettingsService extends ABSSettingsService{
         result.errorMessage = "Failed to connect, "
             "please connect to the internet and try again";
 
+      }else{
+        print("<<<<<<<<< ${e.toString()}");
+        if(e.response == null){
+          result.errorMessage = "We could not upload this file";
+        }
+        else if(e.response.data is Map){
+          result.errorMessage = e.response.data['message'];
+        }else{
+          result.errorMessage = "We could not upload this file";
+        }
       }
-      print("error ${e.response.data}");
+      //print("error ${e.response.data}");
       result.error = true;
     }
 

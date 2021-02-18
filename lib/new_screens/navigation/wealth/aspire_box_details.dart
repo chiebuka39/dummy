@@ -10,11 +10,13 @@ import 'package:shimmer/shimmer.dart';
 import 'package:zimvest/data/models/product_transaction.dart';
 import 'package:zimvest/data/models/saving_plan.dart';
 import 'package:zimvest/data/view_models/identity_view_model.dart';
+import 'package:zimvest/data/view_models/payment_view_model.dart';
 import 'package:zimvest/data/view_models/savings_view_model.dart';
 import 'package:zimvest/data/view_models/settings_view_model.dart';
 import 'package:zimvest/new_screens/funding/top_up_screen.dart';
 import 'package:zimvest/new_screens/funding/withdraw_screen.dart';
 import 'package:zimvest/new_screens/navigation/portfolio_screen.dart';
+import 'package:zimvest/new_screens/navigation/wealth/aspire/edit_plan_screen.dart';
 import 'package:zimvest/new_screens/navigation/wealth/aspire/name_goal_screen.dart';
 import 'package:zimvest/new_screens/navigation/wealth/aspire/select_goals.dart';
 import 'package:zimvest/new_screens/navigation/widgets/money_title_widget.dart';
@@ -52,17 +54,29 @@ class _AspireDetailsScreenState extends State<AspireDetailsScreen>
   ABSSavingViewModel savingViewModel;
   ABSSettingsViewModel settingsViewModel;
   ABSIdentityViewModel identityViewModel;
+  ABSPaymentViewModel paymentViewModel;
 
 
   bool transactionsLoading = true;
-  bool isPaused;
+  bool isPaused = false;
   List<ProductTransaction> transactions = [];
   Map<String, dynamic> withdrawlSummary;
 
+  SavingPlanModel goal;
+
+
+
   @override
   void afterFirstLayout(BuildContext context) async {
-    savingViewModel.selectedPlan = widget.goal;
+
+      savingViewModel.selectedPlan = widget.goal;
+
+
+
+
     isPaused = widget.goal.isPaused;
+    print(",,,mmmmmmmmmmm ${widget.goal.isPaused}");
+    print(",,,mmmmmmmmmmm ${isPaused}");
     var result = await savingViewModel.getTransactionForProduct(
         token: identityViewModel.user.token, id: widget.goal.id);
     if (result.error == false) {
@@ -79,13 +93,26 @@ class _AspireDetailsScreenState extends State<AspireDetailsScreen>
     } else {}
 
     setState(() {});
+    savingViewModel.getSavingFrequency(token: identityViewModel.user.token);
+    savingViewModel.getFundingChannel(token: identityViewModel.user.token);
+    paymentViewModel.getUserCards(identityViewModel.user.token);
+
   }
 
+  @override
+  void initState() {
+    if(widget.goal != null){
+      goal = widget.goal;
+
+    }
+    super.initState();
+  }
   @override
   Widget build(BuildContext context) {
     identityViewModel = Provider.of(context);
     savingViewModel = Provider.of(context);
     settingsViewModel = Provider.of(context);
+    paymentViewModel = Provider.of(context);
     print("oooooo $isPaused");
     return Scaffold(
       backgroundColor: AppColors.kWealth,
@@ -96,7 +123,7 @@ class _AspireDetailsScreenState extends State<AspireDetailsScreen>
               left: 0,
               right: 0,
               child: Hero(
-                  tag: widget.goal,
+                  tag: goal,
                   child: CachedNetworkImage(
                     imageUrl: AppStrings.url,
                     height: 150,
@@ -119,7 +146,7 @@ class _AspireDetailsScreenState extends State<AspireDetailsScreen>
                     children: [
                       XMargin(20),
                       Text(
-                        widget.goal.planName,
+                        goal.planName,
                         style: TextStyle(
                             fontSize: 15, fontFamily: AppStrings.fontBold),
                       ),
@@ -134,7 +161,7 @@ class _AspireDetailsScreenState extends State<AspireDetailsScreen>
                                 context: context,
                                 builder: (BuildContext context) {
                                   return WealthMore(
-                                      savingPlanModel: widget.goal,
+                                      savingPlanModel: goal,
                                       isActive: !isPaused);
                                 },
                                 isScrollControlled: true);
@@ -154,7 +181,7 @@ class _AspireDetailsScreenState extends State<AspireDetailsScreen>
                         ),
                         YMargin(10),
                         MoneyTitleWidget(
-                          amount: widget.goal.amountSaved,
+                          amount: goal.amountSaved,
                         ),
                         YMargin(25),
                         Row(
@@ -183,7 +210,7 @@ class _AspireDetailsScreenState extends State<AspireDetailsScreen>
                                               fontSize: 11,
                                               color: AppColors.kWealthDark)),
                                       Text(
-                                        " ${widget.goal.accruedInterest}",
+                                        " ${goal.accruedInterest}",
                                         style: TextStyle(
                                             fontFamily: AppStrings.fontMedium,
                                             fontSize: 11,
@@ -214,7 +241,7 @@ class _AspireDetailsScreenState extends State<AspireDetailsScreen>
                                 ),
                                 YMargin(4),
                                 Text(
-                                  "${widget.goal.interestRate}%",
+                                  "${goal.interestRate}%",
                                   style: TextStyle(
                                       fontSize: 11,
                                       fontFamily: AppStrings.fontMedium,
@@ -236,12 +263,41 @@ class _AspireDetailsScreenState extends State<AspireDetailsScreen>
                             ),
                             Spacer(),
                             InkWell(
-                              onTap: () {
-                                savingViewModel.selectedPlan = widget.goal;
-                                Navigator.push(
+                              onTap: () async{
+                                savingViewModel.selectedPlan = goal;
+                                savingViewModel.amountToSave =goal.targetAmount;
+                                savingViewModel.endDate =goal.maturityDate;
+                                savingViewModel.goalName =goal.planName;
+                                savingViewModel.startDate =goal.startDate;
+                                savingViewModel.autoSave =true;
+                                if(goal.fundingChannelText == "Card"){
+                                  paymentViewModel.selectedCard = paymentViewModel.userCards.where((element) => element.id == goal.cardId).first;
+                                }
+
+                                print("pppp ${goal.savingsFrequency}");
+                                savingViewModel.selectedFrequency =savingViewModel.savingFrequency.where((element)
+                                => element.id == goal.savingsFrequency).first;
+
+                                  var result = await  Navigator.push(
                                     context,
-                                    NameYourGoalScreen.route(
-                                        goalName: widget.goal.planName));
+                                    EditPlanScreen.route());
+                                  if(result != null){
+                                    print("pppppcfff $result");
+                                    if(result == 1){
+                                     await savingViewModel.getSingleSavingPlan(
+                                        token: identityViewModel.user.token,
+                                        id: goal.id
+                                      ).then((value) {
+                                        if(value.error == false){
+                                          savingViewModel.selectedPlan = value.data;
+                                          setState(() {
+                                            goal = value.data;
+                                          });
+                                        }
+                                     });
+
+                                    }
+                                  }
                               },
                               child: Text("Edit",
                                   style: TextStyle(
@@ -269,16 +325,16 @@ class _AspireDetailsScreenState extends State<AspireDetailsScreen>
                                 animation: true,
                                 backgroundColor:
                                     AppColors.kPrimaryColor.withOpacity(0.2),
-                                percent: (double.parse(widget.goal.successRate
+                                percent: (double.parse(goal.successRate
                                                 .replaceAll("%", "")) /
                                             100) >
                                         1
                                     ? 1.0
-                                    : (double.parse(widget.goal.successRate
+                                    : (double.parse(goal.successRate
                                             .replaceAll("%", "")) /
                                         100),
                                 center: new Text(
-                                  "${widget.goal.successRate}",
+                                  "${goal.successRate}",
                                   style: new TextStyle(
                                       fontWeight: FontWeight.bold,
                                       fontSize: 12),
@@ -295,7 +351,7 @@ class _AspireDetailsScreenState extends State<AspireDetailsScreen>
                                     children: [
                                       Text(AppStrings.nairaSymbol),
                                       Text(
-                                        "${widget.goal.targetAmount}"
+                                        "${goal.targetAmount}"
                                             .split(".")
                                             .first
                                             .convertWithComma(),
@@ -316,7 +372,7 @@ class _AspireDetailsScreenState extends State<AspireDetailsScreen>
                                   YMargin(30),
                                   Text(
                                     AppUtils.getReadableDate2(
-                                        widget.goal.maturityDate),
+                                        goal.maturityDate),
                                     style: TextStyle(
                                         fontFamily: AppStrings.fontMedium,
                                         color: AppColors.kGreyText),
@@ -379,7 +435,7 @@ class _AspireDetailsScreenState extends State<AspireDetailsScreen>
                         child: Center(
                           child: GestureDetector(
                             onTap: () {
-                              if (widget.goal.amountSaved == 0 ||
+                              if (goal.amountSaved == 0 ||
                                   withdrawlSummary == null) {
                                 return;
                               }
@@ -387,12 +443,12 @@ class _AspireDetailsScreenState extends State<AspireDetailsScreen>
                                       .kycValidationCheck.isKycValidated ==
                                   true) {
                                 DateTime time = DateTime.now();
-                                if (time.day == widget.goal.maturityDate.day &&
+                                if (time.day == goal.maturityDate.day &&
                                     time.month ==
-                                        widget.goal.maturityDate.month &&
+                                        goal.maturityDate.month &&
                                     time.year ==
-                                        widget.goal.maturityDate.year) {
-                                  savingViewModel.selectedPlan = widget.goal;
+                                        goal.maturityDate.year) {
+                                  savingViewModel.selectedPlan = goal;
                                   Navigator.of(context)
                                       .push(AmountWithdrawScreen.route());
                                 } else {
@@ -400,11 +456,11 @@ class _AspireDetailsScreenState extends State<AspireDetailsScreen>
                                       context: context,
                                       builder: (BuildContext context) {
                                         return WithdrawWealthbox(
-                                          savingPlanModel: widget.goal,
+                                          savingPlanModel: goal,
                                           prompt: withdrawlSummary['prompt'],
                                           onTapYes: () {
                                             savingViewModel.selectedPlan =
-                                                widget.goal;
+                                                goal;
                                             Navigator.of(context)
                                                 .pushReplacement(
                                                     AmountWithdrawScreen.route(
@@ -423,7 +479,7 @@ class _AspireDetailsScreenState extends State<AspireDetailsScreen>
                               }
                             },
                             child: Opacity(
-                              opacity: widget.goal.amountSaved == 0 ||
+                              opacity: goal.amountSaved == 0 ||
                                       withdrawlSummary == null
                                   ? 0.4
                                   : 1,
@@ -464,7 +520,7 @@ class _AspireDetailsScreenState extends State<AspireDetailsScreen>
                                 EasyLoading.show(status: "Pausing savings");
                                 result = await savingViewModel.pauseSaving(
                                     token: identityViewModel.user.token,
-                                    savingModelId: widget.goal.id);
+                                    savingModelId: goal.id);
                                 if (result.error == false) {
                                   setState(() {
                                     isPaused = !isPaused;
@@ -477,7 +533,7 @@ class _AspireDetailsScreenState extends State<AspireDetailsScreen>
                                 EasyLoading.show(status: "Continue savings");
                                 result = await savingViewModel.continueSaving(
                                     token: identityViewModel.user.token,
-                                    savingModelId: widget.goal.id);
+                                    savingModelId: goal.id);
                                 if (result.error == false) {
                                   setState(() {
                                     isPaused = !isPaused;

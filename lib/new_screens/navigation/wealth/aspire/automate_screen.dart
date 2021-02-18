@@ -100,3 +100,120 @@ class _AutomateSavingsScreenState extends State<AutomateSavingsScreen> {
     );
   }
 }
+
+class SavingsAutomationWidget extends StatefulWidget {
+  const SavingsAutomationWidget({
+    Key key,
+  }) : super(key: key);
+
+
+
+  @override
+  _SavingsAutomationWidgetState createState() => _SavingsAutomationWidgetState();
+}
+
+class _SavingsAutomationWidgetState extends State<SavingsAutomationWidget> {
+  ABSSavingViewModel savingViewModel;
+  Widget check = SvgPicture.asset("images/check.svg");
+  Widget checkEmpty = SvgPicture.asset("images/check_empty.svg");
+  bool automatic;
+  @override
+  Widget build(BuildContext context) {
+    savingViewModel = Provider.of(context);
+
+    return Container(
+      height: 450,
+      decoration: BoxDecoration(
+        color: Colors.transparent,
+      ),
+      child: Column(children: [
+        YMargin(10),
+        Center(child: Container(
+          width: 30,
+          height: 5,
+          decoration: BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.circular(5)
+          ),
+        ),),
+        YMargin(20),
+        Expanded(child: Container(
+          width: double.infinity,
+          decoration: BoxDecoration(
+              color:Colors.white,
+              borderRadius: BorderRadius.only(
+                  topLeft: Radius.circular(25),
+                  topRight: Radius.circular(25)
+              )
+          ),
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 20),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                YMargin(30),
+            Text("Would you like to automate your savings ?",
+              style: TextStyle(fontSize: 15,
+                  fontFamily: AppStrings.fontBold),),
+            YMargin(35),
+            InkWell(
+              onTap: (){
+
+                savingViewModel.autoSave = true;
+                Navigator.pop(context);
+              },
+              child: Container(
+                height: 50,
+                child: Row(
+                  children: [
+                    Text("Yes debit me automatically", style: TextStyle(fontSize: 13),),
+                    Spacer(),
+                    AnimatedSwitcher(
+                        duration: Duration(milliseconds: 600),
+                        child: automatic == true ? check:checkEmpty)
+                  ],
+                ),
+              ),
+            ),
+            InkWell(
+              onTap: (){
+                savingViewModel.autoSave = false;
+                Navigator.pop(context);
+              },
+              child: Container(
+                height: 50,
+                child: Row(
+                  children: [
+                    Text("No, I would save whenever I want", style: TextStyle(fontSize: 13),),
+                    Spacer(),
+                    AnimatedSwitcher(
+                        duration: Duration(milliseconds: 600),
+                        child: automatic == false ?check: checkEmpty)
+                  ],
+                ),
+              ),
+            ),
+
+              ],
+            ),
+          ),
+        ))
+      ],),
+    );
+
+  }
+  int buildLength() {
+    print("ooooo ${savingViewModel.endDate.difference(savingViewModel.startDate).inDays}");
+    if(savingViewModel.endDate.difference(savingViewModel.startDate).inDays < 185){
+      print("jjjjj11 ${savingViewModel.endDate.difference(savingViewModel.startDate).inDays}");
+      return savingViewModel.savingFrequency.length -2;
+    }else if(savingViewModel.endDate.difference(savingViewModel.startDate).inDays < 366){
+      print("jjjjj22 ${savingViewModel.endDate.difference(savingViewModel.startDate).inDays}");
+      return savingViewModel.savingFrequency.length -1;
+    }
+    else{
+      return savingViewModel.savingFrequency.length;
+    }
+
+  }
+}

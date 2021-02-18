@@ -56,6 +56,7 @@ class _FundDollarWalletPaymentOptionState
   @override
   Widget build(BuildContext context) {
     paymentViewModel = Provider.of(context);
+    var height = MediaQuery.of(context).size.height;
     return Scaffold(
       appBar: ZimAppBar(
         icon: Icons.arrow_back_ios_outlined,
@@ -68,7 +69,7 @@ class _FundDollarWalletPaymentOptionState
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          YMargin(69),
+          YMargin(height > 750 ?72: 35),
           Padding(
             padding: const EdgeInsets.only(left: 20.0, right: 76),
             child: Text(
@@ -80,7 +81,7 @@ class _FundDollarWalletPaymentOptionState
               ),
             ),
           ),
-          verticalSpace(52),
+          verticalSpace(height > 750 ?52: 35),
           TabBar(
             controller: controller,
             tabs: [

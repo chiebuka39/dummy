@@ -596,7 +596,7 @@ class IdentityService extends ABSIdentityService {
     Result<void> result = Result(error: false);
 
 
-    var url = "zimvest.services.identity/api/Account/reset-password";
+    var url = "zimvest.services.identity/api/Account/reset-password?email=$email";
     var body = {
       'email': email
     };
@@ -604,7 +604,7 @@ class IdentityService extends ABSIdentityService {
     print("lll $url");
     print("lll $body");
     try{
-      var response = await dio.post(url,data: body);
+      var response = await dio.get(url);
       final int statusCode = response.statusCode;
       var response1 = response.data;
       print("iii ${response1}");
@@ -619,6 +619,7 @@ class IdentityService extends ABSIdentityService {
 
     }on DioError catch(e){
       print("error ${e.response.data}");
+      print("error ${e.toString()}");
       result.error = true;
     }
 

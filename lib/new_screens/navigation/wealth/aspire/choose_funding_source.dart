@@ -114,3 +114,113 @@ class _ChooseFundingScreenState extends State<ChooseFundingScreen> with AfterLay
     );
   }
 }
+
+class FundingSourceWidget extends StatefulWidget {
+  const FundingSourceWidget({
+    Key key,
+  }) : super(key: key);
+
+
+
+  @override
+  _FundingSourceWidgetState createState() => _FundingSourceWidgetState();
+}
+
+class _FundingSourceWidgetState extends State<FundingSourceWidget> with AfterLayoutMixin<FundingSourceWidget> {
+  ABSSavingViewModel savingViewModel;
+  ABSIdentityViewModel identityViewModel;
+  ABSPaymentViewModel paymentViewModel;
+
+  @override
+  void afterFirstLayout(BuildContext context) {
+    paymentViewModel.getUserCards(identityViewModel.user.token);
+  }
+  @override
+  Widget build(BuildContext context) {
+    savingViewModel = Provider.of(context);
+    paymentViewModel = Provider.of(context);
+    identityViewModel = Provider.of(context);
+
+
+    return Container(
+      height: 450,
+      decoration: BoxDecoration(
+        color: Colors.transparent,
+      ),
+      child: Column(children: [
+        YMargin(10),
+        Center(child: Container(
+          width: 30,
+          height: 5,
+          decoration: BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.circular(5)
+          ),
+        ),),
+        YMargin(20),
+        Expanded(child: Container(
+          width: double.infinity,
+          decoration: BoxDecoration(
+              color:Colors.white,
+              borderRadius: BorderRadius.only(
+                  topLeft: Radius.circular(25),
+                  topRight: Radius.circular(25)
+              )
+          ),
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 20),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                YMargin(30),
+                Text("Choose funding source", style: TextStyle(fontSize: 15,
+                    color: AppColors.kGreyText,
+                    fontFamily: AppStrings.fontBold),),
+                YMargin(50),
+                GestureDetector(
+                  onTap: (){
+                    showModalBottomSheet < Null > (context: context, builder: (BuildContext context) {
+                      return SelectCardWidget(success: false,navigate: (){
+                        Navigator.pop(context);
+                      },);
+                    });
+                  },
+                  child: Container(
+                    padding: EdgeInsets.symmetric(horizontal: 20),
+                    width: double.infinity,
+                    height: 55,
+                    decoration: BoxDecoration(
+                        color: AppColors.kPrimaryColor,
+                        borderRadius: BorderRadius.circular(15)
+                    ),
+                    child: Row(children: [
+                      SvgPicture.asset("images/new/card.svg"),
+                      XMargin(10),
+                      Text("Debit Card", style: TextStyle(color: AppColors.kWhite,
+                          fontSize: 13,fontFamily: AppStrings.fontNormal),),
+                      Spacer(),
+                      Icon(Icons.navigate_next_rounded,color: AppColors.kWhite,)
+                    ],),
+                  ),
+                ),
+                YMargin(25),
+                SelectWallet(onPressed: (){
+                  paymentViewModel.selectedCard = null;
+                  // savingViewModel.selectedChannel = savingViewModel
+                  //     .fundingChannels.firstWhere((element) => element.name == "Wallet");
+                  Navigator.of(context).push(SavingsSummaryScreen.route());
+                }),
+
+                YMargin(5),
+                Text("Funding with your Zimvest wallet is free",
+                  style: TextStyle(fontSize: 11, fontFamily: AppStrings.fontNormal),)
+
+              ],
+            ),
+          ),
+        ))
+      ],),
+    );
+
+  }
+}

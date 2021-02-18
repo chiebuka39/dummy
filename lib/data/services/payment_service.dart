@@ -18,6 +18,7 @@ abstract class ABSPaymentService {
   Future<Result<void>> deleteCard(String token,int cardId);
   Future<Result<List<Wallet>>> getWallet(String token);
   Future<Result<void>> setBankAsActive(String token,int bankId);
+  Future<Result<Bank>> createVirtualAccount(String token);
   Future<Result<List<Bank>>> getCustomerBank(String token);
   Future<Result<void>> withdrawToBank(String token, Bank bank, double amount, String type);
   Future<Result<CardPayload>> registerNewCard(String token);
@@ -446,10 +447,15 @@ class PaymentService extends ABSPaymentService {
 
 
         List<Wallet> wallets = [];
-        (response1['data'] as List).forEach((chaList) {
-          //initialize Chat Object
-          wallets.add(Wallet.fromJson(chaList));
-        });
+        if(response1['data'] == null){
+
+        }else{
+          (response1['data'] as List).forEach((chaList) {
+            //initialize Chat Object
+            wallets.add(Wallet.fromJson(chaList));
+          });
+        }
+
         result.data = wallets;
 
       }
@@ -623,6 +629,53 @@ class PaymentService extends ABSPaymentService {
         result.error = true;
       } else {
         result.error = false;
+
+
+      }
+    } on DioError catch (e) {
+      print("error $e}");
+      if(e.response != null ){
+        print(e.response.data);
+        result.errorMessage = e.response.data['message'];
+      }else{
+        print(e.toString());
+        result.errorMessage = "Sorry, We could not complete your request";
+      }
+      result.error = true;
+    }
+
+    return result;
+  }
+
+  @override
+  Future<Result<Bank>> createVirtualAccount(String token) async{
+    Result<Bank> result = Result(error: false);
+
+    var headers = {"Authorization": "Bearer $token"};
+
+
+    var url = "zimvest.services.wallet/api/VirtualAccounts";
+    print("llllll $url");
+
+
+    try {
+      var response = await dio.post(url, options: Options(headers: headers));
+      final int statusCode = response.statusCode;
+      var response1 = response.data;
+      print("iii ${response1}");
+
+      if (statusCode != 200) {
+        result.errorMessage = response1['message'];
+        result.error = true;
+      } else {
+        result.error = false;
+        Bank bank = Bank(
+            accountNum: response1['data']['accountNumber'],
+            name: response1['data']['bankName'],
+
+        );
+
+        result.data = bank;
 
 
       }

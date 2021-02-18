@@ -29,8 +29,8 @@ void setUpLocator(){
     BaseOptions options = new BaseOptions(
         baseUrl: AppStrings.baseUrl,
         receiveDataWhenStatusError: true,
-        connectTimeout: 5*1000, // 60 seconds
-        receiveTimeout: 5*1000 // 60 seconds
+        connectTimeout: 30*1000, // 60 seconds
+        receiveTimeout: 30*1000 // 60 seconds
     );
     Dio dio = Dio(options);
     dio.interceptors.add(InterceptorsWrapper(
